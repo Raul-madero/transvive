@@ -1,0 +1,74 @@
+body {
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.title-bar {
+    background-color: #5e7fa2;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-top: 3px solid #ffc107;
+    border-bottom: 3px solid #ffc107;
+    margin-bottom: 20px;
+    border-radius: 10px 10px 0 0;
+}
+
+.login-card {
+    border: 1px solid #e3e3e3;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.login-card .card-title {
+    margin-bottom: 10px;
+}
+
+.login-card .btn-primary {
+    background-color: #5e7fa2;
+    border-color: #5e7fa2;
+}
+
+.login-card .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.login-card .card-footer {
+    background-color: #ffffff;
+    border-top: none;
+}
+
+.position-relative {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #5e7fa2;
+}
+
+.btn-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
