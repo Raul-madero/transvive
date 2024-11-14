@@ -5,7 +5,7 @@
 	$password = 'M6WeJ17g7uV3EsuLM1Ifjnt11HHf5i6y';
 	$db = 'transvive_piv3';
 
-	$conection = @mysqli_connect($host,$user,$password,$db);
+	$conection = mysqli_connect($host,$user,$password,$db);
 	$conection->set_charset('utf8');
 
 	if(!$conection){
