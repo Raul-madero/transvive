@@ -1,6 +1,12 @@
 <?php 
+$host = getenv('BD_HOST');
+$user = getenv('BD_USER');
+$password = getenv('BD_PASSWORD');
+$database = getenv('BD_NAME');
+$port = intval(getenv('BD_PORT'));
+
 	// $conection = mysqli_connect("localhost", "root", "", "prueba");
-	$conection = mysqli_connect(getenv('BD_HOST'), getenv('BD_USER'),getenv('BD_PASSWORD'), getenv('BD_NAME'), intval(getenv('BD_PORT')));
+	$conection = mysqli_connect($host, $user, $password, $database);
 	$conection->set_charset('utf8');
 
 	if(!$conection){
