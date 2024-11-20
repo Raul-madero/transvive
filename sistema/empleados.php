@@ -172,6 +172,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="../vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
 
 <!-- DataTables JS library -->
+
 <script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <!-- DataTables JBootstrap -->
 <script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
@@ -190,14 +191,30 @@ var table = $('#example1').dataTable({
 "iDisplayLength": 10,
 "responsive": true,
 "aoColumns": [
-{ mData: 'noempleado', "sWidth": "50px" } ,
-{ mData: 'nombres' ,"sWidth": "120px"},
-{ mData: 'apellido_paterno' ,"sWidth": "100px"},
-{ mData: 'apellido_materno' ,"sWidth": "100px"},
-{ mData: 'cargo' ,"sWidth": "130px"},
-{ mData: 'tipo_contrato' ,"sWidth": "50px"},
-{ mData: 'telefono' ,"sWidth": "80px"},
-{ mData: 'Status' ,"sWidth": "50px"},
+{ mData: 'noempleado', "sWidth": "50px", "render": function (data, type, full, meta) {
+  return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+} },
+{ mData: 'nombres' ,"sWidth": "120px", "render": function (data, type, full, meta) {
+  return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+}},
+{ mData: 'apellido_paterno' ,"sWidth": "100px", "render": function (data, type, full, meta) {
+  return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+}},
+{ mData: 'apellido_materno' ,"sWidth": "100px", "render": function (data, type, full, meta) {
+  return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+}},
+{ mData: 'cargo' ,"sWidth": "130px", "render": function (data, type, full, meta) {
+  return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+}},
+{ mData: 'tipo_contrato' ,"sWidth": "50px", "render": function (data, type, full, meta) {
+  return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+}},
+{ mData: 'telefono' ,"sWidth": "80px", "render": function (data, type, full, meta) {
+  return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+}},
+{ mData: 'Status' ,"sWidth": "50px", "render": function (data, type, full, meta) {
+  return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+}},
 {
                     "render": function ( data, type, full, meta ) {
         return '<a class="link_edit" style="color:#007bff;" href= \'edit_empleado.php?id=' + full.noempleado +  '\'><i class="far fa-edit"></i> Edit</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.noempleado +  '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a>| <a data-toggle="modal" data-target="#modalAltacliente"  data-id=\'' + full.noempleado +  '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno +  '\' href="javascript:void(0)" class="link_delete" style="color:green" ><i class="fas fa-angle-double-up"></i> Reingreso</a> | <a class="link_edit" style="color:#007bff;" href= \'new_empleado23.php?id=' + full.noempleado +  '\'><i class="fas fa-portrait"></i></a> | <a class="link_edit" style="color:gray;" href= \'factura/alta_empleado.php?id=' + full.noempleado +  '\' target="_blank"><i class="fas fa-print"></i></a>';
@@ -270,6 +287,15 @@ var table = $('#listaClientes').dataTable({
 });
 });
         
+</script>
+
+<script>
+  $('#modalDetalles').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) // Button that triggered the modal
+  var empleadoId = button.data('id') // Extract info from data-* attributes
+  // Hacer una petición AJAX para obtener los detalles del empleado con el ID empleadoId
+  // y llenar los campos del modal con los datos obtenidos
+});
 </script>
 
 <script type="text/javascript">
