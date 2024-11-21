@@ -220,11 +220,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
       </div>
     </section>
-    <>
+    <center>
     <div class="col-md-9" >
     <div class="card card-secondary">
               <div class="card-header">
-                <h3 class="card-title">Edición de Empleado</h3>
+                <h3 class="card-title">Detalles de Empleado</h3>
               </div>
     
               <div class="card-body">
@@ -233,7 +233,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Generales</a></li>
                   <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Datos Operativos</a></li>
                   <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Datos Nomina</a></li>
-                   <li class="nav-item"><a class="nav-link" href="#settingss" data-toggle="tab">Datos Pago Nomina</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
@@ -348,8 +347,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </div>
                       <div class="offset-sm-2 col-sm-10">
-                          <a href="empleados.php" type="button" class="btn btn-secondary" id="btn_salir">Cancelar</a>
-                        </div>
+                        <a href=<?php echo 'empleados.php?id=' . $id ?> type="button" class="btn btn-secondary" id="btn_salir">Volver</a>
+                      </div>
                       
                     </form>
                     </div>
@@ -406,8 +405,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                     </div>
                     <div class="offset-sm-2 col-sm-10">
-                          <a href="empleados.php" type="button" class="btn btn-secondary" id="btn_salir">Cancelar</a>
-                        </div>
+                      <a href=<?php echo 'empleados.php?id=' . $id ?> type="button" class="btn btn-secondary" id="btn_salir">Volver</a>
+                    </div>
                     <br>
                     <p>&nbsp;</p>
 
@@ -692,7 +691,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     
                       <div class="form-group row" style="text-align:right;">
                         <div class="offset-sm-2 col-sm-10">
-                          <a href="empleados.php" type="button" class="btn btn-secondary" id="btn_salir">Cancelar</a>
+                          <a href=<?php echo 'empleados.php?id=' . $id ?> type="button" class="btn btn-secondary" id="btn_salir">Volver</a>
                         </div>
                       </div>
                       </form>
@@ -707,7 +706,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </div>
           <!-- /.col -->
         </div>
-
+        </div>
+                        </center>
 
 
     
@@ -740,3 +740,4 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
+

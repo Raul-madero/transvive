@@ -353,6 +353,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <input type="text" class="form-control" id="inputCurp" name="inputCurp" value="<?php echo $curp; ?>">
                         </div>
                       </div>
+                      <button type="button" class="btn btn-secondary btn_salir">Regresar</button>
                       
                     </form>
                     </div>
@@ -422,6 +423,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </select>
                         </div>
                     </div>
+                    <button type="button" class="btn btn-secondary btn_salir">Regresar</button>
                     <br>
                     <p>&nbsp;</p>
 
@@ -601,6 +603,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <input type="text" class="form-control" id="inputRecontrable" name="inputRecontrable" step="0.01" value="<?php echo $pqrecontrata; ?>">
                         </div>
                     </div>
+                    <button type="button" class="btn btn-secondary btn_salir">Regresar</button>
 
 
 
@@ -722,7 +725,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     
                       <div class="form-group row" style="text-align:right;">
                         <div class="offset-sm-2 col-sm-10">
-                          <button type="button" class="btn btn-secondary" id="btn_salir">Cancelar</button>
+                          <button type="button" class="btn btn-secondary btn_salir">Regresar</button>
                           <button type="submit" class="btn btn-success" id="guardar_cliente">Guardar</button>
                         </div>
                       </div>
@@ -783,9 +786,10 @@ document.getElementById("inputSaldoAdeudo").value = parseFloat(document.getEleme
 
 <script>
 
-$('#btn_salir').click(function(e){
+$('.btn_salir').click(function(e){
         e.preventDefault();
-
+        const params = new URLSearchParams(window.location.search);
+        const foo = parseInt(params.get('id'));
             
         Swal
     .fire({
@@ -808,7 +812,7 @@ $('#btn_salir').click(function(e){
         } else {
             // Dijeron que no
             //*location.reload();
-            location.href = 'empleados.php';
+            location.href = "<?php echo 'empleados.php?id='. $id; ?>";
         }
     });
 

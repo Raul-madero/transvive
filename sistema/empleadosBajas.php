@@ -184,7 +184,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       }
       var table = $('#example1').dataTable({
         "bProcessing": true,
-        "sAjaxSource": "data/data_empleadosActivos.php",
+        "sAjaxSource": "data/data_empleadosBaja.php",
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         "iDisplayLength": 10,
@@ -268,14 +268,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
       });
     });
-    table.column(7).search('Activo').draw();
   </script>
 
   <script>
     $(document).ready(function() {
       var table = $('#listaClientes').dataTable({
         "bProcessing": true,
-        "sAjaxSource": "data/data_clientes.php",
+        "sAjaxSource": "data/data_clientesBaja.php",
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         "iDisplayLength": 10,
