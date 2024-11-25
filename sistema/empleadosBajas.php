@@ -164,23 +164,54 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <script>
     $(document).ready(function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
+      const params = new URLSearchParams(window.location.search);
+      const id = parseInt(params.get('id'));
       const page = (id) => {
-        const numId = parseInt(id)
-        if (numId <= 10) {
-          return 0
-        } else if (numId < 20) {
-          return 1
-        } else if (numId >= 290) {
-          return 28
-        } else if (numId % 10 === 0) {
-          return Math.floor(numId / 10)
-        } else {
-          return Math.floor(numId / 10) - 1
+        if (id) {
+          if (id <= 123) {
+            return 0;
+          }else if (id <= 182) {
+            return 10;
+          }else if (id <= 207) {
+            return 20;
+          }else if (id <= 222) {
+            return 30;
+          }else if (id <= 235) {
+            return 40;
+          }else if (id <= 248) {
+            return 50;
+          }else if (id <= 265) {
+            return 60;
+          }else if (id <= 276) {
+            return 70;
+          }else if (id <= 287) {
+            return 80;
+          }else if (id <= 298) {
+            return 90;
+          }else if (id <= 310) {
+            return 100;
+          }else if (id <= 322) {
+            return 110;
+          }else if (id <= 335) {
+            return 120;
+          }else if (id <= 346) {
+            return 130;
+          }else if (id <= 365) {
+            return 140;
+          }else if (id <= 379) {
+            return 150;
+          }else if (id <= 394) {
+            return 160;
+          }else if (id <= 404) {
+            return 170;
+          }else if (id <= 421) {
+            return 180;
+          }else {
+            return 190;
+          }
+        }else {
+          return 0;
         }
-        const result = Math.floor(numId / 10) - 1
-        return result
       }
       var table = $('#example1').dataTable({
         "bProcessing": true,
@@ -188,7 +219,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         "iDisplayLength": 10,
-        "iDisplayStart": id ? page(id) * 10 : 0,
+        "iDisplayStart": page(id),
         "responsive": true,
         "aoColumns": [{
             mData: 'noempleado',
@@ -243,13 +274,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             mData: 'Status',
             "sWidth": "50px",
             "render": function(data, type, full, meta) {
-              console.log(data)
+              // console.log(data)
               return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
             }
           },
           {
             "render": function(data, type, full, meta) {
-              return '<a class="link_edit" style="color:#007bff;" href= \'edit_empleado.php?id=' + full.noempleado + '\'><i class="far fa-edit"></i> Edit</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.noempleado + '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a>| <a data-toggle="modal" data-target="#modalAltacliente"  data-id=\'' + full.noempleado + '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '\' href="javascript:void(0)" class="link_delete" style="color:green" ><i class="fas fa-angle-double-up"></i> Reingreso</a> | <a class="link_edit" style="color:#007bff;" href= \'new_empleado23.php?id=' + full.noempleado + '\'><i class="fas fa-portrait"></i></a> | <a class="link_edit" style="color:gray;" href= \'factura/alta_empleado.php?id=' + full.noempleado + '\' target="_blank"><i class="fas fa-print"></i></a>';
+              return '<a class="link_edit" style="color:#000;" href= \'saldos.php?id=' + full.noempleado + '\'><i class="fas fa-file-invoice-dollar"></i> Financieros</a> | <a class="link_edit" style="color:#007bff;" href= \'edit_empleado.php?id=' + full.noempleado + '\'><i class="far fa-edit"></i> Edit</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.noempleado + '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a>| <a data-toggle="modal" data-target="#modalAltacliente"  data-id=\'' + full.noempleado + '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '\' href="javascript:void(0)" class="link_delete" style="color:green" ><i class="fas fa-angle-double-up"></i> Reingreso</a> | <a class="link_edit" style="color:#007bff;" href= \'new_empleado23.php?id=' + full.noempleado + '\'><i class="fas fa-portrait"></i></a> | <a class="link_edit" style="color:gray;" href= \'factura/alta_empleado.php?id=' + full.noempleado + '\' target="_blank"><i class="fas fa-print"></i></a>';
             }
           }
         ],

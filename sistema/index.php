@@ -835,7 +835,8 @@ include "../conexion.php";
   mysqli_close($conection);
   while ($srow = mysqli_fetch_array($sqlnsem)){
    //extract $drow;
-    $name_semana = $srow ['Nsemana'];
+    // $name_semana = $srow ['Nsemana'];
+    $name_semana = 'Semana 44';
   
 }
 
@@ -911,13 +912,15 @@ include "../conexion.php";
   }    
 
 $lasemana = date("n");
-  setlocale(LC_TIME, 'es_MX');
+var_dump($lasemana);
 $monthNum  = $lasemana;
 $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-$NameMes = strftime('%B', $dateObj->getTimestamp());
+setlocale(LC_TIME, 'es_MX');
+// // $NameMes = strftime('%B', $dateObj->getTimestamp());
+$NameMes = $dateObj->format('F');
 
 include "../conexion.php";
-  $sqlcomprames= mysqli_query($conection,"SELECT MONTHNAME(fecha) as Nmeses, YEAR(fecha), SUM(total) as totalcompras FROM compras WHERE  MONTHNAME(fecha) =  MONTHNAME(CURDATE()) and estatus = 1 GROUP BY MONTH(fecha) ");
+  $sqlcomprames= mysqli_query($conection,"SELECT MONTH(fecha) as Nmeses, YEAR(fecha), SUM(total) as totalcompras FROM compras WHERE  MONTH(fecha) =  10 and estatus = 1 GROUP BY MONTH(fecha) ");
   mysqli_close($conection);
   $result_sqlcomprames = mysqli_num_rows($sqlcomprames);
 
@@ -933,7 +936,7 @@ include "../conexion.php";
         $comprasmes = number_format(0.00,2);
     }
 
-$dhoy2 = date("Y-m-d");
+$dhoy2 = '2024-10-30';
 include "../conexion.php";
   $sqlndsem= mysqli_query($conection,"SELECT semana as Nsemana, dia_inicial, dia_final FROM semanas WHERE '$dhoy2' BETWEEN dia_inicial  and dia_final");
   mysqli_close($conection);
