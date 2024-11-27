@@ -7,7 +7,7 @@ RUN docker-php-ext-install pdo_mysql mysqli
 COPY . /var/www/html
 
 # Establece los permisos adecuados para los archivos
-RUN chown -R www-data:www-data /var/www/htm
+RUN chown -R www-data:www-data /var/www/html
 
 # Instala Nginx
 RUN apt-get update && apt-get install -y nginx
