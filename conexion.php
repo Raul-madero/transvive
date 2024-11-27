@@ -1,10 +1,10 @@
 <?php 
 
-$host = "transvive-db-1";
-$password = "Epasillas0406";
-$user = "root";
-$database = "transvive";
-$port = 3306;
+$host = "dpg-csr5lf1u0jms73cis3s0-a";
+$password = "M6WeJ17g7uV3EsuLM1Ifjnt11HHf5i6y";
+$user = "rmadero";
+$database = "transvive_piv3";
+$port = 5432;
 
 
 
