@@ -11,7 +11,7 @@ session_start();
 
   $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(importe) as Importec, sum(litros) as Litros FROM carga_combustible WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus <> 0 GROUP BY MONTH(fecha)");
   mysqli_close($conection);
-  $result_sqlenc = mysqli_num_rows($sqlenc);
+  $sqlenc && $result_sqlenc = mysqli_num_rows($sqlenc);
 
   if($result_sqlenc == 0){
     $importemes1 = 0;
