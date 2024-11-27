@@ -4,10 +4,23 @@ FROM php:7.4-fpm
 RUN docker-php-ext-install pdo_mysql mysqli
 
 # Copy project files
-COPY . /sistema
+COPY . /var/www/html
 
-# Expose port
+# Establece los permisos adecuados para los archivos
+RUN chown -R www-data:www-data /var/www/htm
+
+# Instala Nginx
+RUN apt-get update && apt-get install -y nginx
+
+# Copia configuración de Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copia el script de inicio
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Expone los puertos necesarios
 EXPOSE 80
 
-# Start PHP-FPM
-CMD ["php-fpm"]
+# Usa el script para iniciar ambos procesos
+CMD ["/start.sh"]
