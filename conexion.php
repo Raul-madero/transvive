@@ -1,11 +1,8 @@
 <?php 
-$host = getenv('BD_HOST');
-$user = getenv('BD_USER');
-$password = getenv('BD_PASSWORD');
-$database = getenv('BD_NAME');
-$port = intval(getenv('BD_PORT'));
+require 'vendor/autoload.php';
+use Dotenv\Dotenv;
 
-	$conection = mysqli_connect("localhost", "root", "Epasillas0406", "transvive", 3305);
+	$conection = mysqli_connect("127.0.0.1", "root", "Epasillas0406", "transvive", 3305);
 	// $conection = mysqli_connect($host, $user, $password, $database, $port);
 	$conection->set_charset('utf8');
 

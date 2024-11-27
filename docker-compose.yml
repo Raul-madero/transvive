@@ -1,3 +1,4 @@
+version: '3.8'
 
 services:
   app:
@@ -5,4 +6,31 @@ services:
     ports:
       - "80:80"
     volumes:
+<<<<<<< HEAD
+      - ./:/sistema
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: 127.0.0.1  # Especificamos la IP del contenedor de MariaDB
+=======
       - ./:/var/www/html
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
+>>>>>>> 9471eaf74715b14072ff3427b9d75bfbcf635d59
+      MYSQL_PORT: 3305  # Especificamos el puerto 3305 para MariaDB
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Epasillas0406
+      MYSQL_DATABASE: transvive
+
+  db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: Epasillas0406
+      MYSQL_DATABASE: transvive
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Epasillas0406
+      MYSQL_PORT: 3305  # Especificamos el puerto 3305 para MariaDB
+    ports:
+      - "8080:3305"

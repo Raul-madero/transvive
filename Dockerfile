@@ -1,13 +1,13 @@
 FROM php:7.4-fpm
 
-# Instalar extensiones PHP
-RUN docker-php-ext-install pdo_mysql
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mysqli
 
-# Copiar archivos del proyecto
-COPY . /var/www/html
+# Copy project files
+COPY . /sistema
 
-# Exponer puerto
-EXPOSE 9000
+# Expose port
+EXPOSE 80
 
-# Comando para iniciar el servidor web
+# Start PHP-FPM
 CMD ["php-fpm"]
