@@ -5,8 +5,6 @@ services:
       - "80:80"
     volumes:
       - ./:/var/www/html
-    depends_on:
-      - db
     environment:
       MYSQL_HOST: dpg-csr5lf1u0jms73cis3s0-a 
       MYSQL_PORT: 5432  # Especificamos el puerto 3305 para MariaDB
