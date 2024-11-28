@@ -37,7 +37,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </head>
-
 <body class="hold-transition layout-top-nav">
   <div class="wrapper">
     <!-- Navbar -->
@@ -168,34 +167,55 @@ scratch. This page gets rid of all links and provides the needed markup only.
       const params = new URLSearchParams(window.location.search);
       const id = parseInt(params.get('id'));
       const page = (id) => {
-        console.log(id)
         if (id) {
-          if (id <= 26) {
+          if (id <= 123) {
             return 0;
-          } else if (id <= 149) {
+          }else if (id <= 182) {
             return 10;
-          } else if (id <= 208) {
+          }else if (id <= 207) {
             return 20;
-          } else if (id <= 316) {
+          }else if (id <= 222) {
             return 30;
-          } else if (id <= 359) {
+          }else if (id <= 235) {
             return 40;
-          } else if (id <= 385) {
+          }else if (id <= 248) {
             return 50;
-          } else if (id <= 420) {
+          }else if (id <= 265) {
             return 60;
-          } else if (id <= 439) {
+          }else if (id <= 276) {
             return 70;
-          } else {
+          }else if (id <= 287) {
             return 80;
+          }else if (id <= 298) {
+            return 90;
+          }else if (id <= 310) {
+            return 100;
+          }else if (id <= 322) {
+            return 110;
+          }else if (id <= 335) {
+            return 120;
+          }else if (id <= 346) {
+            return 130;
+          }else if (id <= 365) {
+            return 140;
+          }else if (id <= 379) {
+            return 150;
+          }else if (id <= 394) {
+            return 160;
+          }else if (id <= 404) {
+            return 170;
+          }else if (id <= 421) {
+            return 180;
+          }else {
+            return 190;
           }
-        } else {
+        }else {
           return 0;
         }
       }
       var table = $('#example1').dataTable({
         "bProcessing": true,
-        "sAjaxSource": "data/data_empleadosActivos.php",
+        "sAjaxSource": "data/data_empleadosBaja.php",
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         "iDisplayLength": 10,
@@ -279,32 +299,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
       });
     });
-    // table.column(7).search('Activo').draw();
   </script>
 
   <script>
     $(document).ready(function() {
       var table = $('#listaClientes').dataTable({
         "bProcessing": true,
-        "sAjaxSource": "data/data_clientes.php",
+        "sAjaxSource": "data/data_clientesBaja.php",
         "bPaginate": true,
         "sPaginationType": "full_numbers",
         "iDisplayLength": 10,
-        "aoColumns": [{
-            mData: 'Empid'
-          },
-          {
-            mData: 'Name'
-          },
-          {
-            mData: 'Salary'
-          },
-          {
-            mData: 'Linea'
-          },
-          {
-            mData: 'Lugar'
-          },
+        "aoColumns": [{ mData: 'Empid' },
+          {mData: 'Name' },
+          { mData: 'Salary'},
+          { mData: 'Linea'},
+          { mData: 'Lugar' },
           {
             "render": function(data, type, full, meta) {
               return '<a class="link_edit" href= \'editar_cliente.php?id=' + full.Empid + '\'><i class="far fa-edit"></i> Editar</a> | <data-toggle="modal" data-target="#modalEditcliente" class="btn btn-primary btn-block" data-id=\'' + full.Empid + '\' data-name=\'' + full.Name + ' ' + full.Salary + '\'  href="javascript:void(0)" class="link_delete" ><i class="far fa-trash-alt"></i> Baja</a>';
@@ -356,7 +365,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   });
                 }
               },
-              error: function(error) {}
+              error: function(error) {
+              }
             });
           } else {
             swal("Accion Cancelada Registro no Borrado !");
@@ -466,7 +476,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           if (response != 'error') {
             //console.log(response);
             var info = JSON.parse(response);
-            // console.log(info);
+            console.log(info);
             //$('#modalFactura').modal('hide');
             //--$('#detalle_inspeccion').html(info.detalle);
             swal('Eliminado', 'Baja de Empleado Registrada', 'success').then((value) => {
@@ -474,7 +484,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               location.reload(true);
             })
           } else {
-            // console.log('no data');
+            console.log('no data');
             swal('Error', 'Empleado ya fue dado de Baja', 'warning').then((value) => {
               $('#modalEditcliente').modal('hide')
             })
@@ -560,7 +570,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           if (response != 'error') {
             //console.log(response);
             var info = JSON.parse(response);
-            // console.log(info);
+            console.log(info);
             //$('#modalFactura').modal('hide');
             //--$('#detalle_inspeccion').html(info.detalle);
             swal('Editado', 'Reingreso de Empleado Registrado', 'success').then((value) => {
@@ -568,7 +578,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               location.reload(true);
             })
           } else {
-            // console.log('no data');
+            console.log('no data');
             swal('Error', 'Empleado ya fue dado de Baja', 'warning').then((value) => {
               $('#modalAltacliente').modal('hide')
             })
@@ -579,6 +589,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
     });
   </script>
+
   <script>
     $(document).ready(function(e) {
       $('#modalDeleteContacto').on('show.bs.modal', function(e) {
@@ -591,6 +602,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
     });
   </script>
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Invocamos cada 5 segundos ;)
@@ -602,5 +614,4 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
   </script>
 </body>
-
 </html>
