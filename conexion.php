@@ -8,7 +8,7 @@ $port = 5432;
 
 
 
-	$conection = mysqli_connect($host, $user, 	$password, $database, $port);
+	$conection = pg_connect("host=$host port=$port dbname=$database user=$user password=$password");
 	// $conection = mysqli_connect($host, $user, $password, $database, $port);
 	$conection->set_charset('utf8');
 
