@@ -24,3 +24,6 @@ EXPOSE 80
 
 # Usa el script para iniciar ambos procesos
 CMD ["/start.sh"]
+
+# Inicia Nginx y PHP-FPM
+ENTRYPOINT service nginx start && php-fpm
