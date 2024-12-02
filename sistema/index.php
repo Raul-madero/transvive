@@ -199,7 +199,7 @@ session_start();
 
 
   include "../conexion.php";
-  $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(total) as totalcompra FROM compras WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus <> 0 GROUP BY MONTH(fecha)");
+  $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(total) as totalcompra FROM compras WHERE YEAR(fecha) = YEAR('2024') and estatus <> 0 GROUP BY MONTH(fecha)");
   mysqli_close($conection);
   $result_sqlenc = mysqli_num_rows($sqlenc);
 

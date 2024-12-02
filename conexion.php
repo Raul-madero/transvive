@@ -6,10 +6,16 @@
 // $database = "transvive_piv3";
 // $port = 5432;
 
+// $host = "transvive.cp6sossw859c.us-east-1.rds.amazonaws.com";
+// $password = "NUXeiLBzTVKsitZDoN1u";
+// $user = "admin";
+// $database = "transvive";
+// $port = 3306;
+
 $host = "mysql-transvive-transvive.g.aivencloud.com";
 $password = "AVNS_HDRST7NXsI9UJ0fG5B3";
 $user = "avnadmin";
-$database = "defaultdb";
+$database = "transvive";
 $port = 12088;
 ini_set("mysql.connect_timeout", 5000);
 ini_set("default_socket_timeout",5000);

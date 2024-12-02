@@ -6,10 +6,8 @@ session_set_cookie_params(0);
 session_start();
 if(!empty($_SESSION['active']))
 {
-    
   header('location: sistema/');
 }else{  
-
   if(!empty($_POST))
   {
     if(empty($_POST['usuario']) || empty($_POST['password']))
@@ -21,13 +19,22 @@ if(!empty($_SESSION['active']))
       $user = mysqli_real_escape_string($conection,$_POST['usuario']);
       $pass = md5(mysqli_real_escape_string($conection,$_POST['password']));
 
-      $query = mysqli_query($conection, "SELECT u.idusuario,u.nombre,u.correo,u.usuario, r.idrol,r.rol FROM usuario u INNER JOIN rol r ON u.rol = r.idrol WHERE u.usuario='$user' AND u.clave='$pass' AND u.estatus=1 ");
-      mysqli_close($conection);
-      $result = mysqli_num_rows($query);
+      
+      $query = mysqli_query($conection, "SELECT u.idusuario,u.nombre,u.correo,u.usuario, r.idrol,r.rol 
+                                                      FROM usuario u 
+                                                      INNER JOIN rol r 
+                                                      ON u.rol = r.idrol 
+                                                      WHERE u.usuario='$user'
+                                                      AND u.clave='$pass' 
+                                                      AND u.estatus=1 ");
 
-      if($result > 0)
+      if (!$query) {
+        die("Error en la consulta: " . mysqli_error($conection));
+      }
+      if(mysqli_num_rows($query) > 0)
       {
         $data = mysqli_fetch_array($query);
+        session_regenerate_id(true);
         $_SESSION['active'] = true;
         $_SESSION['idUser'] = $data['idusuario'];
         $_SESSION['nombre'] = $data['nombre'];
@@ -36,61 +43,33 @@ if(!empty($_SESSION['active']))
         $_SESSION['rol']    = $data['idrol'];
         $_SESSION['rol_name']= $data['rol'];
 
-        if($_SESSION['rol_name'] === "Conductor"){
-            header('location: sistema/index_conductor.php');  
-
-        }else {
-          if ($_SESSION['rol_name'] === "Supervisor") {
-             header('location: sistema/index_supervisor.php');
-          }else {
-            if ($_SESSION['rol_name'] === "Recursos Humanos") {
-              header('location: sistema/index_rhumanos.php');
-            }else {
-              if ($_SESSION['rol_name'] === "Operaciones") {
-                header('location: sistema/index_operaciones.php');
-              }else {
-                if ($_SESSION['rol_name'] === "Operador") {
-                  header('location: sistema/index_operador.php');
-                }else {
-                  if ($_SESSION['rol_name'] === "Mantenimiento") {
-                    header('location: sistema/index_mantto.php');
-                  }else {
-                    if ($_SESSION['rol_name'] === "Jefe Operaciones") {
-                      header('location: sistema/index_jefeoperaciones.php');
-                    }else {
-                      if ($_SESSION['rol_name'] === "Gerencia") {
-                        header('location: sistema/index_gerencia.php');
-                      }else {
-                        if ($_SESSION['rol_name'] === "Almacen") {
-                          header('location: sistema/index_almacen.php');
-                        }else {
-                          if ($_SESSION['rol_name'] === "Calidad") {
-                            header('location: sistema/index_calidad.php');
-                          }else {
-                            if ($_SESSION['rol_name'] === "Monitorista") {
-                               header('location: sistema/index_monitorista.php');
-                            }else {
-                              if ($_SESSION['rol_name'] === "Compras") {
-                                header('location: sistema/index_compras.php');
-                              }else {
-                               header('location: sistema/');
-                              } 
-                              
-                            }   
-                          }  
-                        }  
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+        $rolRedirects = [
+          "Administrador" => "sistema/index.php",
+          "Conductor" => "sistema/index_conductor.php",
+          "Supervisor" => "sistema/index_supervisor.php",
+          "Recursos Humanos" => "sistema/index_rhumanos.php",
+          "Operaciones" => "sistema/index_operaciones.php",
+          "Operador" => "sistema/index_operador.php",
+          "Mantenimiento" => "sistema/index_mantto.php",
+          "Jefe Operaciones" => "sistema/index_jefeoperaciones.php",
+          "Gerencia" => "sistema/index_gerencia.php",
+          "Almacen" => "sistema/index_almacen.php",
+          "Calidad" => "sistema/index_calidad.php",
+          "Monitorista" => "sistema/index_monitorista.php",
+          "Compras" => "sistema/index_compras.php",
+        ];
+        echo $roleRedirects[$_SESSION['rol_name']];
+        if (isset($roleRedirects[$_SESSION['rol_name']])) {
+          header('location: ' . $roleRedirects[$_SESSION['rol_name']]);
+        } else {
+            header('location: sistema/');
         }
+        exit();
       }else{
         $alert = 'El Usuario o la Contraseña son incorrectos';
         session_destroy();
       }
+      mysqli_close($conection);
     }
   } 
 }
