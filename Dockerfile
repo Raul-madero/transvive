@@ -10,7 +10,10 @@ COPY . /var/www/html
 RUN chown -R www-data:www-data /var/www/html
 
 # Instala Nginx
-RUN apt-get update && apt-get install -y nginx
+RUN apt-get update && apt-get install -y \
+    nginx \
+    libpq-dev \
+    && docker-php-ext-install pdo_pgsql
 
 # Copia configuración de Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -27,3 +30,4 @@ CMD ["/start.sh"]
 
 # Inicia Nginx y PHP-FPM
 ENTRYPOINT service nginx start && php-fpm
+

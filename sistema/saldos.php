@@ -316,7 +316,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Descuento:</label>
                                             <div class="col-sm-3">
-                                                <input type="number" class="form-control" id="inputDescuento" name="inputDescuento" step="0.01" value="<?php echo $descuento; ?>" readonly>
+                                                <input type="number" class="form-control" id="inputDescuento" name="inputDescuento" step="0.01" value="<?php if($saldo_adeudo < $descuento) {
+                                                    echo $saldo_adeudo;
+                                                }else {
+                                                    echo $descuento;
+                                                } 
+                                                    ?>" readonly>
+                                                    
                                             </div>
                                         </div>
 
