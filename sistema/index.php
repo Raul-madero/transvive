@@ -9,7 +9,7 @@ session_start();
 
   $namerol = $filas['rol'];
 
-  $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(importe) as Importec, sum(litros) as Litros FROM carga_combustible WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus <> 0 GROUP BY MONTH(fecha)");
+  $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(importe) as Importec, sum(litros) as Litros FROM carga_combustible WHERE YEAR(fecha) = YEAR('2024') and estatus <> 0 GROUP BY MONTH(fecha)");
   mysqli_close($conection);
   $sqlenc && $result_sqlenc = mysqli_num_rows($sqlenc);
 
@@ -1820,7 +1820,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </script> 
 
 
- <?php
+ <!-- <?php
 
   include "../conexion.php";  
      
@@ -1859,7 +1859,7 @@ if (mysqli_num_rows($resultado) > 0) {
 <?php 
     }
 
-?>
+?> -->
 
 
 
