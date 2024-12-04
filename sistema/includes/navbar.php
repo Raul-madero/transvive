@@ -298,6 +298,8 @@
           </ul>
         </li>
         <!--<li><a href="prestamos.php" class="dropdown-item">Prestamos</a></li>-->
+
+        <li><a href="adeudos.php" class="dropdown-item">Adeudos</a></li>
         <li><a href="incidencias.php" class="dropdown-item">Incidencias</a></li>
         <li><a href="finiquitos.php" class="dropdown-item">Finiquitos</a></li>
         <li class="dropdown-divider"></li>
