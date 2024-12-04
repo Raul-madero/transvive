@@ -195,14 +195,27 @@ session_start();
     }
 
   }
+  include '../conexion.php'; //Conexion a la base de datos
+  $sqlenc= mysqli_query($conection,"SELECT 
+                                                    MONTH(fecha) as Nmes, 
+                                                    YEAR(fecha) as anio, 
+                                                    SUM(total) as totalcompra 
+                                                  FROM 
+                                                    compras
+                                                  WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus <> 0 
+                                                  GROUP BY anio, Nmes
+                                                  ORDER BY anio, Nmes");
+//Validar consulta
+  if(!$sqlenc){
+    die("Error en la consulta");
+  }
+  $datos_compras = [];
+  while ($data = mysqli_fetch_array($sqlenc)){
+    $datos_compras[] = $data;
+  }
 
-
-
-  include "../conexion.php";
-  $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(total) as totalcompra FROM compras WHERE YEAR(fecha) = YEAR('2024') and estatus <> 0 GROUP BY MONTH(fecha)");
   mysqli_close($conection);
   $result_sqlenc = mysqli_num_rows($sqlenc);
-
   if($result_sqlenc == 0){
     $importemesc1 = 0;
     $importemesc2 = 0;
@@ -351,7 +364,15 @@ session_start();
 
 
   include "../conexion.php";
-  $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(total) as totalocompra FROM orden_compra WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus <> 0 GROUP BY MONTH(fecha)");
+  $sqlenc= mysqli_query($conection,"SELECT 
+                                                    MONTH(fecha) as Nmes, 
+                                                    YEAR(fecha) as anio, 
+                                                    SUM(total) as totalocompra 
+                                                  FROM 
+                                                    orden_compra 
+                                                  WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus <> 0 
+                                                  GROUP BY anio, Nmes
+                                                  ORDER BY anio, Nmes");
   mysqli_close($conection);
   $result_sqlenc = mysqli_num_rows($sqlenc);
 
@@ -741,40 +762,87 @@ session_start();
   }
 
   include "../conexion.php";
-  $sqlviajes= mysqli_query($conection,"SELECT MONTHNAME(fecha) as Nmeses, YEAR(fecha), SUM(IF(planeado=1, valor_vuelta, 0)) as Planeados, SUM(valor_vuelta) as Registrados,(SUM(valor_vuelta)  - SUM(IF(planeado=1, valor_vuelta, 0))) as Diferencia, 100 - (SUM(IF(planeado=1, valor_vuelta, 0)) / SUM(valor_vuelta)*100) as Porcdiferencia  FROM registro_viajes WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus = 2 GROUP BY MONTH(fecha)");
-  mysqli_close($conection);
-  while ($drow = mysqli_fetch_array($sqlviajes)){
-   //extract $drow;
-    $t = $drow ['Nmeses'];
-     $r = number_format($drow ['Porcdiferencia'],2);
-    
-   $values[] = $t;
-   $dato2[] = $drow['Planeados'];
-   $dato3[] = $drow['Registrados'];
-   $dato4[] = $drow['Diferencia'];
-   $dato5[] = $r;
+  $sqlviajes= mysqli_query($conection,"SELECT 
+                                                        MONTHNAME(fecha) AS Nmeses, 
+                                                        YEAR(fecha) AS anio, 
+                                                        SUM(IF(planeado=1, valor_vuelta, 0)) AS Planeados, 
+                                                        SUM(valor_vuelta) AS Registrados, 
+                                                        (SUM(valor_vuelta) - SUM(IF(planeado=1, valor_vuelta, 0))) AS Diferencia, 
+                                                        CASE 
+                                                            WHEN SUM(valor_vuelta) = 0 THEN 0
+                                                            ELSE 100 - (SUM(IF(planeado=1, valor_vuelta, 0)) / SUM(valor_vuelta) * 100)
+                                                        END AS Porcdiferencia
+                                                    FROM 
+                                                        registro_viajes
+                                                    WHERE 
+                                                        YEAR(fecha) = YEAR(CURDATE()) 
+                                                        AND estatus = 2
+                                                    GROUP BY 
+                                                        anio, Nmeses
+                                                    ");
+  if (!$sqlviajes) {
+    die("Error en la consulta: " . mysqli_error($conection));
+  };
 
-}
+  $values = [];
+  $dato2 = [];
+  $dato3 = [];
+  $dato4 = [];
+  $dato5 = [];
+
+  while ($drow = mysqli_fetch_assoc($sqlviajes)){
+    $values[] = $drow['Nmeses'];
+    $dato2[] = $drow['Planeados'];
+    $dato3[] = $drow['Registrados'];
+    $dato4[] = $drow['Diferencia'];
+    $dato5[] = number_format($drow['Porcdiferencia'], 2); 
+  };
+
+  mysqli_close($conection);
 
 include "../conexion.php";
-  $sqlenc10= mysqli_query($conection,"SELECT cliente, fecha, tiempo_forma, tiempo_respuesta, disponibilidad, calidad, asesoria_tecnica, limpieza_condicion, servicio_operador, conduce_adecuado, atencion_calidad, servicio_facturacion, nuestros_precios FROM newencuesta_clientes WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP by cliente");
+$sqlenc10 = mysqli_query(
+                $conection,
+                "SELECT 
+                    cliente, 
+                    fecha, 
+                    tiempo_forma, 
+                    tiempo_respuesta, 
+                    disponibilidad, 
+                    calidad, 
+                    asesoria_tecnica, 
+                    limpieza_condicion, 
+                    servicio_operador, 
+                    conduce_adecuado, 
+                    atencion_calidad, 
+                    servicio_facturacion, 
+                    nuestros_precios 
+                FROM 
+                    newencuesta_clientes 
+                WHERE 
+                    YEAR(fecha) = YEAR(CURDATE())"
+              );
  // $result10 = mysql_query($sqlenc10);
-  mysqli_close($conection);
-  while ($nrow = mysqli_fetch_array($sqlenc10)){
+ if (!$sqlenc10) {
+    die("Error en la consulta: " . mysqli_error($conection));
+  };
 
-   //extract $drow;
-     $tt[] = $nrow['cliente'];
-    // $r = number_format($drow ['Porcdiferencia'],2);
+  $tt = [];
+  $data1 = [];
+  $values24 = [];
+  $dato24 = [];
+  $dato34 = [];
+  $dato44 = [];
+
+  while ($nrow = mysqli_fetch_assoc($sqlenc10)) {
+    $tt[] = $nrow['cliente'];
     $data1[] = $nrow['cliente'];
-   $values24[] = $tt;
-   $dato24[] = $nrow['tiempo_forma'];
-   $dato34[] = $nrow['tiempo_respuesta'];
-   $dato44[] = $nrow['disponibilidad'];
-  // $dato54[] = $r;
-
+    $values24[] = $nrow['cliente'];
+    $dato24[] = $nrow['tiempo_forma'];
+    $dato34[] = $nrow['tiempo_respuesta'];
+    $dato44[] = $nrow['disponibilidad'];
 }
-
-
+  mysqli_close($conection);
 
  $aniocurso = date("Y"); 
 
@@ -837,32 +905,57 @@ include "../conexion.php";
    //extract $drow;
     // $name_semana = $srow ['Nsemana'];
     $name_semana = 'Semana 44';
-  
 }
 
   include "../conexion.php";
-  $sqlvsem= mysqli_query($conection,"SELECT YEAR(fecha), SUM(IF(planeado=1, valor_vuelta, 0)) as Planeados, SUM(valor_vuelta) as Registrados,(SUM(valor_vuelta)  - SUM(IF(planeado=1, valor_vuelta, 0))) as Diferencia, 100 - (SUM(IF(planeado=1, valor_vuelta, 0)) / SUM(valor_vuelta)*100) as Porcdiferencia FROM registro_viajes WHERE semana = '$name_semana' and estatus = 2 ");
-  mysqli_close($conection);
-  while ($vrow = mysqli_fetch_array($sqlvsem)){
-   //extract $drow;
-      
-   $v_planeados   = $vrow['Planeados'];;
-   $v_registrados = $vrow['Registrados'];
-   $v_diferencia  = $vrow['Diferencia'];
+  $sqlvsem= mysqli_query($conection,"SELECT 
+														YEAR(fecha) as anio, 
+														SUM(IF(planeado=1, valor_vuelta, 0)) as Planeados, 
+														SUM(valor_vuelta) as Registrados,(SUM(valor_vuelta)  - SUM(IF(planeado=1, valor_vuelta, 0))) as Diferencia, 
+														100 - (SUM(IF(planeado=1, valor_vuelta, 0)) / SUM(valor_vuelta)*100) as Porcdiferencia 
+													FROM registro_viajes
+													WHERE semana = '$name_semana' and estatus = 2
+													GROUP BY anio");
 
+  if (!$sqlvsem) {
+	die("Error en la consulta: " . mysqli_error($conection));
+  };
+
+  if ($vrow = mysqli_fetch_assoc($sqlvsem)) {
+    $v_planeados   = $vrow['Planeados'];
+    $v_registrados = $vrow['Registrados'];
+    $v_diferencia  = $vrow['Diferencia'];
+    $v_porcdif     = $vrow['Porcdiferencia']; // Porcentaje de diferencia (ya redondeado)
+} else {
+    // En caso de no haber resultados
+    echo "No se encontraron registros para la semana: $name_semana.";
 }
+  mysqli_close($conection);
 
 
     include "../conexion.php";
-     $sqlvplan= mysqli_query($conection,"SELECT YEAR(fecha), SUM(IF(planeado=1, 1, 0)) as Vplaneados, SUM(IF(planeado=1, 1, 0)) - SUM(valor_vuelta) as Vdiferencia FROM registro_viajes WHERE semana = '$name_semana' ");
+    $sqlvplan= mysqli_query($conection,"SELECT 
+														YEAR(fecha), 
+														SUM(IF(planeado=1, 1, 0)) as Vplaneados, 
+														SUM(IF(planeado=1, 1, 0)) - SUM(valor_vuelta) as Vdiferencia 
+													FROM registro_viajes
+													WHERE semana = '$name_semana' 
+													GROUP BY YEAR(fecha)");
+	if (!$sqlvplan) {
+		die("Error en la consulta: " . mysqli_error($conection));
+	};
+
+	if ($prow = mysqli_fetch_assoc($sqlvplan)) {
+		$vjs_planeados    = $prow['Vplaneados'];  // Total de viajes planeados
+		$total_vuelta     = $prow['TotalVueltaPlaneados']; // Suma total de "valor_vuelta"
+		$planeados_reg    = $prow['TotalPlaneadosRegistrados']; // Total de "valor_vuelta" para viajes planeados
+		$vjs_diferencia   = $prow['Vdiferencia']; // Diferencia total calculada
+		$nv_planeados = 0;
+	}else {
+		echo "No se encontraron registros para la semana: $name_semana.";
+	};
+
     mysqli_close($conection);
-    while ($prow = mysqli_fetch_array($sqlvplan)){
-    //extract $drow;
-      
-     $vjs_planeados   = $prow['Vplaneados'];
-     $vjs_diferencia  = $prow['Vdiferencia'];
-     $nv_planeados = 0;
-    }
 
 
 if (isset($v_registrados)) {
@@ -912,7 +1005,6 @@ include "../conexion.php";
   }    
 
 $lasemana = date("n");
-var_dump($lasemana);
 $monthNum  = $lasemana;
 $dateObj   = DateTime::createFromFormat('!m', $monthNum);
 setlocale(LC_TIME, 'es_MX');
@@ -920,21 +1012,29 @@ setlocale(LC_TIME, 'es_MX');
 $NameMes = $dateObj->format('F');
 
 include "../conexion.php";
-  $sqlcomprames= mysqli_query($conection,"SELECT MONTH(fecha) as Nmeses, YEAR(fecha), SUM(total) as totalcompras FROM compras WHERE  MONTH(fecha) =  10 and estatus = 1 GROUP BY MONTH(fecha) ");
-  mysqli_close($conection);
-  $result_sqlcomprames = mysqli_num_rows($sqlcomprames);
+$sqlcomprames= mysqli_query($conection,"SELECT 
+														MONTH(fecha) as Nmeses, 
+														YEAR(fecha), 
+														SUM(total) as totalcompras 
+													FROM compras 
+													WHERE  MONTH(fecha) =  MONTH(CURDATE()) 
+													and estatus = 1 
+													GROUP BY Nmeses, YEAR(fecha)");
 
-    while ($datacanc = mysqli_fetch_array($sqlcomprames)){
-      $compras_mes   = number_format($datacanc['totalcompras'],2);
-      //$especiales   = $datav['viajes_especiales'];
-     
-  } 
+if (!$sqlcomprames) {
+	die("Error en la consulta: " . mysqli_error($conection));
+};
 
-  if (isset($compras_mes)) {
-        $comprasmes = $compras_mes;
-    }else {
-        $comprasmes = number_format(0.00,2);
-    }
+$comprasmes = number_format(0.00,2);
+if ($datanc = mysqli_fetch_assoc($sqlcomprames)) {
+	$comprasmes = number_format($datanc['totalcompras'],2);
+};
+mysqli_close($conection);
+if (isset($compras_mes)) {
+	$comprasmes = $compras_mes;
+}else {
+	$comprasmes = number_format(0.00,2);
+}
 
 $dhoy2 = '2024-10-30';
 include "../conexion.php";
@@ -965,33 +1065,29 @@ include "../conexion.php";
     }
 
 include "../conexion.php";
-  $sqlconsumomes= mysqli_query($conection,"SELECT 
-    MONTHNAME(fecha) as Nmeses, 
-    YEAR(fecha), 
-    SUM(importe) as totalgas 
-FROM 
-    carga_combustible 
-WHERE  
-    MONTHNAME(fecha) = MONTHNAME(CURDATE()) 
-    AND YEAR(fecha) = YEAR(CURDATE())  -- Asegura que es el año actual
-    AND estatus <> 0 
-GROUP BY 
-    MONTH(fecha), YEAR(fecha)");
+$sqlconsumomes= mysqli_query($conection,"SELECT 
+												MONTHNAME(fecha) as Nmeses, 
+												YEAR(fecha) as anio, 
+												SUM(importe) as totalgas 
+											FROM 
+												carga_combustible 
+											WHERE  
+												MONTHNAME(fecha) = MONTHNAME(CURDATE()) 
+												AND YEAR(fecha) = YEAR(CURDATE())  -- Asegura que es el año actual
+												AND estatus <> 0
+												GROUP BY Nmeses, anio");
+
+if (!$sqlconsumomes) {
+die("Error en la consulta: " . mysqli_error($conection));
+};
+
+$consumo_mes = number_format(0.00,2);
+
+if ($datanc = mysqli_fetch_assoc($sqlconsumomes)) {
+$consumo_mes = number_format($datanc['totalgas'],2);
+};
+												
   mysqli_close($conection);
-  $result_sqlconsumomes = mysqli_num_rows($sqlconsumomes);
-
-    while ($datacanc = mysqli_fetch_array($sqlconsumomes)){
-      $consumo_mes   = number_format($datacanc['totalgas'],2);
-      //$especiales   = $datav['viajes_especiales'];
-     
-  } 
-
-  if (isset($consumo_mes)) {
-        $nconsumo_mes = $consumo_mes;
-    }else {
-        $nconsumo_mes = number_format(0.00,2);
-    }
-
 
   include "../conexion.php";
   $sqlconsumosem= mysqli_query($conection,"SELECT MONTHNAME(fecha) as Nmeses, YEAR(fecha), SUM(importe) as totalgas FROM carga_combustible WHERE fecha >= '$diaini' and fecha <= '$diafin' and estatus <> 0 GROUP BY fecha ");
@@ -2305,9 +2401,7 @@ Highcharts.chart('container2', {
     ]
 });
 </script>
-
 <script>
-    
     Highcharts.chart('container6d', {
     chart: {
         type: 'column'
@@ -2368,12 +2462,7 @@ Highcharts.chart('container2', {
     ]
 });
 </script>
-
-
-
-
-
-<script>
+<!-- <script>
     document.addEventListener("DOMContentLoaded", function(){
       // Invocamos cada 5 segundos ;)
       const milisegundos = 5 *1000;
@@ -2382,7 +2471,7 @@ Highcharts.chart('container2', {
          fetch("./refrescar.php");
       },milisegundos);
     });
-</script>
+</script> -->
 <script src="js/sweetalert.min.js"></script>
 </body>
 </html>
