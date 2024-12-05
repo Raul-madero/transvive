@@ -86,8 +86,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="new_empleado.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;', 2); ?>Nuevo</a></li>
-                <li class="breadcrumb-item"><a href="factura/empleados_excel.php"><i class="fas fa-file-excel"></i> Excel</a></li>
+                <li class="breadcrumb-item"><a href="new_adeudo.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;', 2); ?>Nuevo</a></li>
+                <li class="breadcrumb-item"><a href="factura/adeudos_excel.php"><i class="fas fa-file-excel"></i> Excel</a></li>
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item"><a href="#">Layout</a></li>
                 <li class="breadcrumb-item active">Navegacion</li>
@@ -280,89 +280,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
     });
     // table.column(7).search('Activo').draw();
-  </script>
-
-  <script>
-    $(document).ready(function() {
-      var table = $('#listaClientes').dataTable({
-        "bProcessing": true,
-        "sAjaxSource": "data/data_clientes.php",
-        "bPaginate": true,
-        "sPaginationType": "full_numbers",
-        "iDisplayLength": 10,
-        "aoColumns": [{
-            mData: 'Empid'
-          },
-          {
-            mData: 'Name'
-          },
-          {
-            mData: 'Salary'
-          },
-          {
-            mData: 'Linea'
-          },
-          {
-            mData: 'Lugar'
-          },
-          {
-            "render": function(data, type, full, meta) {
-              return '<a class="link_edit" href= \'editar_cliente.php?id=' + full.Empid + '\'><i class="far fa-edit"></i> Editar</a> | <data-toggle="modal" data-target="#modalEditcliente" class="btn btn-primary btn-block" data-id=\'' + full.Empid + '\' data-name=\'' + full.Name + ' ' + full.Salary + '\'  href="javascript:void(0)" class="link_delete" ><i class="far fa-trash-alt"></i> Baja</a>';
-            }
-          }
-        ],
-        "oLanguage": {
-          "sEmptyTable": "No hay registros disponibles",
-          "sInfo": "Hay _TOTAL_ registros. Mostrando de (_START_ a _END_)",
-          "sLoadingRecords": "Por favor espera - Cargando...",
-          "sSearch": "Buscar:",
-          "sLengthMenu": "Mostrar _MENU_",
-        }
-      });
-    });
-  </script>
-
-  <script type="text/javascript">
-    /* it will load products when document loads */
-    $(document).on('click', '#delete_cliente', function(e) {
-      e.preventDefault();
-      var clienteId = $(this).data('id');
-      var action = 'deleteEmpleado';
-      swal({
-          title: "Desea Eliminar Al Empleado ?",
-          text: " " + clienteId,
-          icon: "warning",
-          buttons: true,
-          dangerMode: true,
-        })
-        .then((willDelete) => {
-          if (willDelete) {
-            $.ajax({
-              url: 'includes/ajax.php',
-              type: "POST",
-              async: true,
-              data: {
-                action: action,
-                clienteId: clienteId
-              },
-              success: function(response) {
-                if (response != 0) {
-                  swal('Eliminado', 'Empleado Borrado Correctamente', 'success').then((value) => {
-                    location.reload();
-                  })
-                } else {
-                  swal("Poof! Error!", {
-                    icon: "warning",
-                  });
-                }
-              },
-              error: function(error) {}
-            });
-          } else {
-            swal("Accion Cancelada Registro no Borrado !");
-          }
-        });
-    });
   </script>
 
   <script>

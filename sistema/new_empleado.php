@@ -69,33 +69,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </button>
 
      <?php
-       if ($_SESSION['rol'] == 4) {
-        include('includes/navbarsup.php');
-      }else {
-       if ($_SESSION['rol'] == 5) {
-          include('includes/navbarrhuman.php');
-         }else {  
-          if ($_SESSION['rol'] == 6) {
-            include('includes/navbaroperac.php');
-          }else {
-            if ($_SESSION['rol'] == 8) {
-              include('includes/navbarjefeoper.php');
-            }else {
-              if ($_SESSION['rol'] == 9) {
-                include('includes/navbargrcia.php');
-              } else {
-               include('includes/navbar.php');
-              }     
-             }  
-          }  
-        } 
-      } 
-
-       if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 5 ) {
+     switch ($_SESSION['rol']) {
+      case 1:
         $activo = "";
-      } else { 
+        break;
+      case 4:
+        include "includes/navbarsup.php";
         $activo = "disabled";
-      }
+        break;
+      case 5:
+        include "includes/navbarrhuman.php";
+        $activo = "disabled";
+        break;
+      case 6:
+        include "includes/navbaroperac.php";
+        $activo = "disabled";
+        break;
+      case 8:
+        include "includes/navbarjefeoper.php";
+        $activo = "disabled";
+        break;
+      case 9:
+        include "includes/navbargrcia.php";
+        $activo = "disabled";
+        break;
+      default:
+        include "includes/navbar.php";
+        $activo = "disabled";
+        break;
+     };
       ?>
       <?php include('includes/nav.php') ?>
 
