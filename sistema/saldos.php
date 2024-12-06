@@ -1,56 +1,82 @@
 <?php
 include "../conexion.php";
 session_start();
+
+// Verificar sesión y rol
 $User = $_SESSION['user'];
 $rol = $_SESSION['rol'];
-$sql = "select * from rol where idrol =$rol ";
+
+// Obtener el nombre del rol
+$sql = "SELECT * FROM rol WHERE idrol = $rol";
 $query = mysqli_query($conection, $sql);
 $filas = mysqli_fetch_assoc($query);
 $namerol = $filas['rol'];
-//Mostrar Datos
+
+// Validar parámetro 'id'
 if (empty($_REQUEST['id'])) {
     header('Location: empleados.php');
-    mysqli_close($conection);
+    exit;
 }
-$noempl = $_REQUEST['id'];
-$sqlact = mysqli_query($conection, "SELECT * FROM empleados WHERE noempleado = $noempl");
-mysqli_close($conection);
-$result_sqlact = mysqli_num_rows($sqlact);
+$noempl = (int)$_REQUEST['id']; // Convertir a entero para evitar inyecciones
 
+// Obtener información del empleado
+$sqlact = mysqli_query($conection, "SELECT * FROM empleados WHERE noempleado = $noempl");
+if (!$sqlact) {
+    die("Error en la consulta de empleados: " . mysqli_error($conection));
+}
+$result_sqlact = mysqli_num_rows($sqlact);
 if ($result_sqlact == 0) {
     header('Location: empleados.php');
-} else {
-    $option = '';
-    while ($data = mysqli_fetch_array($sqlact)) {
-        $id             = $data['id'];
-        $noempl         = $data['noempleado'];
-        $nombres        = $data['nombres'];
-        $paterno        = $data['apellido_paterno'];
-        $materno        = $data['apellido_materno'];
-        $cargo          = $data['cargo'];
-        $estatus        = $data['estatus'];
-        $salarioxdia    = $data['salarioxdia'];
-        $salariodiario  = $data['salario_diario'];
-        $sueldobase     = $data['sueldo_base'];
-        $deuda          = $data['deuda_general'];
-        $descuento      = $data['descuento'];
-        $adeudo         = $data['adeudo'];
-        $saldo_adeudo   = $data['saldo_adeudo'];
-        $bonos          = $data['bono_supervisor'];
-        $clasif_cat     = $data['clasifica_categoria'];
-        $bonosc2        = $data['bono_categoria'];
-        $bonosemanal    = $data['bono_semanal'];
-        $vales          = $data['apoyo_mes'];
-        $apoyoadicional = $data['sueldo_adicional'];
-        $caja           = $data['caja_ahorro'];
-        $vacaciones     = $data['vacaciones'];
-        $tiponomina     = $data['tipo_nomina'];
-        $efectivo       = $data['efectivo'];
-        $descfiscal     = $data['descuento_fiscal'];
-        //$user   = $_SESSION['idUser'];
-    }
+    exit;
 }
+
+$data = mysqli_fetch_assoc($sqlact); // Obtener los datos del empleado
+$id             = $data['id'];
+$nombres        = $data['nombres'];
+$paterno        = $data['apellido_paterno'];
+$materno        = $data['apellido_materno'];
+$cargo          = $data['cargo'];
+$estatus        = $data['estatus'];
+$salarioxdia    = $data['salarioxdia'];
+$sueldobase     = $data['sueldo_base'];
+$adeudo         = $data['adeudo'];
+$saldo_adeudo   = $data['saldo_adeudo'];
+
+// Verificar conexión antes de realizar más consultas
+if (!$conection) {
+    die("Error al conectar con la base de datos: " . mysqli_error($conection));
+}
+
+// Obtener los adeudos del empleado
+$sqladeudo = mysqli_query($conection, "SELECT id, cantidad, descuento, fecha_inicial FROM adeudos WHERE noempleado = $id");
+if (!$sqladeudo) {
+    die("Error en la consulta de adeudos: " . mysqli_error($conection));
+}
+
+// Variables para almacenar resultados
+$sumaCantidad = 0; // Suma total de la columna 'cantidad'
+$totalDescuentoSemanas = 0; // Total de descuento * semanas transcurridas
+$fechaConsulta = new DateTime(); // Fecha actual (fecha de consulta)
+
+// Procesar los resultados de adeudos
+while ($row = mysqli_fetch_assoc($sqladeudo)) {
+    // Sumar la columna 'cantidad'
+    $sumaCantidad += (float)$row['cantidad'];
+
+    // Calcular semanas transcurridas desde la fecha inicial
+    $fechaInicial = new DateTime($row['fecha_inicial']);
+    $intervalo = $fechaInicial->diff($fechaConsulta);
+    $semanasTranscurridas = floor($intervalo->days / 7); // Semanas completas transcurridas
+
+    // Multiplicar descuento por semanas transcurridas
+    $totalDescuentoSemanas += (float)$row['descuento'] * $semanasTranscurridas;
+    $descuento += (float)$row['descuento'];
+}
+
+// Cerrar conexión
+mysqli_close($conection);
 ?>
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -186,8 +212,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </div>
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Descuento:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputDescuento" name="inputDescuento" step="0.01" value="<?php if ($saldo_adeudo < $descuento) {
-                                    echo $saldo_adeudo;
+                                <input type="number" class="form-control" id="inputDescuento" name="inputDescuento" step="0.01" value="<?php if ($sumaCantidad < $descuento) {
+                                    echo $sumaCantidad;
                                 } else {
                                     echo $descuento;
                                 } ?>" readonly>
@@ -196,11 +222,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Adeudo:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputAdeudo" name="inputAdeudo" step="0.01" value="<?php echo $adeudo; ?>" onkeyup="PasarValor();" readonly>
+                                <input type="number" class="form-control" id="inputAdeudo" name="inputAdeudo" step="0.01" value="<?php echo $sumaCantidad; ?>" onkeyup="PasarValor();" readonly>
                             </div>
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Saldo Adeudo:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputSaldoAdeudo" name="inputSaldoAdeudo" step="0.01" value="<?php echo $saldo_adeudo; ?>" readonly>
+                                <input type="number" class="form-control" id="inputSaldoAdeudo" name="inputSaldoAdeudo" step="0.01" value="<?php echo ($sumaCantidad - $totalDescuentoSemanas); ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group row">

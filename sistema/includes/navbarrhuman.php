@@ -72,6 +72,7 @@
               <li><a href="nominas.php" class="dropdown-item">Nomina Semanal</a></li>
               <li><a href="nominas_quincenales.php" class="dropdown-item">Nomina Quincenal</a></li>
               <li><a href="nominas_especiales.php" class="dropdown-item">Nomina Especial</a></li>
+              <li><a href="adeudos.php" class="dropdown-item">Adeudos</a></li>
               <li><a href="incidencias.php" class="dropdown-item">Incidencias</a></li>
               <li><a href="finiquitos.php" class="dropdown-item">Finiquitos</a></li>
               <li class="dropdown-divider"></li>
@@ -124,7 +125,8 @@
                 <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
                   
                   <!--<li><a href="clientes.php" class="dropdown-item">Clientes</a></li>-->
-                  <li><a href="empleados.php" class="dropdown-item">Empleados</a></li>
+                  <li><a href="empleados.php" class="dropdown-item">Empleados Activos</a></li>
+                  <li><a href="empleadosBajas.php" class="dropdown-item">Empleados Bajas</a></li>
                   <li><a href="cargos_puestos.php" class="dropdown-item">Cargos (Puestos)</a></li>
                   <li><a href="supervisores.php" class="dropdown-item">Supervisores</a></li>
                   <!--<li><a href="unidades.php" class="dropdown-item">Unidades</a></li>

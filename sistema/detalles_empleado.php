@@ -118,9 +118,6 @@ session_start();
   $sqlcargo   = "select cargo from cargos ORDER BY cargo";
   $querycargo = mysqli_query($conection, $sqlcargo);
   $filascargo = mysqli_fetch_all($querycargo, MYSQLI_ASSOC); 
-
-  $sqladeud = "select * from adeudos where noempleado = $id";
-  $queryadeud = mysqli_query($conection, $sqladeud);
   
   mysqli_close($conection);
 ?>

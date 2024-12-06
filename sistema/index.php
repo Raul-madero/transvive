@@ -215,7 +215,6 @@ if ($result_sqlenc == 0) {
 	$importemesc11 = 0;
 	$importemesc12 = 0;
 } else {
-
 	while ($data = mysqli_fetch_array($sqlenc)) {
 		$mes = $data['Nmes'];
 		switch ($mes) {

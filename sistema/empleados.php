@@ -168,7 +168,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
       const params = new URLSearchParams(window.location.search);
       const id = parseInt(params.get('id'));
       const page = (id) => {
-        console.log(id)
         if (id) {
           if (id <= 26) {
             return 0;

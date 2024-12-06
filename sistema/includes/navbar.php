@@ -455,7 +455,7 @@
           <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Catalogos</a>
           <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
 
-            <li><a href="empleados.php" class="dropdown-item">Empleados</a></li>
+            <li><a href="empleados.php" class="dropdown-item">Empleados Activos</a></li>
             <li><a href="empleadosBajas.php" class="dropdown-item">Empleados Bajas</a></li>
             <li><a href="cargos_puestos.php" class="dropdown-item">Cargos (Puestos)</a></li>
             <li><a href="supervisores.php" class="dropdown-item">Supervisores</a></li>
