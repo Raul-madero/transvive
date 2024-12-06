@@ -105,14 +105,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <thead>
               <tr>
                 <th>No.</th>
-                <th>Nombre(s)</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Cargo</th>
-                <th>Tipo Contrato</th>
-                <th>Teléfono</th>
-                <th>Estatus</th>
-                <th>Acciones</th>
+                <th>Nombre</th>
+                <th>Adeudo Total</th>
+                <th>Motivo de Adeudo</th>
+                <th>Estado</th>
+                <th>Fecha de inicio</th>
+                <th>Fecha final</th>
+                <th>Descuento</th>
+                <th>Abono total</th>
+                <th>Total de semanasl</th>
+                <th>Semanas restantes</th>
+                <th>Comentarios</th>
               </tr>
             </thead>
             <tbody>
@@ -163,124 +166,75 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
 
-  <script>
+<script>
     $(document).ready(function() {
-      const params = new URLSearchParams(window.location.search);
-      const id = parseInt(params.get('id'));
-      const page = (id) => {
-        console.log(id)
-        if (id) {
-          if (id <= 26) {
-            return 0;
-          } else if (id <= 149) {
-            return 10;
-          } else if (id <= 208) {
-            return 20;
-          } else if (id <= 316) {
-            return 30;
-          } else if (id <= 359) {
-            return 40;
-          } else if (id <= 385) {
-            return 50;
-          } else if (id <= 420) {
-            return 60;
-          } else if (id <= 439) {
-            return 70;
-          } else {
-            return 80;
-          }
-        } else {
-          return 0;
-        }
-      }
-      var table = $('#example1').dataTable({
-        "bProcessing": true,
-        "sAjaxSource": "data/data_adeudos.php",
-        "bPaginate": true,
-        "sPaginationType": "full_numbers",
-        "iDisplayLength": 10,
-        "iDisplayStart": page(id),
-        "responsive": true,
-        "aoColumns": [{
-            mData: 'noempleado',
-            "sWidth": "50px",
-            "render": function(data, type, full, meta) {
-              return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
+        var table = $('#example1').dataTable({
+            "bProcessing": true,
+            "sAjaxSource": "data/data_adeudos.php",
+            "bPaginate": true,
+            "sPaginationType": "full_numbers",
+            "iDisplayLength": 10,
+            "responsive": true,
+            "aoColumns": [
+                {
+                    mData: 'noempleado',
+                    "sWidth": "50px",
+                    "render": function(data) {
+                        return '<p>' + data + '</p>';
+                    }
+                },
+                {
+                    mData: null,  // Usamos 'null' para procesar múltiples campos concatenados
+                    "sWidth": "120px",
+                    "render": function(data, type, full) {
+                        return '<p>' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '</p>';
+                    }
+                },
+                {
+                    mData: 'cantidad',
+                    "sWidth": "100px",
+                    "render": function(data) {
+                        return '<p>' + data + '</p>';
+                    }
+                },
+                {
+                    mData: 'motivo_adeudo',
+                    "sWidth": "100px",
+                    "render": function(data) {
+                        return '<p>' + data + '</p>';
+                    }
+                },
+                {
+                    mData: 'estado',
+                    "sWidth": "130px",
+                    "render": function(data) {
+                        return '<p>' + (data === 1 ? 'Activo' : 'Pagado') + '</p>';
+                    }
+                },
+                {
+                    mData: 'fecha_inicio',
+                    "sWidth": "50px",
+                    "render": function(data) {
+                        return '<p>' + data + '</p>';
+                    }
+                }
+            ],
+            "oLanguage": {
+                "sEmptyTable": "No hay registros disponibles",
+                "sInfo": "Hay _TOTAL_ registros. Mostrando de (_START_ a _END_)",
+                "sLoadingRecords": "Por favor espera - Cargando...",
+                "sSearch": "Buscar:",
+                "sLengthMenu": "Mostrar _MENU_",
+                "oPaginate": {
+                    "sFirst": "Primera",
+                    "sPrevious": "Previa",
+                    "sNext": "Siguiente",
+                    "sLast": "Última"
+                }
             }
-          },
-          {
-            mData: 'nombres',
-            "sWidth": "120px",
-            "render": function(data, type, full, meta) {
-              return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\' >' + data + '</a>'
-            }
-          },
-          {
-            mData: 'apellido_paterno',
-            "sWidth": "100px",
-            "render": function(data, type, full, meta) {
-              return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
-            }
-          },
-          {
-            mData: 'apellido_materno',
-            "sWidth": "100px",
-            "render": function(data, type, full, meta) {
-              return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
-            }
-          },
-          {
-            mData: 'cargo',
-            "sWidth": "130px",
-            "render": function(data, type, full, meta) {
-              return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
-            }
-          },
-          {
-            mData: 'tipo_contrato',
-            "sWidth": "50px",
-            "render": function(data, type, full, meta) {
-              return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
-            }
-          },
-          {
-            mData: 'telefono',
-            "sWidth": "80px",
-            "render": function(data, type, full, meta) {
-              return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
-            }
-          },
-          {
-            mData: 'Status',
-            "sWidth": "50px",
-            "render": function(data, type, full, meta) {
-              // console.log(data)
-              return '<a href=\'detalles_empleado.php?id=' + full.noempleado + '\'>' + data + '</a>'
-            }
-          },
-          {
-            "render": function(data, type, full, meta) {
-              return '<a class="link_edit" style="color:#000;" href= \'saldos.php?id=' + full.noempleado + '\'><i class="fas fa-file-invoice-dollar"></i> Financieros</a> | <a class="link_edit" style="color:#007bff;" href= \'edit_empleado.php?id=' + full.noempleado + '\'><i class="far fa-edit"></i> Edit</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.noempleado + '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a>| <a data-toggle="modal" data-target="#modalAltacliente"  data-id=\'' + full.noempleado + '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '\' href="javascript:void(0)" class="link_delete" style="color:green" ><i class="fas fa-angle-double-up"></i> Reingreso</a> | <a class="link_edit" style="color:#007bff;" href= \'new_empleado23.php?id=' + full.noempleado + '\'><i class="fas fa-portrait"></i></a> | <a class="link_edit" style="color:gray;" href= \'factura/alta_empleado.php?id=' + full.noempleado + '\' target="_blank"><i class="fas fa-print"></i></a>';
-            }
-          }
-        ],
-        "oLanguage": {
-          "sEmptyTable": "No hay registros disponibles",
-          "sInfo": "Hay _TOTAL_ registros. Mostrando de (_START_ a _END_)",
-          "sLoadingRecords": "Por favor espera - Cargando...",
-          "sSearch": "Buscar:",
-          "sLengthMenu": "Mostrar _MENU_",
-          "oPaginate": {
-            "sFirst": "Primera",
-            "sPrevious": "Previa",
-            "sNext": "Siguiente",
-            "sLast": "Ultima",
-          }
-        }
-      });
+        });
     });
-    // table.column(7).search('Activo').draw();
-  </script>
+</script>
 
   <script>
     $(document).ready(function(e) {
@@ -508,7 +462,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
     });
   </script>
-  <script>
+  <!-- <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Invocamos cada 5 segundos ;)
       const milisegundos = 5 * 1000;
@@ -516,7 +470,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         // No esperamos la respuesta de la petición porque no nos importa
         fetch("./refrescar.php");
       }, milisegundos);
-    });
+    }); -->
   </script>
 </body>
 

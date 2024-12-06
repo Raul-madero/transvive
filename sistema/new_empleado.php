@@ -140,7 +140,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Generales</a></li>
                   <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Datos Operativos</a></li>
                   <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Datos Nomina</a></li>
-                   <li class="nav-item"><a class="nav-link" href="#settingss" data-toggle="tab">Datos Pago Nomina</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#settingss" data-toggle="tab">Datos Pago Nomina</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">

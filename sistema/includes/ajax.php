@@ -576,88 +576,155 @@ if($_POST['action'] == 'AlmacenaSupervisor')
     exit;
 }
 
+//Almacenar nuevo adeudo
+if ($_POST['action'] == 'AlmacenaAdeudo') {
+    if (
+        isset($_POST['noempleado']) && is_numeric($_POST['noempleado']) &&
+        isset($_POST['cantidad']) && is_numeric($_POST['cantidad']) &&
+        !empty($_POST['motivo_adeudo'])
+    ) {
+        // Sanitización de datos
+        $cantidad = floatval($_POST['cantidad']);
+        $noempleado = intval($_POST['noempleado']);
+        $motivo_adeudo = mysqli_real_escape_string($conection, $_POST['motivo_adeudo']);
+        $estado = isset($_POST['estado']) ? intval($_POST['estado']) : 0;
+        $fecha_inicial = mysqli_real_escape_string($conection, $_POST['fecha_inicial']);
+        $descuento = isset($_POST['descuento']) ? floatval($_POST['descuento']) : 0.0;
+        $comentarios = mysqli_real_escape_string($conection, $_POST['comentarios']);
 
-//Agregar Productos a Entrada
-if($_POST['action'] == 'AlmacenaEmpleado')
-{
-    if(!empty($_POST['name']) || !empty($_POST['paterno']) || !empty($_POST['materno']) )
-    {
-        $noempleado   = $_POST['noempleado'];
-        $name         = $_POST['name'];
-        $paterno      = $_POST['paterno'];
-        $materno      = $_POST['materno'];
-        $cargo        = $_POST['cargo'];
-        $telefono     = $_POST['telefono'];
-        $rfc          = $_POST['rfccte'];
-        $unidad       = $_POST['unidad'];
-        $nounidad     = $_POST['nounidad'];
-        $tipo_lic     = $_POST['tipo_lic'];
-        $nolicencia   = $_POST['nolicencia'];
-        $fecha_vence  = $_POST['fvencimiento'];
-        $supervisor   = $_POST['supervisor'];
-        $tipocontrato = $_POST['tipocontrato'];
-        $contrato     = $_POST['fcontrato'];
-        $fincontrato  = $_POST['vencontrato'];
-        $imss         = $_POST['imss'];
-        $sueldobase   = $_POST['sueldobase'];
-        $salariodia   = $_POST['salariodia'];
-        $sueldo       = $_POST['sueldo'];
-        $sueldob2     = $_POST['sueldob2'];
-        $vdgmv        = $_POST['vdgmv'];
-        $vdgao        = $_POST['vdgao'];
-        $sprinter     = $_POST['sprinter'];
-        $sauto        = $_POST['sueldo_auto'];
-        $ssemi        = $_POST['ssemi'];
-        $deuda        = $_POST['deuda'];
-        $descuento    = $_POST['descuento'];
-        $adeudo       = $_POST['adeudo'];
-        $saldo_adeudo = $_POST['saldo_adeudo'];
-        $bono         = $_POST['bonos'];
-        $clasificacat = $_POST['clasificacat'];
-        $bonoc2       = $_POST['bonosc2'];
-        $bonosemana   = $_POST['bonosemanal'];
-        $apoyomes     = $_POST['apoyomes'];
-        $vales        = $_POST['vales'];
-        $caja         = $_POST['caja'];
-        $vacaciones   = $_POST['vacaciones'];
-        $efectivo     = $_POST['efectivo'];
-        $tipo_nomina  = $_POST['tipo_nomina'];
-        $desc_fiscal  = $_POST['descfiscal'];
-        $sexo         = $_POST['sexo'];
-        $fechanac     = $_POST['fechanac'];
-        $edad         = $_POST['edad'];
-        $edocivil     = $_POST['edocivil'];
-        $domicilio    = $_POST['domicilio'];
-        $estudios     = $_POST['estudios'];
-        $contactoe    = $_POST['contactoe'];
-        $elcurp       = $_POST['elcurp'];
-        $fchaaltaimss = $_POST['fchaaltaimss'];
-        $noss         = $_POST['noss'];
-        $salxdia      = $_POST['salxdia'];
-        $sueldoauto   = $_POST['sueldoauto'];
-        $sdosprinter  = $_POST['sdosprinter'];
-        $comentarios  = $_POST['comentarios'];
+        // Ejecutar la consulta
+        $query_insertar = mysqli_query(
+            $conection,
+            "CALL insertar_adeudo('$cantidad', '$comentarios', '$descuento', '$estado', '$fecha_inicial', '$motivo_adeudo', '$noempleado')"
+        );
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-
-        $query_procesar = mysqli_query($conection,"CALL procesar_empleado($noempleado, '$name', '$paterno', '$materno', '$cargo', '$telefono', '$rfc', '$unidad', '$nounidad', '$tipo_lic', '$nolicencia', '$fecha_vence', '$supervisor', '$tipocontrato', '$contrato', '$fincontrato', '$imss', $salariodia, $sueldobase, $sueldo, $sueldob2, $vdgmv, $vdgao, $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, $saldo_adeudo, $bono, '$clasificacat', $bonoc2, $bonosemana, $apoyomes, $vales, $caja, $vacaciones, $efectivo, '$tipo_nomina', $desc_fiscal, '$sexo', '$fechanac', $edad, '$edocivil', '$domicilio', '$estudios', '$contactoe', '$elcurp', '$fchaaltaimss', '$noss', $salxdia, $sueldoauto, $sdosprinter, '$comentarios', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+        // Verificar si la consulta fue exitosa
+        if ($query_insertar) {
+            // Comprobar si se insertaron filas
+            if (mysqli_affected_rows($conection) > 0) {
+                // Si se insertó correctamente, retornamos un mensaje de éxito
+                echo json_encode(["mensaje" => "Adeudo almacenado correctamente."], JSON_UNESCAPED_UNICODE);
+            } else {
+                // Si no se insertaron filas, algo salió mal
+                echo json_encode(["mensaje" => "No se pudo almacenar el adeudo. Intente nuevamente."], JSON_UNESCAPED_UNICODE);
+            }
+        } else {
+            // En caso de error en la consulta
+            echo json_encode(["mensaje" => "Error al ejecutar la consulta: " . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
         }
-    
-    mysqli_close($conection);
 
-    }else{
-        echo 'error';
+        mysqli_close($conection);
+    } else {
+        echo json_encode(["mensaje" => "Datos inválidos o incompletos recibidos."], JSON_UNESCAPED_UNICODE);
     }
     exit;
 }
+
+
+
+
+
+//Agregar Productos a Entrada
+if ($_POST['action'] == 'AlmacenaEmpleado') {
+    if (!empty($_POST['name']) && !empty($_POST['paterno']) && !empty($_POST['materno'])) {
+        // include "../conexion.php";
+
+        // Validación y limpieza de datos
+        $noempleado   = (int) $_POST['noempleado'];
+        $name         = mysqli_real_escape_string($conection, $_POST['name']);
+        $paterno      = mysqli_real_escape_string($conection, $_POST['paterno']);
+        $materno      = mysqli_real_escape_string($conection, $_POST['materno']);
+        $cargo        = mysqli_real_escape_string($conection, $_POST['cargo']);
+        $telefono     = !empty($_POST['telefono']) ? "'" . mysqli_real_escape_string($conection, $_POST['telefono']) . "'" : "NULL";
+        $rfc          = mysqli_real_escape_string($conection, $_POST['rfccte']);
+        $unidad       = mysqli_real_escape_string($conection, $_POST['unidad']);
+        $nounidad     = mysqli_real_escape_string($conection, $_POST['nounidad']);
+        $tipo_lic     = mysqli_real_escape_string($conection, $_POST['tipo_lic']);
+        $nolicencia   = mysqli_real_escape_string($conection, $_POST['nolicencia']);
+        $fecha_vence  = !empty($_POST['fvencimiento']) ? "'" . $_POST['fvencimiento'] . "'" : "NULL";
+        $supervisor   = mysqli_real_escape_string($conection, $_POST['supervisor']);
+        $tipocontrato = mysqli_real_escape_string($conection, $_POST['tipocontrato']);
+        $contrato     = !empty($_POST['fcontrato']) ? "'" . $_POST['fcontrato'] . "'" : "NULL";
+        $fincontrato  = !empty($_POST['vencontrato']) ? "'" . $_POST['vencontrato'] . "'" : "NULL";
+
+        // Números decimales y enteros (convertir explícitamente)
+        $imss         = (float) $_POST['imss'];
+        $salariodia   = (float) $_POST['salariodia'];
+        $sueldobase   = (float) $_POST['sueldobase'];
+        $sueldo       = (float) $_POST['sueldo'];
+        $sueldob2     = (float) $_POST['sueldob2'];
+        $vdgmv        = (float) $_POST['vdgmv'];
+        $vdgao        = (float) $_POST['vdgao'];
+        $sprinter     = (float) $_POST['sprinter'];
+        $sauto        = (float) $_POST['sueldo_auto'];
+        $ssemi        = (float) $_POST['ssemi'];
+        $deuda        = (float) $_POST['deuda'];
+        $descuento    = (float) $_POST['descuento'];
+        $adeudo       = (float) $_POST['adeudo'];
+        $saldo_adeudo = (float) $_POST['saldo_adeudo'];
+        $bono         = (float) $_POST['bonos'];
+        $bonoc2       = (float) $_POST['bonosc2'];
+        $bonosemana   = (float) $_POST['bonosemanal'];
+        $apoyomes     = (float) $_POST['apoyomes'];
+        $vales        = (float) $_POST['vales'];
+        $caja         = (float) $_POST['caja'];
+        $vacaciones   = (float) $_POST['vacaciones'];
+        $efectivo     = (float) $_POST['efectivo'];
+        $desc_fiscal  = (float) $_POST['descfiscal'];
+        $salxdia      = (float) $_POST['salxdia'];
+        $sueldoauto   = (float) $_POST['sueldoauto'];
+        $sdosprinter  = (float) $_POST['sdosprinter'];
+
+        // Cadenas opcionales
+        $clasificacat = mysqli_real_escape_string($conection, $_POST['clasificacat']);
+        $sexo         = mysqli_real_escape_string($conection, $_POST['sexo']);
+        $fechanac     = !empty($_POST['fechanac']) ? "'" . $_POST['fechanac'] . "'" : "NULL";
+        $edad         = (int) $_POST['edad'];
+        $edocivil     = mysqli_real_escape_string($conection, $_POST['edocivil']);
+        $domicilio    = mysqli_real_escape_string($conection, $_POST['domicilio']);
+        $estudios     = mysqli_real_escape_string($conection, $_POST['estudios']);
+        $contactoe    = mysqli_real_escape_string($conection, $_POST['contactoe']);
+        $elcurp       = mysqli_real_escape_string($conection, $_POST['elcurp']);
+        $fchaaltaimss = !empty($_POST['fchaaltaimss']) ? "'" . $_POST['fchaaltaimss'] . "'" : "NULL";
+        $noss         = mysqli_real_escape_string($conection, $_POST['noss']);
+        $comentarios  = mysqli_real_escape_string($conection, $_POST['comentarios']);
+        $tipo_nomina  = mysqli_real_escape_string($conection, $_POST['tipo_nomina']);
+
+        // Datos de sesión
+        $usuario = $_SESSION['idUser'];
+
+        // Llamada al procedimiento almacenado
+        $query_procesar = mysqli_query($conection, "CALL procesar_empleado(
+            $noempleado, '$name', '$paterno', '$materno', '$cargo', $telefono, '$rfc', '$unidad', '$nounidad',
+            '$tipo_lic', '$nolicencia', $fecha_vence, '$supervisor', '$tipocontrato', $contrato, $fincontrato,
+            $imss, $salariodia, $sueldobase, $sueldo, $sueldob2, $vdgmv, $vdgao, $sprinter, $sauto, $ssemi,
+            $deuda, $descuento, $adeudo, $saldo_adeudo, $bono, '$clasificacat', $bonoc2, $bonosemana, $apoyomes,
+            $vales, $caja, $vacaciones, $efectivo, '$tipo_nomina', $desc_fiscal, '$sexo', $fechanac, $edad,
+            '$edocivil', '$domicilio', '$estudios', '$contactoe', '$elcurp', $fchaaltaimss, '$noss', $salxdia,
+            $sueldoauto, $sdosprinter, '$comentarios', $usuario
+        )");
+
+        // Verificar errores en la consulta
+        if (!$query_procesar) {
+            die("Error en el procedimiento almacenado: " . mysqli_error($conection));
+        }
+
+        // Procesar resultados del procedimiento almacenado
+        $result_detalle = mysqli_num_rows($query_procesar);
+        if ($result_detalle > 0) {
+            $data = mysqli_fetch_assoc($query_procesar);
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo "error";
+        }
+
+        mysqli_close($conection);
+    } else {
+        echo 'error: campos obligatorios vacíos.';
+    }
+    exit;
+}
+
 
 //Almacena Unidad Nueva
 if($_POST['action'] == 'AlmacenaUnidad')
