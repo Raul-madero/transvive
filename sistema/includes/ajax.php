@@ -591,11 +591,13 @@ if ($_POST['action'] == 'AlmacenaAdeudo') {
         $fecha_inicial = mysqli_real_escape_string($conection, $_POST['fecha_inicial']);
         $descuento = isset($_POST['descuento']) ? floatval($_POST['descuento']) : 0.0;
         $comentarios = mysqli_real_escape_string($conection, $_POST['comentarios']);
+        $semanas_totales = intval($_POST['semanas_totales']);
+        $fecha_final = mysqli_real_escape_string($conection, $_POST['fecha_final']);
 
         // Ejecutar la consulta
         $query_insertar = mysqli_query(
             $conection,
-            "CALL insertar_adeudo('$cantidad', '$comentarios', '$descuento', '$estado', '$fecha_inicial', '$motivo_adeudo', '$noempleado')"
+            "CALL insertar_adeudo('$cantidad', '$comentarios', '$descuento', '$estado', '$fecha_inicial', '$motivo_adeudo', '$noempleado', '$semanas_totales', '$fecha_final')"
         );
 
         // Verificar si la consulta fue exitosa

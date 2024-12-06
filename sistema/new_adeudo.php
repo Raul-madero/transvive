@@ -287,6 +287,15 @@ $('#btn_salir').click(function(e){
 <script>
   $('#guardar_adeudo').click(function(e) {
     e.preventDefault(); // Previene el comportamiento por defecto del botón (submit)
+    function sumarSemanas(fecha, semanas) {
+    // Convertir las semanas en días (1 semana = 7 días)
+    const dias = semanas * 7;
+    // Crear una nueva instancia de fecha
+    let nuevaFecha = new Date(fecha);
+    // Sumar los días a la fecha
+    nuevaFecha.setDate(nuevaFecha.getDate() + dias);
+    return nuevaFecha;
+}
 
     // Captura los valores de los inputs
     let cantidad = $('#inputCantidad').val();
@@ -302,6 +311,12 @@ $('#btn_salir').click(function(e){
     let mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Mes con 2 dígitos
     let dia = String(fechaActual.getDate()).padStart(2, '0'); // Día con 2 dígitos
     let fecha_inicial = `${anio}-${mes}-${dia}`;
+    let semanas_totales = Math.ceil(cantidad / descuento)
+    let nuevaFecha = sumarSemanas(fecha_inicial, semanas_totales)
+    let anioFinal = nuevaFecha.getFullYear();
+    let mesFinal = String(nuevaFecha.getMonth() + 1).padStart(2, '0'); // Mes con 2 dígitos
+    let diaFinal = String(nuevaFecha.getDate()).padStart(2, '0'); // Día con 2 dígitos
+    let fecha_final = `${anioFinal}-${mesFinal}-${diaFinal}`;
 
     var action = 'AlmacenaAdeudo';
 
@@ -328,7 +343,9 @@ $('#btn_salir').click(function(e){
             fecha_inicial: fecha_inicial,
             descuento: descuento,
             comentarios: comentarios,
-            cantidad: cantidad
+            cantidad: cantidad,
+            semanas_totales:semanas_totales,
+            fecha_final:fecha_final
         },
         success: function(response) {
             console.log(response);

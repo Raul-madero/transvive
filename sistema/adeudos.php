@@ -208,16 +208,66 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     mData: 'estado',
                     "sWidth": "130px",
                     "render": function(data) {
-                        return '<p>' + (data === 1 ? 'Activo' : 'Pagado') + '</p>';
+                        return '<p>' + (data === 1 ? 'Pagado' : 'Activo') + '</p>';
                     }
                 },
                 {
-                    mData: 'fecha_inicio',
+                    mData: 'fecha_inicial',
                     "sWidth": "50px",
                     "render": function(data) {
                         return '<p>' + data + '</p>';
                     }
-                }
+                },
+                {
+                    mData: 'fecha_final', //Usamos "null" para procesar múltiples campos concatenados
+                    "sWidth": "50px",
+                    "render": function(data) {
+                        return '<p>' + data + '</p>';
+                    }
+                },
+                {
+                    mData: 'descuento',
+                    "sWidth": "50px",
+                    "render": function(data) {
+                        return '<p>' + data + '</p>';
+                    }
+                },
+                {
+                  mData: null,
+                  "sWidth": "120px",
+                  "render": function(data, type, full, meta) {
+                    let fechaInicial = new Date(full.fecha_inicial);
+                    let fechaActual = new Date();
+                    
+                    // Calcular semanas transcurridas desde la fecha inicial
+                    let semanasTranscurridas = Math.floor((fechaActual - fechaInicial) / (7 * 24 * 60 * 60 * 1000));
+                    
+                    // Calcular abono total (descuento * semanas transcurridas)
+                    let abonoTotal = semanasTranscurridas * full.descuento;
+                    
+                    return `<p>${abonoTotal}</p>`;
+                  }
+                },
+                {
+                    mData: 'semanas_totales',
+                    "sWidth": "50px",
+                    "render": function(data) {
+                        return '<p>' + data + '</p>';
+                    }
+                },
+                {
+                  mData: null,
+                  "sWidth": "120px",
+                  "render": function(data, type, full, meta) {
+                    let fechaActual = new Date();
+                    let fechaFinal = new Date(full.fecha_final);
+                    
+                    // Calcular semanas restantes hasta la fecha final
+                    let semanasRestantes = Math.ceil((fechaFinal - fechaActual) / (7 * 24 * 60 * 60 * 1000));
+                    
+                    return `<p>${semanasRestantes > 0 ? semanasRestantes : 0}</p>`;
+                  }
+              }
             ],
             "oLanguage": {
                 "sEmptyTable": "No hay registros disponibles",
