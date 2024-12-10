@@ -9,6 +9,11 @@ COPY . /var/www/html
 # Establece los permisos adecuados para los archivos
 RUN chown -R www-data:www-data /var/www/html
 
+RUN apt-get update && apt-get install -y \
+    unzip \
+    && curl -sS https://getcomposer.org/installer | php -- \
+    && mv composer.phar /usr/local/bin/composer
+
 # Instala Nginx
 RUN apt-get update && apt-get install -y \
     nginx \
@@ -21,6 +26,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copia el script de inicio
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
+
+RUN composer install
 
 # Expone los puertos necesarios
 EXPOSE 80
