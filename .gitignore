@@ -48,5 +48,3 @@ $RECYCLE.BIN/
 *.lnk
 ./idx/*
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode
-conexion.php
-sistema/index.html
