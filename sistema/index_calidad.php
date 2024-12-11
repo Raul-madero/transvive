@@ -441,13 +441,13 @@ session_start();
 
 }
 
-include "../conexion.php";
-  $sqlviajes= mysqli_query($conection,"TRUNCATE rep_viajescte");
-  mysqli_close($conection);
+// include "../conexion.php";
+//   $sqlviajes= mysqli_query($conection,"TRUNCATE rep_viajescte");
+//   mysqli_close($conection);
 
-include "../conexion.php";
-  $sqlviajes= mysqli_query($conection,"INSERT INTO rep_viajescte (cliente, enero) SELECT cliente, sum(valor_vuelta) FROM registro_viajes WHERE estatus = 2 and  MONTH(fecha) = 1 GROUP BY  cliente");
-  mysqli_close($conection);
+// include "../conexion.php";
+//   $sqlviajes= mysqli_query($conection,"INSERT INTO rep_viajescte (cliente, enero) SELECT cliente, sum(valor_vuelta) FROM registro_viajes WHERE estatus = 2 and  MONTH(fecha) = 1 GROUP BY  cliente");
+//   mysqli_close($conection);
 
 ?>
 

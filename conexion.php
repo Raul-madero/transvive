@@ -1,8 +1,8 @@
 <?php 
-require __DIR__ . '/vendor/autoload.php';
+// require __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+// $dotenv->load();
 // $host = "dpg-csr5lf1u0jms73cis3s0-a.oregon-postgres.render.com";
 // $password = "M6WeJ17g7uV3EsuLM1Ifjnt11HHf5i6y";
 // $user = "rmadero";
@@ -21,11 +21,11 @@ $dotenv->load();
 // $database = "transvive";
 // $port = 12088;
 
-$host = $_ENV['BD_HOST'];
-$port = $_ENV['BD_PORT'];
-$user = $_ENV['BD_USER'];
-$password = $_ENV['BD_PASSWORD'];
-$database = $_ENV['DB_DATABASE'];
+$host = "207-173-153-160.host.secureserver.net";
+// $port = "$_ENV['BD_PORT']";
+$user = "rmadero";
+$password = "8_86y2Myk";
+$database = "transvive";
 
 ini_set("mysql.connect_timeout", 5000);
 ini_set("default_socket_timeout",5000);
