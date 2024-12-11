@@ -1,5 +1,4 @@
 .env
-<<<<<<< HEAD
 # Created by https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,visualstudiocode
 
@@ -49,5 +48,5 @@ $RECYCLE.BIN/
 *.lnk
 ./idx/*
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode
-=======
->>>>>>> 9471eaf74715b14072ff3427b9d75bfbcf635d59
+conexion.php
+sistema/index.html

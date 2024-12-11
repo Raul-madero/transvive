@@ -1,78 +1,81 @@
 <?php 
 
-  $alert = '';
+<?php 
+
+$alert = '';
 
 session_set_cookie_params(0); 
 session_start();
-if(!empty($_SESSION['active']))
-{
-  header('location: sistema/');
-}else{  
-  if(!empty($_POST))
-  {
-    if(empty($_POST['usuario']) || empty($_POST['password']))
-    {
-      $alert = 'Ingrese sus datos de acceso';
-    }else{
-      require_once "conexion.php";
-
-      $user = mysqli_real_escape_string($conection,$_POST['usuario']);
-      $pass = md5(mysqli_real_escape_string($conection,$_POST['password']));
-
-      
-      $query = mysqli_query($conection, "SELECT u.idusuario,u.nombre,u.correo,u.usuario, r.idrol,r.rol 
-                                                      FROM usuario u 
-                                                      INNER JOIN rol r 
-                                                      ON u.rol = r.idrol 
-                                                      WHERE u.usuario='$user'
-                                                      AND u.clave='$pass' 
-                                                      AND u.estatus=1 ");
-
-      if (!$query) {
-        die("Error en la consulta: " . mysqli_error($conection));
-      }
-      if(mysqli_num_rows($query) > 0)
-      {
-        $data = mysqli_fetch_array($query);
-        session_regenerate_id(true);
-        $_SESSION['active'] = true;
-        $_SESSION['idUser'] = $data['idusuario'];
-        $_SESSION['nombre'] = $data['nombre'];
-        $_SESSION['email']  = $data['correo'];
-        $_SESSION['user']   = $data['usuario'];
-        $_SESSION['rol']    = $data['idrol'];
-        $_SESSION['rol_name']= $data['rol'];
-
-        $rolRedirects = [
-          "Administrador" => "sistema/index.php",
-          "Conductor" => "sistema/index_conductor.php",
-          "Supervisor" => "sistema/index_supervisor.php",
-          "Recursos Humanos" => "sistema/index_rhumanos.php",
-          "Operaciones" => "sistema/index_operaciones.php",
-          "Operador" => "sistema/index_operador.php",
-          "Mantenimiento" => "sistema/index_mantto.php",
-          "Jefe Operaciones" => "sistema/index_jefeoperaciones.php",
-          "Gerencia" => "sistema/index_gerencia.php",
-          "Almacen" => "sistema/index_almacen.php",
-          "Calidad" => "sistema/index_calidad.php",
-          "Monitorista" => "sistema/index_monitorista.php",
-          "Compras" => "sistema/index_compras.php",
-        ];
-        echo $roleRedirects[$_SESSION['rol_name']];
-        if (isset($roleRedirects[$_SESSION['rol_name']])) {
-          header('location: ' . $roleRedirects[$_SESSION['rol_name']]);
+if (!empty($_SESSION['active'])) {
+    header('location: sistema/');
+    exit();
+} else {  
+    if (!empty($_POST)) {
+        if (empty($_POST['usuario']) || empty($_POST['password'])) {
+            $alert = 'Ingrese sus datos de acceso';
         } else {
-            header('location: sistema/');
+            require_once "conexion.php";
+
+            $user = mysqli_real_escape_string($conection, $_POST['usuario']);
+            $pass = md5(mysqli_real_escape_string($conection, $_POST['password']));
+
+            $query = mysqli_query($conection, "SELECT u.idusuario, u.nombre, u.correo, u.usuario, r.idrol, r.rol 
+                                               FROM usuario u 
+                                               INNER JOIN rol r 
+                                               ON u.rol = r.idrol 
+                                               WHERE u.usuario = '$user'
+                                               AND u.clave = '$pass' 
+                                               AND u.estatus = 1");
+
+            if (!$query) {
+                die("Error en la consulta: " . mysqli_error($conection));
+            }
+
+            if (mysqli_num_rows($query) > 0) {
+                $data = mysqli_fetch_array($query);
+                session_regenerate_id(true);
+                $_SESSION['active'] = true;
+                $_SESSION['idUser'] = $data['idusuario'];
+                $_SESSION['nombre'] = $data['nombre'];
+                $_SESSION['email']  = $data['correo'];
+                $_SESSION['user']   = $data['usuario'];
+                $_SESSION['rol']    = $data['idrol'];
+                $_SESSION['rol_name'] = $data['rol'];
+
+                // Redirecciones basadas en rol
+                $rolRedirects = [
+                    "Administrador" => "sistema/index.php",
+                    "Conductor" => "sistema/index_conductor.php",
+                    "Supervisor" => "sistema/index_supervisor.php",
+                    "Recursos Humanos" => "sistema/index_rhumanos.php",
+                    "Operaciones" => "sistema/index_operaciones.php",
+                    "Operador" => "sistema/index_operador.php",
+                    "Mantenimiento" => "sistema/index_mantto.php",
+                    "Jefe Operaciones" => "sistema/index_jefeoperaciones.php",
+                    "Gerencia" => "sistema/index_gerencia.php",
+                    "Almacen" => "sistema/index_almacen.php",
+                    "Calidad" => "sistema/index_calidad.php",
+                    "Monitorista" => "sistema/index_monitorista.php",
+                    "Compras" => "sistema/index_compras.php",
+                ];
+
+                if (isset($rolRedirects[$_SESSION['rol_name']])) {
+                    header('location: ' . $rolRedirects[$_SESSION['rol_name']]);
+                } else {
+                    header('location: sistema/');
+                }
+                exit();
+            } else {
+                $alert = 'El Usuario o la Contraseña son incorrectos';
+                session_destroy();
+            }
+            mysqli_close($conection);
         }
-        exit();
-      }else{
-        $alert = 'El Usuario o la Contraseña son incorrectos';
-        session_destroy();
-      }
-      mysqli_close($conection);
-    }
-  } 
+    } 
 }
+
+?>
+
 
 ?>
 <!DOCTYPE html>
