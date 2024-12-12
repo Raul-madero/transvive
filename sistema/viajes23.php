@@ -720,116 +720,103 @@ buttons: [
 ?>
 
 <script type="text/javascript">
+    load_data(); // first load
 
-      load_data(); // first load
-
-      function load_data(initial_date, final_date, gender){
+    function load_data(initial_date, final_date){
         var ajax_url = "data/datadetorders3.php";
 
         $('#fetch_generated_wills').DataTable({
-          "order": [[ 1, "desc" ], [0, "desc"]]
-          dom: 'Bfrtip',
-lengthMenu: [
-[20, 25, 50, -1],
-['20 rows', '25 rows', '50 rows', 'Show all']
-],
-buttons: [
-'excelHtml5',
-'pageLength'
-],
-
-          "processing": true,
-          "serverSide": true,
-          "stateSave": true,
-          "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-          "ajax" : {
-            "url" : ajax_url,
-            "dataType": "json",
-            "type": "POST",
-            "data" : { 
-              "action" : "fetch_users", 
-              "initial_date" : initial_date, 
-              "final_date" : final_date 
-              
+            "order": [[ 1, "desc" ], [0, "desc"]],
+            "dom": 'Bfrtip',
+            "lengthMenu": [
+                [20, 25, 50, -1],
+                ['20 rows', '25 rows', '50 rows', 'Show all']
+            ],
+            "buttons": [
+                'excelHtml5',
+                'pageLength'
+            ],
+            "processing": true,
+            "serverSide": true,
+            "stateSave": true,
+            "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+            "ajax" : {
+                "url" : ajax_url,
+                "dataType": "json",
+                "type": "POST",
+                "data" : { 
+                    "action" : "fetch_users", 
+                    "initial_date" : initial_date, 
+                    "final_date" : final_date 
+                },
+                "dataSrc": "records"
             },
-            "dataSrc": "records"
-          },
-          "columns": [
-            { "data" : "pedidono", "width": "10px", className: "text-right" },
-            { "data" : "fecha", "width": "60px", "orderable": false},
-            { "data" : "horainicio", "width": "50px", className: "text-center", "orderable": false },
-            { "data" : "horafin", "width": "50px", className: "text-center", "orderable": false },
-            { "data" : "nosemana", "width": "80px", "orderable": false },
-            { "data" : "razonsocial", "width": "100px", "orderable":false },
-            { "data" : "conductor", "width": "100px", "orderable":false },
-            { "data" : "tipounidad", "width": "80px", "orderable":false },
-            { "data" : "nounidad", "width": "30px", "orderable":false },
-           
-            { "data" : "estatusped", "width": "30px", "orderable":false },
-            {
+            "columns": [
+                { "data" : "pedidono", "width": "10px", "className": "text-right" },
+                { "data" : "fecha", "width": "60px", "orderable": false},
+                { "data" : "horainicio", "width": "50px", "className": "text-center", "orderable": false },
+                { "data" : "horafin", "width": "50px", "className": "text-center", "orderable": false },
+                { "data" : "nosemana", "width": "80px", "orderable": false },
+                { "data" : "razonsocial", "width": "100px", "orderable":false },
+                { "data" : "conductor", "width": "100px", "orderable":false },
+                { "data" : "tipounidad", "width": "80px", "orderable":false },
+                { "data" : "nounidad", "width": "30px", "orderable":false },
+                { "data" : "estatusped", "width": "30px", "orderable":false },
+                {
                     "render": function ( data, type, full, meta ) {
-        return '<center><a href=\'edit_viaje.php?id=' + full.pedidono +  '\' class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white;  font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\'' + full.pedidono +  '\' href="#" class="btn btn-danger btn-xs" ><i class="fas fa-times-circle"></i></a></center>';
-    }
-                    
-            
- }   
-            
-          ],
-          "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
-    "buttons": [
-        'copyHtml5',
-        'excelHtml5',
-        'csvHtml5',     
-        {
-            extend: 'colvis',
-            postfixButtons: [ 'colvisRestore' ],
-            columns: '0,1,2,3,4,5,6'
-        }
-    ],
-
-         
+                        return '<center><a href="edit_viaje.php?id=' + full.pedidono + '" class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white; font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="' + full.pedidono + '" class="btn btn-danger btn-xs"><i class="fas fa-times-circle"></i></a></center>';
+                    }
+                }
+            ],
+            "sDom": "B<'row'<'col-md-6'l><'col-md-6'f>>t<'row'<'col-md-4'i><'col-md-4'p>>",
+            "buttons": [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                {
+                    extend: 'colvis',
+                    postfixButtons: [ 'colvisRestore' ],
+                    columns: '0,1,2,3,4,5,6'
+                }
+            ],
         }); 
-      }  
+    }  
 
-      $("#filter").click(function(){
+    $("#filter").click(function(){
         var initial_date = $("#initial_date").val();
         var final_date = $("#final_date").val();
-        //var gender = $("#gender").val();
 
         if(initial_date == '' && final_date == ''){
-          $('#fetch_generated_wills').DataTable().destroy();
-          load_data("", ""); // filter immortalize only
-        }else{
-          var date1 = new Date(initial_date);
-          var date2 = new Date(final_date);
-          var diffTime = Math.abs(date2 - date1);
-          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            $('#fetch_generated_wills').DataTable().destroy();
+            load_data("", ""); // Carga sin filtros
+        } else {
+            var date1 = new Date(initial_date);
+            var date2 = new Date(final_date);
+            var diffTime = Math.abs(date2 - date1);
+            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
-          if(initial_date == '' || final_date == ''){
-              $("#error_log").html("Warning: You must select both (start and end) date.</span>");
-          }else{
-            if(date1 > date2){
-                $("#error_log").html("Warning: End date should be greater then start date.");
-            }else{
-               $("#error_log").html(""); 
-               $('#fetch_generated_wills').DataTable().destroy();
-               load_data(initial_date, final_date);
+            if(initial_date == '' || final_date == ''){
+                $("#error_log").html("Warning: You must select both (start and end) dates.");
+            } else {
+                if(date1 > date2){
+                    $("#error_log").html("Warning: End date should be greater than start date.");
+                } else {
+                    $("#error_log").html(""); 
+                    $('#fetch_generated_wills').DataTable().destroy();
+                    load_data(initial_date, final_date);
+                }
             }
-          }
         }
-      });
+    });
 
-      
+    // Datepicker 
+    $( ".datepicker" ).datepicker({
+        language: 'es',
+        dateFormat: "yy-mm-dd",
+        changeYear: true
+    });
+</script>
 
-            // Datapicker 
-            $( ".datepicker" ).datepicker({
-                language: 'es',
-                "dateFormat": "yy-mm-dd",
-                changeYear: true
-            });
-
-
-    </script>
 
     <?php } else {
       if ($_SESSION['rol'] == 8) {
