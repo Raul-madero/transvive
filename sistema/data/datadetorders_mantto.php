@@ -2,142 +2,125 @@
 session_start();
 include '../config/db-config.php';
 
-
 global $connection;
 
-if($_REQUEST['action'] == 'fetch_users'){
-
+if ($_REQUEST['action'] === 'fetch_users') {
     $requestData = $_REQUEST;
-    $start = $_REQUEST['start'];
+    $start = intval($_REQUEST['start']);
+    $length = intval($_REQUEST['length']);
+    $searchValue = $requestData['search']['value'] ?? '';
 
-    $initial_date = $_REQUEST['initial_date'];
-    $final_date = $_REQUEST['final_date'];
-    $gender = $_REQUEST['gender'];
+    $initialDate = $_REQUEST['initial_date'] ?? '';
+    $finalDate = $_REQUEST['final_date'] ?? '';
+    $gender = $_REQUEST['gender'] ?? '';
 
-    if(!empty($initial_date) && !empty($final_date)){
-        $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    }else{
-        $date_range = "";
+    $dateRangeQuery = (!empty($initialDate) && !empty($finalDate)) ? " AND p.fecha BETWEEN ? AND ? " : '';
+
+    $statusMapping = [
+        'Activa' => 1,
+        'Cerrada' => 2,
+        'Cancelada' => 0,
+    ];
+    $genderQuery = isset($statusMapping[$gender]) ? " AND p.estatus = ? " : '';
+
+    $columns = [
+        'p.id', 'p.no_orden', 'p.fecha', 'p.usuario', 'p.solicita', 'p.unidad',
+        'p.tipo_trabajo', 'p.tipo_mantenimiento', 'p.trabajo_solicitado', 'p.estatus'
+    ];
+    $columnsOrder = ['id', 'no_orden', 'fecha', 'usuario', 'solicita', 'unidad', 'tipo_trabajo', 'tipo_mantenimiento', 'trabajo_solicitado', 'estatus'];
+
+    $orderColumn = $columnsOrder[$requestData['order'][0]['column']] ?? 'id';
+    $orderDir = $requestData['order'][0]['dir'] === 'desc' ? 'DESC' : 'ASC';
+
+    $query = "SELECT " . implode(',', $columns) . " FROM solicitud_mantenimiento p WHERE p.id > 0";
+
+    $params = [];
+    $paramTypes = '';
+
+    if ($dateRangeQuery) {
+        $query .= $dateRangeQuery;
+        $params[] = $initialDate;
+        $params[] = $finalDate;
+        $paramTypes .= 'ss';
     }
 
-    if($gender != ""){
-        if ($gender == "Activa") {
-         $gender = 1;   
-        }else {
-            if ($gender == "Cerrada") {
-              $gender = 2;
-            }else {
-                if ($gender == "Cancelada") {
-                    $gender = 0;
-                }
-            }
+    if ($genderQuery) {
+        $query .= $genderQuery;
+        $params[] = $statusMapping[$gender];
+        $paramTypes .= 'i';
+    }
+
+    if (!empty($searchValue)) {
+        $query .= " AND (p.no_orden LIKE ? OR p.tipo_mantenimiento LIKE ? OR p.unidad LIKE ? )";
+        $params[] = "%$searchValue%";
+        $params[] = "%$searchValue%";
+        $params[] = "%$searchValue%";
+        $paramTypes .= 'sss';
+    }
+
+    $stmt = $connection->prepare($query);
+
+    if ($stmt) {
+        if (!empty($paramTypes)) {
+            $stmt->bind_param($paramTypes, ...$params);
         }
 
-        $gender = " AND p.estatus = $gender ";
-    }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $totalData = $result->num_rows;
 
-    $columns = ' p.id, p.no_orden, p.fecha, p.usuario, p.solicita, p.unidad, p.tipo_trabajo, p.tipo_mantenimiento, p.trabajo_solicitado, p.estatus ';
-    $table = ' solicitud_mantenimiento p ' ;
-    $where = " WHERE p.id > 0 ".$date_range.$gender ;
+        $query .= " ORDER BY $orderColumn $orderDir LIMIT ?, ?";
+        $params[] = $start;
+        $params[] = $length;
+        $paramTypes .= 'ii';
 
-    $columns_order = array(
-        0 => 'id',
-        1 => 'no_orden',
-        2 => 'fecha',
-        3 => 'usuario',
-        4 => 'solicita',
-        5 => 'unidad',
-        6 => 'tipo_trabajo',
-        7 => 'tipo_mantenimiento',
-        8 => 'trabajo_solicitado',
-        9 => 'estatus'
-    );
+        $stmt = $connection->prepare($query);
+        $stmt->bind_param($paramTypes, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+        $data = [];
+        $count = $start;
 
-    $result = mysqli_query($connection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
+        while ($row = $result->fetch_assoc()) {
+            $estatusLabels = [
+                1 => '<span class="label label-primary">Activa</span>',
+                2 => '<span class="label label-success">Cerrada</span>',
+                3 => '<span class="label label-danger">Cancelado</span>',
+                4 => '<span class="label label-primary">Iniciado</span>',
+                5 => '<span class="label label-info">Terminado</span>',
+                0 => '<span class="label label-success">Cancelada</span>'
+            ];
 
-    if( !empty($requestData['search']['value']) ) {
-        $sql.="AND ( no_orden LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR tipo_mantenimiento LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR unidad LIKE '%".$requestData['search']['value']."%'  )";
-       
-        
-    }
+            $estatusNew = $estatusLabels[$row['estatus']] ?? '';
 
-    $result = mysqli_query($connection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
-
-    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
-
-    if($requestData['length'] != "-1"){
-        $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
-    }
-
-    $result = mysqli_query($connection, $sql);
-    $data = array();
-    $counter = $start;
-
-    $count = $start;
-    while($row = mysqli_fetch_array($result)){
-        if ($row['estatus'] == 1){
-        $Estatusnew = '<span class="label label-primary">Activa</span>'; 
-    }else{
-        if ($row['estatus'] == 2){
-           $Estatusnew = '<span class="label label-success">Cerrada</span>';
-        }else{
-            if ($row['estatus'] == 3) {
-              $Estatusnew = '<span class="label label-danger">Cancelado</span>';
-            }else {
-                if ($row['estatus'] == 4) {
-                 $Estatusnew = '<span class="label label-primary">Iniciado</span>';
-                }else {
-                 if ($row['estatus'] == 5) {
-                  $Estatusnew = '<span class="label label-info">Terminado</span>';
-                 }else {
-                  $Estatusnew = '<span class="label label-success">Cancelada</span>';
-                 } 
-                }     
+            $data[] = [
+                'counter' => ++$count,
+                'pedidono' => $row['id'],
+                'nopedido' => '<a style="text-decoration:none" href="factura/pedidonw.php?id=' . $row['id'] . '" target="_blank">' . $row['id'] . '</a>',
+                'fechaa' => date('d/m/Y', strtotime($row['fecha'])),
+                'noorden' => $row['no_orden'],
+                'usuario' => $row['usuario'],
+                'solicita' => $row['solicita'],
+                'unidad' => $row['unidad'],
+                'tipojob' => $row['tipo_trabajo'],
+                'tipomantto' => $row['tipo_mantenimiento'],
+                'trabsolicitado' => $row['trabajo_solicitado'],
+                'Datenew' => $row['fecha'],
+                'estatusped' => $estatusNew
+            ];
         }
+
+        $json_data = [
+            'draw' => intval($requestData['draw']),
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalData,
+            'records' => $data
+        ];
+
+        echo json_encode($json_data);
+    } else {
+        echo json_encode(['error' => 'Error en la consulta SQL']);
     }
-    }
-
-        $count++;
-        $nestedData = array();
-
-        $nestedData['counter'] = $count;
-        $nestedData['pedidono'] =  $row["id"];
-
-        $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id='.($row["id"]).'" target="_blank">'.($row["id"]).'</a>';
-        $time = strtotime($row["fecha"]);
-        $nestedData['fechaa'] = date('d/m/Y', $time);
-        $nestedData['noorden'] = $row["no_orden"];
-        $nestedData['usuario'] = $row['usuario'];
-        $nestedData['solicita'] = $row["solicita"];
-
-        $nestedData['unidad'] = $row["unidad"];
-        $nestedData['tipojob'] = $row["tipo_trabajo"];
-      
-        $nestedData['tipomantto'] = $row["tipo_mantenimiento"];   
-        $nestedData['trabsolicitado'] = $row["trabajo_solicitado"];     
-        $nestedData['Datenew'] = $row["fecha"];
-
-        $nestedData['estatusped'] = $Estatusnew;
-
-        $data[] = $nestedData;
-    }
-
-    $json_data = array(
-        "draw"            => intval( $requestData['draw'] ),
-        "recordsTotal"    => intval( $totalData),
-        "recordsFiltered" => intval( $totalFiltered ),
-        "records"         => $data
-    );
-
-    echo json_encode($json_data);
 }
-
 ?>
