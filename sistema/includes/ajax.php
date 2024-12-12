@@ -775,6 +775,7 @@ if($_POST['action'] == 'AlmacenaUnidad')
 
 //Agregar Productos a Entrada.
 if($_POST['action'] == 'AlmacenaViaje')
+
 {
     if(!empty($_POST['fecha']) || !empty($_POST['semana']) || !empty($_POST['cliente'])
     || !empty($_POST['ruta']) || !empty($_POST['tipo']) || !empty($_POST['horarios']) )
