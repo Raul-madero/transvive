@@ -285,119 +285,100 @@ session_start();
 
 
  
-    <script type="text/javascript">
+	<script type="text/javascript">
 
-      load_data(); // first load
+// Cargar datos iniciales
+load_data();
 
-      function load_data(initial_date, final_date, gender){
-        var ajax_url = "data/datadetorders_mantto.php";
+function load_data(initial_date = "", final_date = "", gender = "") {
+	const ajax_url = "data/datadetorders_mantto.php";
 
-        $('#fetch_generated_wills').DataTable({
-          "order": [[ 0, "desc" ]],
-          dom: 'Bfrtip',
-lengthMenu: [
-[20, 25, 50, -1],
-['20 rows', '25 rows', '50 rows', 'Show all']
-],
-buttons: [
-'excelHtml5',
-'pageLength'
-],
-          "processing": true,
-          "serverSide": true,
-          "stateSave": true,
-          "responsive": true,
-          "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-          "ajax" : {
-            "url" : ajax_url,
-            "dataType": "json",
-            "type": "POST",
-            "data" : { 
-              "action" : "fetch_users", 
-              "initial_date" : initial_date, 
-              "final_date" : final_date,
-              "gender" : gender 
-              
-            },
-            "dataSrc": "records"
-          },
-          "columns": [
-            { "data" : "pedidono", "width": "3%", className: "text-right" },
-            { "data" : "noorden", "width": "5%" },
-            { "data" : "fechaa", "width": "5%", className: "text-right", "orderable": false},
-            { "data" : "unidad", "width": "5%", "orderable": false},
-            { "data" : "solicita", "width": "18%", "orderable":false },
-            { "data" : "tipojob", "width": "12%", "orderable":false },
-            { "data" : "tipomantto", "width": "8%" },
-            { "data" : "trabsolicitado", "width": "12%" },
-            { "data" : "estatusped", "width": "8%", "orderable":false },
-              
-          
-            {
-                    "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a>';
-    }
-                    
-            
- },
+	// Configuración común de DataTable
+	const tableConfig = {
+		"order": [[0, "desc"]],
+		dom: 'Bfrtip',
+		lengthMenu: [
+			[20, 25, 50, -1],
+			['20 rows', '25 rows', '50 rows', 'Show all']
+		],
+		buttons: [
+			'excelHtml5',
+			'pageLength'
+		],
+		"processing": true,
+		"serverSide": true,
+		"stateSave": true,
+		"responsive": true,
+		"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+		"ajax": {
+			"url": ajax_url,
+			"dataType": "json",
+			"type": "POST",
+			"data": {
+				"action": "fetch_users",
+				"initial_date": initial_date,
+				"final_date": final_date,
+				"gender": gender
+			},
+			"dataSrc": "records"
+		},
+		"columns": [
+			{ "data": "pedidono", "width": "3%", className: "text-right" },
+			{ "data": "noorden", "width": "5%" },
+			{ "data": "fechaa", "width": "5%", className: "text-right", "orderable": false },
+			{ "data": "unidad", "width": "5%", "orderable": false },
+			{ "data": "solicita", "width": "18%", "orderable": false },
+			{ "data": "tipojob", "width": "12%", "orderable": false },
+			{ "data": "tipomantto", "width": "8%" },
+			{ "data": "trabsolicitado", "width": "12%" },
+			{ "data": "estatusped", "width": "8%", "orderable": false },
+			{
+				"render": function (data, type, full, meta) {
+					return `<a class="link_edit" style="color:#007bff;" href='edit_solicitudmantto.php?id=${full.pedidono}'><i class="far fa-edit"></i> Editar</a> |
+							<a href='factura/form_ordenmantto.php?id=${full.noorden}' target="_blank"><i class="fa fa-print" style="color:white; font-size: 1.3em"></i> Print</a> |
+							<a data-toggle="modal" data-target="#modalEditcliente" data-id='${full.pedidono}' data-name='${full.noorden}' href="javascript:void(0)" class="link_delete" style="color:red"><i class="fa fa-ban"></i> Cancelar</a>`;
+				}
+			}
+		]
+	};
 
-         
-            
-          ],
-          "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
-    "buttons": [
-        'copyHtml5',
-        'excelHtml5',
-        'csvHtml5',     
-        {
-            extend: 'colvis',
-            postfixButtons: [ 'colvisRestore' ],
-            columns: '0,1,2,3,4,5,6'
-        }
-    ],
-         
-        }); 
-      }  
+	$('#fetch_generated_wills').DataTable(tableConfig);
+}
 
-      $("#filter").click(function(){
-        var initial_date = $("#initial_date").val();
-        var final_date = $("#final_date").val();
-        var gender = $("#gender").val();
+// Evento de filtro
+$("#filter").click(function () {
+	const initial_date = $("#initial_date").val();
+	const final_date = $("#final_date").val();
+	const gender = $("#gender").val();
 
-        if(initial_date == '' && final_date == ''){
-          $('#fetch_generated_wills').DataTable().destroy();
-          load_data("", "", gender); // filter immortalize only
-        }else{
-          var date1 = new Date(initial_date);
-          var date2 = new Date(final_date);
-          var diffTime = Math.abs(date2 - date1);
-          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+	// Validar fechas
+	if (!initial_date && !final_date) {
+		$('#fetch_generated_wills').DataTable().destroy();
+		load_data("", "", gender);
+	} else if (!initial_date || !final_date) {
+		$("#error_log").html("<span class='text-warning'>Warning: You must select both (start and end) dates.</span>");
+	} else {
+		const date1 = new Date(initial_date);
+		const date2 = new Date(final_date);
 
-          if(initial_date == '' || final_date == ''){
-              $("#error_log").html("Warning: You must select both (start and end) date.</span>");
-          }else{
-            if(date1 > date2){
-                $("#error_log").html("Warning: End date should be greater then start date.");
-            }else{
-               $("#error_log").html(""); 
-               $('#fetch_generated_wills').DataTable().destroy();
-               load_data(initial_date, final_date, gender);
-            }
-          }
-        }
-      });
+		if (date1 > date2) {
+			$("#error_log").html("<span class='text-warning'>Warning: End date should be greater than start date.</span>");
+		} else {
+			$("#error_log").html(""); // Limpiar mensajes de error
+			$('#fetch_generated_wills').DataTable().destroy();
+			load_data(initial_date, final_date, gender);
+		}
+	}
+});
 
-      
+// Configuración del Datepicker
+$(".datepicker").datepicker({
+	language: 'es',
+	dateFormat: "yy-mm-dd",
+	changeYear: true
+});
 
-            // Datapicker 
-            $( ".datepicker" ).datepicker({
-                language: 'es',
-                "dateFormat": "yy-mm-dd",
-                changeYear: true
-            });
-
-
-    </script>
+</script>
 
 
 
