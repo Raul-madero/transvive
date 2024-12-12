@@ -1,4 +1,4 @@
-n amor<?php
+<?php
 
 include "../conexion.php";
 session_start();
@@ -339,9 +339,9 @@ buttons: [
     }
                     
             
- } 
+ },
 
-         
+         console.log(load_data())
             
           ],
           "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
