@@ -1914,7 +1914,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			.catch(error => console.log(error)); 
 			
 		const mostrar = (articulos) => { 
-			articulos.forEach(element => { myChart.data.labels.push(element.cliente); myChart.data.datasets[0].data.push(element.tiempo_forma); myChart.data.datasets[1].data.push(element.tiempo_respuesta); myChart.data.datasets[2].data.push(element.disponibilidad); myChart.data.datasets[3].data.push(element.calidad); myChart.data.datasets[4].data.push(element.asesoria_tecnica); myChart.data.datasets[5].data.push(element.limpieza_condicion); myChart.data.datasets[6].data.push(element.servicio_operador); myChart.data.datasets[7].data.push(element.conduce_adecuado);
+			articulos.forEach(element => { 
+				myChart.data.labels.push(element.cliente); myChart.data.datasets[0].data.push(element.tiempo_forma);
+				myChart.data.datasets[1].data.push(element.tiempo_respuesta); 
+				myChart.data.datasets[2].data.push(element.disponibilidad); 
+				myChart.data.datasets[3].data.push(element.calidad); myChart.data.datasets[4].data.push(element.asesoria_tecnica); 
+				myChart.data.datasets[5].data.push(element.limpieza_condicion); 
+				myChart.data.datasets[6].data.push(element.servicio_operador); 
+				myChart.data.datasets[7].data.push(element.conduce_adecuado);
 
 	</script>
 
