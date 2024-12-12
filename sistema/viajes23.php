@@ -15,7 +15,7 @@ session_start();
   header('Location: ../index.php');
 }
 
-  $sql01= mysqli_query($conection,"SELECT * FROM registro_viajes WHERE estatus= 1");
+  $sql01= mysqli_query($conection,"SELECT * FROM registro_viajes WHERE estatus= 1 ORDER BY fecha DESC");
   mysqli_close($conection);
   $result_sql01 = mysqli_num_rows($sql01);
 
