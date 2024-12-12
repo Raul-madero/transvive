@@ -300,6 +300,7 @@ session_start();
     <script type="text/javascript">
 
       load_data(); // first load
+      
 
       function load_data(initial_date, final_date, gender){
         var ajax_url = "data/datadetorders_ordenc.php";

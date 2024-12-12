@@ -1,9 +1,9 @@
 <?php
 session_start();
-include '../config/db-config.php';
+include '../../conexion.php';
 
 
-global $connection;
+global $conection;
 
 if($_REQUEST['action'] == 'fetch_users'){
 
