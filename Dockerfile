@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.4-fpm
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mysqli

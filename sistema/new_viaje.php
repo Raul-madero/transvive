@@ -14,15 +14,15 @@ session_start();
    }
 
 
-  $sqlopr   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name_operador from empleados where estatus = 1 ORDER BY apellido_paterno";
+  $sqlopr   = "SELECT concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS name_operador FROM empleados WHERE estatus = 1 ORDER BY apellido_paterno";
   $queryopr = mysqli_query($conection, $sqlopr);
   $filasopr = mysqli_fetch_all($queryopr, MYSQLI_ASSOC); 
 
-  $sqlcte = "select * from rutas group by cliente ORDER BY cliente";
+  $sqlcte = "SELECT cliente, COUNT(*) as total_rutas FROM rutas GROUP BY cliente ORDER BY cliente";
   $querycte = mysqli_query($conection, $sqlcte);
   $filascte = mysqli_fetch_all($querycte, MYSQLI_ASSOC);
 
-  $sqlsupv = "select id, idacceso, concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name_superv from supervisores where estatus = 1 ORDER BY nombres";
+  $sqlsupv = "SELECT id, idacceso, concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) AS name_superv FROM supervisores WHERE estatus = 1 ORDER BY nombres";
   $querysupv = mysqli_query($conection, $sqlsupv);
   $filassup = mysqli_fetch_all($querysupv, MYSQLI_ASSOC);
 

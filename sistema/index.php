@@ -1,1092 +1,882 @@
 <?php
 include "../conexion.php";
 session_start();
+
+// Obtener información del usuario y rol
 $User = $_SESSION['user'];
 $rol = $_SESSION['rol'];
-$sql = "select * from rol where idrol =$rol ";
+$sql = "SELECT * FROM rol WHERE idrol = $rol";
 $query = mysqli_query($conection, $sql);
 $filas = mysqli_fetch_assoc($query);
-
 $namerol = $filas['rol'];
+$dhoy = date("Y-m-d");
+$mes_actual = date("m");
+$name_semana = '';
+$diaini = '';
+$diafin = '';
 
-$sqlenc = mysqli_query($conection, "SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(importe) as Importec, sum(litros) as Litros FROM carga_combustible WHERE YEAR(fecha) = YEAR('2024') and estatus <> 0 GROUP BY MONTH(fecha)");
-mysqli_close($conection);
-$sqlenc && $result_sqlenc = mysqli_num_rows($sqlenc);
+$sqlnsem = mysqli_query($conection, "SELECT semana as Nsemana, dia_inicial as Dini, dia_final as Dfin FROM semanas WHERE '$dhoy' BETWEEN dia_inicial AND dia_final");
+if (!$sqlnsem) {
+    die("Error en la consulta de la semana: " . mysqli_error($conection));
+}
 
-if ($result_sqlenc == 0) {
-	$importemes1 = 0;
-	$importemes2 = 0;
-	$importemes3 = 0;
-	$importemes4 = 0;
-	$importemes5 = 0;
-	$importemes6 = 0;
-	$importemes7 = 0;
-	$importemes8 = 0;
-	$importemes9 = 0;
-	$importemes10 = 0;
-	$importemes11 = 0;
-	$importemes12 = 0;
+// Verificar si se obtuvo la semana
+if ($srow = mysqli_fetch_array($sqlnsem)) {
+    $name_semana = $srow['Nsemana'];
+	$diaini = $srow['Dini'];
+	$diafin = $srow['Dfin'];
 } else {
-	while ($data = mysqli_fetch_array($sqlenc)) {
-		$mes = $data['Nmes'];
-		switch ($mes) {
-			case 1:
-				$importemes1 = $data['Importec'];
-				$litros1 = $data['Litros'];
-				break;
-
-			case 2:
-				$importemes2 = $data['Importec'];
-				$litros2 = $data['Litros'];
-				break;
-
-			case 3:
-				$importemes3 = $data['Importec'];
-				$litros3 = $data['Litros'];
-				break;
-
-			case 4:
-				$importemes4 = $data['Importec'];
-				$litros4 = $data['Litros'];
-				break;
-
-			case 5:
-				$importemes5 = $data['Importec'];
-				$litros5 = $data['Litros'];
-				break;
-
-			case 6:
-				$importemes6 = $data['Importec'];
-				$litros6 = $data['Litros'];
-				break;
-
-			case 7:
-				$importemes7 = $data['Importec'];
-				$litros7 = $data['Litros'];
-				break;
-
-			case 8:
-				$importemes8 = $data['Importec'];
-				$litros8 = $data['Litros'];
-				break;
-
-			case 9:
-				$importemes9 = $data['Importec'];
-				$litros9 = $data['Litros'];
-				break;
-
-			case 10:
-				$importemes10 = $data['Importec'];
-				$litros10 = $data['Litros'];
-				break;
-
-			case 11:
-				$importemes11 = $data['Importec'];
-				$litros11 = $data['Litros'];
-				break;
-
-			case 12:
-				$importemes12 = $data['Importec'];
-				$litros12 = $data['Litros'];
-				break;
-
-				//...
-		}
-	}
-	if (isset($importemes1)) {
-		$nimportemes1 = $importemes1;
-		$nlitros1 = $litros1;
-	} else {
-		$nimportemes1 = 0;
-		$nlitros1 = 0;
-	}
-	if (isset($importemes2)) {
-		$nimportemes2 = $importemes2;
-		$nlitros2 = $litros2;
-	} else {
-		$nimportemes2 = 0;
-		$nlitros2 = 0;
-	}
-	if (isset($importemes3)) {
-		$nimportemes3 = $importemes3;
-		$nlitros3 = $litros3;
-	} else {
-		$nimportemes3 = 0;
-		$nlitros3 = 0;
-	}
-	if (isset($importemes4)) {
-		$nimportemes4 = $importemes4;
-		$nlitros4 = $litros4;
-	} else {
-		$nimportemes4 = 0;
-		$nlitros4 = 0;
-	}
-	if (isset($importemes5)) {
-		$nimportemes5 = $importemes5;
-		$nlitros5 = $litros5;
-	} else {
-		$nimportemes5 = 0;
-		$nlitros5 = 0;
-	}
-	if (isset($importemes6)) {
-		$nimportemes6 = $importemes6;
-		$nlitros6 = $litros6;
-	} else {
-		$nimportemes6 = 0;
-		$nlitros6 = 0;
-	}
-	if (isset($importemes7)) {
-		$nimportemes7 = $importemes7;
-		$nlitros7 = $litros7;
-	} else {
-		$nimportemes7 = 0;
-		$nlitros7 = 0;
-	}
-	if (isset($importemes8)) {
-		$nimportemes8 = $importemes8;
-		$nlitros8 = $litros8;
-	} else {
-		$nimportemes8 = 0;
-		$nlitros8 = 0;
-	}
-	if (isset($importemes9)) {
-		$nimportemes9 = $importemes9;
-		$nlitros9 = $litros9;
-	} else {
-		$nimportemes9 = 0;
-		$nlitros9 = 0;
-	}
-	if (isset($importemes10)) {
-		$nimportemes10 = $importemes10;
-		$nlitros10 = $litros10;
-	} else {
-		$nimportemes10 = 0;
-		$nlitros10 = 0;
-	}
-
-	if (isset($importemes11)) {
-		$nimportemes11 = $importemes11;
-		$nlitros11 = $litros11;
-	} else {
-		$nimportemes11 = 0;
-		$nlitros11 = 0;
-	}
-
-	if (isset($importemes12)) {
-		$nimportemes12 = $importemes12;
-		$nlitros12 = $litros12;
-	} else {
-		$nimportemes12 = 0;
-		$nlitros12 = 0;
-	}
-}
-include '../conexion.php'; //Conexion a la base de datos
-$sqlenc = mysqli_query($conection, "SELECT 
-                                                    MONTH(fecha) as Nmes, 
-                                                    YEAR(fecha) as anio, 
-                                                    SUM(total) as totalcompra 
-                                                  FROM 
-                                                    compras
-                                                  WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus <> 0 
-                                                  GROUP BY anio, Nmes
-                                                  ORDER BY anio, Nmes");
-//Validar consulta
-if (!$sqlenc) {
-	die("Error en la consulta");
-}
-$datos_compras = [];
-while ($data = mysqli_fetch_array($sqlenc)) {
-	$datos_compras[] = $data;
-}
-
-mysqli_close($conection);
-$result_sqlenc = mysqli_num_rows($sqlenc);
-if ($result_sqlenc == 0) {
-	$importemesc1 = 0;
-	$importemesc2 = 0;
-	$importemesc3 = 0;
-	$importemesc4 = 0;
-	$importemesc5 = 0;
-	$importemesc6 = 0;
-	$importemesc7 = 0;
-	$importemesc8 = 0;
-	$importemesc9 = 0;
-	$importemesc10 = 0;
-	$importemesc11 = 0;
-	$importemesc12 = 0;
-} else {
-	while ($data = mysqli_fetch_array($sqlenc)) {
-		$mes = $data['Nmes'];
-		switch ($mes) {
-			case 1:
-				$importemesc1 = $data['totalcompra'];
-				break;
-
-			case 2:
-				$importemesc2 = $data['totalcompra'];
-				break;
-
-			case 3:
-				$importemesc3 = $data['totalcompra'];
-				break;
-
-			case 4:
-				$importemesc4 = $data['totalcompra'];
-				break;
-
-			case 5:
-				$importemesc5 = $data['totalcompra'];
-				break;
-
-			case 6:
-				$importemesc6 = $data['totalcompra'];
-				break;
-
-			case 7:
-				$importemesc7 = $data['totalcompra'];
-				break;
-
-			case 8:
-				$importemesc8 = $data['totalcompra'];
-				break;
-
-			case 9:
-				$importemesc9 = $data['totalcompra'];
-				break;
-
-			case 10:
-				$importemesc10 = $data['totalcompra'];
-				break;
-
-			case 11:
-				$importemesc11 = $data['totalcompra'];
-				break;
-
-			case 12:
-				$importemesc12 = $data['totalcompra'];
-				break;
-
-				//...
-		}
-		if (isset($importemesc1)) {
-			$comprames1 = $importemesc1;
-		} else {
-			$comprames1 = 0;
-		}
-
-		if (isset($importemesc2)) {
-			$comprames2 = $importemesc2;
-		} else {
-			$comprames2 = 0;
-		}
-
-		if (isset($importemesc3)) {
-			$comprames3 = $importemesc3;
-		} else {
-			$comprames3 = 0;
-		}
-
-		if (isset($importemesc4)) {
-			$comprames4 = $importemesc4;
-		} else {
-			$comprames4 = 0;
-		}
-
-		if (isset($importemesc5)) {
-			$comprames5 = $importemesc5;
-		} else {
-			$comprames5 = 0;
-		}
-
-		if (isset($importemesc6)) {
-			$comprames6 = $importemesc6;
-		} else {
-			$comprames6 = 0;
-		}
-
-		if (isset($importemesc7)) {
-			$comprames7 = $importemesc7;
-		} else {
-			$comprames7 = 0;
-		}
-
-		if (isset($importemesc8)) {
-			$comprames8 = $importemesc8;
-		} else {
-			$comprames8 = 0;
-		}
-
-		if (isset($importemesc9)) {
-			$comprames9 = $importemesc9;
-		} else {
-			$comprames9 = 0;
-		}
-
-		if (isset($importemesc10)) {
-			$comprames10 = $importemesc10;
-		} else {
-			$comprames10 = 0;
-		}
-
-		if (isset($importemesc11)) {
-			$comprames11 = $importemesc11;
-		} else {
-			$comprames11 = 0;
-		}
-
-		if (isset($importemesc12)) {
-			$comprames12 = $importemesc12;
-		} else {
-			$comprames12 = 0;
-		}
-	}
-}
-
-
-include "../conexion.php";
-$sqlenc = mysqli_query($conection, "SELECT 
-                                                    MONTH(fecha) as Nmes, 
-                                                    YEAR(fecha) as anio, 
-                                                    SUM(total) as totalocompra 
-                                                  FROM 
-                                                    orden_compra 
-                                                  WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus <> 0 
-                                                  GROUP BY anio, Nmes
-                                                  ORDER BY anio, Nmes");
-mysqli_close($conection);
-$result_sqlenc = mysqli_num_rows($sqlenc);
-
-if ($result_sqlenc == 0) {
-	$importemesoc1 = 0;
-	$importemesoc2 = 0;
-	$importemesoc3 = 0;
-	$importemesoc4 = 0;
-	$importemesoc5 = 0;
-	$importemesoc6 = 0;
-	$importemesoc7 = 0;
-	$importemesoc8 = 0;
-	$importemesoc9 = 0;
-	$importemesoc10 = 0;
-	$importemesoc11 = 0;
-	$importemesoc12 = 0;
-} else {
-
-	while ($data = mysqli_fetch_array($sqlenc)) {
-		$mes = $data['Nmes'];
-		switch ($mes) {
-			case 1:
-				$importemesoc1 = $data['totalocompra'];
-				break;
-
-			case 2:
-				$importemesoc2 = $data['totalocompra'];
-				break;
-
-			case 3:
-				$importemesoc3 = $data['totalocompra'];
-				break;
-
-			case 4:
-				$importemesoc4 = $data['totalocompra'];
-				break;
-
-			case 5:
-				$importemesoc5 = $data['totalocompra'];
-				break;
-
-			case 6:
-				$importemesoc6 = $data['totalocompra'];
-				break;
-
-			case 7:
-				$importemesoc7 = $data['totalocompra'];
-				break;
-
-			case 8:
-				$importemesoc8 = $data['totalocompra'];
-				break;
-
-			case 9:
-				$importemesoc9 = $data['totalocompra'];
-				break;
-
-			case 10:
-				$importemesco10 = $data['totalocompra'];
-				break;
-
-			case 11:
-				$importemesoc11 = $data['totalocompra'];
-				break;
-
-			case 12:
-				$importemesoc12 = $data['totalocompra'];
-				break;
-
-				//...
-		}
-		if (isset($importemesoc1)) {
-			$ocomprames1 = $importemesoc1;
-		} else {
-			$ocomprames1 = 0;
-		}
-
-		if (isset($importemesoc2)) {
-			$ocomprames2 = $importemesoc2;
-		} else {
-			$ocomprames2 = 0;
-		}
-
-		if (isset($importemesoc3)) {
-			$ocomprames3 = $importemesoc3;
-		} else {
-			$ocomprames3 = 0;
-		}
-
-		if (isset($importemesoc4)) {
-			$ocomprames4 = $importemesoc4;
-		} else {
-			$ocomprames4 = 0;
-		}
-
-		if (isset($importemesoc5)) {
-			$ocomprames5 = $importemesoc5;
-		} else {
-			$ocomprames5 = 0;
-		}
-
-		if (isset($importemesoc6)) {
-			$ocomprames6 = $importemesoc6;
-		} else {
-			$ocomprames6 = 0;
-		}
-
-		if (isset($importemesoc7)) {
-			$ocomprames7 = $importemesoc7;
-		} else {
-			$ocomprames7 = 0;
-		}
-
-		if (isset($importemesoc8)) {
-			$ocomprames8 = $importemesoc8;
-		} else {
-			$ocomprames8 = 0;
-		}
-
-		if (isset($importemesoc9)) {
-			$ocomprames9 = $importemesoc9;
-		} else {
-			$ocomprames9 = 0;
-		}
-
-		if (isset($importemesoc10)) {
-			$ocomprames10 = $importemesoc10;
-		} else {
-			$ocomprames10 = 0;
-		}
-
-		if (isset($importemesoc11)) {
-			$ocomprames11 = $importemesoc11;
-		} else {
-			$ocomprames11 = 0;
-		}
-
-		if (isset($importemesoc12)) {
-			$ocomprames12 = $importemesoc12;
-		} else {
-			$ocomprames12 = 0;
-		}
-	}
+    // En caso de no encontrar la semana correspondiente
+    echo "No se pudo determinar la semana para la fecha actual.";
+    mysqli_close($conection);
+    exit;
 }
 
 include "../conexion.php";
-$sqlprom = mysqli_query($conection, "SELECT (SUM(tiempo_forma)/COUNT(tiempo_forma) + SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) + SUM(disponibilidad)/COUNT(disponibilidad) + SUM(calidad)/COUNT(calidad) + SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) + SUM(limpieza_condicion)/COUNT(limpieza_condicion) + SUM(servicio_operador)/COUNT(servicio_operador) + SUM(conduce_adecuado)/COUNT(conduce_adecuado) + SUM(atencion_calidad)/COUNT(atencion_calidad) + SUM(servicio_facturacion)/COUNT(servicio_facturacion) + SUM(nuestros_precios)/COUNT(nuestros_precios)) / ( (COUNT(tiempo_forma) + COUNT(tiempo_respuesta) + COUNT(disponibilidad) + COUNT(calidad) + COUNT(asesoria_tecnica) + COUNT(limpieza_condicion) + COUNT(servicio_operador) + COUNT(conduce_adecuado) + COUNT(atencion_calidad) + COUNT(servicio_facturacion) + COUNT(nuestros_precios)) /  count(*)) as promedio FROM newencuesta_clientes where YEAR(fecha)  = YEAR(CURDATE())");
-mysqli_close($conection);
-while ($rowprom = mysqli_fetch_array($sqlprom)) {
-	//extract $drow;
-	$promedio = $rowprom['promedio'];
-}
 
+// Consulta SQL viajes
+$sqlviajes = mysqli_query($conection, "
+    SELECT COUNT(CASE WHEN estatus = 3 AND semana = '$name_semana' THEN valor_vuelta END) as Cancelados, MONTHNAME(fecha) AS Nmeses, YEAR(fecha) AS anio, SUM(IF(planeado=1, valor_vuelta, 0)) AS Planeados, SUM(valor_vuelta) AS Registrados, (SUM(valor_vuelta) - SUM(IF(planeado=1, valor_vuelta, 0))) AS Diferencia, 100 - (SUM(IF(planeado=1, valor_vuelta, 0)) / SUM(valor_vuelta) * 100) AS Porcdiferencia FROM registro_viajes WHERE (estatus = 3 AND semana = '$name_semana') OR (YEAR(fecha) = YEAR(CURDATE()) AND estatus = 2) GROUP BY anio, Nmeses;
+");
 
-include "../conexion.php";
-$sqlenc23 = mysqli_query($conection, "SELECT SUM(tiempo_forma)/COUNT(tiempo_forma) as Timeforma, SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) as Timerespuesta, SUM(disponibilidad)/COUNT(disponibilidad) as Disponibilidad, SUM(calidad)/COUNT(calidad) as Calidad, SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) as Asesoriatecnica, SUM(limpieza_condicion)/COUNT(limpieza_condicion) as Limpieza, SUM(servicio_operador)/COUNT(servicio_operador) as Servicio, SUM(conduce_adecuado)/COUNT(conduce_adecuado) as Conduce, SUM(atencion_calidad)/COUNT(atencion_calidad) as Atencion, SUM(servicio_facturacion)/COUNT(servicio_facturacion) as Facturacion, SUM(nuestros_precios)/COUNT(nuestros_precios) as Precios, count(*) as Numeroreg FROM newencuesta_clientes where YEAR(fecha)  = 2024");
-mysqli_close($conection);
-$result_sqlenc23 = mysqli_num_rows($sqlenc23);
-
-if ($result_sqlenc23 == 0) {
-	$resp1_23 = 0;
-	$resp2_23 = 0;
-	$resp3_23 = 0;
-	$resp4_23 = 0;
-	$resp5_23 = 0;
-	$resp6_23 = 0;
-	$resp7_23 = 0;
-	$resp8_23 = 0;
-	$resp9_23 = 0;
-	$resp10_23 = 0;
-	$resp11_23 = 0;
-	$resp12_23 = 0;
-} else {
-
-	$dataenc = mysqli_fetch_array($sqlenc23);
-	$resp1_23 = number_format($dataenc['Timeforma'], 1);
-	$resp2_23 = number_format($dataenc['Timerespuesta'], 1);
-	$resp3_23 = number_format($dataenc['Disponibilidad'], 1);
-	$resp4_23 = number_format($dataenc['Calidad'], 1);
-	$resp5_23 = number_format($dataenc['Asesoriatecnica'], 1);
-	$resp6_23 = number_format($dataenc['Limpieza'], 1);
-	$resp7_23 = number_format($dataenc['Servicio'], 1);
-	$resp8_23 = number_format($dataenc['Conduce'], 1);
-	$resp9_23 = number_format($dataenc['Atencion'], 1);
-	$resp10_23 = number_format($dataenc['Facturacion'], 1);
-	$resp11_23 = number_format($dataenc['Precios'], 1);
-	$resp12_23 = number_format($dataenc['Numeroreg'], 0);
-}
-
-
-include "../conexion.php";
-$sqlenc24 = mysqli_query($conection, "SELECT SUM(tiempo_forma)/COUNT(tiempo_forma) as Timeforma, SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) as Timerespuesta, SUM(disponibilidad)/COUNT(disponibilidad) as Disponibilidad, SUM(calidad)/COUNT(calidad) as Calidad, SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) as Asesoriatecnica, SUM(limpieza_condicion)/COUNT(limpieza_condicion) as Limpieza, SUM(servicio_operador)/COUNT(servicio_operador) as Servicio, SUM(conduce_adecuado)/COUNT(conduce_adecuado) as Conduce, SUM(atencion_calidad)/COUNT(atencion_calidad) as Atencion, SUM(servicio_facturacion)/COUNT(servicio_facturacion) as Facturacion, SUM(nuestros_precios)/COUNT(nuestros_precios) as Precios, count(*) as Numeroreg FROM newencuesta_clientes where YEAR(fecha)  = 2024");
-mysqli_close($conection);
-$result_sqlenc24 = mysqli_num_rows($sqlenc24);
-
-if ($result_sqlenc24 == 0) {
-	$resp1_24 = 0;
-	$resp2_24 = 0;
-	$resp3_24 = 0;
-	$resp4_24 = 0;
-	$resp5_24 = 0;
-	$resp6_24 = 0;
-	$resp7_24 = 0;
-	$resp8_24 = 0;
-	$resp9_24 = 0;
-	$resp10_24 = 0;
-	$resp11_24 = 0;
-	$resp12_24 = 0;
-} else {
-
-	$dataenc = mysqli_fetch_array($sqlenc24);
-	$resp1_24 = number_format($dataenc['Timeforma'], 1);
-	$resp2_24 = number_format($dataenc['Timerespuesta'], 1);
-	$resp3_24 = number_format($dataenc['Disponibilidad'], 1);
-	$resp4_24 = number_format($dataenc['Calidad'], 1);
-	$resp5_24 = number_format($dataenc['Asesoriatecnica'], 1);
-	$resp6_24 = number_format($dataenc['Limpieza'], 1);
-	$resp7_24 = number_format($dataenc['Servicio'], 1);
-	$resp8_24 = number_format($dataenc['Conduce'], 1);
-	$resp9_24 = number_format($dataenc['Atencion'], 1);
-	$resp10_24 = number_format($dataenc['Facturacion'], 1);
-	$resp11_24 = number_format($dataenc['Precios'], 1);
-	$resp12_24 = number_format($dataenc['Numeroreg'], 0);
-}
-
-include "../conexion.php";
-$sqlenc25 = mysqli_query($conection, "SELECT SUM(tiempo_forma)/COUNT(tiempo_forma) as Timeforma, SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) as Timerespuesta, SUM(disponibilidad)/COUNT(disponibilidad) as Disponibilidad, SUM(calidad)/COUNT(calidad) as Calidad, SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) as Asesoriatecnica, SUM(limpieza_condicion)/COUNT(limpieza_condicion) as Limpieza, SUM(servicio_operador)/COUNT(servicio_operador) as Servicio, SUM(conduce_adecuado)/COUNT(conduce_adecuado) as Conduce, SUM(atencion_calidad)/COUNT(atencion_calidad) as Atencion, SUM(servicio_facturacion)/COUNT(servicio_facturacion) as Facturacion, SUM(nuestros_precios)/COUNT(nuestros_precios) as Precios, count(*) as Numeroreg FROM newencuesta_clientes where YEAR(fecha)  = 2025");
-mysqli_close($conection);
-$result_sqlenc25 = mysqli_num_rows($sqlenc25);
-
-if ($result_sqlenc25 == 0) {
-	$resp1_25 = 0;
-	$resp2_25 = 0;
-	$resp3_25 = 0;
-	$resp4_25 = 0;
-	$resp5_25 = 0;
-	$resp6_25 = 0;
-	$resp7_25 = 0;
-	$resp8_25 = 0;
-	$resp9_25 = 0;
-	$resp10_25 = 0;
-	$resp11_25 = 0;
-	$resp12_25 = 0;
-} else {
-
-	$dataenc = mysqli_fetch_array($sqlenc25);
-	$resp1_25 = number_format($dataenc['Timeforma'], 1);
-	$resp2_25 = number_format($dataenc['Timerespuesta'], 1);
-	$resp3_25 = number_format($dataenc['Disponibilidad'], 1);
-	$resp4_25 = number_format($dataenc['Calidad'], 1);
-	$resp5_25 = number_format($dataenc['Asesoriatecnica'], 1);
-	$resp6_25 = number_format($dataenc['Limpieza'], 1);
-	$resp7_25 = number_format($dataenc['Servicio'], 1);
-	$resp8_25 = number_format($dataenc['Conduce'], 1);
-	$resp9_25 = number_format($dataenc['Atencion'], 1);
-	$resp10_25 = number_format($dataenc['Facturacion'], 1);
-	$resp11_25 = number_format($dataenc['Precios'], 1);
-	$resp12_25 = number_format($dataenc['Numeroreg'], 0);
-}
-
-include "../conexion.php";
-$sqlenc26 = mysqli_query($conection, "SELECT SUM(tiempo_forma)/COUNT(tiempo_forma) as Timeforma, SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) as Timerespuesta, SUM(disponibilidad)/COUNT(disponibilidad) as Disponibilidad, SUM(calidad)/COUNT(calidad) as Calidad, SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) as Asesoriatecnica, SUM(limpieza_condicion)/COUNT(limpieza_condicion) as Limpieza, SUM(servicio_operador)/COUNT(servicio_operador) as Servicio, SUM(conduce_adecuado)/COUNT(conduce_adecuado) as Conduce, SUM(atencion_calidad)/COUNT(atencion_calidad) as Atencion, SUM(servicio_facturacion)/COUNT(servicio_facturacion) as Facturacion, SUM(nuestros_precios)/COUNT(nuestros_precios) as Precios, count(*) as Numeroreg FROM newencuesta_clientes where YEAR(fecha)  = 2026");
-mysqli_close($conection);
-$result_sqlenc26 = mysqli_num_rows($sqlenc26);
-
-if ($result_sqlenc26 == 0) {
-	$resp1_26 = 0;
-	$resp2_26 = 0;
-	$resp3_26 = 0;
-	$resp4_26 = 0;
-	$resp5_26 = 0;
-	$resp6_26 = 0;
-	$resp7_26 = 0;
-	$resp8_26 = 0;
-	$resp9_26 = 0;
-	$resp10_26 = 0;
-	$resp11_26 = 0;
-	$resp12_26 = 0;
-} else {
-
-	$dataenc = mysqli_fetch_array($sqlenc26);
-	$resp1_26 = number_format($dataenc['Timeforma'], 1);
-	$resp2_26 = number_format($dataenc['Timerespuesta'], 1);
-	$resp3_26 = number_format($dataenc['Disponibilidad'], 1);
-	$resp4_26 = number_format($dataenc['Calidad'], 1);
-	$resp5_26 = number_format($dataenc['Asesoriatecnica'], 1);
-	$resp6_26 = number_format($dataenc['Limpieza'], 1);
-	$resp7_26 = number_format($dataenc['Servicio'], 1);
-	$resp8_26 = number_format($dataenc['Conduce'], 1);
-	$resp9_26 = number_format($dataenc['Atencion'], 1);
-	$resp10_26 = number_format($dataenc['Facturacion'], 1);
-	$resp11_26 = number_format($dataenc['Precios'], 1);
-	$resp12_26 = number_format($dataenc['Numeroreg'], 0);
-}
-
-include "../conexion.php";
-$sqlenc27 = mysqli_query($conection, "SELECT SUM(tiempo_forma)/COUNT(tiempo_forma) as Timeforma, SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) as Timerespuesta, SUM(disponibilidad)/COUNT(disponibilidad) as Disponibilidad, SUM(calidad)/COUNT(calidad) as Calidad, SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) as Asesoriatecnica, SUM(limpieza_condicion)/COUNT(limpieza_condicion) as Limpieza, SUM(servicio_operador)/COUNT(servicio_operador) as Servicio, SUM(conduce_adecuado)/COUNT(conduce_adecuado) as Conduce, SUM(atencion_calidad)/COUNT(atencion_calidad) as Atencion, SUM(servicio_facturacion)/COUNT(servicio_facturacion) as Facturacion, SUM(nuestros_precios)/COUNT(nuestros_precios) as Precios, count(*) as Numeroreg FROM newencuesta_clientes where YEAR(fecha)  = 2027");
-mysqli_close($conection);
-$result_sqlenc27 = mysqli_num_rows($sqlenc27);
-
-if ($result_sqlenc27 == 0) {
-	$resp1_27 = 0;
-	$resp2_27 = 0;
-	$resp3_27 = 0;
-	$resp4_27 = 0;
-	$resp5_27 = 0;
-	$resp6_27 = 0;
-	$resp7_27 = 0;
-	$resp8_27 = 0;
-	$resp9_27 = 0;
-	$resp10_27 = 0;
-	$resp11_27 = 0;
-	$resp12_27 = 0;
-} else {
-
-	$dataenc = mysqli_fetch_array($sqlenc27);
-	$resp1_27 = number_format($dataenc['Timeforma'], 1);
-	$resp2_27 = number_format($dataenc['Timerespuesta'], 1);
-	$resp3_27 = number_format($dataenc['Disponibilidad'], 1);
-	$resp4_27 = number_format($dataenc['Calidad'], 1);
-	$resp5_27 = number_format($dataenc['Asesoriatecnica'], 1);
-	$resp6_27 = number_format($dataenc['Limpieza'], 1);
-	$resp7_27 = number_format($dataenc['Servicio'], 1);
-	$resp8_27 = number_format($dataenc['Conduce'], 1);
-	$resp9_27 = number_format($dataenc['Atencion'], 1);
-	$resp10_27 = number_format($dataenc['Facturacion'], 1);
-	$resp11_27 = number_format($dataenc['Precios'], 1);
-	$resp12_27 = number_format($dataenc['Numeroreg'], 0);
-}
-
-include "../conexion.php";
-$sqlenc28 = mysqli_query($conection, "SELECT SUM(tiempo_forma)/COUNT(tiempo_forma) as Timeforma, SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) as Timerespuesta, SUM(disponibilidad)/COUNT(disponibilidad) as Disponibilidad, SUM(calidad)/COUNT(calidad) as Calidad, SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) as Asesoriatecnica, SUM(limpieza_condicion)/COUNT(limpieza_condicion) as Limpieza, SUM(servicio_operador)/COUNT(servicio_operador) as Servicio, SUM(conduce_adecuado)/COUNT(conduce_adecuado) as Conduce, SUM(atencion_calidad)/COUNT(atencion_calidad) as Atencion, SUM(servicio_facturacion)/COUNT(servicio_facturacion) as Facturacion, SUM(nuestros_precios)/COUNT(nuestros_precios) as Precios, count(*) as Numeroreg FROM newencuesta_clientes where YEAR(fecha)  = 2028");
-mysqli_close($conection);
-$result_sqlenc28 = mysqli_num_rows($sqlenc28);
-
-if ($result_sqlenc28 == 0) {
-	$resp1_28 = 0;
-	$resp2_28 = 0;
-	$resp3_28 = 0;
-	$resp4_28 = 0;
-	$resp5_28 = 0;
-	$resp6_28 = 0;
-	$resp7_28 = 0;
-	$resp8_28 = 0;
-	$resp9_28 = 0;
-	$resp10_28 = 0;
-	$resp11_28 = 0;
-	$resp12_28 = 0;
-} else {
-
-	$dataenc = mysqli_fetch_array($sqlenc28);
-	$resp1_28 = number_format($dataenc['Timeforma'], 2);
-	$resp2_28 = number_format($dataenc['Timerespuesta'], 2);
-	$resp3_28 = number_format($dataenc['Disponibilidad'], 2);
-	$resp4_28 = number_format($dataenc['Calidad'], 2);
-	$resp5_28 = number_format($dataenc['Asesoriatecnica'], 2);
-	$resp6_28 = number_format($dataenc['Limpieza'], 2);
-	$resp7_28 = number_format($dataenc['Servicio'], 2);
-	$resp8_28 = number_format($dataenc['Conduce'], 2);
-	$resp9_28 = number_format($dataenc['Atencion'], 2);
-	$resp10_28 = number_format($dataenc['Facturacion'], 2);
-	$resp11_28 = number_format($dataenc['Precios'], 2);
-	$resp12_28 = number_format($dataenc['Numeroreg'], 0);
-}
-
-include "../conexion.php";
-$sqlviajes = mysqli_query($conection, "SELECT 
-                                                        MONTHNAME(fecha) AS Nmeses, 
-                                                        YEAR(fecha) AS anio, 
-                                                        SUM(IF(planeado=1, valor_vuelta, 0)) AS Planeados, 
-                                                        SUM(valor_vuelta) AS Registrados, 
-                                                        (SUM(valor_vuelta) - SUM(IF(planeado=1, valor_vuelta, 0))) AS Diferencia, 
-                                                        CASE 
-                                                            WHEN SUM(valor_vuelta) = 0 THEN 0
-                                                            ELSE 100 - (SUM(IF(planeado=1, valor_vuelta, 0)) / SUM(valor_vuelta) * 100)
-                                                        END AS Porcdiferencia
-                                                    FROM 
-                                                        registro_viajes
-                                                    WHERE 
-                                                        YEAR(fecha) = YEAR(CURDATE()) 
-                                                        AND estatus = 2
-                                                    GROUP BY 
-                                                        anio, Nmeses
-                                                    ");
+// Verificación de la consulta SQL
 if (!$sqlviajes) {
-	die("Error en la consulta: " . mysqli_error($conection));
-};
+    die("Error en la consulta: " . mysqli_error($conection));
+}
 
-$values = [];
-$dato2 = [];
-$dato3 = [];
-$dato4 = [];
-$dato5 = [];
+// Inicialización del array de resultados
+$viajesData = [];
 
 while ($drow = mysqli_fetch_assoc($sqlviajes)) {
-	$values[] = $drow['Nmeses'];
-	$dato2[] = $drow['Planeados'];
-	$dato3[] = $drow['Registrados'];
-	$dato4[] = $drow['Diferencia'];
-	$dato5[] = number_format($drow['Porcdiferencia'], 2);
+    $viajesData[] = [
+        'Nmeses' => $drow['Nmeses'],
+        'Planeados' => $drow['Planeados'],
+        'Registrados' => $drow['Registrados'],
+        'Diferencia' => $drow['Diferencia'],
+        'Porcdiferencia' => number_format($drow['Porcdiferencia'], 2),
+		'Cancelados' => $drow['Cancelados']
+    ];
+}
+
+$datos_mes_actual = $viajesData[9];
+
+//Calcular Porcentajes
+ $p_planeados = $datos_mes_actual['Planeados'] - $datos_mes_actual['Cancelados']; 
+ $porc_planeados = ($datos_mes_actual['Planeados'] == 0) ? 0 : number_format(($p_planeados / $datos_mes_actual['Planeados']) * 100, 2); 
+ $porc_registrados = ($datos_mes_actual['Planeados'] == 0) ? 0 : number_format(100 - (($datos_mes_actual['Registrados'] / $datos_mes_actual['Planeados']) * 100), 2); 
+ $porc_diferencia = 0; 
+ $porc_cancelados = 0; 
+ if ($datos_mes_actual['Planeados'] > 0) { 
+	$p_diferencia = $datos_mes_actual['Planeados'] - $datos_mes_actual['Registrados'];
+	$porc_diferencia = number_format(($datos_mes_actual['Registrados'] / $p_diferencia) * 100, 2); 
+	$porc_cancelados = number_format(($datos_mes_actual['Cancelados'] / $datos_mes_actual['Planeados']) * 100, 2); 
+}
+
+// Consulta para obtener los datos de los viajes planeados y la diferencia para la semana
+$sqlviajes_semana = mysqli_query($conection, "
+SELECT 
+    YEAR(fecha) as anio,
+    SUM(IF(planeado = 1, 1, 0)) as ViajesPlaneadosSemana,
+    SUM(valor_vuelta) as TotalVueltasSemana,
+    SUM(IF(planeado = 1, valor_vuelta, 0)) as TotalVueltasPlaneadasSemana,
+    SUM(IF(planeado = 1, valor_vuelta, 0)) - SUM(valor_vuelta) as DiferenciaSemanal,
+    COUNT(CASE WHEN estatus = 3 THEN valor_vuelta END) as CanceladosSemana
+FROM registro_viajes
+WHERE semana = '$name_semana'
+GROUP BY YEAR(fecha)
+");
+
+
+if (!$sqlviajes_semana) {
+    die("Error en la consulta: " . mysqli_error($conection));
+}
+
+// Comprobar si se encontraron registros
+if ($prow = mysqli_fetch_assoc($sqlviajes_semana)) {
+    // Asignar los valores obtenidos
+    $viajes_planeados_semana = $prow['ViajesPlaneadosSemana'];  // Total de viajes planeados
+    $total_vueltas_semana = $prow['TotalVueltasSemana']; // Suma total de "valor_vuelta"
+    $vueltas_planeadas_semana = $prow['TotalVueltasPlaneadasSemana']; // Total de "valor_vuelta" para viajes planeados
+    $diferencia_semana = $prow['DiferenciaSemanal']; // Diferencia total calculada
+	$cancelados_semana = $prow['CanceladosSemana']; // Total de viajes cancelados
+} else {
+    // Si no se encuentran registros, asignamos valores por defecto
+    $viajes_planeados_semana = 0;
+    $total_vueltas_semana = 0;
+    $vueltas_planeadas_semana = 0;
+    $diferencia_semana = 0;
+	$cancelados_semana = 0;
+    echo "No se encontraron registros para la semana: $name_semana.";
+}
+
+//Calculo porcentajes semanales
+$p_planeados_semanales = $viajes_planeados_semana - $cancelados_semana;
+$porc_planeados_semana = ($viajes_planeados_semana == 0) ? 0 : number_format(($p_planeados_semanales / $viajes_planeados_semana) * 100, 2);
+$porc_registrados_semana = ($viajes_planeados_semana == 0) ? 0 : number_format(($vueltas_planeadas_semana / $viajes_planeados_semana) * 100, 2);
+$porc_diferencia_semana = 0;
+$porc_cancelados_semana = 0;
+if($viajes_planeados_semana > 0) {
+	$p_diferencia_semana = $viajes_planeados_semana - $vueltas_planeadas_semana;
+	$porc_diferencia_semana = number_format(($vueltas_planeadas_semana / $p_diferencia_semana) * 100, 2);
+	$porc_cancelados_semana = number_format(($cancelados_semana / $viajes_planeados_semana) * 100, 2);
 };
+
+$sqlcomprames = mysqli_query($conection, "
+	SELECT 
+		MONTHNAME(fecha) as Nmeses, 
+		YEAR(fecha) as anio, 
+		SUM(CASE 
+			WHEN fecha >= '$diaini' AND fecha <= '$diafin' THEN total 
+			ELSE 0 
+		END) as totalcompras_semana,
+		SUM(CASE 
+			WHEN MONTH(fecha) = MONTH(CURDATE()) THEN total 
+			ELSE 0 
+		END) as totalcompras_mes
+	FROM compras
+	WHERE estatus = 1
+	GROUP BY anio, Nmeses
+");
+
+if (!$sqlcomprames) {
+    die("Error en la consulta: " . mysqli_error($conection));
+}
+
+// Si hay resultados, asignamos el valor formateado
+$comprasmes = 0.00;
+$compras_semana = 0.00;
+if ($datanc = mysqli_fetch_assoc($sqlcomprames)) {
+    $comprasmes = number_format($datanc['totalcompras'], 2);
+	$compras_semana = number_format($datanc['totalcompras_semana'], 2);
+}
 
 mysqli_close($conection);
 
 include "../conexion.php";
-$sqlenc10 = mysqli_query(
-	$conection,
-	"SELECT 
-                    cliente, 
-                    fecha, 
-                    tiempo_forma, 
-                    tiempo_respuesta, 
-                    disponibilidad, 
-                    calidad, 
-                    asesoria_tecnica, 
-                    limpieza_condicion, 
-                    servicio_operador, 
-                    conduce_adecuado, 
-                    atencion_calidad, 
-                    servicio_facturacion, 
-                    nuestros_precios 
-                FROM 
-                    newencuesta_clientes 
-                WHERE 
-                    YEAR(fecha) = YEAR(CURDATE())"
-);
-// $result10 = mysql_query($sqlenc10);
-if (!$sqlenc10) {
-	die("Error en la consulta: " . mysqli_error($conection));
-};
 
-$tt = [];
-$data1 = [];
-$values24 = [];
-$dato24 = [];
-$dato34 = [];
-$dato44 = [];
+// Obtener el mes actual en formato textual
+$lasemana = date("n");
+$monthNum = $lasemana;
+$dateObj = DateTime::createFromFormat('!m', $monthNum);
+setlocale(LC_TIME, 'es_MX');
+$NameMes = $dateObj->format('F');  // Mes en español
+// Consultar importes y litros agrupados por mes
+$sqlenc = mysqli_query($conection, "
+    SELECT MONTH(fecha) AS Nmes, SUM(importe) AS Importec, SUM(litros) AS Litros 
+    FROM carga_combustible 
+    WHERE YEAR(fecha) = 2024 AND estatus <> 0 
+    GROUP BY MONTH(fecha)
+");
+
+mysqli_close($conection);
+
+$importes = array_fill(1, 12, 0); // Inicializar arreglo de importes con 12 elementos (meses) en 0
+$litros = array_fill(1, 12, 0);   // Inicializar arreglo de litros con 12 elementos (meses) en 0
+
+if ($sqlenc && mysqli_num_rows($sqlenc) > 0) {
+    while ($data = mysqli_fetch_assoc($sqlenc)) {
+        $mes = (int)$data['Nmes'];
+        $importes[$mes] = $data['Importec'];
+        $litros[$mes] = $data['Litros'];
+    }
+}
+
+$mes_consulta = (int)date('m');
+$importes_mes_actual = $importes[$mes_consulta];
+$litros_mes_actual = $litros[$mes_consulta];
+
+// Ejemplo: cómo acceder a los valores para el mes 1
+$nimportemes1 = $importes[1];
+$nlitros1 = $litros[1];
+
+// Puedes iterar o acceder fácilmente a cualquier mes con $importes y $litros
+
+// Consultar las compras agrupadas por mes y año
+include '../conexion.php'; // Conexión a la base de datos
+
+// Consultar las compras agrupadas por mes y año
+$sqlenc = mysqli_query($conection, "
+    SELECT 
+        MONTH(fecha) AS Nmes, 
+        YEAR(fecha) AS anio, 
+        SUM(total) AS totalcompra 
+    FROM compras 
+    WHERE YEAR(fecha) = YEAR(CURDATE()) AND estatus <> 0 
+    GROUP BY anio, Nmes
+    ORDER BY anio, Nmes
+");
+
+// Validar consulta
+if (!$sqlenc) {
+    die("Error en la consulta");
+}
+
+// Inicializar los arreglos para los importes por mes
+$compras_por_mes = array_fill(1, 12, 0); // Inicializa un arreglo de 12 meses con valor 0
+
+// Almacenar los resultados en el arreglo correspondiente
+while ($data = mysqli_fetch_array($sqlenc)) {
+    $mes = $data['Nmes'];
+    $compras_por_mes[$mes] = $data['totalcompra']; // Asigna el valor de compra al mes correspondiente
+}
+
+mysqli_close($conection);
+
+// Asignación final para cada mes, asegurando que el valor esté inicializado a 0 si no se encontró en la consulta
+$comprames1 = $compras_por_mes[1];
+$comprames2 = $compras_por_mes[2];
+$comprames3 = $compras_por_mes[3];
+$comprames4 = $compras_por_mes[4];
+$comprames5 = $compras_por_mes[5];
+$comprames6 = $compras_por_mes[6];
+$comprames7 = $compras_por_mes[7];
+$comprames8 = $compras_por_mes[8];
+$comprames9 = $compras_por_mes[9];
+$comprames10 = $compras_por_mes[10];
+$comprames11 = $compras_por_mes[11];
+$comprames12 = $compras_por_mes[12];
+
+include "../conexion.php"; // Conexión a la base de datos
+
+// Consultar las compras agrupadas por mes y año
+$sqlenc = mysqli_query($conection, "
+    SELECT 
+        MONTH(fecha) AS Nmes, 
+        YEAR(fecha) AS anio, 
+        SUM(total) AS totalocompra 
+    FROM orden_compra 
+    WHERE YEAR(fecha) = YEAR(CURDATE()) AND estatus <> 0 
+    GROUP BY anio, Nmes
+    ORDER BY anio, Nmes
+");
+
+// Validar la consulta
+if (!$sqlenc) {
+    die("Error en la consulta");
+}
+
+// Inicializar un arreglo con los valores de compra por mes
+$compras_por_mes = array_fill(1, 12, 0); // Inicializa un arreglo con 12 elementos, todos en 0
+
+// Almacenar los resultados en el arreglo correspondiente
+while ($data = mysqli_fetch_array($sqlenc)) {
+    $mes = $data['Nmes'];
+    $compras_por_mes[$mes] = $data['totalocompra']; // Asigna el valor de compra al mes correspondiente
+}
+
+mysqli_close($conection);
+
+// Asignación final para cada mes
+$ocomprames1 = $compras_por_mes[1];
+$ocomprames2 = $compras_por_mes[2];
+$ocomprames3 = $compras_por_mes[3];
+$ocomprames4 = $compras_por_mes[4];
+$ocomprames5 = $compras_por_mes[5];
+$ocomprames6 = $compras_por_mes[6];
+$ocomprames7 = $compras_por_mes[7];
+$ocomprames8 = $compras_por_mes[8];
+$ocomprames9 = $compras_por_mes[9];
+$ocomprames10 = $compras_por_mes[10];
+$ocomprames11 = $compras_por_mes[11];
+$ocomprames12 = $compras_por_mes[12];
+
+include "../conexion.php";
+
+$sqlprom = mysqli_query($conection, "
+    SELECT 
+        (
+            (SUM(tiempo_forma) + SUM(tiempo_respuesta) + SUM(disponibilidad) + 
+            SUM(calidad) + SUM(asesoria_tecnica) + SUM(limpieza_condicion) + 
+            SUM(servicio_operador) + SUM(conduce_adecuado) + 
+            SUM(atencion_calidad) + SUM(servicio_facturacion) + 
+            SUM(nuestros_precios)) 
+            / 
+            (COUNT(tiempo_forma) + COUNT(tiempo_respuesta) + COUNT(disponibilidad) + 
+            COUNT(calidad) + COUNT(asesoria_tecnica) + COUNT(limpieza_condicion) + 
+            COUNT(servicio_operador) + COUNT(conduce_adecuado) + 
+            COUNT(atencion_calidad) + COUNT(servicio_facturacion) + 
+            COUNT(nuestros_precios)) 
+        ) as promedio 
+    FROM newencuesta_clientes 
+    WHERE YEAR(fecha) = YEAR(CURDATE())
+");
+
+// Validar la consulta
+if (!$sqlprom) {
+    die("Error en la consulta SQL");
+}
+
+// Obtener el resultado
+$rowprom = mysqli_fetch_array($sqlprom);
+$promedio = $rowprom['promedio'] ?? 0; // Asignar 0 si no se obtiene resultado
+
+// Cerrar la conexión
+mysqli_close($conection);
+
+include "../conexion.php";
+
+// Consulta SQL optimizada: realizamos los cálculos directamente en la consulta y obtenemos todos los resultados en un solo paso
+$sqlenc23 = mysqli_query($conection, "
+    SELECT 
+        SUM(tiempo_forma)/COUNT(tiempo_forma) AS Timeforma, 
+        SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) AS Timerespuesta, 
+        SUM(disponibilidad)/COUNT(disponibilidad) AS Disponibilidad, 
+        SUM(calidad)/COUNT(calidad) AS Calidad, 
+        SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) AS Asesoriatecnica, 
+        SUM(limpieza_condicion)/COUNT(limpieza_condicion) AS Limpieza, 
+        SUM(servicio_operador)/COUNT(servicio_operador) AS Servicio, 
+        SUM(conduce_adecuado)/COUNT(conduce_adecuado) AS Conduce, 
+        SUM(atencion_calidad)/COUNT(atencion_calidad) AS Atencion, 
+        SUM(servicio_facturacion)/COUNT(servicio_facturacion) AS Facturacion, 
+        SUM(nuestros_precios)/COUNT(nuestros_precios) AS Precios, 
+        COUNT(*) AS Numeroreg 
+    FROM newencuesta_clientes 
+    WHERE YEAR(fecha) = 2024
+");
+
+// Verificar si la consulta se ejecutó correctamente
+if (!$sqlenc23) {
+    die("Error en la consulta SQL");
+}
+
+// Verificar si se obtuvo un resultado
+$dataenc = mysqli_fetch_array($sqlenc23);
+
+// Cerrar la conexión
+mysqli_close($conection);
+
+// Asignar los resultados a las variables
+if ($dataenc) {
+    // Formateamos los resultados y los almacenamos en un array
+    $respuestas = [
+        'Timeforma' => number_format($dataenc['Timeforma'], 1),
+        'Timerespuesta' => number_format($dataenc['Timerespuesta'], 1),
+        'Disponibilidad' => number_format($dataenc['Disponibilidad'], 1),
+        'Calidad' => number_format($dataenc['Calidad'], 1),
+        'Asesoriatecnica' => number_format($dataenc['Asesoriatecnica'], 1),
+        'Limpieza' => number_format($dataenc['Limpieza'], 1),
+        'Servicio' => number_format($dataenc['Servicio'], 1),
+        'Conduce' => number_format($dataenc['Conduce'], 1),
+        'Atencion' => number_format($dataenc['Atencion'], 1),
+        'Facturacion' => number_format($dataenc['Facturacion'], 1),
+        'Precios' => number_format($dataenc['Precios'], 1),
+        'Numeroreg' => number_format($dataenc['Numeroreg'], 0),
+    ];
+} else {
+    // Si no hay resultados, asignar valores por defecto
+    $respuestas = [
+        'Timeforma' => 0,
+        'Timerespuesta' => 0,
+        'Disponibilidad' => 0,
+        'Calidad' => 0,
+        'Asesoriatecnica' => 0,
+        'Limpieza' => 0,
+        'Servicio' => 0,
+        'Conduce' => 0,
+        'Atencion' => 0,
+        'Facturacion' => 0,
+        'Precios' => 0,
+        'Numeroreg' => 0,
+    ];
+}
+
+// Acceder a las variables ya formateadas
+$resp1_23 = $respuestas['Timeforma'];
+$resp2_23 = $respuestas['Timerespuesta'];
+$resp3_23 = $respuestas['Disponibilidad'];
+$resp4_23 = $respuestas['Calidad'];
+$resp5_23 = $respuestas['Asesoriatecnica'];
+$resp6_23 = $respuestas['Limpieza'];
+$resp7_23 = $respuestas['Servicio'];
+$resp8_23 = $respuestas['Conduce'];
+$resp9_23 = $respuestas['Atencion'];
+$resp10_23 = $respuestas['Facturacion'];
+$resp11_23 = $respuestas['Precios'];
+$resp12_23 = $respuestas['Numeroreg'];
+
+include "../conexion.php";
+
+// Consulta SQL optimizada: se realiza todo el cálculo en un solo paso
+$sqlenc24 = mysqli_query($conection, "
+    SELECT 
+        SUM(tiempo_forma)/COUNT(tiempo_forma) AS Timeforma, 
+        SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) AS Timerespuesta, 
+        SUM(disponibilidad)/COUNT(disponibilidad) AS Disponibilidad, 
+        SUM(calidad)/COUNT(calidad) AS Calidad, 
+        SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) AS Asesoriatecnica, 
+        SUM(limpieza_condicion)/COUNT(limpieza_condicion) AS Limpieza, 
+        SUM(servicio_operador)/COUNT(servicio_operador) AS Servicio, 
+        SUM(conduce_adecuado)/COUNT(conduce_adecuado) AS Conduce, 
+        SUM(atencion_calidad)/COUNT(atencion_calidad) AS Atencion, 
+        SUM(servicio_facturacion)/COUNT(servicio_facturacion) AS Facturacion, 
+        SUM(nuestros_precios)/COUNT(nuestros_precios) AS Precios, 
+        COUNT(*) AS Numeroreg 
+    FROM newencuesta_clientes 
+    WHERE YEAR(fecha) = 2024
+");
+
+// Verificar si la consulta se ejecutó correctamente
+if (!$sqlenc24) {
+    die("Error en la consulta SQL");
+}
+
+// Verificar si se obtuvo un resultado
+$dataenc = mysqli_fetch_array($sqlenc24);
+
+// Cerrar la conexión
+mysqli_close($conection);
+
+// Asignar los resultados a un array
+$respuestas = [
+    'Timeforma' => number_format($dataenc['Timeforma'] ?? 0, 1),
+    'Timerespuesta' => number_format($dataenc['Timerespuesta'] ?? 0, 1),
+    'Disponibilidad' => number_format($dataenc['Disponibilidad'] ?? 0, 1),
+    'Calidad' => number_format($dataenc['Calidad'] ?? 0, 1),
+    'Asesoriatecnica' => number_format($dataenc['Asesoriatecnica'] ?? 0, 1),
+    'Limpieza' => number_format($dataenc['Limpieza'] ?? 0, 1),
+    'Servicio' => number_format($dataenc['Servicio'] ?? 0, 1),
+    'Conduce' => number_format($dataenc['Conduce'] ?? 0, 1),
+    'Atencion' => number_format($dataenc['Atencion'] ?? 0, 1),
+    'Facturacion' => number_format($dataenc['Facturacion'] ?? 0, 1),
+    'Precios' => number_format($dataenc['Precios'] ?? 0, 1),
+    'Numeroreg' => number_format($dataenc['Numeroreg'] ?? 0, 0),
+];
+
+// Acceder a las variables ya formateadas
+$resp1_24 = $respuestas['Timeforma'];
+$resp2_24 = $respuestas['Timerespuesta'];
+$resp3_24 = $respuestas['Disponibilidad'];
+$resp4_24 = $respuestas['Calidad'];
+$resp5_24 = $respuestas['Asesoriatecnica'];
+$resp6_24 = $respuestas['Limpieza'];
+$resp7_24 = $respuestas['Servicio'];
+$resp8_24 = $respuestas['Conduce'];
+$resp9_24 = $respuestas['Atencion'];
+$resp10_24 = $respuestas['Facturacion'];
+$resp11_24 = $respuestas['Precios'];
+$resp12_24 = $respuestas['Numeroreg'];
+
+include "../conexion.php";
+
+// Consulta SQL optimizada: se realiza todo el cálculo en un solo paso
+$sqlenc25 = mysqli_query($conection, "
+    SELECT 
+        SUM(tiempo_forma)/COUNT(tiempo_forma) AS Timeforma, 
+        SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) AS Timerespuesta, 
+        SUM(disponibilidad)/COUNT(disponibilidad) AS Disponibilidad, 
+        SUM(calidad)/COUNT(calidad) AS Calidad, 
+        SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) AS Asesoriatecnica, 
+        SUM(limpieza_condicion)/COUNT(limpieza_condicion) AS Limpieza, 
+        SUM(servicio_operador)/COUNT(servicio_operador) AS Servicio, 
+        SUM(conduce_adecuado)/COUNT(conduce_adecuado) AS Conduce, 
+        SUM(atencion_calidad)/COUNT(atencion_calidad) AS Atencion, 
+        SUM(servicio_facturacion)/COUNT(servicio_facturacion) AS Facturacion, 
+        SUM(nuestros_precios)/COUNT(nuestros_precios) AS Precios, 
+        COUNT(*) AS Numeroreg 
+    FROM newencuesta_clientes 
+    WHERE YEAR(fecha) = 2025
+");
+
+// Verificar si la consulta se ejecutó correctamente
+if (!$sqlenc25) {
+    die("Error en la consulta SQL");
+}
+
+// Verificar si se obtuvo un resultado
+$dataenc = mysqli_fetch_array($sqlenc25);
+
+// Cerrar la conexión
+mysqli_close($conection);
+
+// Asignar los resultados a un array
+$respuestas = [
+    'Timeforma' => number_format($dataenc['Timeforma'] ?? 0, 1),
+    'Timerespuesta' => number_format($dataenc['Timerespuesta'] ?? 0, 1),
+    'Disponibilidad' => number_format($dataenc['Disponibilidad'] ?? 0, 1),
+    'Calidad' => number_format($dataenc['Calidad'] ?? 0, 1),
+    'Asesoriatecnica' => number_format($dataenc['Asesoriatecnica'] ?? 0, 1),
+    'Limpieza' => number_format($dataenc['Limpieza'] ?? 0, 1),
+    'Servicio' => number_format($dataenc['Servicio'] ?? 0, 1),
+    'Conduce' => number_format($dataenc['Conduce'] ?? 0, 1),
+    'Atencion' => number_format($dataenc['Atencion'] ?? 0, 1),
+    'Facturacion' => number_format($dataenc['Facturacion'] ?? 0, 1),
+    'Precios' => number_format($dataenc['Precios'] ?? 0, 1),
+    'Numeroreg' => number_format($dataenc['Numeroreg'] ?? 0, 0),
+];
+
+// Acceder a las variables ya formateadas
+$resp1_25 = $respuestas['Timeforma'];
+$resp2_25 = $respuestas['Timerespuesta'];
+$resp3_25 = $respuestas['Disponibilidad'];
+$resp4_25 = $respuestas['Calidad'];
+$resp5_25 = $respuestas['Asesoriatecnica'];
+$resp6_25 = $respuestas['Limpieza'];
+$resp7_25 = $respuestas['Servicio'];
+$resp8_25 = $respuestas['Conduce'];
+$resp9_25 = $respuestas['Atencion'];
+$resp10_25 = $respuestas['Facturacion'];
+$resp11_25 = $respuestas['Precios'];
+$resp12_25 = $respuestas['Numeroreg'];
+
+
+
+
+
+include "../conexion.php";
+
+// Consulta SQL
+$sqlenc10 = mysqli_query(
+    $conection,
+    "SELECT 
+        cliente, 
+        fecha, 
+        tiempo_forma, 
+        tiempo_respuesta, 
+        disponibilidad, 
+        calidad, 
+        asesoria_tecnica, 
+        limpieza_condicion, 
+        servicio_operador, 
+        conduce_adecuado, 
+        atencion_calidad, 
+        servicio_facturacion, 
+        nuestros_precios 
+    FROM 
+        newencuesta_clientes 
+    WHERE 
+        YEAR(fecha) = YEAR(CURDATE())"
+);
+
+// Verificación de la consulta SQL
+if (!$sqlenc10) {
+    die("Error en la consulta: " . mysqli_error($conection));
+}
+
+// Inicialización de array multidimensional para almacenar los datos
+$encuestasData = [];
 
 while ($nrow = mysqli_fetch_assoc($sqlenc10)) {
-	$tt[] = $nrow['cliente'];
-	$data1[] = $nrow['cliente'];
-	$values24[] = $nrow['cliente'];
-	$dato24[] = $nrow['tiempo_forma'];
-	$dato34[] = $nrow['tiempo_respuesta'];
-	$dato44[] = $nrow['disponibilidad'];
+    $encuestasData[] = [
+        'cliente' => $nrow['cliente'],
+        'tiempo_forma' => $nrow['tiempo_forma'],
+        'tiempo_respuesta' => $nrow['tiempo_respuesta'],
+        'disponibilidad' => $nrow['disponibilidad'],
+        'calidad' => $nrow['calidad'],
+        'asesoria_tecnica' => $nrow['asesoria_tecnica'],
+        'limpieza_condicion' => $nrow['limpieza_condicion'],
+        'servicio_operador' => $nrow['servicio_operador'],
+        'conduce_adecuado' => $nrow['conduce_adecuado'],
+        'atencion_calidad' => $nrow['atencion_calidad'],
+        'servicio_facturacion' => $nrow['servicio_facturacion'],
+        'nuestros_precios' => $nrow['nuestros_precios']
+    ];
 }
+
+// Cerrar la conexión a la base de datos
 mysqli_close($conection);
+
+// Si necesitas acceder a los datos posteriormente:
+// foreach ($encuestasData as $encuesta) {
+//     echo "Cliente: " . $encuesta['cliente'] . "<br>";
+//     echo "Tiempo forma: " . $encuesta['tiempo_forma'] . "<br>";
+//     echo "Tiempo respuesta: " . $encuesta['tiempo_respuesta'] . "<br>";
+//     echo "Disponibilidad: " . $encuesta['disponibilidad'] . "<br>";
+//     echo "Calidad: " . $encuesta['calidad'] . "<br>";
+//     echo "Asesoría técnica: " . $encuesta['asesoria_tecnica'] . "<br>";
+//     echo "Limpieza condición: " . $encuesta['limpieza_condicion'] . "<br>";
+//     echo "Servicio operador: " . $encuesta['servicio_operador'] . "<br>";
+//     echo "Conduce adecuado: " . $encuesta['conduce_adecuado'] . "<br>";
+//     echo "Atención calidad: " . $encuesta['atencion_calidad'] . "<br>";
+//     echo "Servicio facturación: " . $encuesta['servicio_facturacion'] . "<br>";
+//     echo "Nuestros precios: " . $encuesta['nuestros_precios'] . "<br><br>";
+// }
+
+
 
 $aniocurso = date("Y");
 
 include "../conexion.php";
-$sqlenc024 = mysqli_query($conection, "SELECT SUM(tiempo_forma)/COUNT(tiempo_forma) as Timeforma, SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) as Timerespuesta, SUM(disponibilidad)/COUNT(disponibilidad) as Disponibilidad, SUM(calidad)/COUNT(calidad) as Calidad, SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) as Asesoriatecnica, SUM(limpieza_condicion)/COUNT(limpieza_condicion) as Limpieza, SUM(servicio_operador)/COUNT(servicio_operador) as Servicio, SUM(conduce_adecuado)/COUNT(conduce_adecuado) as Conduce, SUM(atencion_calidad)/COUNT(atencion_calidad) as Atencion, SUM(servicio_facturacion)/COUNT(servicio_facturacion) as Facturacion, SUM(nuestros_precios)/COUNT(nuestros_precios) as Precios, count(*) as Numeroreg FROM newencuesta_clientes where YEAR(fecha)  = YEAR(CURDATE())");
+
+// Realizar la consulta a la base de datos
+$sqlenc024 = mysqli_query($conection, "SELECT 
+    SUM(tiempo_forma)/COUNT(tiempo_forma) as Timeforma,
+    SUM(tiempo_respuesta)/COUNT(tiempo_respuesta) as Timerespuesta,
+    SUM(disponibilidad)/COUNT(disponibilidad) as Disponibilidad,
+    SUM(calidad)/COUNT(calidad) as Calidad,
+    SUM(asesoria_tecnica)/COUNT(asesoria_tecnica) as Asesoriatecnica,
+    SUM(limpieza_condicion)/COUNT(limpieza_condicion) as Limpieza,
+    SUM(servicio_operador)/COUNT(servicio_operador) as Servicio,
+    SUM(conduce_adecuado)/COUNT(conduce_adecuado) as Conduce,
+    SUM(atencion_calidad)/COUNT(atencion_calidad) as Atencion,
+    SUM(servicio_facturacion)/COUNT(servicio_facturacion) as Facturacion,
+    SUM(nuestros_precios)/COUNT(nuestros_precios) as Precios,
+    count(*) as Numeroreg 
+FROM newencuesta_clientes 
+WHERE YEAR(fecha) = YEAR(CURDATE())");
+
 mysqli_close($conection);
+
+// Inicializar las variables de respuesta
+$respuestas = [
+    'Timeforma' => 0,
+    'Timerespuesta' => 0,
+    'Disponibilidad' => 0,
+    'Calidad' => 0,
+    'Asesoriatecnica' => 0,
+    'Limpieza' => 0,
+    'Servicio' => 0,
+    'Conduce' => 0,
+    'Atencion' => 0,
+    'Facturacion' => 0,
+    'Precios' => 0,
+    'Numeroreg' => 0
+];
+
+// Verificar si la consulta devolvió resultados
 $result_sqlenc024 = mysqli_num_rows($sqlenc024);
+if ($result_sqlenc024 > 0) {
+    $dataenc = mysqli_fetch_array($sqlenc024);
 
-if ($result_sqlenc024 == 0) {
-	$respact1 = 0;
-	$respact2 = 0;
-	$respact3 = 0;
-	$respact4 = 0;
-	$respact5 = 0;
-	$respact6 = 0;
-	$respact7 = 0;
-	$respact8 = 0;
-	$respact9 = 0;
-	$respact10 = 0;
-	$respact11 = 0;
-	$respact12 = 0;
-} else {
-
-	$dataenc = mysqli_fetch_array($sqlenc024);
-	$respact1  = (number_format($dataenc['Timeforma'], 2) * 100) / 10;
-	$respact2  = (number_format($dataenc['Timerespuesta'], 2) * 100) / 10;
-	$respact3  = (number_format($dataenc['Disponibilidad'], 2) * 100) / 10;
-	$respact4  = (number_format($dataenc['Calidad'], 2) * 100) / 10;
-	$respact5  = (number_format($dataenc['Asesoriatecnica'], 2) * 100) / 10;
-	$respact6  = (number_format($dataenc['Limpieza'], 2) * 100) / 10;
-	$respact7  = (number_format($dataenc['Servicio'], 2) * 100) / 10;
-	$respact8  = (number_format($dataenc['Conduce'], 2) * 100) / 10;
-	$respact9  = (number_format($dataenc['Atencion'], 2) * 100) / 10;
-	$respact10 = (number_format($dataenc['Facturacion'], 2) * 100) / 10;
-	$respact11 = (number_format($dataenc['Precios'], 2) * 100) / 10;
-	$respact12 = number_format($dataenc['Numeroreg'], 0);
-
-	$respuesta1  = $respact1 . '%';
-	$respuesta2  = $respact2 . '%';
-	$respuesta3  = $respact3 . '%';
-	$respuesta4  = $respact4 . '%';
-	$respuesta5  = $respact5 . '%';
-	$respuesta6  = $respact6 . '%';
-	$respuesta7  = $respact7 . '%';
-	$respuesta8  = $respact8 . '%';
-	$respuesta9  = $respact9 . '%';
-	$respuesta10 = $respact10 . '%';
-	$respuesta11 = $respact11 . '%';
+    // Calcular el porcentaje y almacenar en el array de respuestas
+    foreach ($respuestas as $key => $value) {
+        if ($key != 'Numeroreg') {
+            // Para las métricas que no son 'Numeroreg', calculamos el porcentaje
+            $respuestas[$key] = (number_format($dataenc[$key], 2) * 100) / 10 . '%';
+        } else {
+            // 'Numeroreg' no es un porcentaje, solo formateamos el número
+            $respuestas[$key] = number_format($dataenc[$key], 0);
+        }
+    }
 }
 
-$dhoy = date("Y-m-d");
+// Para comprobar, imprime las respuestas
+// foreach ($respuestas as $key => $value) {
+//     echo $key . ': ' . $value . '<br>';
+// }
+
+
 
 include "../conexion.php";
-$sqlnsem = mysqli_query($conection, "SELECT semana as Nsemana FROM semanas WHERE '$dhoy' BETWEEN dia_inicial  and dia_final");
-mysqli_close($conection);
-while ($srow = mysqli_fetch_array($sqlnsem)) {
-	extract ($srow);
-	$name_semana = $srow ['Nsemana'];
-	// $name_semana = 'Semana 44';
-};
 
-include "../conexion.php";
+// Consulta para obtener la semana actual
+$sqlnsem = mysqli_query($conection, "SELECT semana as Nsemana FROM semanas WHERE '$dhoy' BETWEEN dia_inicial AND dia_final");
+
+if (!$sqlnsem) {
+    die("Error en la consulta de la semana: " . mysqli_error($conection));
+}
+
+// Verificar si se obtuvo la semana
+if ($srow = mysqli_fetch_array($sqlnsem)) {
+    $name_semana = $srow['Nsemana'];
+} else {
+    // En caso de no encontrar la semana correspondiente
+    echo "No se pudo determinar la semana para la fecha actual.";
+    mysqli_close($conection);
+    exit;
+}
+
+// Consulta para obtener los registros de viajes de la semana
 $sqlvsem = mysqli_query($conection, "SELECT 
-														YEAR(fecha) as anio, 
-														SUM(IF(planeado=1, valor_vuelta, 0)) as Planeados, 
-														SUM(valor_vuelta) as Registrados,(SUM(valor_vuelta)  - SUM(IF(planeado=1, valor_vuelta, 0))) as Diferencia, 
-														100 - (SUM(IF(planeado=1, valor_vuelta, 0)) / SUM(valor_vuelta)*100) as Porcdiferencia 
-													FROM registro_viajes
-													WHERE semana = '$name_semana' and estatus = 2
-													GROUP BY anio");
+    YEAR(fecha) as anio, 
+    SUM(IF(planeado = 1, valor_vuelta, 0)) as Planeados, 
+    SUM(valor_vuelta) as Registrados,
+    (SUM(valor_vuelta) - SUM(IF(planeado = 1, valor_vuelta, 0))) as Diferencia, 
+    100 - (SUM(IF(planeado = 1, valor_vuelta, 0)) / SUM(valor_vuelta) * 100) as Porcdiferencia 
+FROM registro_viajes
+WHERE semana = '$name_semana' AND estatus = 2
+GROUP BY anio");
 
 if (!$sqlvsem) {
-	die("Error en la consulta: " . mysqli_error($conection));
-};
+    die("Error en la consulta de los viajes: " . mysqli_error($conection));
+}
 
 if ($vrow = mysqli_fetch_assoc($sqlvsem)) {
-	$v_planeados   = $vrow['Planeados'];
-	$v_registrados = $vrow['Registrados'];
-	$v_diferencia  = $vrow['Diferencia'];
-	$v_porcdif     = $vrow['Porcdiferencia']; // Porcentaje de diferencia (ya redondeado)
+    // Asignar los valores de los resultados de la consulta
+    $v_planeados   = $vrow['Planeados'];
+    $v_registrados = $vrow['Registrados'];
+    $v_diferencia  = $vrow['Diferencia'];
+    $v_porcdif     = $vrow['Porcdiferencia']; // Porcentaje de diferencia (ya redondeado)
 } else {
-	// En caso de no haber resultados
-	echo "No se encontraron registros para la semana: $name_semana.";
+    // Si no hay registros para la semana seleccionada
+    echo "No se encontraron registros para la semana: $name_semana.";
 }
+
 mysqli_close($conection);
 
+
+// Validación para asegurar que las variables estén definidas
+$nv_registrados = isset($v_registrados) ? $v_registrados : 0.001;
+$nv_diferencia = isset($v_diferencia) ? $v_diferencia : 0;
 
 include "../conexion.php";
-$sqlvplan = mysqli_query($conection, "SELECT 
-														YEAR(fecha), 
-														SUM(IF(planeado=1, 1, 0)) as Vplaneados, 
-														SUM(IF(planeado=1, 1, 0)) - SUM(valor_vuelta) as Vdiferencia 
-													FROM registro_viajes
-													WHERE semana = '$name_semana' 
-													GROUP BY YEAR(fecha)");
-if (!$sqlvplan) {
-	die("Error en la consulta: " . mysqli_error($conection));
-};
 
-if ($prow = mysqli_fetch_assoc($sqlvplan)) {
-	$vjs_planeados    = $prow['Vplaneados'];  // Total de viajes planeados
-	$total_vuelta     = $prow['TotalVueltaPlaneados']; // Suma total de "valor_vuelta"
-	$planeados_reg    = $prow['TotalPlaneadosRegistrados']; // Total de "valor_vuelta" para viajes planeados
-	$vjs_diferencia   = $prow['Vdiferencia']; // Diferencia total calculada
-	$nv_planeados = 0;
-} else {
-	echo "No se encontraron registros para la semana: $name_semana.";
-};
-
+// Obtener viajes cancelados
+$sqlviajescanc = mysqli_query($conection, "SELECT count(valor_vuelta) as viajes_cancelados FROM registro_viajes WHERE semana = '$name_semana' and estatus = 3 ");
 mysqli_close($conection);
 
-
-if (isset($v_registrados)) {
-	$nv_registrados = $v_registrados;
-} else {
-	$nv_registrados = 0.001;
+if ($datacanc = mysqli_fetch_array($sqlviajescanc)) {
+    $v_cancelados = $datacanc['viajes_cancelados'];
 }
 
-if (isset($nv_diferencia)) {
-	$nv_diferencia = $v_diferencia;
-} else {
-	$nv_diferencia = 0;
-}
+// Cálculos de porcentajes
+// $p_planeados = $vjs_planeados - $v_cancelados;
+// $porc_planeados = ($vjs_planeados == 0) ? 0 : number_format(($p_planeados / $vjs_planeados) * 100, 2);
 
-include "../conexion.php";
-$sqlviajescanc = mysqli_query($conection, "SELECT count(valor_vuelta) as viajes_cancelados from registro_viajes WHERE  semana = '$name_semana' and estatus = 3 ");
-mysqli_close($conection);
-$result_sqlviajescanc = mysqli_num_rows($sqlviajescanc);
+// $porc_registrados = ($vjs_planeados == 0) ? 0 : number_format(100 - (($nv_registrados / $vjs_planeados) * 100), 2);
 
-while ($datacanc = mysqli_fetch_array($sqlviajescanc)) {
-	$v_cancelados   = number_format($datacanc['viajes_cancelados'], 2);
-	//$especiales   = $datav['viajes_especiales'];
+// $porc_diferencia = 0;
+// $porc_cancelados = 0;
+// if ($vjs_planeados > 0) {
+//     $p_diferencia = $vjs_planeados - $nv_registrados;
+//     $porc_diferencia = number_format(($nv_registrados / $p_diferencia) * 100, 2);
+//     $porc_cancelados = number_format(($v_cancelados / $vjs_planeados) * 100, 2);
+// }
 
-}
-
-$p_planeados    = $vjs_planeados - $v_cancelados;
-if ($p_planeados == 0) {
-	$porc_planeados  = 0;
-} else {
-	$porc_planeados = number_format(($p_planeados / $vjs_planeados) * 100, 2);
-}
-
-if ($vjs_planeados == 0) {
-	$porc_registrados = 0;
-} else {
-	$p_registrados    = ($nv_registrados / $vjs_planeados) * 100;
-	$porc_registrados = number_format(100 - $p_registrados, 2);
-}
-
-if ($vjs_planeados == 0) {
-	$porc_diferencia = 0;
-	$porc_cancelados = 0;
-} else {
-	$p_diferencia    = ($v_registrados - $vjs_planeados);
-	$porc_diferencia = number_format(($nv_registrados / $p_diferencia) * 100, 2);
-	$porc_cancelados = number_format(($v_cancelados / $vjs_planeados) * 100, 2);
-}
-
+// Obtener el mes actual en formato textual
 $lasemana = date("n");
-$monthNum  = $lasemana;
-$dateObj   = DateTime::createFromFormat('!m', $monthNum);
+$monthNum = $lasemana;
+$dateObj = DateTime::createFromFormat('!m', $monthNum);
 setlocale(LC_TIME, 'es_MX');
-// // $NameMes = strftime('%B', $dateObj->getTimestamp());
-$NameMes = $dateObj->format('F');
+$NameMes = $dateObj->format('F');  // Mes en español
 
 include "../conexion.php";
-$sqlcomprames = mysqli_query($conection, "SELECT 
-														MONTH(fecha) as Nmeses, 
-														YEAR(fecha), 
-														SUM(total) as totalcompras 
-													FROM compras 
-													WHERE  MONTH(fecha) =  MONTH(CURDATE()) 
-													and estatus = 1 
-													GROUP BY Nmeses, YEAR(fecha)");
 
-if (!$sqlcomprames) {
-	die("Error en la consulta: " . mysqli_error($conection));
-};
+// Consulta para obtener las compras del mes actual
 
-$comprasmes = number_format(0.00, 2);
-if ($datanc = mysqli_fetch_assoc($sqlcomprames)) {
-	$comprasmes = number_format($datanc['totalcompras'], 2);
-};
+
 mysqli_close($conection);
+
+// Si ya tienes un valor asignado a $compras_mes, lo asignas a $comprasmes
 if (isset($compras_mes)) {
-	$comprasmes = $compras_mes;
-} else {
-	$comprasmes = number_format(0.00, 2);
+    $comprasmes = $compras_mes;
 }
 
-$dhoy2 = '2024-10-30';
-include "../conexion.php";
-$sqlndsem = mysqli_query($conection, "SELECT semana as Nsemana, dia_inicial, dia_final FROM semanas WHERE '$dhoy2' BETWEEN dia_inicial  and dia_final");
+
+
 mysqli_close($conection);
-while ($crow = mysqli_fetch_array($sqlndsem)) {
-	//extract $drow;
-	$diaini = $crow['dia_inicial'];
-	$diafin = $crow['dia_final'];
-}
 
 include "../conexion.php";
-$sqlcomprasem = mysqli_query($conection, "SELECT MONTHNAME(fecha) as Nmeses, YEAR(fecha), SUM(total) as totalcompras FROM compras WHERE  fecha >= '$diaini' and fecha <= '$diafin' and estatus = 1 GROUP BY fecha ");
+
+// Consulta para obtener las compras de la semana entre $diaini y $diafin
+
+
 mysqli_close($conection);
-$result_sqlcomprasem = mysqli_num_rows($sqlcomprasem);
 
-while ($datacanc = mysqli_fetch_array($sqlcomprasem)) {
-	$compras_semana   = number_format($datacanc['totalcompras'], 2);
-	//$especiales   = $datav['viajes_especiales'];
-
-}
-
-if (isset($compras_semana)) {
-	$comprassem = $compras_semana;
-} else {
-	$comprassem = number_format(0.00, 2);
-}
 
 include "../conexion.php";
+
+// Consulta para obtener el consumo de combustible del mes actual
 $sqlconsumomes = mysqli_query($conection, "SELECT 
-												MONTHNAME(fecha) as Nmeses, 
-												YEAR(fecha) as anio, 
-												SUM(importe) as totalgas 
-											FROM 
-												carga_combustible 
-											WHERE  
-												MONTHNAME(fecha) = MONTHNAME(CURDATE()) 
-												AND YEAR(fecha) = YEAR(CURDATE())  -- Asegura que es el año actual
-												AND estatus <> 0
-												GROUP BY Nmeses, anio");
+    MONTH(fecha) as Nmeses, 
+    YEAR(fecha) as anio, 
+    SUM(importe) as totalgas 
+FROM carga_combustible 
+WHERE MONTH(fecha) = MONTH(CURDATE()) 
+  AND YEAR(fecha) = YEAR(CURDATE())  -- Asegura que es el año actual
+  AND estatus <> 0
+GROUP BY Nmeses, anio");
 
 if (!$sqlconsumomes) {
-	die("Error en la consulta: " . mysqli_error($conection));
-};
+    die("Error en la consulta: " . mysqli_error($conection));
+}
 
+// Asignamos un valor por defecto en caso de no encontrar resultados
 $consumo_mes = number_format(0.00, 2);
 
 if ($datanc = mysqli_fetch_assoc($sqlconsumomes)) {
-	$consumo_mes = number_format($datanc['totalgas'], 2);
-};
+    $consumo_mes = number_format($datanc['totalgas'], 2); // Asignamos el valor del consumo
+}
 
 mysqli_close($conection);
 
 include "../conexion.php";
-$sqlconsumosem = mysqli_query($conection, "SELECT MONTHNAME(fecha) as Nmeses, YEAR(fecha), SUM(importe) as totalgas FROM carga_combustible WHERE fecha >= '$diaini' and fecha <= '$diafin' and estatus <> 0 GROUP BY fecha ");
+
+// Consulta para obtener el consumo de combustible durante un rango de fechas específico
+$sqlconsumosem = mysqli_query($conection, "SELECT 
+    MONTHNAME(fecha) as Nmeses, 
+    YEAR(fecha), 
+    SUM(importe) as totalgas 
+FROM carga_combustible 
+WHERE fecha >= '$diaini' 
+  AND fecha <= '$diafin' 
+  AND estatus <> 0
+GROUP BY fecha");
+
 mysqli_close($conection);
-$result_sqlconsumosem = mysqli_num_rows($sqlconsumosem);
+
+// Verificamos si hay registros y calculamos el total
+$consumo_semana = 0;  // Inicializamos con 0 en caso de no haber resultados
 
 while ($datacanc = mysqli_fetch_array($sqlconsumosem)) {
-	$consumo_semana   = number_format($datacanc['totalgas'], 2);
-	//$especiales   = $datav['viajes_especiales'];
-
+    $consumo_semana = number_format($datacanc['totalgas'], 2);  // Asignamos el total de combustible
 }
 
-if (isset($consumo_semana)) {
-	$consumosemana = $consumo_semana;
+// Si no se encontró consumo, lo dejamos en 0
+$consumosemana = $consumo_semana ?: 0;  // Si $consumo_semana es nulo o 0, asigna 0
+
+include "../conexion.php";
+
+// Realizamos la consulta SQL para obtener los promedios de los servicios
+$sqlserv = mysqli_query($conection, "SELECT 
+    SUM(IF(servicio_ventas = 'Excelente', 3, IF(servicio_ventas = 'Bueno', 2, IF(servicio_ventas = 'Regular', 1, IF(servicio_ventas = 'Malo', 0, 0)))))/COUNT(servicio_ventas) AS sventas,
+    SUM(IF(servicio_supervisor = 'Excelente', 3, IF(servicio_supervisor = 'Bueno', 2, IF(servicio_supervisor = 'Regular', 1, IF(servicio_supervisor = 'Malo', 0, 0)))))/COUNT(servicio_supervisor) AS ssuperv,
+    SUM(IF(servicio_jefe = 'Excelente', 3, IF(servicio_jefe = 'Bueno', 2, IF(servicio_jefe = 'Regular', 1, IF(servicio_jefe = 'Malo', 0, 0)))))/COUNT(servicio_jefe) AS sjefe,
+    SUM(IF(servicio_quejas = 'Excelente', 3, IF(servicio_quejas = 'Bueno', 2, IF(servicio_quejas = 'Regular', 1, IF(servicio_quejas = 'Malo', 0, 0)))))/COUNT(servicio_quejas) AS squejas
+FROM newencuesta_clientes
+WHERE YEAR(fecha) = YEAR(CURDATE())");
+
+// Cerrar la conexión después de la consulta
+mysqli_close($conection);
+
+// Verificar si hay resultados antes de almacenarlos
+if ($rowsv = mysqli_fetch_array($sqlserv)) {
+    $datosv[] = $rowsv['sventas'];
+    $datoss[] = $rowsv['ssuperv'];
+    $datosj[] = $rowsv['sjefe'];
+    $datosq[] = $rowsv['squejas'];
 } else {
-	$consumosemana = 0;
+    // En caso de que no se encuentren resultados, asignamos valores por defecto
+    $datosv[] = 0;
+    $datoss[] = 0;
+    $datosj[] = 0;
+    $datosq[] = 0;
 }
 
 include "../conexion.php";
-$sqlserv = mysqli_query($conection, "SELECT sum(if(servicio_ventas = 'Excelente',3, if(servicio_ventas = 'Bueno', 2, if(servicio_ventas = 'Regular', 1, if(servicio_ventas = 'Malo',0,0)))))/count(servicio_ventas) as sventas, sum(if(servicio_supervisor = 'Excelente',3, if(servicio_supervisor = 'Bueno', 2, if(servicio_supervisor = 'Regular', 1, if(servicio_supervisor = 'Malo',0,0)))))/count(servicio_supervisor) as ssuperv, sum(if(servicio_jefe = 'Excelente',3, if(servicio_jefe = 'Bueno', 2, if(servicio_jefe = 'Regular', 1, if(servicio_jefe = 'Malo',0,0)))))/count(servicio_jefe) as sjefe, sum(if(servicio_quejas = 'Excelente',3, if(servicio_quejas = 'Bueno', 2, if(servicio_quejas = 'Regular', 1, if(servicio_quejas = 'Malo',0,0)))))/count(servicio_quejas) as squejas FROM newencuesta_clientes where YEAR(fecha) = YEAR(CURDATE())");
+
+// Realizamos la consulta SQL para obtener los promedios de los servicios por cliente
+$sqlservct = mysqli_query($conection, "SELECT 
+    cliente, 
+    SUM(IF(servicio_ventas = 'Excelente', 3, IF(servicio_ventas = 'Bueno', 2, IF(servicio_ventas = 'Regular', 1, IF(servicio_ventas = 'Malo', 0, 0)))))/COUNT(servicio_ventas) AS sventas,
+    SUM(IF(servicio_supervisor = 'Excelente', 3, IF(servicio_supervisor = 'Bueno', 2, IF(servicio_supervisor = 'Regular', 1, IF(servicio_supervisor = 'Malo', 0, 0)))))/COUNT(servicio_supervisor) AS ssuperv,
+    SUM(IF(servicio_jefe = 'Excelente', 3, IF(servicio_jefe = 'Bueno', 2, IF(servicio_jefe = 'Regular', 1, IF(servicio_jefe = 'Malo', 0, 0)))))/COUNT(servicio_jefe) AS sjefe,
+    SUM(IF(servicio_quejas = 'Excelente', 3, IF(servicio_quejas = 'Bueno', 2, IF(servicio_quejas = 'Regular', 1, IF(servicio_quejas = 'Malo', 0, 0)))))/COUNT(servicio_quejas) AS squejas
+FROM newencuesta_clientes
+WHERE YEAR(fecha) = YEAR(CURDATE())
+GROUP BY cliente");
+
+// Cerrar la conexión después de la consulta
 mysqli_close($conection);
-while ($rowsv = mysqli_fetch_array($sqlserv)) {
-	//extract $drow;
 
-	$datosv[] = $rowsv['sventas'];
-	$datoss[] = $rowsv['ssuperv'];
-	$datosj[] = $rowsv['sjefe'];
-	$datosq[] = $rowsv['squejas'];
+// Verificar si hay resultados antes de almacenarlos
+if ($sqlservct && mysqli_num_rows($sqlservct) > 0) {
+    while ($rowsvc = mysqli_fetch_array($sqlservct)) {
+        $datoscte[] = $rowsvc['cliente'];
+        $datosvct[] = $rowsvc['sventas'];
+        $datossct[] = $rowsvc['ssuperv'];
+        $datosjct[] = $rowsvc['sjefe'];
+        $datosqct[] = $rowsvc['squejas'];
+    }
+} else {
+    // Si no hay resultados, se asignan valores por defecto
+    $datoscte = [];
+    $datosvct = [];
+    $datossct = [];
+    $datosjct = [];
+    $datosqct = [];
 }
-
-
-include "../conexion.php";
-$sqlservct = mysqli_query($conection, "SELECT cliente, sum(if(servicio_ventas = 'Excelente',3, if(servicio_ventas = 'Bueno', 2, if(servicio_ventas = 'Regular', 1, if(servicio_ventas = 'Malo',0,0)))))/count(servicio_ventas) as sventas, sum(if(servicio_supervisor = 'Excelente',3, if(servicio_supervisor = 'Bueno', 2, if(servicio_supervisor = 'Regular', 1, if(servicio_supervisor = 'Malo',0,0)))))/count(servicio_supervisor) as ssuperv, sum(if(servicio_jefe = 'Excelente',3, if(servicio_jefe = 'Bueno', 2, if(servicio_jefe = 'Regular', 1, if(servicio_jefe = 'Malo',0,0)))))/count(servicio_jefe) as sjefe, sum(if(servicio_quejas = 'Excelente',3, if(servicio_quejas = 'Bueno', 2, if(servicio_quejas = 'Regular', 1, if(servicio_quejas = 'Malo',0,0)))))/count(servicio_quejas) as squejas FROM newencuesta_clientes where YEAR(fecha) = YEAR(CURDATE()) group by cliente");
-mysqli_close($conection);
-while ($rowsvc = mysqli_fetch_array($sqlservct)) {
-	//extract $drow;
-
-	$datoscte[] = $rowsvc['cliente'];
-	$datosvct[] = $rowsvc['sventas'];
-	$datossct[] = $rowsvc['ssuperv'];
-	$datosjct[] = $rowsvc['sjefe'];
-	$datosqct[] = $rowsvc['squejas'];
-}
-
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -1361,8 +1151,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 								<div class="row">
 									<div class="col-lg-3">
 										<div class="description-block border-right">
-											<span class="description-percentage text-primary"><i class="fas fa-caret-left"></i> <?php echo $porc_planeados; ?> %</span>
-											<h5 class="description-header"><?php echo $vjs_planeados; ?></h5>
+											<span class="description-percentage text-primary"><i class="fas fa-caret-left"></i><?php echo $porc_planeados_semana . " %" ?></span>
+											<h5 class="description-header"><?php echo $viajes_planeados_semana; ?></h5>
 											<span class="description-text">Viajes Planeados</span>
 										</div>
 										<!-- /.description-block -->
@@ -1370,8 +1160,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<!-- /.col -->
 									<div class="col-lg-3">
 										<div class="description-block border-right">
-											<span class="description-percentage text-success"><i class="fas fa-caret-up"></i> <?php echo $porc_registrados; ?> %</span>
-											<h5 class="description-header"><?php echo number_format($nv_registrados, 2); ?></h5>
+											<span class="description-percentage text-success"><i class="fas fa-caret-up"></i> <?php echo $porc_registrados_semana; ?> %</span>
+											<h5 class="description-header"><?php echo $total_vueltas_semana; ?></h5>
 											<span class="description-text">Viajes Registrados</span>
 										</div>
 										<!-- /.description-block -->
@@ -1379,8 +1169,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<!-- /.col -->
 									<div class="col-lg-3">
 										<div class="description-block border-right">
-											<span class="description-percentage text-info"><i class="fas fa-caret-up"></i> <?php echo $porc_diferencia; ?> %</span>
-											<h5 class="description-header"><?php echo $vjs_diferencia; ?></h5>
+											<span class="description-percentage text-info"><i class="fas fa-caret-up"></i> <?php echo $porc_diferencia_semana; ?> %</span>
+											<h5 class="description-header"><?php echo $diferencia_semana; ?></h5>
 											<span class="description-text">Diferencia</span>
 										</div>
 										<!-- /.description-block -->
@@ -1388,8 +1178,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<!-- /.col -->
 									<div class="col-lg-3">
 										<div class="description-block">
-											<span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> <?php echo $porc_cancelados; ?> %</span>
-											<h5 class="description-header"><?php echo $v_cancelados; ?></h5>
+											<span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> <?php echo $porc_cancelados_semana; ?> %</span>
+											<h5 class="description-header"><?php echo $cancelados_semana; ?></h5>
 											<span class="description-text">Viajes Cancelados</span>
 										</div>
 										<!-- /.description-block -->
@@ -1419,7 +1209,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<div class="col-lg-3">
 										<div class="description-block border-right">
 											<span class="description-percentage text-success"><i class="fas fa-cart-arrow-down"></i> &nbsp;</span>
-											<h5 class="description-header"><?php echo $comprassem; ?></h5>
+											<h5 class="description-header"><?php echo $compras_semana; ?></h5>
 											<span class="description-text">Compras Semana</span>
 										</div>
 										<!-- /.description-block -->
@@ -1428,7 +1218,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<div class="col-lg-3">
 										<div class="description-block border-right">
 											<span class="description-percentage text-primary"><i class="fas fa-gas-pump"></i> &nbsp; </span>
-											<h5 class="description-header"><?php echo $nconsumo_mes; ?></h5>
+											<h5 class="description-header"><?php echo $litros_mes_actual; ?></h5>
 											<span class="description-text">Consumo Mes</span>
 										</div>
 										<!-- /.description-block -->
@@ -2090,128 +1880,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 
-	<script>
-		var ctx = document.getElementById('myChart')
-		var myChart = new Chart(ctx, {
-			type: 'bar',
-			data: {
-				datasets: [{
-					label: 'Tiempo forma',
-					backgroundColor: ['#63d69f', '#63d69f', '#63d69f', '#63d69f', '#63d69f', '#63d69f', '#63d69f', '#63d69f'],
-					borderColor: ['black'],
-					borderWidth: 0
-				}, {
-					label: 'Tiempo respuesta',
-					backgroundColor: ['#438c6c', '#438c6c', '#438c6c', '#438c6c', '#438c6c', '#438c6c', '#438c6c', '#438c6c'],
-					borderColor: ['black'],
-					borderWidth: 0
-				}, {
-					label: 'Disponibilidad',
-					backgroundColor: ['#509c7f', '#509c7f', '#509c7f', '#509c7f', '#509c7f', '#509c7f', '#509c7f', '#509c7f'],
-					borderColor: ['black'],
-					borderWidth: 0
+	<script> 
+	var ctx = document.getElementById('myChart').getContext('2d'); 
+	var myChart = new Chart(ctx, { 
+		type: 'bar', data: { labels: [], datasets: [{ 
+			label: 'Tiempo forma', backgroundColor: '#63d69f', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Tiempo respuesta', backgroundColor: '#438c6c', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Disponibilidad', backgroundColor: '#509c7f', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Calidad', backgroundColor: '#1f794e', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Asesoria tecnica', backgroundColor: '#34444c', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Limpieza Condicion', backgroundColor: '#90CAF9', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Servicio Operador', backgroundColor: '#64B5F6', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Conduce adecuado', backgroundColor: '#42A5F5', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Atencion Calidad', backgroundColor: '#2196F3', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Servicio facturacion', backgroundColor: '#0D47A1', borderColor: 'black', borderWidth: 0, data: [] 
+		}, { 
+			label: 'Nuestros precios', backgroundColor: '#9C74F7', borderColor: 'black', borderWidth: 0, data: [] 
+		}] }, 
+		options: { scales: { yAxes: [{ display: true, ticks: { beginAtZero: true } }] } } }); 
 
-				}, {
-					label: 'Calidad',
-					backgroundColor: ['#1f794e', '#1f794e', '#1f794e', '#1f794e', '#1f794e', '#1f794e', '#1f794e', '#1f794e'],
-					borderColor: ['black'],
-					borderWidth: 0
+		let url = 'includes/articulos.php'; 
+		fetch(url) .then(response => response.json()) 
+			.then(datos => mostrar(datos)) 
+			.catch(error => console.log(error)); 
+			
+		const mostrar = (articulos) => { 
+			articulos.forEach(element => { myChart.data.labels.push(element.cliente); myChart.data.datasets[0].data.push(element.tiempo_forma); myChart.data.datasets[1].data.push(element.tiempo_respuesta); myChart.data.datasets[2].data.push(element.disponibilidad); myChart.data.datasets[3].data.push(element.calidad); myChart.data.datasets[4].data.push(element.asesoria_tecnica); myChart.data.datasets[5].data.push(element.limpieza_condicion); myChart.data.datasets[6].data.push(element.servicio_operador); myChart.data.datasets[7].data.push(element.conduce_adecuado);
 
-				}, {
-					label: 'Asesoria tecnica',
-					backgroundColor: ['#34444c', '#34444c', '#34444c', '#34444c', '#34444c', '#34444c', '#34444c', '#34444c'],
-					borderColor: ['black'],
-					borderWidth: 0
-
-				}, {
-					label: 'Limpieza Condicion',
-					backgroundColor: ['#90CAF9', '#90CAF9', '#90CAF9', '#90CAF9', '#90CAF9', '#90CAF9', '#90CAF9', '#90CAF9'],
-					borderColor: ['black'],
-					borderWidth: 0
-
-				}, {
-					label: 'Servicio Operador',
-					backgroundColor: ['#64B5F6', '#64B5F6', '#64B5F6', '#64B5F6', '#64B5F6', '#64B5F6', '#64B5F6', '#64B5F6'],
-					borderColor: ['black'],
-					borderWidth: 0
-
-				}, {
-					label: 'Conduce adecuado',
-					backgroundColor: ['#42A5F5', '#42A5F5', '#42A5F5', '#42A5F5', '#42A5F5', '#42A5F5', '#42A5F5', '#42A5F5'],
-					borderColor: ['black'],
-					borderWidth: 0
-
-				}, {
-					label: 'Atencion Calidad',
-					backgroundColor: ['#2196F3', '#2196F3', '#2196F3', '#2196F3', '#2196F3', '#2196F3', '#2196F3', '#2196F3'],
-					borderColor: ['black'],
-					borderWidth: 0
-
-				}, {
-					label: 'Servicio facturacion',
-					backgroundColor: ['#0D47A1', '#0D47A1', '#0D47A1', '#0D47A1', '#0D47A1', '#0D47A1', '#0D47A1', '#0D47A1'],
-					borderColor: ['black'],
-					borderWidth: 0
-
-				}, {
-					label: 'Nuestros precios',
-					backgroundColor: ['#9C74F7', '#9C74F7', '#9C74F7', '#9C74F7', '#9C74F7', '#9C74F7', '#9C74F7', '#9C74F7'],
-					borderColor: ['black'],
-					borderWidth: 0
-
-				}]
-			},
-			options: {
-				scales: {
-					yAxes: [{
-						display: true,
-						ticks: {
-							beginAtZero: true
-						}
-					}]
-				}
-			}
-		})
-
-		let url = 'includes/articulos.php'
-		fetch(url)
-			.then(response => response.json())
-			.then(datos => mostrar(datos))
-			.catch(error => console.log(error))
-
-
-		const mostrar = (articulos) => {
-			articulos.forEach(element => {
-				myChart.data['labels'].push(element.cliente) {
-					myChart.data['datasets'][0].data.push(element.tiempo_forma);
-
-					myChart.data['datasets'][1].data.push(element.tiempo_respuesta);
-
-					myChart.data['datasets'][2].data.push(element.disponibilidad);
-
-					myChart.data['datasets'][3].data.push(element.calidad);
-
-					myChart.data['datasets'][4].data.push(element.asesoria_tecnica);
-
-					myChart.data['datasets'][5].data.push(element.limpieza_condicion);
-
-					myChart.data['datasets'][6].data.push(element.servicio_operador);
-
-					myChart.data['datasets'][7].data.push(element.conduce_adecuado);
-
-					myChart.data['datasets'][8].data.push(element.atencion_calidad);
-
-					myChart.data['datasets'][9].data.push(element.servicio_facturacion);
-
-					myChart.data['datasets'][10].data.push(element.nuestros_precios);
-
-				}
-
-
-				myChart.update()
-			});
-			console.log(myChart.data)
-		}
 	</script>
 
 	<script>

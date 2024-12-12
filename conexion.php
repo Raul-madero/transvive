@@ -15,18 +15,18 @@
 // $database = "transvive";
 // $port = 3306;
 
-// $host = "mysql-transvive-transvive.g.aivencloud.com";
-// $password = "AVNS_HDRST7NXsI9UJ0fG5B3";
-// $user = "avnadmin";
-// $database = "transvive";
-// $port = 12088;
-
-$host = "localhost:3306";
-// $port = "$_ENV['BD_PORT']";
-$user = "rmadero";
-$password = "8_86y2Myk";
+$host = "mysql-transvive-transvive.g.aivencloud.com";
+$password = "AVNS_HDRST7NXsI9UJ0fG5B3";
+$user = "avnadmin";
 $database = "transvive";
-$port = 3306;
+$port = 12088;
+
+// $host = "localhost:3306";
+// // $port = "$_ENV['BD_PORT']";
+// $user = "rmadero";
+// $password = "8_86y2Myk";
+// $database = "transvive";
+// $port = 3306;
 
 ini_set("mysql.connect_timeout", 5000);
 ini_set("default_socket_timeout",5000);
