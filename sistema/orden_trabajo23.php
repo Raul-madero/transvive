@@ -1,4 +1,4 @@
-<?php
+n amor<?php
 
 include "../conexion.php";
 session_start();
