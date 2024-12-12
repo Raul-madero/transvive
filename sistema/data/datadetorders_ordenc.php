@@ -2,127 +2,92 @@
 session_start();
 include '../config/db-config.php';
 
-
 global $connection;
 
-if($_REQUEST['action'] == 'fetch_users'){
+if ($_REQUEST['action'] == 'fetch_users') {
 
     $requestData = $_REQUEST;
     $start = $_REQUEST['start'];
-
     $initial_date = $_REQUEST['initial_date'];
     $final_date = $_REQUEST['final_date'];
     $gender = $_REQUEST['gender'];
 
-    if(!empty($initial_date) && !empty($final_date)){
-        $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    }else{
-        $date_range = "";
-    }
+    // Filtros de fecha y género
+    $date_range = !empty($initial_date) && !empty($final_date) ? " AND p.fecha BETWEEN '$initial_date' AND '$final_date' " : "";
+    $gender_filter = !empty($gender) ? " AND p.no_orden = $gender " : "";
 
-    if($gender != ""){
-       
-        $gender = " AND p.no_orden = $gender ";
-    }
-
+    // Columnas de la consulta
     $columns = ' p.id, p.no_orden, p.fecha, p.proveedor, p.area_solicitante, p.contacto, p.telefono, p.total, p.observaciones, p.estatus, pv.nombre ';
-    $table = ' orden_compra p INNER JOIN proveedores pv ON p.proveedor = pv.id ' ;
-    $where = " WHERE p.id > 0 ".$date_range.$gender ;
+    $table = ' orden_compra p INNER JOIN proveedores pv ON p.proveedor = pv.id ';
+    $where = " WHERE p.id > 0 $date_range $gender_filter ";
 
+    // Orden de columnas
     $columns_order = array(
-        0 => 'id',
-        1 => 'no_orden',
-        2 => 'fecha',
-        3 => 'proveedor',
-        4 => 'area_solicitante',
-        5 => 'contacto',
-        6 => 'telefono',
-        7 => 'nombre',
-        8 => 'estatus'
+        'id', 'no_orden', 'fecha', 'proveedor', 'area_solicitante', 'contacto', 'telefono', 'nombre', 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+    // Construcción de la consulta SQL
+    $sql = "SELECT $columns FROM $table $where";
 
-    $result = mysqli_query($connection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
-
-    if( !empty($requestData['search']['value']) ) {
-        $sql.="AND ( nombre LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR area_solicitante LIKE '%".$requestData['search']['value']."%'  )";
-       
-        
+    // Filtrado de búsqueda
+    if (!empty($requestData['search']['value'])) {
+        $search_value = $requestData['search']['value'];
+        $sql .= " AND (nombre LIKE '%$search_value%' OR area_solicitante LIKE '%$search_value%')";
     }
 
+    // Obtención de datos totales filtrados
     $result = mysqli_query($connection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
+    $totalFiltered = mysqli_num_rows($result);
 
-    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
+    // Ordenar y limitar datos
+    $column_index = $requestData['order'][0]['column'];
+    $column_order = $columns_order[$column_index];
+    $column_dir = $requestData['order'][0]['dir'];
+    $length = $requestData['length'];
+    $sql .= " ORDER BY $column_order $column_dir LIMIT $start, $length";
 
-    if($requestData['length'] != "-1"){
-        $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
-    }
-
+    // Ejecución de la consulta final
     $result = mysqli_query($connection, $sql);
     $data = array();
-    $counter = $start;
 
-    $count = $start;
-    while($row = mysqli_fetch_array($result)){
-        if ($row['estatus'] == 1){
-        $Estatusnew = '<span class="label label-primary">Activa</span>'; 
-    }else{
-        if ($row['estatus'] == 2){
-           $Estatusnew = '<span class="label label-success">Cerrada</span>';
-        }else{
-            if ($row['estatus'] == 3) {
-              $Estatusnew = '<span class="label label-danger">Cancelado</span>';
-            }else {
-                if ($row['estatus'] == 4) {
-                 $Estatusnew = '<span class="label label-primary">Iniciado</span>';
-                }else {
-                 if ($row['estatus'] == 5) {
-                  $Estatusnew = '<span class="label label-info">Terminado</span>';
-                 }else {
-                  $Estatusnew = '<span class="label label-success">Cancelada</span>';
-                 } 
-                }     
-        }
-    }
-    }
+    while ($row = mysqli_fetch_array($result)) {
+        // Asignar etiqueta de estado
+        $status_labels = [
+            1 => '<span class="label label-primary">Activa</span>',
+            2 => '<span class="label label-success">Cerrada</span>',
+            3 => '<span class="label label-danger">Cancelado</span>',
+            4 => '<span class="label label-primary">Iniciado</span>',
+            5 => '<span class="label label-info">Terminado</span>',
+            6 => '<span class="label label-success">Cancelada</span>'
+        ];
+        $estatusnew = $status_labels[$row['estatus']] ?? '<span class="label label-default">Desconocido</span>';
 
-        $count++;
-        $nestedData = array();
-
-        $nestedData['counter'] = $count;
-        $nestedData['pedidono'] =  $row["id"];
-        $nestedData['Folio'] = $row["no_orden"];
-
-        $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id='.($row["id"]).'" target="_blank">'.($row["id"]).'</a>';
-        $time = strtotime($row["fecha"]);
-        $nestedData['fechaa'] = date('d/m/Y', $time);
-        $nestedData['nameproveedor'] = $row["nombre"];
-        $nestedData['arear'] = $row['area_solicitante'];
-        $nestedData['contacto'] = $row['contacto'];
-        $nestedData['telefono'] = $row['telefono'];
-        $nestedData['importe'] = $row['total'];
-        $nestedData['notas'] = $row['observaciones'];      
-        $nestedData['Datenew'] = $row["fecha"];
-
-        $nestedData['estatusped'] = $Estatusnew;
-
-        $data[] = $nestedData;
+        // Formateo de datos para DataTable
+        $data[] = [
+            'counter' => ++$start,
+            'pedidono' => $row['id'],
+            'Folio' => $row['no_orden'],
+            'nopedido' => '<a style="text-decoration:none" href="factura/pedidonw.php?id='.$row['id'].'" target="_blank">'.$row['id'].'</a>',
+            'fechaa' => date('d/m/Y', strtotime($row['fecha'])),
+            'nameproveedor' => $row['nombre'],
+            'arear' => $row['area_solicitante'],
+            'contacto' => $row['contacto'],
+            'telefono' => $row['telefono'],
+            'importe' => $row['total'],
+            'notas' => $row['observaciones'],
+            'Datenew' => $row['fecha'],
+            'estatusped' => $estatusnew
+        ];
     }
 
-    $json_data = array(
-        "draw"            => intval( $requestData['draw'] ),
-        "recordsTotal"    => intval( $totalData),
-        "recordsFiltered" => intval( $totalFiltered ),
-        "records"         => $data
-    );
+    // Preparar datos JSON
+    $json_data = [
+        "draw" => intval($requestData['draw']),
+        "recordsTotal" => intval(mysqli_num_rows(mysqli_query($connection, "SELECT * FROM $table"))),
+        "recordsFiltered" => intval($totalFiltered),
+        "records" => $data
+    ];
 
     echo json_encode($json_data);
 }
-
 ?>
