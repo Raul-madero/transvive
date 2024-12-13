@@ -610,14 +610,14 @@ $result_sql03 = mysqli_num_rows($sql03);
         $('#fetch_generated_wills').DataTable({
           "order": [[ 1, "desc" ]],
           dom: 'Bfrtip',
-lengthMenu: [
-[20, 25, 50, -1],
-['20 rows', '25 rows', '50 rows', 'Show all']
-],
-buttons: [
-'excelHtml5',
-'pageLength'
-],
+          lengthMenu: [
+          [20, 25, 50, -1],
+          ['20 rows', '25 rows', '50 rows', 'Show all']
+          ],
+          buttons: [
+          'excelHtml5',
+          'pageLength'
+          ],
           "processing": true,
           "serverSide": true,
           "stateSave": true,
@@ -652,26 +652,23 @@ buttons: [
             { "data" : "jefeopera", "width": "50px", "orderable":false },
             { "data" : "estatusped", "width": "30px", "orderable":false },
             {
-                    "render": function ( data, type, full, meta ) {
-        return '<center><a href=\'edit_viaje.php?id=' + full.pedidono +  '\' class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white;  font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\'' + full.pedidono +  '\' href="#" class="btn btn-danger btn-xs" ><i class="fas fa-times-circle"></i></a></center>';
-    }
-                    
-            
- }   
+				"render": function ( data, type, full, meta ) {
+        			return '<center><a href=\'edit_viaje.php?id=' + full.pedidono +  '\' class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white;  font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\'' + full.pedidono +  '\' href="#" class="btn btn-danger btn-xs" ><i class="fas fa-times-circle"></i></a></center>';
+				}            
+ 			}   
             
           ],
           "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
-    "buttons": [
-        'copyHtml5',
-        'excelHtml5',
-        'csvHtml5',     
-        {
-            extend: 'colvis',
-            postfixButtons: [ 'colvisRestore' ],
-            columns: '0,1,2,3,4,5,6'
-        }
-    ],
-         
+    		"buttons": [
+				'copyHtml5',
+				'excelHtml5',
+				'csvHtml5',     
+				{
+					extend: 'colvis',
+					postfixButtons: [ 'colvisRestore' ],
+					columns: '0,1,2,3,4,5,6'
+				}
+			],
         }); 
       }  
 
@@ -827,7 +824,7 @@ buttons: [
 
       function load_data(inicio_date, fin_date, buscaid){
         var ajax_url = "data/datadetorders2_jo.php";
-        
+
 
         $('#fetch_generated_willss').DataTable({
           "order": [[ 1, "desc" ]],
