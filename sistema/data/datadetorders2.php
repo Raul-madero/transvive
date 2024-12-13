@@ -6,16 +6,18 @@ global $connection;
 
 if ($_REQUEST['action'] === 'fetch_users') {
     $requestData = $_REQUEST;
-    $start = filter_var($_REQUEST['start'], FILTER_VALIDATE_INT);
+    $start = isset($_REQUEST['start']) ? intval($_REQUEST['start']) : 0;
+    $length = isset($_REQUEST['length']) ? intval($_REQUEST['length']) : 10;
+    $draw = isset($_REQUEST['draw']) ? intval($_REQUEST['draw']) : 1;
     $initial_date = filter_var($_REQUEST['initial_date'], FILTER_SANITIZE_STRING);
     $final_date = filter_var($_REQUEST['final_date'], FILTER_SANITIZE_STRING);
-    $gender = filter_var($_POST['gender'], FILTER_VALIDATE_INT);
+    $gender = isset($_POST['gender']) ? intval($_POST['gender']) : null;
 
     $date_range = (!empty($initial_date) && !empty($final_date)) 
         ? " AND p.fecha BETWEEN ? AND ?" 
         : "";
 
-    $gender_filter = ($gender > 0) 
+    $gender_filter = ($gender !== null && $gender > 0) 
         ? " AND p.id = ?" 
         : "";
 
@@ -26,13 +28,41 @@ if ($_REQUEST['action'] === 'fetch_users') {
               LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
     $where = "WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) $date_range $gender_filter";
 
-    $sql = "SELECT $columns FROM $table $where";
+    // Preparar consulta principal para conteo total
+    $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
+    $stmt_count = $connection->prepare($count_sql);
+
+    if ($stmt_count === false) {
+        echo json_encode(["error" => "Error al preparar la consulta de conteo."]);
+        exit;
+    }
+
+    // Asociar parámetros si es necesario
+    if (!empty($initial_date) && !empty($final_date) && $gender !== null) {
+        $stmt_count->bind_param("ssi", $initial_date, $final_date, $gender);
+    } elseif (!empty($initial_date) && !empty($final_date)) {
+        $stmt_count->bind_param("ss", $initial_date, $final_date);
+    }
+
+    $stmt_count->execute();
+    $count_result = $stmt_count->get_result();
+    $totalData = $count_result->fetch_assoc()['total'] ?? 0;
+
+    // Preparar consulta de datos con paginación
+    $sql = "SELECT $columns FROM $table $where LIMIT ?, ?";
     $stmt = $connection->prepare($sql);
 
-    if (!empty($initial_date) && !empty($final_date) && $gender > 0) {
-        $stmt->bind_param("ssi", $initial_date, $final_date, $gender);
+    if ($stmt === false) {
+        echo json_encode(["error" => "Error al preparar la consulta de datos."]);
+        exit;
+    }
+
+    if (!empty($initial_date) && !empty($final_date) && $gender !== null) {
+        $stmt->bind_param("ssiii", $initial_date, $final_date, $gender, $start, $length);
     } elseif (!empty($initial_date) && !empty($final_date)) {
-        $stmt->bind_param("ss", $initial_date, $final_date);
+        $stmt->bind_param("ssii", $initial_date, $final_date, $start, $length);
+    } else {
+        $stmt->bind_param("ii", $start, $length);
     }
 
     $stmt->execute();
@@ -64,15 +94,14 @@ if ($_REQUEST['action'] === 'fetch_users') {
             'estatusped' => $Estatusnew
         ];
     }
-    header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');   
-    $json_data = [
-        "draw" => intval($requestData['draw']),
-        "recordsTotal" => $result->num_rows,
-        "recordsFiltered" => $result->num_rows,
-        "records" => $data
-    ];
 
-    echo json_encode($json_data, JSON_UNESCAPED_UNICODE);
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    echo json_encode([
+        "draw" => $draw,
+        "recordsTotal" => $totalData,
+        "recordsFiltered" => $totalData,
+        "records" => $data
+    ], JSON_UNESCAPED_UNICODE);
 }
 ?>
