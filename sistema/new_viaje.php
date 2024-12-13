@@ -176,7 +176,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha *</label>
                     <div class="col-sm-10">
                       <input type="date" class="form-control" id="inputFecha" name="inputFecha" placeholder="Descripcion de la Tarea" value="<?php echo $fcha;?>" 
-                      <!-- onchange="cambiarEndDate()" -->
+                      
                       >
                     </div>
                   </div>
