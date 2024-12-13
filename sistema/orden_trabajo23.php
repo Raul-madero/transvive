@@ -260,10 +260,10 @@ if (!$query_ordenes) {
                   echo "<td>" . htmlspecialchars($data['fecha']) . "</td>";
                   echo "<td>" . htmlspecialchars($data["unidad"]) . "</td>";
                   echo "<td>" . htmlspecialchars($data["solicita"]) . "</td>";
-                  echo "<td>" . htmlspecialchars($data["tipojob"]) . "</td>";
-                  echo "<td>" . htmlspecialchars($data["tipomantto"]) . "</td>";
-                  echo "<td>" . htmlspecialchars($data["trabsolicitado"]) . "</td>";
-                  echo "<td>" . htmlspecialchars($data["estatusped"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["tipo_trabajo"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["tipo_mantenimiento"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["trabajo_solicitado"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["estatus"]) . "</td>";
                   echo '<td><a class="link_edit" style="color:#007bff;" href="edit_solicitudmantto.php?id=' . htmlspecialchars($data['id']) . '"><i class="far fa-edit"></i> Editar</a> |
                   <a href="factura/form_ordenmantto.php?id=' . htmlspecialchars($data['no_orden']) . '" target="_blank"><i class="fa fa-print" style="color:white; font-size: 1.3em"></i> Print</a> |
                   <a data-toggle="modal" data-target="#modalEditcliente" data-id="' . htmlspecialchars($data['id']) . '" data-name="' . htmlspecialchars($data['no_orden']) . '" href="javascript:void(0)" class="link_delete" style="color:red"><i class="fa fa-ban"></i> Cancelar</a>';
