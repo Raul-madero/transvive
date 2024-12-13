@@ -1172,7 +1172,7 @@ refresh.addEventListener('click', _ => {
 
 
 <script src="js/sweetalert.min.js"></script>
-<!-- <script>
+<script>
     document.addEventListener("DOMContentLoaded", function(){
       // Invocamos cada 5 segundos ;)
       const milisegundos = 5 *1000;
@@ -1181,6 +1181,6 @@ refresh.addEventListener('click', _ => {
          fetch("./refrescar.php");
       },milisegundos);
     });
-</script> -->
+</script>
 </body>
 </html>
