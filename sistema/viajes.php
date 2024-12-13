@@ -14,10 +14,10 @@ session_start();
   mysqli_close($conection);
   $result_sql01 = mysqli_num_rows($sql01);
 
-    while ($data = mysqli_fetch_array($sql01)){
-      $abiertos   = 0;
+    // while ($data = mysqli_fetch_array($sql01)){
+    //   $abiertos   = 0;
      
-    }
+    // }
      date_default_timezone_set('America/Mexico_City');
 
     $fechaActual = date("Y-m-d");
@@ -28,8 +28,8 @@ session_start();
   $fcha = date("Y-m-d"); 
   $diafcha = date("w");
   $diasrest = 6 - $diafcha;
-  $fchaini = date("Y-m-d",strtotime($fcha."- $diafcha days")); 
-  $fchafin = date("Y-m-d",strtotime($fcha."+ $diasrest days")); 
+//   $fchaini = date("Y-m-d",strtotime($fcha."- $diafcha days")); 
+//   $fchafin = date("Y-m-d",strtotime($fcha."+ $diasrest days")); 
   include "../conexion.php";
 
   $sql= mysqli_query($conection,"SELECT semana, dia_inicial, dia_final FROM semanas40 WHERE dia_inicial <= '$fechaActual' AND dia_final >= '$fechaActual'");
@@ -95,7 +95,7 @@ $result_sql03 = mysqli_num_rows($sql03);
 
  
  include "../conexion.php";
-  $sql04= mysqli_query($conection,"SELECT *  FROM registro_viajes WHERE estatus = 1 and fecha < '$fchaini' and tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter' or tipo_viaje = 'Semidomiciliadas'");
+  $sql04= mysqli_query($conection,"SELECT *  FROM registro_viajes WHERE estatus = 1 and tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter' or tipo_viaje = 'Semidomiciliadas'");
   mysqli_close($conection);
   $result_sql04 = mysqli_num_rows($sql04);
 
@@ -423,7 +423,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       </tbody>
                               </table>
 
-               <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+               <table class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
                 <th style="text-align: center">ID</th>
