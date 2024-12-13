@@ -15,6 +15,185 @@ session_start();
   header('Location: ../index.php');
 }
 
+$sql01= mysqli_query($conection,"SELECT * FROM registro_viajes WHERE estatus= 1 ORDER BY fecha DESC");
+mysqli_close($conection);
+$result_sql01 = mysqli_num_rows($sql01);
+
+  while ($data = mysqli_fetch_array($sql01)){
+	$abiertos   = 0;
+   
+  }
+   date_default_timezone_set('America/Mexico_City');
+
+  $fechaActual = date("Y-m-d");
+  $fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fechaActual ) ) );
+  $newDate = date("d-m-Y", strtotime($fcha1));  
+
+
+$fcha = date("Y-m-d"); 
+$diafcha = date("w");
+$diasrest = 6 - $diafcha;
+$fchaini = date("Y-m-d",strtotime($fcha."- $diafcha days")); 
+$fchafin = date("Y-m-d",strtotime($fcha."+ $diasrest days")); 
+include "../conexion.php";
+
+$sql= mysqli_query($conection,"SELECT semana, dia_inicial, dia_final FROM semanas40 WHERE dia_inicial <= '$fechaActual' AND dia_final >= '$fechaActual'");
+	   mysqli_close($conection);
+	   $result = mysqli_num_rows($sql);
+	   
+
+	   while ($data = mysqli_fetch_array($sql)){
+	   $diainicial  = $data['dia_inicial'];
+	   $diafinal    = $data['dia_final'];
+   
+	
+	//$user   = $_SESSION['idUser'];
+	
+  }
+
+if ($rol == 1) {
+	include "../conexion.php";
+$sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and (tipo_viaje <> 'Especial' or tipo_viaje <> 'Especial Turistico') ");
+mysqli_close($conection);
+$result_sql02 = mysqli_num_rows($sql02);
+
+  while ($data = mysqli_fetch_array($sql02)){
+	$tareahoy   = $data['viajeshoy'];
+	  
+}
+
+}else {  
+include "../conexion.php";
+$sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') and usuario_id = $idUser");
+mysqli_close($conection);
+$result_sql02 = mysqli_num_rows($sql02);
+
+  while ($data = mysqli_fetch_array($sql02)){
+	$tareahoy   = $data['viajeshoy'];
+   
+}
+} 
+
+if ($rol == 1) {  
+
+include "../conexion.php";
+$sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') ");
+mysqli_close($conection);
+$result_sql03 = mysqli_num_rows($sql03);
+
+while ($data = mysqli_fetch_array($sql03)){
+ $tareasem   = $data['totalsem'];
+	 
+} 
+}else {
+
+Include "../conexion.php";
+$sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') and usuario_id = $rol ");
+mysqli_close($conection);
+$result_sql03 = mysqli_num_rows($sql03);
+
+while ($data = mysqli_fetch_array($sql03)){
+ $tareasem   = $data['totalsem'];
+	 
+} 
+}
+
+
+include "../conexion.php";
+$sql04= mysqli_query($conection,"SELECT *  FROM registro_viajes WHERE estatus = 1 and fecha < '$fchaini' and (tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter' or tipo_viaje = 'Semidomiciliadas')");
+mysqli_close($conection);
+$result_sql04 = mysqli_num_rows($sql04);
+
+  while ($data = mysqli_fetch_array($sql04)){
+	$tarearetraso   = 0;
+   
+} 
+
+include "../conexion.php";
+$sqlviajes= mysqli_query($conection,"SELECT count(tipo_viaje) as normales from registro_viajes WHERE (tipo_viaje != 'Especial' or tipo_viaje != 'Especial Turistico')  and fecha = '$fcha1' and planeado = 1");
+mysqli_close($conection);
+$result_sqlviajes = mysqli_num_rows($sqlviajes);
+
+  while ($datav = mysqli_fetch_array($sqlviajes)){
+	$normales   = $datav['normales'];
+	//$especiales   = 0;
+   
+} 
+
+include "../conexion.php";
+$sqlviajesreg= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_normales from registro_viajes WHERE (tipo_viaje != 'Normal' or tipo_viaje != 'Especial Turistico') and fecha = '$fcha1' and valor_vuelta >0 and planeado = 1");
+mysqli_close($conection);
+$result_sqlviajesreg = mysqli_num_rows($sqlviajesreg);
+
+  while ($datareg = mysqli_fetch_array($sqlviajesreg)){
+	$normalesreg   = $datareg['viajes_normales'];
+	//$especiales   = $datav['viajes_especiales'];
+   
+} 
+
+include "../conexion.php";
+$sqlviajespec= mysqli_query($conection,"SELECT sum(valor_vuelta) as especiales from registro_viajes WHERE (tipo_viaje = 'Especial' or tipo_viaje = 'Especial Turistico') and fecha = '$fcha1' ");
+mysqli_close($conection);
+$result_sqlviajespec = mysqli_num_rows($sqlviajespec);
+
+  while ($datavs = mysqli_fetch_array($sqlviajespec)){
+	$especiales   = $datavs['especiales'];
+	//$especiales   = 0;
+   
+} 
+
+include "../conexion.php";
+$sqlviajesregesp= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_especiales from registro_viajes WHERE tipo_viaje LIKE '%Especial%' and fecha = '$fcha1' and valor_vuelta >0");
+mysqli_close($conection);
+$result_sqlviajesregesp = mysqli_num_rows($sqlviajesregesp);
+
+  while ($dataregesp = mysqli_fetch_array($sqlviajesregesp)){
+	$especialesreg   = $dataregesp['viajes_especiales'];
+	//$especiales   = $datav['viajes_especiales'];  
+} 
+
+ include "../conexion.php";
+$sqlviajesplan= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_planeados FROM registro_viajes WHERE fecha= '$fcha1' and (tipo_viaje !='Especial' or tipo_viaje != 'Especial Turistico') and planeado = 1 ");
+
+mysqli_close($conection);
+$result_sqlviajesplan = mysqli_num_rows($sqlviajesplan);
+
+  while ($dataplan = mysqli_fetch_array($sqlviajesplan)){
+	$planeados   = $dataplan['viajes_planeados'];
+	//$especiales   = $datav['viajes_especiales'];
+   
+} 
+
+ include "../conexion.php";
+$sqlviajesextra= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_extras from registro_viajes WHERE (tipo_viaje != 'Especial' or tipo_viaje != 'Especial Turistico') and fecha = '$fcha1' and planeado = 0 and valor_vuelta > 0");
+mysqli_close($conection);
+$result_sqlviajesextra = mysqli_num_rows($sqlviajesextra);
+
+  while ($dataextra = mysqli_fetch_array($sqlviajesextra)){
+	$extras   = $dataextra['viajes_extras'];
+	//$especiales   = $datav['viajes_especiales'];
+   
+} 
+
+ include "../conexion.php";
+$sqlviajescanc= mysqli_query($conection,"SELECT count(valor_vuelta) as viajes_cancelados from registro_viajes WHERE (tipo_viaje != 'Especial' or tipo_viaje != 'Especial Turistico') and fecha = '$fcha1' and estatus = 3 ");
+mysqli_close($conection);
+$result_sqlviajescanc = mysqli_num_rows($sqlviajescanc);
+
+  while ($datacanc = mysqli_fetch_array($sqlviajescanc)){
+	$cancelados   = $datacanc['viajes_cancelados'];
+	//$especiales   = $datav['viajes_especiales'];
+   
+} 
+
+
+
+//*include "../conexion.php";
+//*$sqledo = "select estado from estados ORDER BY estado";
+//*$queryedo = mysqli_query($conection, $sqledo);
+//*$filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); 
+
+
  
 ?>
 <!DOCTYPE html>
@@ -422,117 +601,7 @@ session_start();
    if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 14 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 5){
 ?>
 
-    <script type="text/javascript">
-
-      load_data(); // first load
-
-      function load_data(initial_date, final_date, gender){
-        var ajax_url = "data/datadetorders2.php";
-
-        $('#fetch_generated_wills').DataTable({
-          "order": [[ 1, "desc" ]],
-          dom: 'Bfrtip',
-          lengthMenu: [
-          [20, 25, 50, -1],
-          ['20 rows', '25 rows', '50 rows', 'Show all']
-          ],
-          buttons: [
-          'excelHtml5',
-          'pageLength'
-          ],
-          "processing": true,
-          "serverSide": true,
-          "stateSave": true,
-          "responsive": true,
-          "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-          "deferRender": true, // Aquí se activa el deferRender
-          "ajax" : {
-            "url" : ajax_url,
-            "dataType": "json",
-            "type": "POST",
-            "data" : { 
-              "action" : "fetch_users", 
-              "initial_date" : initial_date, 
-              "final_date" : final_date,
-              "gender" : gender 
-              
-            },
-            "dataSrc": "records"
-          },
-          "columns": [
-            { "data" : "pedidono", "width": "10px", className: "text-right" },
-            { "data" : "fecha", "width": "60px"},
-            { "data" : "horainicio", "width": "50px", className: "text-center", "orderable": false },
-            { "data" : "horafin", "width": "50px", className: "text-center", "orderable": false },
-            { "data" : "nosemana", "width": "80px", "orderable": false },
-            { "data" : "razonsocial", "width": "100px", "orderable":false },
-            { "data" : "rutacte", "width": "40px", "orderable":false },
-            { "data" : "conductor", "width": "100px", "orderable":false },
-            { "data" : "tipounidad", "width": "80px", "orderable":false },
-            { "data" : "nounidad", "width": "30px", "orderable":false },
-            { "data" : "supervisor", "width": "50px", "orderable":false },
-            { "data" : "jefeopera", "width": "50px", "orderable":false },
-            { "data" : "estatusped", "width": "30px", "orderable":false },
-            {
-				"render": function ( data, type, full, meta ) {
-        			return '<center><a href=\'edit_viaje.php?id=' + full.pedidono +  '\' class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white;  font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\'' + full.pedidono +  '\' href="#" class="btn btn-danger btn-xs" ><i class="fas fa-times-circle"></i></a></center>';
-				}            
- 			}   
-            
-          ],
-          "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
-    		"buttons": [
-				'copyHtml5',
-				'excelHtml5',
-				'csvHtml5',     
-				{
-					extend: 'colvis',
-					postfixButtons: [ 'colvisRestore' ],
-					columns: '0,1,2,3,4,5,6'
-				}
-			],
-        }); 
-      }  
-
-      $("#filter").click(function(){
-        var initial_date = $("#initial_date").val();
-        var final_date = $("#final_date").val();
-        var gender = $("#gender").val();
-
-        if(initial_date == '' && final_date == ''){
-          $('#fetch_generated_wills').DataTable().destroy();
-          load_data("", "", gender); // filter immortalize only
-        }else{
-          var date1 = new Date(initial_date);
-          var date2 = new Date(final_date);
-          var diffTime = Math.abs(date2 - date1);
-          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
-          if(initial_date == '' || final_date == ''){
-              $("#error_log").html("Warning: You must select both (start and end) date.</span>");
-          }else{
-            if(date1 > date2){
-                $("#error_log").html("Warning: End date should be greater then start date.");
-            }else{
-               $("#error_log").html(""); 
-               $('#fetch_generated_wills').DataTable().destroy();
-               load_data(initial_date, final_date, gender);
-            }
-          }
-        }
-      });
-
-      
-
-            // Datapicker 
-            $( ".datepicker" ).datepicker({
-                language: 'es',
-                "dateFormat": "yy-mm-dd",
-                changeYear: true
-            });
-
-
-    </script>
+    
 
  <?php }else {
    if($_SESSION['rol'] == 4  ){
