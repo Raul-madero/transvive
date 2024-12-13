@@ -16,6 +16,7 @@ session_start();
 
     while ($data = mysqli_fetch_array($sql01)){
       $abiertos   = 0;
+     
     }
      date_default_timezone_set('America/Mexico_City');
 
@@ -1120,12 +1121,12 @@ e.preventDefault();
     </script> 
 
 
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
     $(document).ready(function(){
         var c_fecha = '<?php echo $fcha1; ?>';
         searchForDetalleViajes(c_fecha);
      });
-  </script>
+  </script> -->
 
  <script>
  function searchForDetalleViajes(c_fecha){
