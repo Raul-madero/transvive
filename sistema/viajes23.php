@@ -827,6 +827,7 @@ buttons: [
 
       function load_data(inicio_date, fin_date, buscaid){
         var ajax_url = "data/datadetorders2_jo.php";
+        
 
         $('#fetch_generated_willss').DataTable({
           "order": [[ 1, "desc" ]],
