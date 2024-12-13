@@ -101,6 +101,22 @@ if (!$query_ordenes) {
     <style type="text/css">
       th { font-size: 12px; font-weight:bold; }
       td { font-size: 13px; }
+      .paginador a {
+            margin: 0 5px;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            color: #007bff;
+        }
+        .paginador a.activo {
+            font-weight: bold;
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+        .paginador a:hover {
+            background-color: #ddd;
+        }
   </style>
     <!-- Dashboard Core -->
 </head>
