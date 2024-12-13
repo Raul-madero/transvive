@@ -8,14 +8,31 @@ session_start();
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 
+  
 
   $namerol = $filas['rol'];
   if (!isset($_SESSION['idUser'])) {
   header('Location: ../index.php');
 }
 
-include "../conexion.php";
-$sqlordenes = "SELECT * FROM solicitud_mantenimiento WHERE id > 0";
+$registros_por_pagina = 10;
+
+//Verificar en que pagina estamos y setear por default pagina 1
+$pagina_actual = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$pagina_actual < 1 ? $pagina_actual = 1 : $pagina_actual;
+
+//Calculamos el offset
+$offset = ($pagina_actual - 1) * $registros_por_pagina;
+
+// Consulta total de registros (para calcular el total de páginas)
+$sql_total = "SELECT COUNT(*) as total FROM solicitud_mantenimiento WHERE id > 0";
+$resultado_total = mysqli_query($conection, $sql_total);
+$total_registros = mysqli_fetch_assoc($resultado_total)['total'];
+
+//Calcular el numero total de paginas
+$paginas_totales = ceil($total_registros / $registros_por_pagina)
+
+$sqlordenes = "SELECT * FROM solicitud_mantenimiento WHERE id > 0 LIMIT $registros_por_pagina OFFSET $offset";
 $query_ordenes = mysqli_query($conection, $sqlordenes);
 
 if (!$query_ordenes) {
