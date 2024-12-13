@@ -6,22 +6,7 @@ session_start();
   $idUser = $_SESSION['idUser'];
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
-  $filas = mysqli_fetch_assoc($query);
-  $sql_viajes = '';
-
-  if ($rol == 1 || $rol == 6 || $rol == 8 || $rol == 9) {
-    $sql_viajes = "SELECT rv.id as Id, date_format(rv.fecha, '%d/%m/%Y') as Fcha, rv.cliente, rv.operador, rv.unidad, rv.num_unidad, rv.personas, rv.hora_inicio, rv.direccion, rv.hora_fin, rv.destino, rv.estatus, if(rv.estatus = 1,'Activo',if(rv.estatus = 2, 'Realizado', if(rv.estatus=3 ,'Cancelado',if(rv.estatus=4,'Iniciado',if(rv.estatus=5,'Terminado',''))))) as Status, rv.semana, rv.hora_inicio, time_format(rv.hora_inicio, '%H:%i') as Hinicio, rv.hora_fin, time_format(rv.hora_fin, '%H:%i') as Hfin, rv.id_supervisor, sp.nombres as nombre, us.nombre as jefe_operaciones FROM registro_viajes rv left join clientes ct ON rv.cliente = ct.nombre_corto left join usuario us on ct.id_supervisor = us.idusuario left join supervisores sp ON rv.id_supervisor = sp.idacceso where rv.tipo_viaje <> 'Especial'";
-    }else { 
-    $sql_viajes = "SELECT id as Id, date_format(fecha, '%d/%m/%Y') as Fcha, cliente, operador, unidad, num_unidad, personas, hora_inicio, time_format(hora_inicio, '%H:%i') as Hinicio, direccion, hora_fin, time_format(hora_fin, '%H:%i') as Hfin, destino, estatus, if(estatus = 1,'Activo',if(estatus = 2, 'Realizado', if(estatus=3 ,'Cancelado',if(estatus=4,'Iniciado',if(estatus=5,'Terminado',''))))) as Status, semana, hora_inicio, hora_fin, id_supervisor, jefe_operaciones  FROM registro_viajes where tipo_viaje <> 'Especial' and usuario_id = $idUser 
-    -- and fecha between '$fcha1' and '$fcha2' 
-    and estatus = 1 or estatus = 4 or estatus = 5 
-      ";
-    }
-    $query_viajes = mysqli_query($conection, $sql_viajes);
-
-    if (!query_viajes) {
-      die('Error al ejecutar la consulta: ' . mysqli_error($conection));
-    };
+  $filas = mysqli_fetch_assoc($query); 
 
   $namerol = $filas['rol'];
 
@@ -431,19 +416,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </tr>
                       </thead>
                       <tbody>
-						<?php
-							while($data = mysqli_fetch_assoc($sql_viajes)) {
-								echo "<tr>";
-									echo "<td>" . htmlspecialchars($data['id']);
-							}
-						?>
 
                        
                        
                       </tbody>
                               </table>
 
-               <!-- <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+               <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
                 <th style="text-align: center">ID</th>
@@ -458,7 +437,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 
               </tr>
             </thead>
-          </table>                 -->
+          </table>                
               </div>
               <!-- /.card-body -->
             </div>
