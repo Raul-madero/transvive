@@ -10,186 +10,186 @@ session_start();
 
   $namerol = $filas['rol'];
 
-  $sql01= mysqli_query($conection,"SELECT * FROM registro_viajes WHERE estatus= 1");
-  mysqli_close($conection);
-  $result_sql01 = mysqli_num_rows($sql01);
+//   $sql01= mysqli_query($conection,"SELECT * FROM registro_viajes WHERE estatus= 1");
+//   mysqli_close($conection);
+//   $result_sql01 = mysqli_num_rows($sql01);
 
-    // while ($data = mysqli_fetch_array($sql01)){
-    //   $abiertos   = 0;
+//     // while ($data = mysqli_fetch_array($sql01)){
+//     //   $abiertos   = 0;
      
-    // }
-     date_default_timezone_set('America/Mexico_City');
+//     // }
+//      date_default_timezone_set('America/Mexico_City');
 
-    $fechaActual = date("Y-m-d");
-    $fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fechaActual ) ) );
-    $newDate = date("d-m-Y", strtotime($fcha1));  
+//     $fechaActual = date("Y-m-d");
+//     $fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fechaActual ) ) );
+//     $newDate = date("d-m-Y", strtotime($fcha1));  
 
 
-  $fcha = date("Y-m-d"); 
-  $diafcha = date("w");
-  $diasrest = 6 - $diafcha;
-//   $fchaini = date("Y-m-d",strtotime($fcha."- $diafcha days")); 
-//   $fchafin = date("Y-m-d",strtotime($fcha."+ $diasrest days")); 
-  include "../conexion.php";
+//   $fcha = date("Y-m-d"); 
+//   $diafcha = date("w");
+//   $diasrest = 6 - $diafcha;
+// //   $fchaini = date("Y-m-d",strtotime($fcha."- $diafcha days")); 
+// //   $fchafin = date("Y-m-d",strtotime($fcha."+ $diasrest days")); 
+//   include "../conexion.php";
 
-  $sql= mysqli_query($conection,"SELECT semana, dia_inicial, dia_final FROM semanas40 WHERE dia_inicial <= '$fechaActual' AND dia_final >= '$fechaActual'");
-         mysqli_close($conection);
-         $result = mysqli_num_rows($sql);
+//   $sql= mysqli_query($conection,"SELECT semana, dia_inicial, dia_final FROM semanas40 WHERE dia_inicial <= '$fechaActual' AND dia_final >= '$fechaActual'");
+//          mysqli_close($conection);
+//          $result = mysqli_num_rows($sql);
          
 
-         while ($data = mysqli_fetch_array($sql)){
-         $diainicial  = $data['dia_inicial'];
-         $diafinal    = $data['dia_final'];
+//          while ($data = mysqli_fetch_array($sql)){
+//          $diainicial  = $data['dia_inicial'];
+//          $diafinal    = $data['dia_final'];
      
       
-      //$user   = $_SESSION['idUser'];
+//       //$user   = $_SESSION['idUser'];
       
-    }
+//     }
 
-  if ($rol == 1) {
-      include "../conexion.php";
-  $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and tipo_viaje <> 'Especial'");
-  mysqli_close($conection);
-  $result_sql02 = mysqli_num_rows($sql02);
+//   if ($rol == 1) {
+//       include "../conexion.php";
+//   $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and tipo_viaje <> 'Especial'");
+//   mysqli_close($conection);
+//   $result_sql02 = mysqli_num_rows($sql02);
 
-    while ($data = mysqli_fetch_array($sql02)){
-      $tareahoy   = $data['viajeshoy'];
+//     while ($data = mysqli_fetch_array($sql02)){
+//       $tareahoy   = $data['viajeshoy'];
         
-  }
+//   }
   
-  }else {  
-  include "../conexion.php";
-  $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and tipo_viaje = 'Especial' and usuario_id = $idUser");
-  mysqli_close($conection);
-  $result_sql02 = mysqli_num_rows($sql02);
+//   }else {  
+//   include "../conexion.php";
+//   $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and tipo_viaje = 'Especial' and usuario_id = $idUser");
+//   mysqli_close($conection);
+//   $result_sql02 = mysqli_num_rows($sql02);
 
-    while ($data = mysqli_fetch_array($sql02)){
-      $tareahoy   = $data['viajeshoy'];
+//     while ($data = mysqli_fetch_array($sql02)){
+//       $tareahoy   = $data['viajeshoy'];
      
-  }
-  } 
+//   }
+//   } 
 
-if ($rol == 1) {  
+// if ($rol == 1) {  
 
-include "../conexion.php";
-$sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and tipo_viaje = 'Especial' ");
-mysqli_close($conection);
-$result_sql03 = mysqli_num_rows($sql03);
+// include "../conexion.php";
+// $sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and tipo_viaje = 'Especial' ");
+// mysqli_close($conection);
+// $result_sql03 = mysqli_num_rows($sql03);
   
- while ($data = mysqli_fetch_array($sql03)){
-   $tareasem   = $data['totalsem'];
+//  while ($data = mysqli_fetch_array($sql03)){
+//    $tareasem   = $data['totalsem'];
        
- } 
-}else {
+//  } 
+// }else {
 
-  Include "../conexion.php";
-$sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and tipo_viaje = 'Especial' and usuario_id = $rol ");
-mysqli_close($conection);
-$result_sql03 = mysqli_num_rows($sql03);
+//   Include "../conexion.php";
+// $sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and tipo_viaje = 'Especial' and usuario_id = $rol ");
+// mysqli_close($conection);
+// $result_sql03 = mysqli_num_rows($sql03);
   
- while ($data = mysqli_fetch_array($sql03)){
-   $tareasem   = $data['totalsem'];
+//  while ($data = mysqli_fetch_array($sql03)){
+//    $tareasem   = $data['totalsem'];
        
- } 
-}
+//  } 
+// }
 
  
- include "../conexion.php";
-  $sql04= mysqli_query($conection,"SELECT *  FROM registro_viajes WHERE estatus = 1 and tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter' or tipo_viaje = 'Semidomiciliadas'");
-  mysqli_close($conection);
-  $result_sql04 = mysqli_num_rows($sql04);
+//  include "../conexion.php";
+//   $sql04= mysqli_query($conection,"SELECT *  FROM registro_viajes WHERE estatus = 1 and tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter' or tipo_viaje = 'Semidomiciliadas'");
+//   mysqli_close($conection);
+//   $result_sql04 = mysqli_num_rows($sql04);
 
-    while ($data = mysqli_fetch_array($sql04)){
-      $tarearetraso   = 0;
+//     while ($data = mysqli_fetch_array($sql04)){
+//       $tarearetraso   = 0;
      
-  } 
+//   } 
 
-  include "../conexion.php";
-  $sqlviajes= mysqli_query($conection,"SELECT count(tipo_viaje) as normales from registro_viajes WHERE tipo_viaje = 'Normal' and fecha = '$fcha1' and planeado = 1");
-  mysqli_close($conection);
-  $result_sqlviajes = mysqli_num_rows($sqlviajes);
+//   include "../conexion.php";
+//   $sqlviajes= mysqli_query($conection,"SELECT count(tipo_viaje) as normales from registro_viajes WHERE tipo_viaje = 'Normal' and fecha = '$fcha1' and planeado = 1");
+//   mysqli_close($conection);
+//   $result_sqlviajes = mysqli_num_rows($sqlviajes);
 
-    while ($datav = mysqli_fetch_array($sqlviajes)){
-      $normales   = $datav['normales'];
-      //$especiales   = 0;
+//     while ($datav = mysqli_fetch_array($sqlviajes)){
+//       $normales   = $datav['normales'];
+//       //$especiales   = 0;
      
-  } 
+//   } 
 
-  include "../conexion.php";
-  $sqlviajesreg= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_normales from registro_viajes WHERE tipo_viaje = 'Normal' and fecha = '$fcha1' and valor_vuelta >0 and planeado = 1");
-  mysqli_close($conection);
-  $result_sqlviajesreg = mysqli_num_rows($sqlviajesreg);
+//   include "../conexion.php";
+//   $sqlviajesreg= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_normales from registro_viajes WHERE tipo_viaje = 'Normal' and fecha = '$fcha1' and valor_vuelta >0 and planeado = 1");
+//   mysqli_close($conection);
+//   $result_sqlviajesreg = mysqli_num_rows($sqlviajesreg);
 
-    while ($datareg = mysqli_fetch_array($sqlviajesreg)){
-      $normalesreg   = $datareg['viajes_normales'];
-      //$especiales   = $datav['viajes_especiales'];
+//     while ($datareg = mysqli_fetch_array($sqlviajesreg)){
+//       $normalesreg   = $datareg['viajes_normales'];
+//       //$especiales   = $datav['viajes_especiales'];
      
-  } 
+//   } 
 
-  include "../conexion.php";
-  $sqlviajespec= mysqli_query($conection,"SELECT sum(valor_vuelta) as especiales from registro_viajes WHERE tipo_viaje = 'Especial' and fecha = '$fcha1' ");
-  mysqli_close($conection);
-  $result_sqlviajespec = mysqli_num_rows($sqlviajespec);
+//   include "../conexion.php";
+//   $sqlviajespec= mysqli_query($conection,"SELECT sum(valor_vuelta) as especiales from registro_viajes WHERE tipo_viaje = 'Especial' and fecha = '$fcha1' ");
+//   mysqli_close($conection);
+//   $result_sqlviajespec = mysqli_num_rows($sqlviajespec);
 
-    while ($datavs = mysqli_fetch_array($sqlviajespec)){
-      $especiales   = $datavs['especiales'];
-      //$especiales   = 0;
+//     while ($datavs = mysqli_fetch_array($sqlviajespec)){
+//       $especiales   = $datavs['especiales'];
+//       //$especiales   = 0;
      
-  } 
+//   } 
 
-  include "../conexion.php";
-  $sqlviajesregesp= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_especiales from registro_viajes WHERE tipo_viaje = 'Especial' and fecha = '$fcha1' and valor_vuelta >0");
-  mysqli_close($conection);
-  $result_sqlviajesregesp = mysqli_num_rows($sqlviajesregesp);
+//   include "../conexion.php";
+//   $sqlviajesregesp= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_especiales from registro_viajes WHERE tipo_viaje = 'Especial' and fecha = '$fcha1' and valor_vuelta >0");
+//   mysqli_close($conection);
+//   $result_sqlviajesregesp = mysqli_num_rows($sqlviajesregesp);
 
-    while ($dataregesp = mysqli_fetch_array($sqlviajesregesp)){
-      $especialesreg   = $dataregesp['viajes_especiales'];
-      //$especiales   = $datav['viajes_especiales'];  
-  } 
+//     while ($dataregesp = mysqli_fetch_array($sqlviajesregesp)){
+//       $especialesreg   = $dataregesp['viajes_especiales'];
+//       //$especiales   = $datav['viajes_especiales'];  
+//   } 
 
-   include "../conexion.php";
-  $sqlviajesplan= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_planeados FROM registro_viajes WHERE fecha= '$fcha1' and tipo_viaje='Normal' and planeado = 1 ");
+//    include "../conexion.php";
+//   $sqlviajesplan= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_planeados FROM registro_viajes WHERE fecha= '$fcha1' and tipo_viaje='Normal' and planeado = 1 ");
 
-  mysqli_close($conection);
-  $result_sqlviajesplan = mysqli_num_rows($sqlviajesplan);
+//   mysqli_close($conection);
+//   $result_sqlviajesplan = mysqli_num_rows($sqlviajesplan);
 
-    while ($dataplan = mysqli_fetch_array($sqlviajesplan)){
-      $planeados   = $dataplan['viajes_planeados'];
-      //$especiales   = $datav['viajes_especiales'];
+//     while ($dataplan = mysqli_fetch_array($sqlviajesplan)){
+//       $planeados   = $dataplan['viajes_planeados'];
+//       //$especiales   = $datav['viajes_especiales'];
      
-  } 
+//   } 
 
-   include "../conexion.php";
-  $sqlviajesextra= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_extras from registro_viajes WHERE tipo_viaje = 'Normal' and fecha = '$fcha1' and planeado = 0 and valor_vuelta > 0");
-  mysqli_close($conection);
-  $result_sqlviajesextra = mysqli_num_rows($sqlviajesextra);
+//    include "../conexion.php";
+//   $sqlviajesextra= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_extras from registro_viajes WHERE tipo_viaje = 'Normal' and fecha = '$fcha1' and planeado = 0 and valor_vuelta > 0");
+//   mysqli_close($conection);
+//   $result_sqlviajesextra = mysqli_num_rows($sqlviajesextra);
 
-    while ($dataextra = mysqli_fetch_array($sqlviajesextra)){
-      $extras   = $dataextra['viajes_extras'];
-      //$especiales   = $datav['viajes_especiales'];
+//     while ($dataextra = mysqli_fetch_array($sqlviajesextra)){
+//       $extras   = $dataextra['viajes_extras'];
+//       //$especiales   = $datav['viajes_especiales'];
      
-  } 
+//   } 
 
-   include "../conexion.php";
-  $sqlviajescanc= mysqli_query($conection,"SELECT count(valor_vuelta) as viajes_cancelados from registro_viajes WHERE tipo_viaje = 'Normal' and fecha = '$fcha1' and estatus = 3 ");
-  mysqli_close($conection);
-  $result_sqlviajescanc = mysqli_num_rows($sqlviajescanc);
+//    include "../conexion.php";
+//   $sqlviajescanc= mysqli_query($conection,"SELECT count(valor_vuelta) as viajes_cancelados from registro_viajes WHERE tipo_viaje = 'Normal' and fecha = '$fcha1' and estatus = 3 ");
+//   mysqli_close($conection);
+//   $result_sqlviajescanc = mysqli_num_rows($sqlviajescanc);
 
-    while ($datacanc = mysqli_fetch_array($sqlviajescanc)){
-      $cancelados   = $datacanc['viajes_cancelados'];
-      //$especiales   = $datav['viajes_especiales'];
+//     while ($datacanc = mysqli_fetch_array($sqlviajescanc)){
+//       $cancelados   = $datacanc['viajes_cancelados'];
+//       //$especiales   = $datav['viajes_especiales'];
      
-  } 
+//   } 
 
 
 
-  //*include "../conexion.php";
-  //*$sqledo = "select estado from estados ORDER BY estado";
-  //*$queryedo = mysqli_query($conection, $sqledo);
-  //*$filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); 
+//   //*include "../conexion.php";
+//   //*$sqledo = "select estado from estados ORDER BY estado";
+//   //*$queryedo = mysqli_query($conection, $sqledo);
+//   //*$filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); 
 
  
-?>
+// ?>
 
 <!DOCTYPE html>
 <!--
@@ -304,7 +304,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title"><?php echo $newDate;?></h3>
+              <h3 class="card-title"><?php 
+			  //echo $newDate;
+			  ?></h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" id="refresh">
@@ -323,21 +325,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                     Planeados
-                    <span class="badge bg-warning float-right"><?php echo $normales;?></span>
+                    <span class="badge bg-warning float-right"><?php //echo $normales;?></span>
                   </a>
                   <a href="#" class="nav-link">
                     Registrados
-                    <span class="badge bg-secondary float-right"><?php echo $normalesreg;?></span>
+                    <span class="badge bg-secondary float-right"><?php 
+					//echo $normalesreg;
+					?></span>
                   </a>
                   
                   <a href="#" class="nav-link">
                     No Planeados
-                    <span class="badge bg-success float-right"><?php echo $extras;?></span>
+                    <span class="badge bg-success float-right"><?php 
+					//echo $extras; 
+					?></span>
                   </a>
 
                   <a href="#" class="nav-link">
                     Cancelados
-                    <span class="badge bg-danger float-right"><?php echo $cancelados;?></span>
+                    <span class="badge bg-danger float-right"><?php 
+					//echo $cancelados;
+					?></span>
                   </a>
 
                   <a href="#" class="nav-link"></a>
@@ -346,11 +354,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <li class="nav-item">
                   <a href="#" class="nav-link">
                    Especiales
-                   <span class="badge bg-warning float-right"><?php echo $especiales;?></span>
+                   <span class="badge bg-warning float-right"><?php 
+				   //echo $especiales;
+				   ?></span>
                   </a>
                   <a href="#" class="nav-link">
                     Especiales Reg.
-                    <span class="badge bg-secondary float-right"><?php echo $especialesreg;?></span>
+                    <span class="badge bg-secondary float-right"><?php 
+					//echo $especialesreg;
+					?></span>
                   </a>
                   <a href="#" class="nav-link"></a>
                 </li>
