@@ -22,11 +22,7 @@ if (!$query_ordenes) {
   die("Error al ejecutar la consulta: " . mysqli_error($conection));
 }
 
-while ($data) {
-  echo "<pre>";
-  print_r($data);
-  echo "<pre>";
-}
+
   
   //*include "../conexion.php";
   //*$sqledo = "select estado from estados ORDER BY estado";
@@ -238,6 +234,25 @@ while ($data) {
                 <th style="text-align: center; font-size: 12px;">Accion</th>
               </tr>
             </thead>
+            <tbody>
+              <?php
+                while ($data = mysqli_fetch_assoc($query_ordenes)) {
+                  echo "<tr>";
+                  echo "<td>" . htmlspecialchars($data['id']) . "</td>";
+                  echo "<td>" . htmlspecialchars($data['no_orden']) . "</td>";
+                  echo "<td>" . htmlspecialchars($data['fecha']) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["unidad"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["solicita"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["tipojob"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["tipomantto"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["trabsolicitado"]) . "</td>";
+                  echo "<td>" . htmlspecialchars($data["estatusped"]) . "</td>";
+                  echo '<td><a class="link_edit" style="color:#007bff;" href="edit_solicitudmantto.php?id=' . htmlspecialchars($data['id']) . '"><i class="far fa-edit"></i> Editar</a> |
+                  <a href="factura/form_ordenmantto.php?id=' . htmlspecialchars($data['no_orden']) . '" target="_blank"><i class="fa fa-print" style="color:white; font-size: 1.3em"></i> Print</a> |
+                  <a data-toggle="modal" data-target="#modalEditcliente" data-id="' . htmlspecialchars($data['id']) . '" data-name="' . htmlspecialchars($data['no_orden']) . '" href="javascript:void(0)" class="link_delete" style="color:red"><i class="fa fa-ban"></i> Cancelar</a>';
+                  echo "<td>";
+                }
+              ?>
           </table>
         
 
