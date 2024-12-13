@@ -284,6 +284,22 @@ if (!$query_ordenes) {
   </div>
       <!-- /.row -->
     </section>
+    <div class="paginador">
+        <?php
+        if ($paginaActual > 1) {
+            echo '<a href="?pagina=' . ($paginaActual - 1) . '">Anterior</a>';
+        }
+
+        for ($i = 1; $i <= $totalPaginas; $i++) {
+            $claseActivo = $paginaActual == $i ? 'activo' : '';
+            echo '<a class="' . $claseActivo . '" href="?pagina=' . $i . '">' . $i . '</a>';
+        }
+
+        if ($paginaActual < $totalPaginas) {
+            echo '<a href="?pagina=' . ($paginaActual + 1) . '">Siguiente</a>';
+        }
+        ?>
+    </div>
     <!-- /.content -->
  </div>
   <!-- /.content-wrapper -->
