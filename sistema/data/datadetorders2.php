@@ -2,7 +2,7 @@
 session_start();
 include '../../conexion.php';
 
-global $connection;
+global $conection;
 
 if ($_REQUEST['action'] === 'fetch_users') {
     $requestData = $_REQUEST;
