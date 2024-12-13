@@ -51,7 +51,6 @@ if ($_REQUEST['action'] === 'fetch_users') {
         ];
         return $labels[$estatus] ?? '<span class="label label-default">Desconocido</span>';
     }
-
     $data = [];
     while ($row = $result->fetch_assoc()) {
         $Estatusnew = getStatusLabel($row['estatus']);
@@ -73,7 +72,8 @@ if ($_REQUEST['action'] === 'fetch_users') {
             'estatusped' => $Estatusnew
         ];
     }
-
+    
+    header('Content-Type: application/json; charset=utf-8');
     $json_data = [
         "draw" => intval($requestData['draw']),
         "recordsTotal" => $result->num_rows,
