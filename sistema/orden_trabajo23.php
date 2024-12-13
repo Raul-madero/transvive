@@ -14,6 +14,14 @@ session_start();
   header('Location: ../index.php');
 }
 
+include "../conexion.php";
+$sqlordenes = "SELECT * FROM solicitud_mantenimiento WHERE id > 0";
+$query_ordenes = mysqli_query($conection, $sqlordenes);
+$data = mysqli_fetch_all($query_ordenes);
+
+echo "<pre>";
+print_r($data);
+echo "<pre>";
   
   //*include "../conexion.php";
   //*$sqledo = "select estado from estados ORDER BY estado";
