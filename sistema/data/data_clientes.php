@@ -8,6 +8,8 @@ $data = array();
 while( $rows = mysqli_fetch_assoc($resultset) ) {
 $data[] = $rows;
 }
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 $results = array(
 "sEcho" => 1,
 "iTotalRecords" => count($data),

@@ -65,7 +65,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
         ];
     }
     header('Content-Type: application/json');
-       
+    header('Access-Control-Allow-Origin: *');   
     $json_data = [
         "draw" => intval($requestData['draw']),
         "recordsTotal" => $result->num_rows,
