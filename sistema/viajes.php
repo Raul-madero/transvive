@@ -431,6 +431,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </tr>
                       </thead>
                       <tbody>
+						<?php
+							while($data = mysqli_fetch_assoc($sql_viajes)) {
+								echo "<tr>";
+									echo "<td>" . htmlspecialchars($data['id']);
+							}
+						?>
 
                        
                        
