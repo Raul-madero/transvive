@@ -17,7 +17,8 @@ session_start();
 include "../conexion.php";
 $sqlordenes = "SELECT * FROM solicitud_mantenimiento WHERE id > 0";
 $query_ordenes = mysqli_query($conection, $sqlordenes);
-$data = mysqli_fetch_all($query_ordenes);
+$data = mysqli_fetch_assoc($query_ordenes);
+
 
 echo "<pre>";
 print_r($data);
