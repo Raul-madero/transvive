@@ -17,12 +17,16 @@ session_start();
 include "../conexion.php";
 $sqlordenes = "SELECT * FROM solicitud_mantenimiento WHERE id > 0";
 $query_ordenes = mysqli_query($conection, $sqlordenes);
-$data = mysqli_fetch_assoc($query_ordenes);
 
+if (!$query_ordenes) {
+  die("Error al ejecutar la consulta: " . mysqli_error($conection));
+}
 
-echo "<pre>";
-print_r($data);
-echo "<pre>";
+while ($data) {
+  echo "<pre>";
+  print_r($data);
+  echo "<pre>";
+}
   
   //*include "../conexion.php";
   //*$sqledo = "select estado from estados ORDER BY estado";
