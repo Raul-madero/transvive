@@ -14,11 +14,11 @@ if ($_REQUEST['action'] === 'fetch_users') {
     $gender = isset($_POST['gender']) ? intval($_POST['gender']) : null;
 
     $date_range = (!empty($initial_date) && !empty($final_date)) 
-        ? " AND p.fecha BETWEEN $initial_date AND $final_date" 
+        ? " AND p.fecha BETWEEN ? AND ?" 
         : "";
 
     $gender_filter = ($gender !== null && $gender > 0) 
-        ? " AND p.id = $gender" 
+        ? " AND p.id = ?" 
         : "";
 
     $columns = 'p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno) as name, us.nombre AS jefeo, p.ruta';
@@ -29,7 +29,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
     $where = "WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) $date_range $gender_filter";
 
     // Preparar consulta principal para conteo total
-    $count_sql = "SELECT COUNT(*) AS total FROM $table $where ";
+    $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
     $stmt_count = $connection->prepare($count_sql);
 
     if ($stmt_count === false) {
@@ -48,8 +48,8 @@ if ($_REQUEST['action'] === 'fetch_users') {
     $count_result = $stmt_count->get_result();
     $totalData = $count_result->fetch_assoc()['total'] ?? 0;
 
-    // Preparar consulta de datos con paginación
-    $sql = "SELECT $columns FROM $table $where ORDER BY fecha DESC LIMIT ?, ?";
+    // Preparar consulta de datos con paginación y orden por fecha (más reciente primero)
+    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT ?, ?";
     $stmt = $connection->prepare($sql);
 
     if ($stmt === false) {
