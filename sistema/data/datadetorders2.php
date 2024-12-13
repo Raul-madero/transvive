@@ -22,7 +22,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
               LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
     $where = "WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) $date_range $gender_filter";
 
-    $sql = "SELECT $columns FROM $table $where LIMIT ?, ?";
+    $sql = "SELECT $columns FROM $table $where ";
     $stmt = $connection->prepare($sql);
 
     $params = [];
