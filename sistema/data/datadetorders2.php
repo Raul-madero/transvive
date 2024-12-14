@@ -10,7 +10,12 @@ if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
 }
 
 $requestData = $_REQUEST;
-error_log(print_r($_REQUEST['initial_date'], true));
+
+$columns = array(
+    0 => 'id', 
+    1 => 'fecha', 
+    // ... other columns
+);
 
 $start = isset($requestData['start']) ? intval($requestData['start']) : 0;
 $length = isset($requestData['length']) ? intval($requestData['length']) : 10;
@@ -31,17 +36,24 @@ $gender_filter = ($gender !== null && $gender > 0)
 $columns = 'p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, 
     CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno) as name, us.nombre AS jefeo, p.ruta';
 $table = 'registro_viajes p 
-          LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
-          LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
-          LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
+        LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
+        LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
+        LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
 $where = "WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) $date_range $gender_filter";
 
 // Conteo total
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $connection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
+// Ordenamiento
+if (!empty($requestData['order'])) {
+    $orderColumn = $columns[$requestData['order'][0]['column']]; 
+    $orderDir = $requestData['order'][0]['dir']; 
+    $sql .= " ORDER BY $orderColumn $orderDir"; 
+}
+
 // Datos con paginación
-$sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
+$sql = "SELECT $columns FROM $table $where $order_by LIMIT $start, $length"; 
 $result = $connection->query($sql);
 
 if (!$result) {
