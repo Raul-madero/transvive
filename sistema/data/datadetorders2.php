@@ -4,7 +4,7 @@ include '../config/db-config.php';
 
 global $connection;
 echo "<pre>";
-echo $_REQUEST;
+print_r($_REQUEST);
 echo "</pre>";
 
 if ($_REQUEST['action'] === 'fetch_users') {
