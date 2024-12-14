@@ -49,7 +49,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
     $totalData = $count_result->fetch_assoc()['total'] ?? 0;
 
     // Preparar consulta de datos con paginación
-    $sql = "SELECT $columns FROM $table $where LIMIT ?, ?";
+    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha LIMIT ?, ?";
     $stmt = $connection->prepare($sql);
 
     if ($stmt === false) {
