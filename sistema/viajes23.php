@@ -147,18 +147,7 @@ while ($datacanc = mysqli_fetch_array($sqlviajescanc)){
 	//$especiales   = $datav['viajes_especiales'];
 } 
 mysqli_close($conection);
-include "../conexion.php";
-$sqlviajesrege = mysqli_query($conection, 'SELECT p.id, , p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno) as name, us.nombre AS jefeo, p.ruta
-FROM registro_viajes as p
-LEFT JOIN clientes as ct ON p.cliente = nombre_corto
-LEFT JOIN usuario as us ON ct.id_supervisor = us.idusuario
-LEFT JOIN supervisores as sp ON p.id_supervisor = sp.idacceso
-WHERE p.tipo_viaje <> 'Especial'');
-$result_sqlviajesrege = mysqli_num_rows($sqlviajesrege);
-echo "<pre>";
-print_r($sqlviajesrege);
-echo "</pre>";
-mysqli_close($conection);
+
 ?>
 
 //*include "../conexion.php";
