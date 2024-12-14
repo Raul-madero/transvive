@@ -11,24 +11,24 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
     $requestData = $_REQUEST;
     $start = $_REQUEST['start'];
-     $initial_date = $fecha1;
-    $final_date = $fecha2;
+    $initial_date = $fcha1;
+    $final_date = $fcha2;
   
     $gender = $_REQUEST['buscarid'];
 
-    if(!empty($initial_date) && !empty($final_date)){
-        $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    }else{
-        $date_range = " ";
-    }
+    // if(!empty($initial_date) && !empty($final_date)){
+    //     $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
+    // }else{
+    //     $date_range = " ";
+    // }
 
-    if($gender != ""){
+    if($gender != null $$ is_numeric($gender)){
         $gender =  " AND p.id = '$gender' ";
     }
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
     $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
-    $where = "  p.tipo_viaje <> 'Especial' ".$gender ;
+    $where = "  p.tipo_viaje <> 'Especial' ". $gender;
     //WHERE p.fecha >= '".$fcha1."' and p.fecha <='".$fcha2."' and
     $columns_order = array(
         0 => 'id',
@@ -46,7 +46,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
         12 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+    $sql = "SELECT ".$columns." FROM ".$table."WHERE 1=1 ".$where." ".$gender;
 
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
@@ -67,9 +67,9 @@ if($_REQUEST['action'] == 'fetch_userss'){
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
-    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
+    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]." ".$requestData['order'][0]['dir'];
 
-    if($requestData['length'] != "-1"){
+    if ($requestData['length'] != "-1") {
         $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
     }
 
@@ -132,15 +132,17 @@ if($_REQUEST['action'] == 'fetch_userss'){
         $data[] = $nestedData;
     }
     header('Content-Type: application/json charset=utf-8');
-    
-    $json_data = array(
-        "draw"            => intval( $requestData['draw'] ),
-        "recordsTotal"    => intval( $totalData),
-        "recordsFiltered" => intval( $totalFiltered ),
-        "records"         => $data
-    );
 
-    echo json_encode($json_data);
+$json_data = array(
+    "draw" => intval($requestData['draw']),
+    "recordsTotal" => intval($totalData),
+    "recordsFiltered" => intval($totalFiltered),
+    "records" => $data
+);
+
+echo json_encode($json_data);
+
 }
 
 ?>
+
