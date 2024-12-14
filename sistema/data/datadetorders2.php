@@ -3,9 +3,6 @@ session_start();
 include '../config/db-config.php';
 
 global $connection;
-echo "<pre>";
-print_r($_REQUEST);
-echo "</pre>";
 
 if ($_REQUEST['action'] === 'fetch_users') {
     $requestData = $_REQUEST;
