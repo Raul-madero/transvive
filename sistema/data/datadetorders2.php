@@ -37,7 +37,7 @@ $table = 'registro_viajes p
 $where = "WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) $date_range $gender_filter";
 
 // Conteo total
-$count_sql = "SELECT COUNT(*) AS total FROM $table $where";
+$count_sql = "SELECT COUNT(*) AS total FROM $table $where ORDER BY p.fecha DESC";
 $totalData = $connection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
 // Datos con paginación
