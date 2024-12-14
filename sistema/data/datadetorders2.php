@@ -13,7 +13,18 @@ $requestData = $_REQUEST;
 
 $columns = array(
     0 => 'id', 
-    1 => 'fecha', 
+    1 => 'fecha',
+    2 => 'hora_inicio',
+    3 => 'hora_fin',
+    4 => 'semana',
+    5 => 'cliente',
+    6 => 'ruta',
+    7 => 'operador',
+    8 => 'unidad',
+    9 => 'num_unidad',
+    10 => 'name',
+    11 => 'jefeo',
+    12 => 'estatus'
     // ... other columns
 );
 
@@ -55,6 +66,8 @@ if (!empty($requestData['order'])) {
 // Datos con paginación
 $sql = "SELECT $columns FROM $table $where $order_by LIMIT $start, $length"; 
 $result = $connection->query($sql);
+
+// Resto del código...
 
 if (!$result) {
     echo json_encode(["error" => $connection->error]);
