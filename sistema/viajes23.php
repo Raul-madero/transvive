@@ -153,7 +153,7 @@ FROM registro_viajes as p
 LEFT JOIN clientes as ct ON p.cliente = nombre_corto
 LEFT JOIN usuario as us ON ct.id_supervisor = us.idusuario
 LEFT JOIN supervisores as sp ON p.id_supervisor = sp.idacceso
-WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE())');
+WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE)');
 $result_sqlviajesrege = mysqli_num_rows($sqlviajesrege);
 echo "<pre>";
 print_r($sqlviajesrege);
