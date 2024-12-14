@@ -66,14 +66,14 @@ if ($rol == 1) {
 
     include "../conexion.php";
     $sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') ");
-    $data = mysqli_fetch_array($sql03)
+    $data = mysqli_fetch_array($sql03);
     $tareasem   = $data['totalsem'];
     mysqli_close($conection);
 }else {
 	Include "../conexion.php";
 	$sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') and usuario_id = $rol ");
 	$result_sql03 = mysqli_num_rows($sql03);
-	$data = mysqli_fetch_array($sql03)
+	$data = mysqli_fetch_array($sql03);
 	$tareasem   = $data['totalsem'];
 	mysqli_close($conection);
 }
@@ -555,13 +555,12 @@ mysqli_close($conection);
 $(document).ready(function () {
     // Inicializa la tabla
     let table = initializeDataTable();
-
     // Listener para el botón de filtro
     $("#filter").on("click", function () {
         let initial_date = $("#initial_date").val();
         let final_date = $("#final_date").val();
         let gender = $("#gender").val();
-
+		console.log(initial_date, final_date, gender);
         if (validateFilter(initial_date, final_date)) {
             table.ajax.url("data/datadetorders2.php").load({
                 initial_date: initial_date,
