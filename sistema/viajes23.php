@@ -602,7 +602,7 @@ function initializeDataTable() {
         deferRender: true,
         ajax: {
             url: "data/datadetorders2.php",
-            
+
             type: "POST",
             dataType: "json",
             data: function (d) {
@@ -877,7 +877,7 @@ buttons: [
         var inicio_date = $("#inicio_date").val();
         var fin_date = $("#fin_date2").val();
         var buscaid = $("#buscaid").val();
-
+        console.log(load_data(inicio_date, fin_date, buscaid))
         if(inicio_date == '' && fin_date == ''){
           $('#fetch_generated_willss').DataTable().destroy();
           load_data("", "", buscaid); // filter immortalize only
