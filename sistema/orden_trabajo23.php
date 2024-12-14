@@ -22,7 +22,7 @@ $pagina_actual = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $pagina_actual < 1 ? $pagina_actual = 1 : $pagina_actual;
 
 //Calculamos el offset
-$offset = ($pagina_actual - 1) * $registros_por_pagina;
+$offset = ($pagina_actual > 1 ? ($pagina_actual - 1) : $pagina_actual) * $registros_por_pagina;
 
 // Consulta total de registros (para calcular el total de páginas)
 $sql_total = "SELECT COUNT(*) as total FROM solicitud_mantenimiento WHERE id > 0";
@@ -291,14 +291,14 @@ if (!$query_ordenes) {
                 <?php
                 if ($pagina_actual > 1) {
                     echo '<a href="?pagina=' . ($pagina_actual - 1) . '">Anterior</a>';
-                }
+                };
                 for ($i = 1; $i <= $total_paginas; $i++) {
                     $clase_activo = $pagina_actual == $i ? 'activo' : '';
                     echo '<a class="' . $clase_activo . '" href="?pagina=' . $i . '">' . $i . '</a>';
-                }
+                };
                 if ($pagina_actual < $total_paginas) {
                     echo '<a href="?pagina=' . ($pagina_actual + 1) . '">Siguiente</a>';
-                }
+                };
                 ?>
          </div>
 
