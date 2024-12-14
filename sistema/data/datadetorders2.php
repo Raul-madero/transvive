@@ -41,16 +41,8 @@ $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $connection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
 // Datos con paginación
-try {
-    $stmt = $pdo->prepare("SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT :start, :length");
-    $stmt->bindParam(':start', $start, PDO::PARAM_INT);
-    $stmt->bindParam(':length', $length, PDO::PARAM_INT);
-    $stmt->execute();
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC); 
-} catch(PDOException $e) {
-    // Handle exceptions (e.g., log the error, display an error message)
-    echo "Error: " . $e->getMessage();
-}
+$sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
+$result = $connection->query($sql);
 
 if (!$result) {
     echo json_encode(["error" => $connection->error]);
