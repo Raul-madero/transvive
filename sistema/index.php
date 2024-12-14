@@ -42,7 +42,7 @@ $sqlviajes = mysqli_query($conection, "
 // Verificación de la consulta SQL
 if (!$sqlviajes) {
     die("Error en la consulta: " . mysqli_error($conection));
-}
+};
 
 // Inicialización del array de resultados
 $viajesData = [];
@@ -56,7 +56,7 @@ while ($drow = mysqli_fetch_assoc($sqlviajes)) {
         'Porcdiferencia' => number_format($drow['Porcdiferencia'], 2),
 		'Cancelados' => $drow['Cancelados']
     ];
-}
+};
 
 $datos_mes_actual = $viajesData[9];
 
@@ -70,7 +70,7 @@ $datos_mes_actual = $viajesData[9];
 	$p_diferencia = $datos_mes_actual['Planeados'] - $datos_mes_actual['Registrados'];
 	$porc_diferencia = number_format(($datos_mes_actual['Registrados'] / $p_diferencia) * 100, 2); 
 	$porc_cancelados = number_format(($datos_mes_actual['Cancelados'] / $datos_mes_actual['Planeados']) * 100, 2); 
-}
+};
 
 // Consulta para obtener los datos de los viajes planeados y la diferencia para la semana
 $sqlviajes_semana = mysqli_query($conection, "
@@ -89,7 +89,7 @@ GROUP BY YEAR(fecha)
 
 if (!$sqlviajes_semana) {
     die("Error en la consulta: " . mysqli_error($conection));
-}
+};
 
 // Comprobar si se encontraron registros
 if ($prow = mysqli_fetch_assoc($sqlviajes_semana)) {
@@ -107,7 +107,7 @@ if ($prow = mysqli_fetch_assoc($sqlviajes_semana)) {
     $diferencia_semana = 0;
 	$cancelados_semana = 0;
     echo "No se encontraron registros para la semana: $name_semana.";
-}
+};
 
 //Calculo porcentajes semanales
 $p_planeados_semanales = $viajes_planeados_semana - $cancelados_semana;
@@ -140,7 +140,7 @@ $sqlcomprames = mysqli_query($conection, "
 
 if (!$sqlcomprames) {
     die("Error en la consulta: " . mysqli_error($conection));
-}
+};
 
 // Si hay resultados, asignamos el valor formateado
 $comprasmes = 0.00;
@@ -148,7 +148,7 @@ $compras_semana = 0.00;
 if ($datanc = mysqli_fetch_assoc($sqlcomprames)) {
     $comprasmes = number_format($datanc['totalcompras'], 2);
 	$compras_semana = number_format($datanc['totalcompras_semana'], 2);
-}
+};
 
 mysqli_close($conection);
 
@@ -179,7 +179,7 @@ if ($sqlenc && mysqli_num_rows($sqlenc) > 0) {
         $importes[$mes] = $data['Importec'];
         $litros[$mes] = $data['Litros'];
     }
-}
+};
 
 $mes_consulta = (int)date('m');
 $importes_mes_actual = $importes[$mes_consulta];
@@ -209,7 +209,7 @@ $sqlenc = mysqli_query($conection, "
 // Validar consulta
 if (!$sqlenc) {
     die("Error en la consulta");
-}
+};
 
 // Inicializar los arreglos para los importes por mes
 $compras_por_mes = array_fill(1, 12, 0); // Inicializa un arreglo de 12 meses con valor 0
@@ -218,7 +218,7 @@ $compras_por_mes = array_fill(1, 12, 0); // Inicializa un arreglo de 12 meses co
 while ($data = mysqli_fetch_array($sqlenc)) {
     $mes = $data['Nmes'];
     $compras_por_mes[$mes] = $data['totalcompra']; // Asigna el valor de compra al mes correspondiente
-}
+};
 
 mysqli_close($conection);
 
@@ -253,7 +253,7 @@ $sqlenc = mysqli_query($conection, "
 // Validar la consulta
 if (!$sqlenc) {
     die("Error en la consulta");
-}
+};
 
 // Inicializar un arreglo con los valores de compra por mes
 $compras_por_mes = array_fill(1, 12, 0); // Inicializa un arreglo con 12 elementos, todos en 0
@@ -262,7 +262,7 @@ $compras_por_mes = array_fill(1, 12, 0); // Inicializa un arreglo con 12 element
 while ($data = mysqli_fetch_array($sqlenc)) {
     $mes = $data['Nmes'];
     $compras_por_mes[$mes] = $data['totalocompra']; // Asigna el valor de compra al mes correspondiente
-}
+};
 
 mysqli_close($conection);
 
@@ -304,7 +304,7 @@ $sqlprom = mysqli_query($conection, "
 // Validar la consulta
 if (!$sqlprom) {
     die("Error en la consulta SQL");
-}
+};
 
 // Obtener el resultado
 $rowprom = mysqli_fetch_array($sqlprom);
@@ -337,7 +337,7 @@ $sqlenc23 = mysqli_query($conection, "
 // Verificar si la consulta se ejecutó correctamente
 if (!$sqlenc23) {
     die("Error en la consulta SQL");
-}
+};
 
 // Verificar si se obtuvo un resultado
 $dataenc = mysqli_fetch_array($sqlenc23);
@@ -378,7 +378,7 @@ if ($dataenc) {
         'Precios' => 0,
         'Numeroreg' => 0,
     ];
-}
+};
 
 // Acceder a las variables ya formateadas
 $resp1_23 = $respuestas['Timeforma'];
@@ -418,7 +418,7 @@ $sqlenc24 = mysqli_query($conection, "
 // Verificar si la consulta se ejecutó correctamente
 if (!$sqlenc24) {
     die("Error en la consulta SQL");
-}
+};
 
 // Verificar si se obtuvo un resultado
 $dataenc = mysqli_fetch_array($sqlenc24);
@@ -480,7 +480,7 @@ $sqlenc25 = mysqli_query($conection, "
 // Verificar si la consulta se ejecutó correctamente
 if (!$sqlenc25) {
     die("Error en la consulta SQL");
-}
+};
 
 // Verificar si se obtuvo un resultado
 $dataenc = mysqli_fetch_array($sqlenc25);
@@ -550,7 +550,7 @@ $sqlenc10 = mysqli_query(
 // Verificación de la consulta SQL
 if (!$sqlenc10) {
     die("Error en la consulta: " . mysqli_error($conection));
-}
+};
 
 // Inicialización de array multidimensional para almacenar los datos
 $encuestasData = [];
@@ -570,7 +570,7 @@ while ($nrow = mysqli_fetch_assoc($sqlenc10)) {
         'servicio_facturacion' => $nrow['servicio_facturacion'],
         'nuestros_precios' => $nrow['nuestros_precios']
     ];
-}
+};
 
 // Cerrar la conexión a la base de datos
 mysqli_close($conection);
@@ -645,9 +645,9 @@ if ($result_sqlenc024 > 0) {
         } else {
             // 'Numeroreg' no es un porcentaje, solo formateamos el número
             $respuestas[$key] = number_format($dataenc[$key], 0);
-        }
-    }
-}
+        };
+    };
+};
 
 // Para comprobar, imprime las respuestas
 // foreach ($respuestas as $key => $value) {
@@ -663,7 +663,7 @@ $sqlnsem = mysqli_query($conection, "SELECT semana as Nsemana FROM semanas WHERE
 
 if (!$sqlnsem) {
     die("Error en la consulta de la semana: " . mysqli_error($conection));
-}
+};
 
 // Verificar si se obtuvo la semana
 if ($srow = mysqli_fetch_array($sqlnsem)) {
@@ -673,7 +673,7 @@ if ($srow = mysqli_fetch_array($sqlnsem)) {
     echo "No se pudo determinar la semana para la fecha actual.";
     mysqli_close($conection);
     exit;
-}
+};
 
 // Consulta para obtener los registros de viajes de la semana
 $sqlvsem = mysqli_query($conection, "SELECT 
@@ -688,7 +688,7 @@ GROUP BY anio");
 
 if (!$sqlvsem) {
     die("Error en la consulta de los viajes: " . mysqli_error($conection));
-}
+};
 
 if ($vrow = mysqli_fetch_assoc($sqlvsem)) {
     // Asignar los valores de los resultados de la consulta
@@ -699,7 +699,7 @@ if ($vrow = mysqli_fetch_assoc($sqlvsem)) {
 } else {
     // Si no hay registros para la semana seleccionada
     echo "No se encontraron registros para la semana: $name_semana.";
-}
+};
 
 mysqli_close($conection);
 
@@ -716,7 +716,7 @@ mysqli_close($conection);
 
 if ($datacanc = mysqli_fetch_array($sqlviajescanc)) {
     $v_cancelados = $datacanc['viajes_cancelados'];
-}
+};
 
 // Cálculos de porcentajes
 // $p_planeados = $vjs_planeados - $v_cancelados;
@@ -739,9 +739,25 @@ $dateObj = DateTime::createFromFormat('!m', $monthNum);
 setlocale(LC_TIME, 'es_MX');
 $NameMes = $dateObj->format('F');  // Mes en español
 
+include "../conexion.php";
+
+// Consulta para obtener las compras del mes actual
+
+
+mysqli_close($conection);
+
 // Si ya tienes un valor asignado a $compras_mes, lo asignas a $comprasmes
 if (isset($compras_mes)) {
     $comprasmes = $compras_mes;
+};
+
+include "../conexion.php";
+
+// Consulta para obtener las compras de la semana entre $diaini y $diafin
+
+
+mysqli_close($conection);
+
 
 include "../conexion.php";
 
@@ -758,14 +774,14 @@ GROUP BY Nmeses, anio");
 
 if (!$sqlconsumomes) {
     die("Error en la consulta: " . mysqli_error($conection));
-}
+};
 
 // Asignamos un valor por defecto en caso de no encontrar resultados
 $consumo_mes = number_format(0.00, 2);
 
 if ($datanc = mysqli_fetch_assoc($sqlconsumomes)) {
     $consumo_mes = number_format($datanc['totalgas'], 2); // Asignamos el valor del consumo
-}
+};
 
 mysqli_close($conection);
 
@@ -820,7 +836,7 @@ if ($rowsv = mysqli_fetch_array($sqlserv)) {
     $datoss[] = 0;
     $datosj[] = 0;
     $datosq[] = 0;
-}
+};
 
 include "../conexion.php";
 
@@ -846,7 +862,7 @@ if ($sqlservct && mysqli_num_rows($sqlservct) > 0) {
         $datossct[] = $rowsvc['ssuperv'];
         $datosjct[] = $rowsvc['sjefe'];
         $datosqct[] = $rowsvc['squejas'];
-    }
+    };
 } else {
     // Si no hay resultados, se asignan valores por defecto
     $datoscte = [];
@@ -854,7 +870,8 @@ if ($sqlservct && mysqli_num_rows($sqlservct) > 0) {
     $datossct = [];
     $datosjct = [];
     $datosqct = [];
-}
+};
+
 ?>
 
 
@@ -1902,6 +1919,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				myChart.data.datasets[5].data.push(element.limpieza_condicion); 
 				myChart.data.datasets[6].data.push(element.servicio_operador); 
 				myChart.data.datasets[7].data.push(element.conduce_adecuado);
+			})
+		};
 
 	</script>
 
@@ -2096,7 +2115,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			]
 		});
 	</script>
-	<!-- <script>
+	<script>
     document.addEventListener("DOMContentLoaded", function(){
       // Invocamos cada 5 segundos ;)
       const milisegundos = 5 *1000;
@@ -2105,7 +2124,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
          fetch("./refrescar.php");
       },milisegundos);
     });
-</script> -->
+</script>
 	<script src="js/sweetalert.min.js"></script>
 </body>
 
