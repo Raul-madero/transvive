@@ -57,7 +57,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
         exit;
     }
 
-    if (!empty($initial_date) && !empty($final_date) && $gender !== null) {
+    if (!empty($initial_date) && !empty($final_date) && !empty($gender)) {
         $stmt->bind_param("ssiii", $initial_date, $final_date, $gender, $start, $length);
     } elseif (!empty($initial_date) && !empty($final_date)) {
         $stmt->bind_param("ssii", $initial_date, $final_date, $start, $length);
