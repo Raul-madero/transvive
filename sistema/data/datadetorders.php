@@ -43,7 +43,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         6 => 'tipo_viaje'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ";
+    $sql = "SELECT ".$columns." FROM ".$table . "ORDER BY p.fecha DESC";
     //.$where
     $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
