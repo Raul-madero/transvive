@@ -599,6 +599,7 @@ function initializeDataTable() {
                 d.initial_date = $("#initial_date").val() || "";
                 d.final_date = $("#final_date").val() || "";
                 d.gender = $("#gender").val() || "";
+				console.log(d); //DEpuracion
             },
             dataSrc: function (json) {
                 // Validar que el JSON sea correcto
