@@ -31,8 +31,6 @@ $total_registros = mysqli_fetch_assoc($resultado_total)['total'];
 
 //Calcular el numero total de paginas
 $paginas_totales = ceil($total_registros / $registros_por_pagina);
-echo "<pre>";
-print_r($pagina_actual)
 
 $sqlordenes = "SELECT * FROM solicitud_mantenimiento WHERE id > 0 LIMIT $registros_por_pagina OFFSET $offset";
 $query_ordenes = mysqli_query($conection, $sqlordenes);
