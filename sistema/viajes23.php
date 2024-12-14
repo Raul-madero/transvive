@@ -560,7 +560,6 @@ $(document).ready(function () {
         let initial_date = $("#initial_date").val();
         let final_date = $("#final_date").val();
         let gender = $("#gender").val();
-		console.log(initial_date, final_date, gender);
         if (validateFilter(initial_date, final_date)) {
             table.ajax.url("data/datadetorders2.php").load({
                 initial_date: initial_date,
