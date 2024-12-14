@@ -66,7 +66,7 @@ if ($rol == 1) {
 
     include "../conexion.php";
     $sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') ");
-    $data = mysqli_fetch_array($sql03)
+    $data = mysqli_fetch_array($sql03);
     $tareasem   = $data['totalsem'];
     mysqli_close($conection);
 }else {
