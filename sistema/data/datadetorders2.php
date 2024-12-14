@@ -10,6 +10,8 @@ if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
 }
 
 $requestData = $_REQUEST;
+error_log(print_r($_REQUEST, true));
+
 $start = isset($requestData['start']) ? intval($requestData['start']) : 0;
 $length = isset($requestData['length']) ? intval($requestData['length']) : 10;
 $draw = isset($requestData['draw']) ? intval($requestData['draw']) : 1;
