@@ -16,10 +16,6 @@ session_start();
 
     while ($data = mysqli_fetch_array($sql01)){
       $abiertos   = 0;
-      echo "<pre>";
-      print_r($data);
-      echo "<pre>";
-     
     }
      date_default_timezone_set('America/Mexico_City');
 
