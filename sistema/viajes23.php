@@ -148,8 +148,6 @@ while ($datacanc = mysqli_fetch_array($sqlviajescanc)){
 } 
 mysqli_close($conection);
 
-?>
-
 //*include "../conexion.php";
 //*$sqledo = "select estado from estados ORDER BY estado";
 //*$queryedo = mysqli_query($conection, $sqledo);
