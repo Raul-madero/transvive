@@ -575,6 +575,7 @@ $(document).ready(function () {
         };
 
         // Recarga la tabla
+		table.state.clear(); //Limpia el estado de almacenado
         table.ajax.reload(null, false); // No reinicia la paginación
     }
 });
