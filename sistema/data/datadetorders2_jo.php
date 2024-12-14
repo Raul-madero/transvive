@@ -47,7 +47,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
         12 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where. " ORDER BY p.fecha DESC";
+    $sql = "SELECT ".$columns." FROM ".$table." ".$where";
 
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);

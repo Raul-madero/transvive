@@ -43,8 +43,8 @@ if($_REQUEST['action'] == 'fetch_users'){
         6 => 'tipo_viaje'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table . " ORDER BY p.fecha DESC";
-    //.$where
+    $sql = "SELECT ".$columns." FROM ".$table;
+
     $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
