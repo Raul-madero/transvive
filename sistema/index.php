@@ -739,29 +739,9 @@ $dateObj = DateTime::createFromFormat('!m', $monthNum);
 setlocale(LC_TIME, 'es_MX');
 $NameMes = $dateObj->format('F');  // Mes en español
 
-include "../conexion.php";
-
-// Consulta para obtener las compras del mes actual
-
-
-mysqli_close($conection);
-
 // Si ya tienes un valor asignado a $compras_mes, lo asignas a $comprasmes
 if (isset($compras_mes)) {
     $comprasmes = $compras_mes;
-}
-
-
-
-mysqli_close($conection);
-
-include "../conexion.php";
-
-// Consulta para obtener las compras de la semana entre $diaini y $diafin
-
-
-mysqli_close($conection);
-
 
 include "../conexion.php";
 
