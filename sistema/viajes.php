@@ -14,6 +14,10 @@ session_start();
   mysqli_close($conection);
   $result_sql01 = mysqli_num_rows($sql01);
 
+  echo "<pre>";
+  print_r($result_sql01);
+  echo "<pre>";
+
     while ($data = mysqli_fetch_array($sql01)){
       $abiertos   = 0;
      
