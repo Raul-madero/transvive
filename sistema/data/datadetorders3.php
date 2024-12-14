@@ -49,9 +49,9 @@ if ($_REQUEST['action'] == 'fetch_users') {
     ];
     $order_column = $columns_order[$requestData['order'][0]['column']];
     $order_dir = $requestData['order'][0]['dir'];
-    //$where
+    //
     // Prepara consulta principal
-    $sql = "SELECT $columns FROM $table ORDER BY $order_column $order_dir LIMIT ?, ?";
+    $sql = "SELECT $columns FROM $table $where ORDER BY $order_column $order_dir LIMIT ?, ?";
     $stmt = $connection->prepare($sql);
 
     // Bind de parámetros según filtros
