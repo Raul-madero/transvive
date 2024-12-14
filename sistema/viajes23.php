@@ -66,14 +66,14 @@ if ($rol == 1) {
 
     include "../conexion.php";
     $sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') ");
-    $data = mysqli_fetch_array($sql03);
+    $data = mysqli_fetch_array($sql03)
     $tareasem   = $data['totalsem'];
     mysqli_close($conection);
 }else {
 	Include "../conexion.php";
 	$sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') and usuario_id = $rol ");
 	$result_sql03 = mysqli_num_rows($sql03);
-	$data = mysqli_fetch_array($sql03);
+	$data = mysqli_fetch_array($sql03)
 	$tareasem   = $data['totalsem'];
 	mysqli_close($conection);
 }
@@ -206,268 +206,286 @@ mysqli_close($conection);
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<?php
-				switch ($_SESSION['rol']) {
-					case 4:
-						include('includes/navbarsup.php');
-						break;
-					case 6:
-						include('includes/navbaroperac.php');
-						break;
-					case 8:
-						include('includes/navbarjefeoper.php');
-						break;
-					case 9:
-						include('includes/navbargrcia.php');
-						break;
-					case 15:
-						include('includes/navbarmonitorista.php');
-						break;
-					case 5:
-						include('includes/navbarrhuman.php');
-						break;
-					default:
-						include('includes/navbar.php');
-						break;
-				};
+			switch ($_SESSION['rol']) {
+				case 4:
+					include('includes/navbarsup.php');
+					break;
+				case 6:
+					include('includes/navbaroperac.php');
+					break;
+				case 8:
+					include('includes/navbarjefeoper.php');
+					break;
+				case 9:
+					include('includes/navbargrcia.php');
+					break;
+				case 15:
+					include('includes/navbarmonitorista.php');
+					break;
+				case 5:
+					include('includes/navbarrhuman.php');
+					break;
+				default:
+					include('includes/navbar.php');
+					break;
+			};
 			?>
+			
 			<?php include('includes/nav.php') ?> 
+
 			</div>
 		</nav>
-	</div>	<!-- Left side column. contains the logo and sidebar -->
+		<!-- Left side column. contains the logo and sidebar -->
+	
+
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 		<section class="content-header">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-sm-6">
-					<h4 class="m-0"> Registro de Viajes <small></small></h4>
-				</div>
-				<div class="col-sm-6 d-none d-sm-block">
-					<ol class="breadcrumb float-sm-right">
-						<?php
-							//Si es administrador, Gerente o Jefe de operaciones
-							if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8) {
-						?> 
-						<li class="breadcrumb-item"><a href="new_viaje.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;',2);?>Nuevo</a></li>
-						<?php }   ?>
-						<li class="breadcrumb-item"><a href="#">Home</a></li>
-						<li class="breadcrumb-item"><a href="#">Layout</a></li>
-						<li class="breadcrumb-item active">Navegacion</li>
-					</ol>
-				</div>
+		<div class="container-fluid">
+			<div class="row">
+			<div class="col-sm-6">
+			<h4 class="m-0"> Registro de Viajes <small></small></h4>
 			</div>
+			<div class="col-sm-6 d-none d-sm-block">
+			<ol class="breadcrumb float-sm-right">
+				<?php
+				//Si es administrador, Gerente o Jefe de operaciones
+				if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8) {
+
+				?> 
+				<li class="breadcrumb-item"><a href="new_viaje.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;',2);?>Nuevo</a></li>
+				<?php }   ?>
+				<li class="breadcrumb-item"><a href="#">Home</a></li>
+				<li class="breadcrumb-item"><a href="#">Layout</a></li>
+				<li class="breadcrumb-item active">Navegacion</li>
+				</ol>
+			</div>
+			</div>
+		</div>
 		</section>
 		<!-- Main content -->
 		<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
+	
+
 		<!-- Main content -->
-			<section class="content">
-				<div class="row">
-					<div class="col-md-2">
-							<a href="#" class="btn btn-primary btn-block mb-3">Viajes</a>
-						<div class="card">
-							<div class="card-header">
-								<h3 class="card-title"><?php echo $newDate;?></h3>
-								<div class="card-tools">
-									<button type="button" class="btn btn-tool" id="refresh">
-										<i class="fa fa-refresh" style="font-size:24px;"></i>
-									</button>
-								</div>
-							</div>
-							<div class="card-body p-0">
-								<ul class="nav nav-pills flex-column">
-									<!--<li class="nav-item active">
-									<a href="tareas.php" class="nav-link">
-										Tareas Abiertas
-										<span class="badge bg-primary float-right">0</span>
-									</a>
-									</li>-->
-									<li class="nav-item">
-										<a href="#" class="nav-link">
-											Planeados
-												<span class="badge bg-warning float-right"><?php echo $normales;?></span>
-										</a>
-										<a href="#" class="nav-link">
-											Registrados
-											<span class="badge bg-secondary float-right"><?php echo $normalesreg;?></span>
-										</a>
-									
-										<a href="#" class="nav-link">
-											No Planeados
-											<span class="badge bg-success float-right"><?php echo $extras;?></span>
-										</a>
+		<section class="content">
+		<div class="row">
+				<div class="col-md-2">
+			<a href="#" class="btn btn-primary btn-block mb-3">Viajes</a>
 
-										<a href="#" class="nav-link">
-											Cancelados
-											<span class="badge bg-danger float-right"><?php echo $cancelados;?></span>
-										</a>
+			<div class="card">
+				<div class="card-header">
+				<h3 class="card-title"><?php echo $newDate;?></h3>
 
-										<a href="#" class="nav-link"></a>
-									</li>
-									
-									<li class="nav-item">
-										<a href="#" class="nav-link">
-											Especiales
-											<span class="badge bg-warning float-right"><?php echo $especiales;?></span>
-										</a>
-										<a href="#" class="nav-link">
-											Especiales Reg.
-											<span class="badge bg-secondary float-right"><?php echo $especialesreg;?></span>
-										</a>
-										<a href="#" class="nav-link"></a>
-									</li>
-									<li class="nav-item">
-										<a href="#" class="nav-link"></a>
-										<center>
-											<a href="#"  class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#modalEditPeriodo2"> Detalle del Día</a>
-										</center>
-										<a href="#" class="nav-link"></a>
-									</li>
-									<!--<li class="nav-item">
-									<a href="#" class="nav-link">
-										<i class="far fa-trash-alt"></i> Mas...
-									</a>
-									</li>-->
-								</ul>
-							</div>
-							<!-- /.card-body -->
-						</div>
-					<!-- /.card -->
-					
-					<!-- /.card -->
-					</div>
-					<div class="col-md-10">
-						<div class="card card-primary card-outline">
-							<div class="card-header">
-								<h3 class="card-title">Viajes</h3>&nbsp;&nbsp;&nbsp;
-								<?php
-									//Si es Administrador, Gerente o Jefe de Operaciones
-									if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8 ) {
-
-								?> 
-								<a href="new_viaje.php"><button class="btn btn-success btn-sm">Crea Nuevo <i class="icon-plus icon-white"></i></button></a>
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<?php }   ?>   
-								<a href="factura/viajes_excel.php"><button class="btn btn-secondary btn-sm">Excel &nbsp;<i class="fas fa-file-excel"></i></button></a>
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="factura/viajes_exceltodos.php"><button class="btn btn-secondary btn-sm">Excel Todos&nbsp; <i class="fas fa-file-excel"></i></button></a>
-							</div>
-						</div>
-					</div>
-						
-					<div class="col-md-12">
-						<div class="card">      
-						<!-- /.card-header -->
-							<div class="card-body">
-							<?php 
-							//Administrador, Gerencia y RR.HH
-								if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 5){
-							?>
-							<table>
-								<tr>
-									<td>
-										<input type='text' readonly name='initial_date' id='initial_date' class="datepicker" placeholder='De Fecha'>
-									</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-									<td>
-										<input type='text' readonly name='final_date' id='final_date' class="datepicker" placeholder='A Fecha'>
-									</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-									<td>
-										<input type='text' name='gender' id='gender' placeholder="ID a buscar">
-									</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-									<td>
-										<button class="btn btn-success btn-block" type="submit" name="filter" id="filter" >
-											<i class="fa fa-filter"></i> Filtro
-										</button>
-									</td>
-									<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-									<td>
-										<button class="btn btn-info btn-block" onClick="actualizarLaPagina()" >
-											<i class="fa fa-refresh"></i> 
-										</button>
-									</td>
-								</tr>
-							</table>   
-					
-						<br>
-						<table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>Fecha</th>
-									<th>Hora Inicio</th>
-									<th>Hora Llegada</th>
-									<th>Semana</th>
-									<th>Cliente</th>
-									<th>Ruta</th>
-									<th>Operador</th>
-									<th>Tipo Unidad</th>
-									<th>No. Eco.</th>
-									<th>Supervisor</th>
-									<th>Jefe Operaciones</th>
-									<th>Estatus</th>
-									<th>Accion</th>
-								</tr>
-							</thead>
-					</table>
-					<?php }else {
-						//Supervisor
-						if($_SESSION['rol'] == 4  ){
-					?>
-
-					<table id="fetch_generated_wills" class="table table-bordered table-hover nowrap" style="width:100%">
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Fecha</th>
-								<th>Hora Inicio</th>
-								<th>Hora Llegada</th>
-								<th>Semana</th>
-								<th>Cliente</th>
-								<th>Operador</th>
-								<th>Tipo Unidad</th>
-								<th>No. Eco.</th>
-								<th>Estatus</th>
-								<th>Acciones</th>
-							</tr>
-						</thead>
-					</table>
-					<?php }else {
-					//Jefe de Operaciones
-					if ($_SESSION['rol'] == 8) {
-					?>
-					<br>
-					
-					<table id="fetch_generated_willss" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Fecha</th>
-								<th>Hora Inicio</th>
-								<th>Hora Llegada</th>
-								<th>Semana</th>
-								<th>Cliente</th>
-								<th>Ruta</th>
-								<th>Operador</th>
-								<th>Tipo Unidad</th>
-								<th>No. Eco.</th>
-								<th>Supervisor</th>
-								<th>Jefe Operaciones</th>
-								<th>Estatus</th>
-								<th>Accion</th>
-							</tr>
-						</thead>
-					</table>
-					<?php  
-					}
-					}} ?>
+				<div class="card-tools">
+					<button type="button" class="btn btn-tool" id="refresh">
+					<i class="fa fa-refresh" style="font-size:24px;"></i>
+					</button>
 				</div>
-			<!-- /.row -->
-			</section>
-		<!-- /.content -->
+				</div>
+				<div class="card-body p-0">
+				<ul class="nav nav-pills flex-column">
+					<!--<li class="nav-item active">
+					<a href="tareas.php" class="nav-link">
+						Tareas Abiertas
+						<span class="badge bg-primary float-right">0</span>
+					</a>
+					</li>-->
+					<li class="nav-item">
+					<a href="#" class="nav-link">
+						Planeados
+						<span class="badge bg-warning float-right"><?php echo $normales;?></span>
+					</a>
+					<a href="#" class="nav-link">
+						Registrados
+						<span class="badge bg-secondary float-right"><?php echo $normalesreg;?></span>
+					</a>
+					
+					<a href="#" class="nav-link">
+						No Planeados
+						<span class="badge bg-success float-right"><?php echo $extras;?></span>
+					</a>
+
+					<a href="#" class="nav-link">
+						Cancelados
+						<span class="badge bg-danger float-right"><?php echo $cancelados;?></span>
+					</a>
+
+					<a href="#" class="nav-link"></a>
+					</li>
+					
+					<li class="nav-item">
+					<a href="#" class="nav-link">
+					Especiales
+					<span class="badge bg-warning float-right"><?php echo $especiales;?></span>
+					</a>
+					<a href="#" class="nav-link">
+						Especiales Reg.
+						<span class="badge bg-secondary float-right"><?php echo $especialesreg;?></span>
+					</a>
+					<a href="#" class="nav-link"></a>
+					</li>
+					<li class="nav-item">
+					<a href="#" class="nav-link"></a>
+					<center>
+						<a href="#"  class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#modalEditPeriodo2"> Detalle del Día</a>
+					</center>
+						<a href="#" class="nav-link"></a>
+					</li>
+					<!--<li class="nav-item">
+					<a href="#" class="nav-link">
+						<i class="far fa-trash-alt"></i> Mas...
+					</a>
+					</li>-->
+				</ul>
+				</div>
+				<!-- /.card-body -->
+			</div>
+			<!-- /.card -->
+			
+			<!-- /.card -->
+			</div>
+			<div class="col-md-10">
+			<div class="card card-primary card-outline">
+				<div class="card-header">
+				<h3 class="card-title">Viajes</h3>&nbsp;&nbsp;&nbsp;
+				<?php
+				//Si es Administrador, Gerente o Jefe de Operaciones
+				if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8 ) {
+
+				?> 
+					<a href="new_viaje.php"><button class="btn btn-success btn-sm">Crea Nuevo <i class="icon-plus icon-white"></i></button></a>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<?php }   ?>   
+					<a href="factura/viajes_excel.php"><button class="btn btn-secondary btn-sm">Excel &nbsp;<i class="fas fa-file-excel"></i></button></a>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="factura/viajes_exceltodos.php"><button class="btn btn-secondary btn-sm">Excel Todos&nbsp; <i class="fas fa-file-excel"></i></button></a>
+				</div>
+
+				
+				<div class="col-md-12">
+				<div class="card">      
+				<!-- /.card-header -->
+				<div class="card-body">
+				<?php 
+				//Administrador, Gerencia y RR.HH
+					if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 5){
+				?>
+				<table>
+					<tr>
+						<td>
+							<input type='text' readonly name='initial_date' id='initial_date' class="datepicker" placeholder='De Fecha'>
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<input type='text' readonly name='final_date' id='final_date' class="datepicker" placeholder='A Fecha'>
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<input type='text' name='gender' id='gender' placeholder="ID a buscar">
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+
+						<td>
+							<button class="btn btn-success btn-block" type="submit" name="filter" id="filter" >
+					<i class="fa fa-filter"></i> Filtro
+				</button>
+						</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<button class="btn btn-info btn-block" onClick="actualizarLaPagina()" >
+					<i class="fa fa-refresh"></i> 
+				</button>
+						</td>
+					</tr>
+				</table>   
+			
+				<br>
+			
+				<table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+				<thead>
+				<tr>
+					<th>ID</th>
+					<th>Fecha</th>
+					<th>Hora Inicio</th>
+					<th>Hora Llegada</th>
+					<th>Semana</th>
+					<th>Cliente</th>
+					<th>Ruta</th>
+					<th>Operador</th>
+					<th>Tipo Unidad</th>
+					<th>No. Eco.</th>
+					<th>Supervisor</th>
+					<th>Jefe Operaciones</th>
+					<th>Estatus</th>
+					<th>Accion</th>
+				</tr>
+				</thead>
+			</table>
+			<?php }else {
+				//Supervisor
+				if($_SESSION['rol'] == 4  ){
+			?>
+
+		<table id="fetch_generated_wills" class="table table-bordered table-hover nowrap" style="width:100%">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Fecha</th>
+					<th>Hora Inicio</th>
+					<th>Hora Llegada</th>
+					<th>Semana</th>
+					<th>Cliente</th>
+					<th>Operador</th>
+					<th>Tipo Unidad</th>
+					<th>No. Eco.</th>
+					<th>Estatus</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+		</table>
+	<?php }else {
+	//Jefe de Operaciones
+	if ($_SESSION['rol'] == 8) {
+	?>
+	
+				<br>
+			
+				<table id="fetch_generated_willss" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+				<thead>
+				<tr>
+					<th>ID</th>
+					<th>Fecha</th>
+					<th>Hora Inicio</th>
+					<th>Hora Llegada</th>
+					<th>Semana</th>
+					<th>Cliente</th>
+					<th>Ruta</th>
+					<th>Operador</th>
+					<th>Tipo Unidad</th>
+					<th>No. Eco.</th>
+					<th>Supervisor</th>
+					<th>Jefe Operaciones</th>
+					<th>Estatus</th>
+					<th>Accion</th>
+				</tr>
+				</thead>
+			</table>
+			<?php  
+	}
+	}} ?>
 		</div>
+				<!-- /.box-body -->
+			</div>
+			<!-- /.box -->
+			</div>
+			<!-- /.col -->
+		</div>
+		<!-- /.row -->
+		</section>
+		<!-- /.content -->
+	</div>
 	<!-- /.content-wrapper -->
 	<footer class="main-footer">
 		<?php include "includes/footer.php"; ?>
@@ -477,15 +495,21 @@ mysqli_close($conection);
 	<aside class="control-sidebar control-sidebar-dark">
 		<!-- Create the tabs -->
 		<ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+		
+		
 		</ul>
 		<!-- Tab panes -->
 		<div class="tab-content">
 		<!-- Home tab content -->
-			<div class="tab-pane" id="control-sidebar-home-tab">
-				<!-- /.control-sidebar-menu -->
-			</div>
+		<div class="tab-pane" id="control-sidebar-home-tab">
+			
+		
+			<!-- /.control-sidebar-menu -->
+
+		</div>
 		<!-- /.tab-pane -->
 		<!-- Stats tab content -->
+		
 		<!-- /.tab-pane -->
 		</div>
 	</aside>
@@ -505,257 +529,257 @@ mysqli_close($conection);
 <!-- Bootstrap 3.3.7 -->
 
 
-	<!-- AdminLTE App -->
-	<script src="../dist/js/adminlte.min.js"></script>
-	<!-- AdminLTE for demo purposes -->
-	<!--<script src="../dist/js/demo.js"></script>-->
-	<!-- page script -->
-	<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<!--<script src="../dist/js/demo.js"></script>-->
+<!-- page script -->
+<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     
-	<script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
-	<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
-	<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 
     <?php
     //Administrador, Operaciones, Calidad, Gerencia, RR.HH
       if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 14 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 5){
     ?>
-	<script>
-	$(document).ready(function () {
-		// Inicializa la tabla
-		let table = initializeDataTable();
+<script>
+$(document).ready(function () {
+    // Inicializa la tabla
+    let table = initializeDataTable();
 
-		// Listener para el botón de filtro
-		$("#filter").on("click", function () {
-			let initial_date = $("#initial_date").val();
-			let final_date = $("#final_date").val();
-			let gender = $("#gender").val();
-			console.log(initial_date, final_date, gender)
+    // Listener para el botón de filtro
+    $("#filter").on("click", function () {
+        let initial_date = $("#initial_date").val();
+        let final_date = $("#final_date").val();
+        let gender = $("#gender").val();
 
-			if (validateFilter(initial_date, final_date)) {
-				table.ajax.url("data/datadetorders2.php").load({
-					initial_date: initial_date,
-					final_date: final_date,
-					gender: gender
-				});
-			}
-		});
-		// Configura el DatePicker
-		$(".datepicker").datepicker({
-			language: 'es',
-			dateFormat: "yy-mm-dd",
-			changeYear: true
-		});
-	});
+        if (validateFilter(initial_date, final_date)) {
+            table.ajax.url("data/datadetorders2.php").load({
+                initial_date: initial_date,
+                final_date: final_date,
+                gender: gender
+            });
+        }
+    });
 
-	// Función para inicializar el DataTable
-	function initializeDataTable() {
-		return $('#fetch_generated_wills').DataTable({
-			order: [[1, "desc"]],
-			dom: 'Bfrtip',
-			processing: true,
-			serverSide: true,
-			stateSave: true,
-			responsive: true,
-			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-			deferRender: true,
-			ajax: {
-				url: "data/datadetorders2.php",
-				type: "POST",
-				dataType: "json",
-				data: function (d) {
-					// Datos enviados por el cliente
-					d.action = "fetch_users";
-					d.initial_date = $("#initial_date").val() || "";
-					d.final_date = $("#final_date").val() || "";
-					d.gender = $("#gender").val() || "";
-				},
-				dataSrc: function (json) {
-					// Validar que el JSON sea correcto
-					if (!json || !json.records) {
-						console.error("Invalid JSON:", json);
-						return [];
-					}
-					return json.records;
-				},
-				error: function (xhr, error, code) {
-					console.error("Error en AJAX:", xhr.responseText);
-					alert("Ocurrió un error al procesar la solicitud.");
-				}
-			},
-			columns: [
-				{ data: "pedidono", width: "10px", className: "text-right" },
-				{ data: "fecha", width: "60px" },
-				{ data: "horainicio", width: "50px", className: "text-center", orderable: false },
-				{ data: "horafin", width: "50px", className: "text-center", orderable: false },
-				{ data: "nosemana", width: "80px", orderable: false },
-				{ data: "razonsocial", width: "100px", orderable: false },
-				{ data: "rutacte", width: "40px", orderable: false },
-				{ data: "conductor", width: "100px", orderable: false },
-				{ data: "tipounidad", width: "80px", orderable: false },
-				{ data: "nounidad", width: "30px", orderable: false },
-				{ data: "supervisor", width: "50px", orderable: false },
-				{ data: "jefeopera", width: "50px", orderable: false },
-				{ data: "estatusped", width: "30px", orderable: false },
-				{
-					render: function (data, type, full) {
-						return `<center>
-							<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
-								<i class="fa fa-edit" style="color:white; font-size: 1.2em"></i>
-							</a> | 
-							<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
-								<i class="fas fa-times-circle"></i>
-							</a>
-						</center>`;
-					}
-				}
-			],
-			buttons: [
-				'copyHtml5',
-				'excelHtml5',
-				'csvHtml5',
-				{
-					extend: 'colvis',
-					postfixButtons: ['colvisRestore'],
-					columns: '0,1,2,3,4,5,6'
-				}
-			]
-		});
-	}
+    // Configura el DatePicker
+    $(".datepicker").datepicker({
+        language: 'es',
+        dateFormat: "yy-mm-dd",
+        changeYear: true
+    });
+});
 
-	// Función para validar el filtro
-	function validateFilter(initial_date, final_date) {
-		if (initial_date === '' && final_date === '') {
-			$("#error_log").html("Warning: You must select both (start and end) date.");
-			return false;
-		}
+// Función para inicializar el DataTable
+function initializeDataTable() {
+    return $('#fetch_generated_wills').DataTable({
+        order: [[1, "desc"]],
+        dom: 'Bfrtip',
+        processing: true,
+        serverSide: true,
+        stateSave: true,
+        responsive: true,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        deferRender: true,
+        ajax: {
+            url: "data/datadetorders2.php",
+            type: "POST",
+            dataType: "json",
+            data: function (d) {
+                // Datos enviados por el cliente
+                d.action = "fetch_users";
+                d.initial_date = $("#initial_date").val() || "";
+                d.final_date = $("#final_date").val() || "";
+                d.gender = $("#gender").val() || "";
+            },
+            dataSrc: function (json) {
+                // Validar que el JSON sea correcto
+                if (!json || !json.records) {
+                    console.error("Invalid JSON:", json);
+                    return [];
+                }
+                return json.records;
+            },
+            error: function (xhr, error, code) {
+                console.error("Error en AJAX:", xhr.responseText);
+                alert("Ocurrió un error al procesar la solicitud.");
+            }
+        },
+        columns: [
+            { data: "pedidono", width: "10px", className: "text-right" },
+            { data: "fecha", width: "60px" },
+            { data: "horainicio", width: "50px", className: "text-center", orderable: false },
+            { data: "horafin", width: "50px", className: "text-center", orderable: false },
+            { data: "nosemana", width: "80px", orderable: false },
+            { data: "razonsocial", width: "100px", orderable: false },
+            { data: "rutacte", width: "40px", orderable: false },
+            { data: "conductor", width: "100px", orderable: false },
+            { data: "tipounidad", width: "80px", orderable: false },
+            { data: "nounidad", width: "30px", orderable: false },
+            { data: "supervisor", width: "50px", orderable: false },
+            { data: "jefeopera", width: "50px", orderable: false },
+            { data: "estatusped", width: "30px", orderable: false },
+            {
+                render: function (data, type, full) {
+                    return `<center>
+                        <a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
+                            <i class="fa fa-edit" style="color:white; font-size: 1.2em"></i>
+                        </a> | 
+                        <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
+                            <i class="fas fa-times-circle"></i>
+                        </a>
+                    </center>`;
+                }
+            }
+        ],
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            {
+                extend: 'colvis',
+                postfixButtons: ['colvisRestore'],
+                columns: '0,1,2,3,4,5,6'
+            }
+        ]
+    });
+}
 
-		if (initial_date !== '' && final_date !== '') {
-			let date1 = new Date(initial_date);
-			let date2 = new Date(final_date);
+// Función para validar el filtro
+function validateFilter(initial_date, final_date) {
+    if (initial_date === '' && final_date === '') {
+        $("#error_log").html("Warning: You must select both (start and end) date.");
+        return false;
+    }
 
-			if (date1 > date2) {
-				$("#error_log").html("Warning: End date should be greater than start date.");
-				return false;
-			}
-		}
+    if (initial_date !== '' && final_date !== '') {
+        let date1 = new Date(initial_date);
+        let date2 = new Date(final_date);
 
-		$("#error_log").html("");
-		return true;
-	}
+        if (date1 > date2) {
+            $("#error_log").html("Warning: End date should be greater than start date.");
+            return false;
+        }
+    }
+
+    $("#error_log").html("");
+    return true;
+}
 
 
-	</script>
+</script>
 
-	<?php }else {
-	//Supervisor
-	if($_SESSION['rol'] == 4  ){
-	?>
+ <?php }else {
+  //Supervisor
+   if($_SESSION['rol'] == 4  ){
+?>
 
-	<script type="text/javascript">
-		load_data(); // first load
+<script type="text/javascript">
+    load_data(); // first load
 
-		function load_data(initial_date, final_date){
-			var ajax_url = "data/datadetorders3.php";
+    function load_data(initial_date, final_date){
+        var ajax_url = "data/datadetorders3.php";
 
-			$('#fetch_generated_wills').DataTable({
-				"order": [[ 1, "desc" ], [0, "desc"]],
-				"dom": 'Bfrtip',
-				"lengthMenu": [
-					[20, 25, 50, -1],
-					['20 rows', '25 rows', '50 rows', 'Show all']
-				],
-				"buttons": [
-					'excelHtml5',
-					'pageLength'
-				],
-				"processing": true,
-				"serverSide": true,
-				"stateSave": true,
-				"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-				"ajax" : {
-					"url" : ajax_url,
-					"dataType": "json",
-					"type": "POST",
-					"data" : { 
-						"action" : "fetch_users", 
-						"initial_date" : initial_date, 
-						"final_date" : final_date 
-					},
-					"dataSrc": "records"
-				},
-				"columns": [
-					{ "data" : "pedidono", "width": "10px", "className": "text-right" },
-					{ "data" : "fecha", "width": "60px", "orderable": false},
-					{ "data" : "horainicio", "width": "50px", "className": "text-center", "orderable": false },
-					{ "data" : "horafin", "width": "50px", "className": "text-center", "orderable": false },
-					{ "data" : "nosemana", "width": "80px", "orderable": false },
-					{ "data" : "razonsocial", "width": "100px", "orderable":false },
-					{ "data" : "conductor", "width": "100px", "orderable":false },
-					{ "data" : "tipounidad", "width": "80px", "orderable":false },
-					{ "data" : "nounidad", "width": "30px", "orderable":false },
-					{ "data" : "estatusped", "width": "30px", "orderable":false },
-					{
-						"render": function ( data, type, full, meta ) {
-							return '<center><a href="edit_viaje.php?id=' + full.pedidono + '" class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white; font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="' + full.pedidono + '" class="btn btn-danger btn-xs"><i class="fas fa-times-circle"></i></a></center>';
-						}
-					}
-				],
-				"sDom": "B<'row'<'col-md-6'l><'col-md-6'f>>t<'row'<'col-md-4'i><'col-md-4'p>>",
-				"buttons": [
-					'copyHtml5',
-					'excelHtml5',
-					'csvHtml5',
-					{
-						extend: 'colvis',
-						postfixButtons: [ 'colvisRestore' ],
-						columns: '0,1,2,3,4,5,6'
-					}
-				],
-			}); 
-		}  
+        $('#fetch_generated_wills').DataTable({
+            "order": [[ 1, "desc" ], [0, "desc"]],
+            "dom": 'Bfrtip',
+            "lengthMenu": [
+                [20, 25, 50, -1],
+                ['20 rows', '25 rows', '50 rows', 'Show all']
+            ],
+            "buttons": [
+                'excelHtml5',
+                'pageLength'
+            ],
+            "processing": true,
+            "serverSide": true,
+            "stateSave": true,
+            "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+            "ajax" : {
+                "url" : ajax_url,
+                "dataType": "json",
+                "type": "POST",
+                "data" : { 
+                    "action" : "fetch_users", 
+                    "initial_date" : initial_date, 
+                    "final_date" : final_date 
+                },
+                "dataSrc": "records"
+            },
+            "columns": [
+                { "data" : "pedidono", "width": "10px", "className": "text-right" },
+                { "data" : "fecha", "width": "60px", "orderable": false},
+                { "data" : "horainicio", "width": "50px", "className": "text-center", "orderable": false },
+                { "data" : "horafin", "width": "50px", "className": "text-center", "orderable": false },
+                { "data" : "nosemana", "width": "80px", "orderable": false },
+                { "data" : "razonsocial", "width": "100px", "orderable":false },
+                { "data" : "conductor", "width": "100px", "orderable":false },
+                { "data" : "tipounidad", "width": "80px", "orderable":false },
+                { "data" : "nounidad", "width": "30px", "orderable":false },
+                { "data" : "estatusped", "width": "30px", "orderable":false },
+                {
+                    "render": function ( data, type, full, meta ) {
+                        return '<center><a href="edit_viaje.php?id=' + full.pedidono + '" class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white; font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="' + full.pedidono + '" class="btn btn-danger btn-xs"><i class="fas fa-times-circle"></i></a></center>';
+                    }
+                }
+            ],
+            "sDom": "B<'row'<'col-md-6'l><'col-md-6'f>>t<'row'<'col-md-4'i><'col-md-4'p>>",
+            "buttons": [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                {
+                    extend: 'colvis',
+                    postfixButtons: [ 'colvisRestore' ],
+                    columns: '0,1,2,3,4,5,6'
+                }
+            ],
+        }); 
+    }  
 
-		$("#filter").click(function(){
-			var initial_date = $("#initial_date").val();
-			var final_date = $("#final_date").val();
+    $("#filter").click(function(){
+        var initial_date = $("#initial_date").val();
+        var final_date = $("#final_date").val();
 
-			if(initial_date == '' && final_date == ''){
-				$('#fetch_generated_wills').DataTable().destroy();
-				load_data("", ""); // Carga sin filtros
-			} else {
-				var date1 = new Date(initial_date);
-				var date2 = new Date(final_date);
-				var diffTime = Math.abs(date2 - date1);
-				var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        if(initial_date == '' && final_date == ''){
+            $('#fetch_generated_wills').DataTable().destroy();
+            load_data("", ""); // Carga sin filtros
+        } else {
+            var date1 = new Date(initial_date);
+            var date2 = new Date(final_date);
+            var diffTime = Math.abs(date2 - date1);
+            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
-				if(initial_date == '' || final_date == ''){
-					$("#error_log").html("Warning: You must select both (start and end) dates.");
-				} else {
-					if(date1 > date2){
-						$("#error_log").html("Warning: End date should be greater than start date.");
-					} else {
-						$("#error_log").html(""); 
-						$('#fetch_generated_wills').DataTable().destroy();
-						load_data(initial_date, final_date);
-					}
-				}
-			}
-		});
+            if(initial_date == '' || final_date == ''){
+                $("#error_log").html("Warning: You must select both (start and end) dates.");
+            } else {
+                if(date1 > date2){
+                    $("#error_log").html("Warning: End date should be greater than start date.");
+                } else {
+                    $("#error_log").html(""); 
+                    $('#fetch_generated_wills').DataTable().destroy();
+                    load_data(initial_date, final_date);
+                }
+            }
+        }
+    });
 
-		// Datepicker 
-		$( ".datepicker" ).datepicker({
-			language: 'es',
-			dateFormat: "yy-mm-dd",
-			changeYear: true
-		});
-	</script>
+    // Datepicker 
+    $( ".datepicker" ).datepicker({
+        language: 'es',
+        dateFormat: "yy-mm-dd",
+        changeYear: true
+    });
+</script>
 
 
     <?php } else {
