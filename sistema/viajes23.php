@@ -602,6 +602,7 @@ function initializeDataTable() {
         deferRender: true,
         ajax: {
             url: "data/datadetorders2.php",
+            
             type: "POST",
             dataType: "json",
             data: function (d) {
