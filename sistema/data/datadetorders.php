@@ -17,7 +17,7 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     $initial_date = $_REQUEST['initial_date'];
     $final_date = $_REQUEST['final_date'];
-    //$gender = $_REQUEST['gender'];
+    $gender = $_REQUEST['gender'];
 
     if(!empty($initial_date) && !empty($final_date)){
         $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
