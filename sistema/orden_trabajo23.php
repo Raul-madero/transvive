@@ -31,6 +31,8 @@ $total_registros = mysqli_fetch_assoc($resultado_total)['total'];
 
 //Calcular el numero total de paginas
 $paginas_totales = ceil($total_registros / $registros_por_pagina);
+echo "<pre>";
+print_r($pagina_actual)
 
 $sqlordenes = "SELECT * FROM solicitud_mantenimiento WHERE id > 0 LIMIT $registros_por_pagina OFFSET $offset";
 $query_ordenes = mysqli_query($conection, $sqlordenes);
@@ -251,8 +253,8 @@ if (!$query_ordenes) {
             </table>   
           
             <br>
-           
-              <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <!-- id="fetch_generated_wills" -->
+              <table  class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
                 <th style="text-align: center; font-size: 12px;">ID</th>
@@ -289,15 +291,15 @@ if (!$query_ordenes) {
           </table>
           <div class="paginador">
                 <?php
-                if ($paginaActual > 1) {
-                    echo '<a href="?pagina=' . ($paginaActual - 1) . '">Anterior</a>';
+                if ($pagina_actual > 1) {
+                    echo '<a href="?pagina=' . ($pagina_actual - 1) . '">Anterior</a>';
                 }
-                for ($i = 1; $i <= $totalPaginas; $i++) {
-                    $claseActivo = $paginaActual == $i ? 'activo' : '';
-                    echo '<a class="' . $claseActivo . '" href="?pagina=' . $i . '">' . $i . '</a>';
+                for ($i = 1; $i <= $total_paginas; $i++) {
+                    $clase_activo = $pagina_actual == $i ? 'activo' : '';
+                    echo '<a class="' . $clase_activo . '" href="?pagina=' . $i . '">' . $i . '</a>';
                 }
-                if ($paginaActual < $totalPaginas) {
-                    echo '<a href="?pagina=' . ($paginaActual + 1) . '">Siguiente</a>';
+                if ($pagina_actual < $total_paginas) {
+                    echo '<a href="?pagina=' . ($pagina_actual + 1) . '">Siguiente</a>';
                 }
                 ?>
          </div>
