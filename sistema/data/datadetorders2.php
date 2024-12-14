@@ -41,7 +41,7 @@ $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $connection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
 // Datos con paginación
-$sql = "SELECT $columns FROM $table $where ORDER BY p.fecha LIMIT $start, $length";
+$sql = "SELECT $columns FROM $table $where ORDER BY fecha DESC LIMIT $start, $length";
 $result = $connection->query($sql);
 
 if (!$result) {
