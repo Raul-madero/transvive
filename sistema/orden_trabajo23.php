@@ -304,16 +304,16 @@ if (!$query_ordenes) {
                 <?php
                 echo "Pagina actual: " . $pagina_actual;
                 echo "Total de paginas: " . $paginas_totales;
-                if ($pagina_actual > 1) {
-                    echo '<a href="?pagina=' . ($pagina_actual - 1) . '">Anterior</a>';
-                };
-                // for ($i = 1; $i <= $total_paginas; $i++) {
-                //     $clase_activo = $pagina_actual == $i ? 'activo' : '';
-                //     echo '<a class="' . $clase_activo . '" href="?pagina=' . $i . '">' . $i . '</a>';
-                // };
-                if ($pagina_actual < $total_paginas) {
-                    echo '<a href="?pagina=' . ($pagina_actual + 1) . '">Siguiente</a>';
-                };
+                if ($pagina_actual > 1) { ?>
+                    <a href='orden_trabajo23.php?pagina=<?php echo($pagina_actual - 1) ?>'>Anterior</a>
+                <?php }; 
+                for ($i = 1; $i <= $total_paginas; $i++) {
+                    $clase_activo = $pagina_actual == $i ? 'activo' : ''; ?>
+                  <a class="<?php echo $clase_activo ?>" href="?pagina=<? echo $i ?>"><?php echo $i ?></a>
+                <?php };
+                if ($pagina_actual < $total_paginas) { ?>
+                   <a href="?pagina=<?php echo ($pagina_actual + 1) ?>">Siguiente</a>
+                <?php };
                 ?>
          </div>
     <!-- /.content -->
