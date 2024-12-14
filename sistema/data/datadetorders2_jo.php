@@ -28,7 +28,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
     $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
-    $where = " WHERE p.tipo_viaje <> 'Especial' ".$gender ;
+    $where = " WHERE p.tipo_viaje <> 'Especial' ".$gender;
     //p.fecha >= '".$fcha1."' and p.fecha <='".$fcha2."' and 
 
     $columns_order = array(
@@ -47,7 +47,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
         12 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where";
+    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
 
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
