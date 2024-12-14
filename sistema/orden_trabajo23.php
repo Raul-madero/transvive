@@ -294,10 +294,10 @@ if (!$query_ordenes) {
                 if ($pagina_actual > 1) {
                     echo '<a href="?pagina=' . ($pagina_actual - 1) . '">Anterior</a>';
                 };
-                for ($i = 1; $i <= $total_paginas; $i++) {
-                    $clase_activo = $pagina_actual == $i ? 'activo' : '';
-                    echo '<a class="' . $clase_activo . '" href="?pagina=' . $i . '">' . $i . '</a>';
-                };
+                // for ($i = 1; $i <= $total_paginas; $i++) {
+                //     $clase_activo = $pagina_actual == $i ? 'activo' : '';
+                //     echo '<a class="' . $clase_activo . '" href="?pagina=' . $i . '">' . $i . '</a>';
+                // };
                 if ($pagina_actual < $total_paginas) {
                     echo '<a href="?pagina=' . ($pagina_actual + 1) . '">Siguiente</a>';
                 };
