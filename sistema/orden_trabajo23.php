@@ -22,7 +22,7 @@ $pagina_actual = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $pagina_actual < 1 ? $pagina_actual = 1 : $pagina_actual;
 
 //Calculamos el offset
-$offset = ($pagina_actual > 1 ? ($pagina_actual - 1) : $pagina_actual) * $registros_por_pagina;
+$offset = ($pagina_actual - 1) * $registros_por_pagina;
 
 // Consulta total de registros (para calcular el total de páginas)
 $sql_total = "SELECT COUNT(*) as total FROM solicitud_mantenimiento WHERE id > 0";
@@ -289,6 +289,8 @@ if (!$query_ordenes) {
           </table>
           <div class="paginador">
                 <?php
+                echo "Pagina actual: " . $pagina_actual;
+                echo "Total de paginas: " . $paginas_totales;
                 if ($pagina_actual > 1) {
                     echo '<a href="?pagina=' . ($pagina_actual - 1) . '">Anterior</a>';
                 };
