@@ -287,7 +287,20 @@ if (!$query_ordenes) {
                 }
               ?>
           </table>
-          <div class="paginador">
+          
+
+      </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+    </div>
+  </div>
+      <!-- /.row -->
+    </section>
+    <div class="paginador">
                 <?php
                 echo "Pagina actual: " . $pagina_actual;
                 echo "Total de paginas: " . $paginas_totales;
@@ -303,19 +316,6 @@ if (!$query_ordenes) {
                 };
                 ?>
          </div>
-
-      </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
-        <!-- /.col -->
-      </div>
-    </div>
-  </div>
-      <!-- /.row -->
-    </section>
-    
     <!-- /.content -->
  </div>
   <!-- /.content-wrapper -->
