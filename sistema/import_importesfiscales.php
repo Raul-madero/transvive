@@ -20,14 +20,27 @@ $folioe = $d->folio + 1;*/
 
 if(isset($_FILES["name"])){
 	$up = new Upload($_FILES["name"]);
+	echo '<script>
+	alert("Correcto !!!");
+	</script>
+	<br>';
+}else{
+	$carga_error = 'Debe seleccionar un archivo'
 	if($up->uploaded){
 		$up->Process("./");
 		if($up->processed){
+			echo '<script>
+			alert("Correcto !!!");
+			</script>
+			<br>';
 			if ( $file = fopen( "./" . $up->file_dst_name , "r" ) ) {
 				$x = fgets($file, 4096);
 				$ok = 0;
 				$error = 0;
 				$products_array = array();
+				echo "<script>
+				alert('Abierto $x')
+				</script>";
 
 				while($x=fgets($file,4096)){
 					$data = explode(",", $x);
@@ -39,7 +52,9 @@ if(isset($_FILES["name"])){
 						VALUES (\"$data[0]\", \"$data[1]\", \"$data[2]\", \"$data[3]\", \"$data[4]\", \"$data[5]\", \"$data[6]\", \"$usuario\")";
 
 						if ($conection->query($sql)) {
-							echo "Inserción exitosa.<br>";
+							echo "<script>
+							alert('Inserción exitosa')
+							</script>";
 						} else {
 							echo "Error en la consulta: " . $conection->error . "<br>";
 						}
@@ -69,7 +84,7 @@ if(isset($_FILES["name"])){
 
 
 echo "<script>
-alert('Correcto $ok, Error $error !!! $carga_error');
+alert('Correcto $ok, Error $error !!!');
 window.location = './empleados.php';
 </script>
 ";
