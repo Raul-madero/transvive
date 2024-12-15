@@ -56,30 +56,30 @@ if(isset($_FILES["name"])){
 						} else {
 							echo "Error en la consulta: " . $conection->error . "<br>";
 						}
-						}else{
-							echo "<script>
-							alert('Error en la linea $x')
-							</script>";
-							$error++;
-						}
+					}else{
+						echo "<script>
+						alert('Error en la linea $x')
+						</script>";
+						$error++;
 					}
 				}
-
-				$sql3 = "UPDATE empleados op
-				INNER JOIN
-				(
-				SELECT empleado, pago_fiscal, deduccion_fiscal 
-				FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
-				$conection->query($sql3);
-				
-				
-				fclose($file);
-				unlink("./".$up->file_dst_name);
-			}else {
-				echo "<script>
-				alert('Error al procesar !!! $up->error')
-				</script>";
 			}
+
+			$sql3 = "UPDATE empleados op
+			INNER JOIN
+			(
+			SELECT empleado, pago_fiscal, deduccion_fiscal 
+			FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
+			$conection->query($sql3);
+			
+			
+			fclose($file);
+			unlink("./".$up->file_dst_name);
+		}else {
+			echo "<script>
+			alert('Error al procesar !!! $up->error')
+			</script>";
+		}
 	}
 	else{
 		$carga_error = $up->error;
