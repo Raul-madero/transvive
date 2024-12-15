@@ -2,13 +2,14 @@
 include "../conexion.php";
 include "class.upload.php";
 session_start();
-$ok = null;
-$error = null;
-$usuario     = $_SESSION['idUser'];
+$ok = 0;
+$error = 0;
+$usuario = $_SESSION['idUser'];
 
 $sql10 = "TRUNCATE importes_fiscales";
 $conection->query($sql10);
 
+$carga_error = "";
 /*$datos = $conection->query("select * from folio_entrada where serie = 'EPT' ");
 $d= $datos->fetch_object();
 $folioe = $d->folio + 1;*/
@@ -22,50 +23,53 @@ if(isset($_FILES["name"])){
 	if($up->uploaded){
 		$up->Process("./");
 		if($up->processed){
-if ( $file = fopen( "./" . $up->file_dst_name , "r" ) ) {
+			if ( $file = fopen( "./" . $up->file_dst_name , "r" ) ) {
+				$x = fgets($file, 4096);
+				$ok = 0;
+				$error = 0;
+				$products_array = array();
 
-	$ok = 0;
-	$error = 0;
-	$products_array = array();
+				while($x=fgets($file,4096)){
+					$data = explode(",", $x);
+					if(count($data)>=6){
+						$ok++;
+						//$fecha = str_replace('/', '-', $fcha);
+						//$fecha_mysql = date('Y-m-d', strtotime($fecha));
+						$sql = "INSERT INTO importes_fiscales (noempleado, empleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) 
+						VALUES (\"$data[0]\", \"$data[1]\", \"$data[2]\", \"$data[3]\", \"$data[4]\", \"$data[5]\", \"$data[6]\", \"$usuario\")";
 
-    while($x=fgets($file,4096)){
-    		$data = explode(",", $x);
-    		if(count($data)>=6){
-    			$ok++;
-    			//$fecha = str_replace('/', '-', $fcha);
-                //$fecha_mysql = date('Y-m-d', strtotime($fecha));
-    			$sql = "INSERT INTO importes_fiscales (noempleado, empleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) 
-        		VALUES (\"$data[0]\", \"$data[1]\", \"$data[2]\", \"$data[3]\", \"$data[4]\", \"$data[5]\", \"$data[6]\", \"$usuario\")";
+						if ($conection->query($sql)) {
+							echo "Inserción exitosa.<br>";
+						} else {
+							echo "Error en la consulta: " . $conection->error . "<br>";
+						}
+					}else{
+						$error++;
+					}
+    			}
+			}
 
-				echo $sql . "<br>";
-				if ($conection->query($sql)) {
-					echo "Inserción exitosa.<br>";
-				} else {
-					echo "Error en la consulta: " . $conection->error . "<br>";
-				}
-    		}else{
-    			$error++;
-    		}
-    }
-}
-
-$sql3 = "UPDATE empleados op
-		INNER JOIN
-		(
-		SELECT empleado, pago_fiscal, deduccion_fiscal 
-		FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
-		$conection->query($sql3);
+			$sql3 = "UPDATE empleados op
+					INNER JOIN
+					(
+					SELECT empleado, pago_fiscal, deduccion_fiscal 
+					FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
+					$conection->query($sql3);
 
 
-        fclose($file);
-		unlink("./".$up->file_dst_name);
+					fclose($file);
+					unlink("./".$up->file_dst_name);
+		}
+	}
+	else{
+		$carga_error = $up->error;
 	}
 	
 }
 
-}
+
 echo "<script>
-alert('Correcto $ok, Error $error !!!');
+alert('Correcto $ok, Error $error !!! $carga_error');
 window.location = './empleados.php';
 </script>
 ";
