@@ -21,7 +21,7 @@ $folioe = $d->folio + 1;*/
 if(isset($_FILES["name"])){
 	$up = new Upload($_FILES["name"]);
 	echo '<script>
-	alert("Correcto !!!");
+	alert("Correcto se subio !!!");
 	</script>
 	<br>';
 }else{
@@ -30,7 +30,7 @@ if(isset($_FILES["name"])){
 		$up->Process("./");
 		if($up->processed){
 			echo '<script>
-			alert("Correcto !!!");
+			alert("Correcto se proceso !!!");
 			</script>
 			<br>';
 			if ( $file = fopen( "./" . $up->file_dst_name , "r" ) ) {
@@ -59,6 +59,9 @@ if(isset($_FILES["name"])){
 							echo "Error en la consulta: " . $conection->error . "<br>";
 						}
 					}else{
+						echo "<script>
+						alert('Error en la linea $x')
+						</script>"
 						$error++;
 					}
     			}
@@ -74,6 +77,10 @@ if(isset($_FILES["name"])){
 
 					fclose($file);
 					unlink("./".$up->file_dst_name);
+		}else {
+			echo "<script>
+			alert('Error al procesar !!! $up->error')
+			</script>";
 		}
 	}
 	else{
