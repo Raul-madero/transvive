@@ -21,7 +21,6 @@ $result_sql01 = mysqli_num_rows($sql01);
 
   while ($data = mysqli_fetch_array($sql01)){
 	$abiertos   = 0;
-   
   }
 date_default_timezone_set('America/Mexico_City');
 
