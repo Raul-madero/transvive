@@ -25,7 +25,7 @@ if(isset($_FILES["name"])){
 	</script>
 	<br>';
 }else{
-	$carga_error = 'Debe seleccionar un archivo'
+	$carga_error = 'Debe seleccionar un archivo';
 	if($up->uploaded){
 		$up->Process("./");
 		if($up->processed){
