@@ -20,10 +20,9 @@ $folioe = $d->folio + 1;*/
 
 if(isset($_FILES["name"])){
 	$up = new Upload($_FILES["name"]);
-	echo '<script>
-	alert("Correcto se subio !!!");
-	</script>
-	<br>';
+	echo "<script>
+	alert('Correcto se subio !!! $up->file_name');
+	</script>";
 	if($up->uploaded){
 		$up->Process("./");
 		if($up->processed){
