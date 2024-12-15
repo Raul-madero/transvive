@@ -61,7 +61,7 @@ if(isset($_FILES["name"])){
 					}else{
 						echo "<script>
 						alert('Error en la linea $x')
-						</script>"
+						</script>";
 						$error++;
 					}
     			}
