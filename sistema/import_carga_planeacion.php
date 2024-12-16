@@ -23,8 +23,8 @@ $fechac = date("Y-m-d");
 
 // Verificar si se ha cargado un archivo
 if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
-    echo "<script> alert($_FILES['name']['error']); </script>";
-    echo "<script> alert('$_FILES['name']...'); </script>";
+    echo "<script> alert('".$_FILES['name']['error']."'); </script>";
+    echo "<script> alert('".$_FILES['name']."'); </script>";
     $up = new Upload($_FILES['name']);
 
     if ($up->uploaded) {
