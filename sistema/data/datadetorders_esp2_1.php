@@ -74,10 +74,10 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $result = mysqli_query($connection, $sql);
         $totalData = mysqli_num_rows($result);
         $totalFiltered = $totalData;
-        $data = array();
-        $counter = $start;
     }
 
+    $data = array();
+    $counter = $start;
     while ($row = mysqli_fetch_assoc($result)) {
         switch ($row['estatus']) {
             case 1:
@@ -133,8 +133,8 @@ if ($_REQUEST['action'] == 'fetch_users'){
 
         $nestedData['estatusped'] = $Estatusnew;
 
-        $data[] = $nestedData;
     }
+    $data[] = $nestedData;
 
     echo $data;
 
