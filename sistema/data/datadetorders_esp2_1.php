@@ -151,5 +151,5 @@ if ($_REQUEST['action'] == 'fetch_users'){
     
     // Se devuelve la respuesta en formato JSON
     echo json_encode($json_data);
-    
+}
 ?>
