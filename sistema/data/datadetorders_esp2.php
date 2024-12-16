@@ -8,6 +8,10 @@ global $connection;
 if($_REQUEST['action'] == 'fetch_users'){
 
     $requestData = $_REQUEST;
+    echo "<pre>";
+    echo print_r($requestData);
+    echo "</pre>";
+
     $start = $_REQUEST['start'];
 
     $initial_date = $_REQUEST['initial_date'];
