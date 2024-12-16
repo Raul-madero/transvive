@@ -112,7 +112,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
         "draw" => intval($requestData['draw'] ?? 1),
         "recordsTotal" => intval($totalData),
         "recordsFiltered" => intval($totalData),
-        "data" => $data
+        "records" => $data
     ];
 
     echo json_encode($json_data);
