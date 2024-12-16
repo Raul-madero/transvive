@@ -2,17 +2,17 @@
 session_start();
 include '../config/db-config.php';
 
-date_default_timezone_set('America/Mexico_City');
-$fecha2 = date("Y-m-d");
-$fecha1 = date("Y-m-d",strtotime ( '-30 day' , strtotime ( $fecha2 ) ) );
+ date_default_timezone_set('America/Mexico_City');
+// $fecha2 = date("Y-m-d");
+// $fecha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fcha2 ) ) );
 global $connection;
 
 if($_REQUEST['action'] == 'fetch_userss'){
 
     $requestData = $_REQUEST;
     $start = $_REQUEST['start'];
-    $initial_date = $fecha1;
-    $final_date = $fecha2;
+    // $initial_date = $fecha1;
+    // $final_date = $fecha2;
   
     $gender = $_REQUEST['buscarid'];
 
@@ -28,7 +28,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
     $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
-    $where = " WHERE p.tipo_viaje <> 'Especial' AND p.fecha BETWEEN '"$fecha1."' AND '"$fecha2."' ".$gender ;
+    $where = " WHERE p.tipo_viaje <> 'Especial' ".$gender ;
     //p.fecha >= '".$fcha1."' and p.fecha <='".$fcha2."' and 
 
     $columns_order = array(
