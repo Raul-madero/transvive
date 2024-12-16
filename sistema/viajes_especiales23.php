@@ -487,7 +487,7 @@ session_start();
       function load_data(initial_date, final_date, gender){
         var ajax_url = "data/datadetorders_esp2_1.php";
        
-
+        console.log(data)
         $('#fetch_generated_wills').DataTable({
           "order": [[ 0, "desc" ]],
           dom: 'Bfrtip',
