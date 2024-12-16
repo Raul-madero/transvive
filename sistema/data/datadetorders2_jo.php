@@ -40,7 +40,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
     );
 
     $sql = "SELECT ".$columns." FROM ".$table." ".$where;
-
+    echo $sql;
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
