@@ -486,8 +486,37 @@ session_start();
 
       function load_data(initial_date, final_date, gender){
         var ajax_url = "data/datadetorders_esp2_1.php";
-       
-        
+        $.ajax({
+  url: ajax_url,
+  type: "POST",
+  data: { 
+    action: "fetch_users", 
+    initial_date: initial_date, 
+    final_date: final_date,
+    gender: gender 
+  },
+  dataType: "json",
+  success: function (data) {
+    try {
+      if (!data.records) {
+        console.error("No 'records' found in response", data);
+        alert("Error: Invalid data format received from server.");
+      } else {
+        console.log("Data received", data);
+        $('#fetch_generated_wills').DataTable().clear().rows.add(data.records).draw();
+      }
+    } catch (e) {
+      console.error("Error parsing response", e);
+      alert("Error parsing server response.");
+    }
+  },
+  error: function (xhr, status, error) {
+    console.error("AJAX Error", xhr, status, error);
+    alert("Error: Could not retrieve data from server.");
+  }
+});
+
+
         $('#fetch_generated_wills').DataTable({
           "order": [[ 0, "desc" ]],
           dom: 'Bfrtip',
@@ -554,7 +583,6 @@ session_start();
           ?>
             
           ],
-          
           "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
     "buttons": [
         'copyHtml5',
@@ -566,13 +594,10 @@ session_start();
             columns: '0,1,2,3,4,5,6'
         }
     ],
-          "initComplete": function(settings, json) {
-          console.log("DataTable initialized:", settings);
-          console.log("JSON data:", json);
-      }
          
         }); 
-      } 
+      }  
+
       $("#filter").click(function(){
         var initial_date = $("#initial_date").val();
         var final_date = $("#final_date").val();
