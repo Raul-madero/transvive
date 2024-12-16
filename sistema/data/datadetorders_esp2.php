@@ -27,7 +27,7 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, 
     p.num_unidad, p.personas, p.estatus, 
-    CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) AS name, 
+    CONCAT(p.nombres, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS name, 
     us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, 
     p.sueldo_vuelta, tipo_viaje';
     $table = ' registro_viajes p 
