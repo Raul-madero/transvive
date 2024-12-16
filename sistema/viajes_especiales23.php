@@ -497,6 +497,7 @@ session_start();
   },
   dataType: "json",
   success: function (data) {
+    console.log(data)
     try {
       if (!data.records) {
         console.error("No 'records' found in response", data);
