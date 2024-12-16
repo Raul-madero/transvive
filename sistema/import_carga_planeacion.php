@@ -62,7 +62,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                         $error++;
                     }
                 }
-                exit;
 
                 fclose($file);
                 unlink($file_path);
