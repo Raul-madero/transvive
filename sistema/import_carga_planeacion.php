@@ -103,7 +103,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                 foreach ($updates as $sql) {
                     //echo "<script> alert('"$sql"'); </script>";
                     $conection->query($sql);
-                    echo "<script> alert('Error en actualización SQL: {$conection->error'); </script>";
+                    echo "<script> alert('Error en actualización SQL: {$conection->error}'); </script>";
                     if (!$conection->query($sql)) {
                         echo "<script> alert('Error en actualización SQL: {$conection->error}'); </script>";
                     }
