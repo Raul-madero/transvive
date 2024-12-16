@@ -136,8 +136,8 @@ if ($_REQUEST['action'] == 'fetch_users'){
 
         $nestedData['estatusped'] = $Estatusnew;
 
-        $data[] = $nestedData;
     }
+    $data[] = $nestedData;
     echo $data;
     header('Content-Type: application/json; charset=utf-8');
     $json_data = array(
