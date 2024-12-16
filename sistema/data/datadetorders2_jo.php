@@ -47,12 +47,6 @@ if($_REQUEST['action'] == 'fetch_userss'){
         12 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
-
-    $result = mysqli_query($connection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
-
     if( !empty($requestData['search']['value']) ) {
         $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR cliente LIKE '%".$requestData['search']['value']."%' ";
@@ -60,10 +54,23 @@ if($_REQUEST['action'] == 'fetch_userss'){
         $sql.=" OR semana LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR nombres LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
-       
-        
     }
-    
+
+    // Obtener el total de registros sin LIMIT (para el conteo total de páginas)
+    $sql_total = "SELECT COUNT(*) FROM " . $table . $where;
+    $result_total = mysqli_query($connection, $sql_total);
+    $row_total = mysqli_fetch_array($result_total);
+    $totalData = $row_total[0];
+
+    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+
+    if (!empty($requestData['order'][0]['column'])) {
+        $sql .= " ORDER BY " . $columns_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'];
+    }
+    if ($length != "-1") {
+        $sql .= " LIMIT " . $start . ", " . $length;
+    }
+
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
@@ -72,37 +79,36 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
     if($requestData['length'] != "-1"){
         $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
+        $result = mysqli_query($connection, $sql);
+        $totalData = mysqli_num_rows($result);
+        $totalFiltered = $totalData;
     }
 
-    $result = mysqli_query($connection, $sql);
+    
     $data = array();
     $counter = $start;
-
-    $count = $start;
     while($row = mysqli_fetch_array($result)){
-        if ($row['estatus'] == 1){
-        $Estatusnew = '<span class="label label-primary">Activo</span>'; 
-    }else{
-        if ($row['estatus'] == 2){
-           $Estatusnew = '<span class="label label-success">Realizado</span>';
-        }else{
-            if ($row['estatus'] == 3) {
-              $Estatusnew = '<span class="label label-danger">Cancelado</span>';
-            }else {
-                if ($row['estatus'] == 4) {
-                 $Estatusnew = '<span class="label label-primary">Iniciado</span>';
-                }else {
-                 if ($row['estatus'] == 5) {
-                  $Estatusnew = '<span class="label label-info">Terminado</span>';
-                 }else {
-                  $Estatusnew = '<span class="label label-success">CERRADO</span>';
-                 } 
-                }     
+        switch ($row['estatus']) {
+            case 1:
+                $Estatusnew = '<span class="label label-primary">Activo</span>';
+                break;
+            case 2:
+                $Estatusnew = '<span class="label label-success">Realizado</span>';
+                break;
+            case 3:
+                $Estatusnew = '<span class="label label-danger">Cancelado</span>';
+                break;
+            case 4:
+                $Estatusnew = '<span class="label label-primary">Iniciado</span>';
+                break;
+            case 5:
+                $Estatusnew = '<span class="label label-info">Terminado</span>';
+                break;
+            default:
+                $Estatusnew = '<span class="label label-success">CERRADO</span>';
         }
-    }
-    }
 
-        $count++;
+        $counter++;
         $nestedData = array();
 
         $nestedData['counter'] = $count;
@@ -142,6 +148,9 @@ if($_REQUEST['action'] == 'fetch_userss'){
     );
 
     echo json_encode($json_data);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        die("JSON encoding error: " . json_last_error_msg());
+    }
 }
 
 ?>
