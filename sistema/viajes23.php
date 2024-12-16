@@ -808,14 +808,14 @@ function validateFilter(initial_date, final_date) {
         $('#fetch_generated_willss').DataTable({
           "order": [[ 1, "desc" ]],
           dom: 'Bfrtip',
-          lengthMenu: [
-              [20, 25, 50, -1],
-              ['20 rows', '25 rows', '50 rows', 'Show all']
-          ],
-          buttons: [
-              'excelHtml5',
-              'pageLength'
-          ],
+lengthMenu: [
+[20, 25, 50, -1],
+['20 rows', '25 rows', '50 rows', 'Show all']
+],
+buttons: [
+'excelHtml5',
+'pageLength'
+],
           "processing": true,
           "serverSide": true,
           "stateSave": true,
@@ -879,25 +879,24 @@ function validateFilter(initial_date, final_date) {
         if(inicio_date == '' && fin_date == ''){
           $('#fetch_generated_willss').DataTable().destroy();
           load_data("", "", buscaid); // filter immortalize only
-        }
-        // else{
-          // var date1 = new Date(inicio_date);
-          // var date2 = new Date(fin_date);
-          // var diffTime = Math.abs(date2 - date1);
-          // var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        }else{
+          var date1 = new Date(inicio_date);
+          var date2 = new Date(fin_date);
+          var diffTime = Math.abs(date2 - date1);
+          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
-          // if(inicio_date == '' || fin_date == ''){
-          //     $("#error_log").html("Warning: You must select both (start and end) date.</span>");
-          // }else{
-          //   if(date1 > date2){
-          //       $("#error_log").html("Warning: End date should be greater then start date.");
-          //   }else{
-               
-          //   }
-          // }
-          $("#error_log").html(""); 
+          if(inicio_date == '' || fin_date == ''){
+              $("#error_log").html("Warning: You must select both (start and end) date.</span>");
+          }else{
+            if(date1 > date2){
+                $("#error_log").html("Warning: End date should be greater then start date.");
+            }else{
+               $("#error_log").html(""); 
                $('#fetch_generated_willss').DataTable().destroy();
                load_data(inicio_date, fin_date, buscaid);
+            }
+          }
+        }
       });
 
       
