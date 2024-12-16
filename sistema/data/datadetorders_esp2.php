@@ -57,8 +57,6 @@ if($_REQUEST['action'] == 'fetch_users'){
     while($row = mysqli_fetch_assoc($result)) {
     print_r($row);
 }
-exit();
-    exit;
 
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
