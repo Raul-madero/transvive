@@ -32,11 +32,10 @@ if($_REQUEST['action'] == 'fetch_users'){
     us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, 
     p.sueldo_vuelta, p.tipo_viaje';
     $table = ' registro_viajes p 
-    LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto ';
-    // LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
-    // LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
-    $where = " WHERE p.tipo_viaje LIKE '%Especial%' ".$date_range.$gender 
-    ;
+    LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto
+    LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
+    LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
+    $where = " WHERE p.tipo_viaje LIKE '%Especial%' ".$date_range.$gender;
 
     $columns_order = array(
         0 => 'id',
@@ -150,7 +149,7 @@ exit();
         "draw"            => intval( $requestData['draw'] ),
         "recordsTotal"    => intval( $totalData),
         "recordsFiltered" => intval( $totalFiltered ),
-        "records"         => $data
+        "data"         => $data
     );
 
     echo json_encode($json_data);
