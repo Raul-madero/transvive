@@ -67,6 +67,20 @@ if ($_REQUEST['action'] == 'fetch_users'){
             $sql .= " LIMIT " . $requestData['start'] . " ," . $requestData['length'];
         }
     }
+    
+    $sql_total = "SELECT COUNT(*) FROM " . $table . $where;
+    $result_total = mysqli_query($connection, $sql_total);
+    $row_total = mysqli_fetch_array($result_total);
+    $totalData = $row_total[0];
+
+    $sql = "SELECT " . $columns . " FROM " . $table . $where;
+    if (!empty($requestData['order'][0]['column'])) {
+        $sql .= " ORDER BY " . $columns_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'];
+    }
+    if ($length != "-1") {
+        $sql .= " LIMIT " . $start . ", " . $length;
+    }
+
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
