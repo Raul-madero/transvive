@@ -35,7 +35,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
         if (!$up->processed) {
             echo "<script> alert('Error en el procesamiento: " . $up->error . "'); </script>";
         }
-    }
+    
 
         if ($up->processed) {
             $file_path = "./" . $up->file_dst_name;
