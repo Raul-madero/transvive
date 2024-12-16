@@ -87,7 +87,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     $counter = $start;
 
     $count = $start;
-    while($row = mysqli_fetch_array($result)){
+    while($row = mysqli_fetch_assoc($result)){
         if ($row['estatus'] == 1){
         $Estatusnew = '<span class="label label-primary">Activo</span>'; 
     }else{
