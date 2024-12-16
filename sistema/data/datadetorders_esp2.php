@@ -25,11 +25,15 @@ if($_REQUEST['action'] == 'fetch_users'){
         $gender = " AND YEAR(p.fecha) = '$gender' ";
     }
 
-    $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, 
-    p.num_unidad, p.personas, p.estatus, 
-    CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno)
-    AS name, 
-    us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, 
+    // $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, 
+    // p.num_unidad, p.personas, p.estatus, 
+    // CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno)
+    // AS name, 
+    // us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, 
+    // p.sueldo_vuelta, p.tipo_viaje';
+    $columns = ' id, fecha, hora_inicio, hora_fin, semana, cliente, operador, unidad, 
+    num_unidad, personas, estatus, 
+    us.nombre AS jefeo, ruta, direccion, destino, costo_viaje, 
     p.sueldo_vuelta, p.tipo_viaje';
     $table = ' registro_viajes p 
     LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto
