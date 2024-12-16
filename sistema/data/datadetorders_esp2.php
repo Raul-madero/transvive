@@ -50,10 +50,8 @@ if($_REQUEST['action'] == 'fetch_users'){
         9 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table;
+    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
     // ." ".$where;
-    echo $sql;
-    echo "Número de filas: " . mysqli_num_rows($result);
     while($row = mysqli_fetch_assoc($result)) {
     print_r($row);
 }
@@ -147,7 +145,6 @@ if($_REQUEST['action'] == 'fetch_users'){
         $data[] = $nestedData;
     }
     header('Content-Type: application/json; charset=utf-8');
-    echo $data;
     $json_data = array(
         "draw"            => intval( $requestData['draw'] ),
         "recordsTotal"    => intval( $totalData),
