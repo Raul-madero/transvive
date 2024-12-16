@@ -41,8 +41,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                     
 
                     if (count($data) >= 12) {
-                        $ok++;
-                        
                         // Procesar los datos
                         $fcha = str_replace('/', '-', $data[9]);
                         $fecha_mysql = date('Y-m-d', strtotime($fcha));
@@ -56,11 +54,17 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                         
                         if (!$conection->query($sql_insert)) {
                             echo "<script> alert('Error en la inserción SQL: {$conection->error}'); </script>";
+                        }else {
+                            $ok++;
                         }
                     } else {
                         $error++;
                     }
+                    echo "<pre>";
+                    print_r($conection);
+                    echo "<pre>";
                 }
+                exit;
 
                 fclose($file);
                 unlink($file_path);
