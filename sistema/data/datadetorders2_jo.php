@@ -48,7 +48,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
         12 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+    $sql = "SELECT ".$columns." FROM ".$table." ".$where . " LIMIT 1200";
 
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
@@ -73,8 +73,6 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
     if($requestData['length'] != "-1"){
         $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
-    }else {
-        $sql .= " LIMIT 1200";
     }
 
     $result = mysqli_query($connection, $sql);
