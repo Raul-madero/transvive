@@ -133,7 +133,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
     }
 
     // Configuración del encabezado de respuesta JSON
-    header('Content-Type: application/json; charset=utf-8');
+    header('Content-Type: application/json; ');
     
     // Estructura final del JSON con los datos
     $json_data = array(
