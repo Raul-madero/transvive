@@ -99,27 +99,29 @@ if ($_REQUEST['action'] == 'fetch_users'){
             default:
                 $Estatusnew = '<span class="label label-success">CERRADO</span>';
         }
-
-        $count++;
-
-        $nestedData['counter'] = $count;
+    
+        $counter++;
+    
+        $nestedData['counter'] = $counter;
         $nestedData['pedidono'] = $row["id"];
-
         $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id=' . $row["id"] . '" target="_blank">' . $row["id"] . '</a>';
+        
         $time = strtotime($row["fecha"]);
         $time2 = strtotime($row["hora_inicio"]);
         $time3 = strtotime($row["hora_fin"]);
+        
         $nestedData['fechaa'] = date('d/m/Y', $time);
         $nestedData['horainicio'] = date('H:i', $time2);
         $nestedData['horafin'] = date('H:i', $time3);
         $nestedData['nosemana'] = $row["semana"];
-
+    
         $nestedData['razonsocial'] = $row["cliente"];
         $nestedData['rutacte'] = $row["ruta"];
+        
         $time2 = strtotime($row["fechacomp"]);
-        $nestedData['fechacomp'] = date('d M, Y', $time);
-
-        $nesteData['conductor'] = $row["operador"];
+        $nestedData['fechacomp'] = date('d M, Y', $time2);
+    
+        $nestedData['conductor'] = $row["operador"];
         $nestedData['tipounidad'] = $row["unidad"];
         $nestedData['nounidad'] = $row["numero_unidades"];
         $nestedData['supervisor'] = $row["name"];
@@ -130,22 +132,24 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $nestedData['Valor_vuelta'] = $row["sueldo_vuelta"];
         $nestedData['Datenew'] = $row["fecha"];
         $nestedData['TipoViaje'] = $row["tipo_viaje"];
-
         $nestedData['estatusped'] = $Estatusnew;
-
+    
+        // Se añade el dato al array
         $data[] = $nestedData;
     }
-
-    echo $data;
-
+    
+    // Configuración del encabezado de respuesta JSON
     header('Content-Type: application/json; charset=utf-8');
+    
+    // Estructura final del JSON con los datos
     $json_data = array(
         "draw" => intval($requestData['draw']),
         "recordsTotal" => intval($totalData),
         "recordsFiltered" => intval($totalFiltered),
         "records" => $data
     );
-
+    
+    // Se devuelve la respuesta en formato JSON
     echo json_encode($json_data);
-}
-?>'
+    
+?>
