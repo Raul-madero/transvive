@@ -886,18 +886,18 @@ function validateFilter(initial_date, final_date) {
           // var diffTime = Math.abs(date2 - date1);
           // var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
-          if(inicio_date == '' || fin_date == ''){
-              $("#error_log").html("Warning: You must select both (start and end) date.</span>");
-          }else{
-            if(date1 > date2){
-                $("#error_log").html("Warning: End date should be greater then start date.");
-            }else{
-               $("#error_log").html(""); 
+          // if(inicio_date == '' || fin_date == ''){
+          //     $("#error_log").html("Warning: You must select both (start and end) date.</span>");
+          // }else{
+          //   if(date1 > date2){
+          //       $("#error_log").html("Warning: End date should be greater then start date.");
+          //   }else{
+               
+          //   }
+          // }
+          $("#error_log").html(""); 
                $('#fetch_generated_willss').DataTable().destroy();
                load_data(inicio_date, fin_date, buscaid);
-            }
-          }
-        
       });
 
       
