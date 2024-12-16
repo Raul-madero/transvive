@@ -486,18 +486,48 @@ session_start();
 
       function load_data(initial_date, final_date, gender){
         var ajax_url = "data/datadetorders_esp2.php";
+        $.ajax({
+  url: ajax_url,
+  type: "POST",
+  data: { 
+    action: "fetch_users", 
+    initial_date: initial_date, 
+    final_date: final_date,
+    gender: gender 
+  },
+  dataType: "json",
+  success: function (data) {
+    try {
+      if (!data.records) {
+        console.error("No 'records' found in response", data);
+        alert("Error: Invalid data format received from server.");
+      } else {
+        console.log("Data received", data);
+        $('#fetch_generated_wills').DataTable().clear().rows.add(data.records).draw();
+      }
+    } catch (e) {
+      console.error("Error parsing response", e);
+      alert("Error parsing server response.");
+    }
+  },
+  error: function (xhr, status, error) {
+    console.error("AJAX Error", xhr, status, error);
+    alert("Error: Could not retrieve data from server.");
+  }
+});
+
 
         $('#fetch_generated_wills').DataTable({
           "order": [[ 0, "desc" ]],
           dom: 'Bfrtip',
-lengthMenu: [
-[20, 25, 50, -1],
-['20 rows', '25 rows', '50 rows', 'Show all']
-],
-buttons: [
-'excelHtml5',
-'pageLength'
-],
+          lengthMenu: [
+          [20, 25, 50, -1],
+          ['20 rows', '25 rows', '50 rows', 'Show all']
+          ],
+          buttons: [
+          'excelHtml5',
+          'pageLength'
+          ],
           "processing": true,
           "serverSide": true,
           "stateSave": true,
@@ -514,6 +544,7 @@ buttons: [
               "gender" : gender 
               
             },
+            
             "dataSrc": "records"
           },
           "columns": [
@@ -537,7 +568,6 @@ buttons: [
         return '<a class="link_edit" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" data-id=\'' + full.pedidono + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.pedidono  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.origen  + '\' data-destino=\'' + full.Destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
           }   
           }
-          console.log(load_data(initial_date, final_date, gender))
           <?php
            }else { 
                 if($_SESSION['rol'] == 9 ){
