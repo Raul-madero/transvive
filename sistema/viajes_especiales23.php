@@ -554,10 +554,7 @@ session_start();
           ?>
             
           ],
-          "initComplete": function(settings, json) {
-              console.log("DataTable initialized:", settings);
-              console.log("JSON data:", json);
-          }
+          
           "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
     "buttons": [
         'copyHtml5',
@@ -569,6 +566,10 @@ session_start();
             columns: '0,1,2,3,4,5,6'
         }
     ],
+          "initComplete": function(settings, json) {
+          console.log("DataTable initialized:", settings);
+          console.log("JSON data:", json);
+      }
          
         }); 
       } 
