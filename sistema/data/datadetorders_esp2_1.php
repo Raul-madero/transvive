@@ -130,7 +130,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $nestedData['estatusped'] = $Estatusnew;
     
         // Se añade el dato al array
-        $data = $nestedData;
+        $data[] = $nestedData;
     }
 
     // Configuración del encabezado de respuesta JSON
