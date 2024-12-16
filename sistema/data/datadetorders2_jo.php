@@ -60,14 +60,8 @@ if($_REQUEST['action'] == 'fetch_userss'){
         $sql.=" OR semana LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR nombres LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
-       
-        
     }
     
-    $result = mysqli_query($connection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
-
     $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
 
     if($requestData['length'] != "-1"){
@@ -75,6 +69,8 @@ if($_REQUEST['action'] == 'fetch_userss'){
     }
 
     $result = mysqli_query($connection, $sql);
+    $totalData = mysqli_num_rows($result);
+    $totalFiltered = $totalData;
     $data = array();
     $counter = $start;
 
