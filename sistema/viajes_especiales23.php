@@ -496,8 +496,8 @@ session_start();
     gender: gender 
   },
   dataType: "json",
-  console.log(data)
   success: function (data) {
+  console.log(data)
     try {
       if (!data.records) {
         console.error("No 'records' found in response", data);
