@@ -147,7 +147,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         $data[] = $nestedData;
     }
     header('Content-Type: application/json; charset=utf-8');
-    var_dump($data)
+    var_dump($data);
     $json_data = array(
         "draw"            => intval( $requestData['draw'] ),
         "recordsTotal"    => intval( $totalData),
