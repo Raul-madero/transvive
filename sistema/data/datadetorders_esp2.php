@@ -8,7 +8,6 @@ global $connection;
 if($_REQUEST['action'] == 'fetch_users'){
 
     $requestData = $_REQUEST;
-    print($requestData)
 
     $start = $_REQUEST['start'];
 
