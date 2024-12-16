@@ -496,6 +496,7 @@ session_start();
     gender: gender 
   },
   dataType: "json",
+  console.log(data)
   success: function (data) {
     try {
       if (!data.records) {
