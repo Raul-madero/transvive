@@ -26,9 +26,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
     echo "<script> alert('".$_FILES['name']['error']."'); </script>";
     echo "<script> alert('".$_FILES['name']."'); </script>";
     $up = new Upload($_FILES['name']);
-    echo "<pre>";
-    print_r($up);
-    echo "<pre";
 
     if ($up->uploaded) {
         $up->Process("./");
@@ -44,17 +41,14 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
 
         if ($up->processed) {
             $file_path = "./" . $up->file_dst_name;
-            echo "<script> alert('Procesando'); </script>";
 
             if ($file = fopen($file_path, "r")) {
                 $ok = 0;
                 $error = 0;
-                echo "<script> alert('Cargando...'); </script>";
 
                 // Leer archivo línea por línea
                 while ($line = fgets($file, 4096)) {
                     $data = explode(",", trim($line)); // Eliminar saltos de línea
-                    echo "<script> alert('Leyendo...'); </script>";
 
                     if (count($data) >= 12) {
                         $ok++;
