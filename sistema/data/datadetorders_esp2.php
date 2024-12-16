@@ -53,6 +53,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     $sql = "SELECT ".$columns." FROM registro_viajes AS p";
     // .$table;
     // ." ".$where;
+    echo $sql;
     echo "Número de filas: " . mysqli_num_rows($result);
     while($row = mysqli_fetch_assoc($result)) {
         print_r($row);
