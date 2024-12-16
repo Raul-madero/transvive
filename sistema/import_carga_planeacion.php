@@ -30,9 +30,12 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
     if ($up->uploaded) {
         $up->Process("./");
         echo "<script> alert('subido'); </script>";
+        echo "<script> alert('Estado de $up->processed: " . ($up->processed ? 'true' : 'false') . "'); </script>";
+    
         if (!$up->processed) {
             echo "<script> alert('Error en el procesamiento: " . $up->error . "'); </script>";
         }
+    }
 
         if ($up->processed) {
             $file_path = "./" . $up->file_dst_name;
