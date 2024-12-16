@@ -46,15 +46,10 @@ if ($_REQUEST['action'] == 'fetch_users'){
     );
 
     $sql = "SELECT " . $columns . " FROM " . $table . $where;
-    echo $sql;
-    echo "Número de filas: " . mysqli_num_rows($result);
-    while($row = mysqli_fetch_assoc($result)) {
-    echo $row;
-    }
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
-    echo $totalData;
     $totalFiltered = $totalData;
+
     $data = array();
     $counter = $start;
 
@@ -146,7 +141,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
         "draw" => intval($requestData['draw']),
         "recordsTotal" => intval($totalData),
         "recordsFiltered" => intval($totalFiltered),
-        "records" => $data
+        "records" => $nestedData
     );
     
     // Se devuelve la respuesta en formato JSON
