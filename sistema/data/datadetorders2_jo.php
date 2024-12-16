@@ -133,14 +133,14 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
         $data[] = $nestedData;
     }
-
+    echo $data;
     header('Content-Type: application/json charset=utf-8');
     
     $json_data = array(
         "draw"            => intval( $requestData['draw'] ),
         "recordsTotal"    => intval( $totalData),
         "recordsFiltered" => intval( $totalFiltered ),
-        "data"         => $data
+        "records"         => $data
     );
 
     echo json_encode($json_data);
