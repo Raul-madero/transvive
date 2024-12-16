@@ -57,10 +57,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                         if (!$conection->query($sql_insert)) {
                             echo "<script> alert('Error en la inserción SQL: {$conection->error}'); </script>";
                         }
-                        echo "<pre>";
-                        print_r($conection);
-                        echo "</pre>";
-                        exit;
                     } else {
                         $error++;
                     }
