@@ -480,135 +480,105 @@ session_start();
    if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 9 ){
 ?>
 
-    <script type="text/javascript">
+<script type="text/javascript">
+  // Inicializa la carga de datos en el DataTable
+  load_data(); // Primera carga
 
-      load_data(); // first load
+  function load_data(initial_date = "", final_date = "", gender = "") {
+    const ajax_url = "data/datadetorders_esp2_1.php";
 
-      function load_data(initial_date, final_date, gender){
-        var ajax_url = "data/datadetorders_esp2_1.php";
-       
-        
-        $('#fetch_generated_wills').DataTable({
-          "order": [[ 0, "desc" ]],
-          dom: 'Bfrtip',
-          lengthMenu: [
-          [20, 25, 50, -1],
-          ['20 rows', '25 rows', '50 rows', 'Show all']
-          ],
-          buttons: [
-          'excelHtml5',
-          'pageLength'
-          ],
-          "processing": true,
-          "serverSide": true,
-          "stateSave": true,
-          "responsive": true,
-          "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-          "ajax" : {
-            "url" : ajax_url,
-            "dataType": "json",
-            "type": "POST",
-            "data" : { 
-              "action" : "fetch_users", 
-              "initial_date" : initial_date, 
-              "final_date" : final_date,
-              "gender" : gender 
-              
-            },
-            
-            "dataSrc": "records"
-          },
-          "columns": [
-            { "data" : "pedidono", "width": "3%", className: "text-right" },
-            { "data" : "fechaa", "width": "5%"},
-            { "data" : "razonsocial", "width": "10%" },
-            { "data" : "origen", "width": "18%" },
-            { "data" : "horainicio", "width": "5%", className: "text-center", "orderable": false },
-            { "data" : "horafin", "width": "5%", className: "text-center", "orderable": false },
-            { "data" : "tipounidad", "width": "10%", "orderable":false },
-            { "data" : "Destino", "width": "15%" },
-            { "data" : "TipoViaje", "width": "10%" },
-            { "data" : "estatusped", "width": "8%", "orderable":false },
-
-            <?php 
-                if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 ){
-            ?>
-          
-            {
-                    "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" data-id=\'' + full.pedidono + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.pedidono  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.origen  + '\' data-destino=\'' + full.Destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
-          }   
-          }
-          <?php
-           }else { 
-                if($_SESSION['rol'] == 9 ){
-          ?>
-
-          {
-                    "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'editgcia_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Registrar/Editar</a>';
-          }        
-          } 
-          <?php
-           }}
-          ?>
-            
-          ],
-          
-          "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
-    "buttons": [
-        'copyHtml5',
+    $('#fetch_generated_wills').DataTable({
+      "destroy": true, // Permite la reinicialización del DataTable
+      "order": [[0, "desc"]],
+      "dom": 'Bfrtip',
+      "lengthMenu": [
+        [10, 25, 50, 100, -1],
+        ["10 rows", "25 rows", "50 rows", "100 rows", "Show all"]
+      ],
+      "buttons": [
         'excelHtml5',
-        'csvHtml5',     
+        'pageLength',
         {
-            extend: 'colvis',
-            postfixButtons: [ 'colvisRestore' ],
-            columns: '0,1,2,3,4,5,6'
+          extend: 'colvis',
+          postfixButtons: ['colvisRestore'],
+          columns: ':not(:last-child)' // Oculta columnas excepto la última
         }
-    ],
-          "initComplete": function(settings, json) {
-          console.log("DataTable initialized:", settings);
-          console.log("JSON data:", json);
+      ],
+      "processing": true,
+      "serverSide": true,
+      "stateSave": true,
+      "responsive": true,
+      "ajax": {
+        "url": ajax_url,
+        "type": "POST",
+        "dataType": "json",
+        "data": {
+          "action": "fetch_users",
+          "initial_date": initial_date,
+          "final_date": final_date,
+          "gender": gender
+        },
+        "dataSrc": "records"
+      },
+      "columns": [
+        { "data": "pedidono", "width": "3%", "className": "text-right" },
+        { "data": "fechaa", "width": "5%" },
+        { "data": "razonsocial", "width": "10%" },
+        { "data": "origen", "width": "18%" },
+        { "data": "horainicio", "width": "5%", "className": "text-center", "orderable": false },
+        { "data": "horafin", "width": "5%", "className": "text-center", "orderable": false },
+        { "data": "tipounidad", "width": "10%", "orderable": false },
+        { "data": "Destino", "width": "15%" },
+        { "data": "TipoViaje", "width": "10%" },
+        { "data": "estatusped", "width": "8%", "orderable": false },
+        {
+          "render": function (data, type, full) {
+            return `<a class="link_edit" href='edit_viajespecial.php?id=${full.pedidono}' style="color:#007bff;"><i class="far fa-edit"></i></a>
+                    | <a class="link_delete" href="#" data-id='${full.pedidono}' style="color:red;"><i class="fa fa-eraser"></i></a>`;
+          },
+          "orderable": false
+        }
+      ],
+      "initComplete": function (settings, json) {
+        console.log("DataTable initialized:", settings);
+        console.log("JSON data:", json);
       }
-         
-        }); 
-      } 
-      $("#filter").click(function(){
-        var initial_date = $("#initial_date").val();
-        var final_date = $("#final_date").val();
-        var gender = $("#gender").val();
+    });
+  }
 
-        if(initial_date == '' && final_date == ''){
-          $('#fetch_generated_wills').DataTable().destroy();
-          load_data("", "", gender); // filter immortalize only
-        }else{
-          var date1 = new Date(initial_date);
-          var date2 = new Date(final_date);
-          var diffTime = Math.abs(date2 - date1);
-          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+  // Filtrado por fecha y género
+  $("#filter").click(function () {
+    const initial_date = $("#initial_date").val();
+    const final_date = $("#final_date").val();
+    const gender = $("#gender").val();
 
-          if(initial_date == '' || final_date == ''){
-              $("#error_log").html("Warning: You must select both (start and end) date.</span>");
-          }else{
-            if(date1 > date2){
-                $("#error_log").html("Warning: End date should be greater then start date.");
-            }else{
-               $("#error_log").html(""); 
-               $('#fetch_generated_wills').DataTable().destroy();
-               load_data(initial_date, final_date, gender);
-            }
-          }
-        }
-      });
+    // Validación de fechas
+    if (initial_date === '' && final_date === '') {
+      $("#fetch_generated_wills").DataTable().destroy();
+      load_data("", "", gender);
+    } else {
+      const date1 = new Date(initial_date);
+      const date2 = new Date(final_date);
 
-      
+      if (initial_date === '' || final_date === '') {
+        $("#error_log").html("Warning: You must select both (start and end) date.");
+      } else if (date1 > date2) {
+        $("#error_log").html("Warning: End date should be greater than start date.");
+      } else {
+        $("#error_log").html("");
+        $("#fetch_generated_wills").DataTable().destroy();
+        load_data(initial_date, final_date, gender);
+      }
+    }
+  });
 
-            // Datapicker 
-            $( ".datepicker" ).datepicker({
-                language: 'es',
-                "dateFormat": "yy-mm-dd",
-                changeYear: true
-            });
+  // Configuración del DatePicker
+  $(".datepicker").datepicker({
+    language: 'es',
+    dateFormat: "yy-mm-dd",
+    changeYear: true
+  });
+</script>
 
 
     </script>
