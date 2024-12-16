@@ -8,7 +8,7 @@ global $connection;
 if($_REQUEST['action'] == 'fetch_users'){
 
     $requestData = $_REQUEST;
-    $start = $_REQUEST['start'];
+    // $start = $_REQUEST['start'];
 
     $initial_date = $_REQUEST['initial_date'];
     $final_date = $_REQUEST['final_date'];

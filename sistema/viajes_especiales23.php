@@ -485,7 +485,7 @@ session_start();
       load_data(); // first load
 
       function load_data(initial_date, final_date, gender){
-        var ajax_url = "data/datadetorders_esp3.php";
+        var ajax_url = "data/datadetorders_esp2.php";
 
         $('#fetch_generated_wills').DataTable({
           "order": [[ 0, "desc" ]],
