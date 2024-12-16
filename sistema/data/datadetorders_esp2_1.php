@@ -77,7 +77,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
             $sql .= " LIMIT " . $requestData['start'] . " ," . $requestData['length'];
         }
     
-        $result = mysqli_query($connection, $sql)
+        $result = mysqli_query($connection, $sql);
         $data = array();
         $counter = $start;
     }
@@ -140,7 +140,6 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $data[] = $nestedData;
     }
     header('Content-Type: application/json; charset=utf-8');
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:1520951272.
     echo $data;
     $json_data = array(
         "draw" => intval($requestData['draw']),
