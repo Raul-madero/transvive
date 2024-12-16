@@ -52,6 +52,8 @@ if($_REQUEST['action'] == 'fetch_users'){
     );
 
     $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+    echo $sql;
+    exit;
 
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
