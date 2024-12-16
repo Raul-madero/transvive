@@ -8,7 +8,9 @@ session_start();
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 
-
+  echo "<pre>";
+  print_r($conection->error);
+  echo "<pre>";
   $namerol = $filas['rol'];
 
   if (!isset($_SESSION['idUser'])) {
