@@ -71,7 +71,6 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $totalFiltered = $totalData;
     }
 
-    $nestedData = array();
     $data = array();
     $counter = $start;
     while ($row = mysqli_fetch_assoc($result)) {
