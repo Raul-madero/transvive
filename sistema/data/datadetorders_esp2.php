@@ -90,21 +90,21 @@ if($_REQUEST['action'] == 'fetch_users'){
     while($row = mysqli_fetch_assoc($result)){
         if ($row['estatus'] == 1){
         $Estatusnew = '<span class="label label-primary">Activo</span>'; 
-    }else{
-        if ($row['estatus'] == 2){
-           $Estatusnew = '<span class="label label-success">Realizado</span>';
         }else{
-            if ($row['estatus'] == 3) {
-              $Estatusnew = '<span class="label label-danger">Cancelado</span>';
-            }else {
-                if ($row['estatus'] == 4) {
-                 $Estatusnew = '<span class="label label-primary">Iniciado</span>';
+            if ($row['estatus'] == 2){
+            $Estatusnew = '<span class="label label-success">Realizado</span>';
+            }else{
+                if ($row['estatus'] == 3) {
+                $Estatusnew = '<span class="label label-danger">Cancelado</span>';
                 }else {
-                 if ($row['estatus'] == 5) {
-                  $Estatusnew = '<span class="label label-info">Terminado</span>';
-                 }else {
-                  $Estatusnew = '<span class="label label-success">CERRADO</span>';
-                 } 
+                    if ($row['estatus'] == 4) {
+                    $Estatusnew = '<span class="label label-primary">Iniciado</span>';
+                    }else {
+                        if ($row['estatus'] == 5) {
+                        $Estatusnew = '<span class="label label-info">Terminado</span>';
+                        }else {
+                        $Estatusnew = '<span class="label label-success">CERRADO</span>';
+                        } 
                 }     
         }
     }

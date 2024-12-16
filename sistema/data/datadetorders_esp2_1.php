@@ -65,18 +65,15 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $sql .= " OR direccion LIKE '%" .$requestData['search']['value'] . "%' ";
         $sql .= " OR destino LIKE '%" .$requestData['search']['value'] . "%'  )";
         
-    
-        $result = mysqli_query($connection, $sql);
-        $totalData = mysqli_num_rows($result);
-        $totalFiltered = $totalData;
-        
         if (!empty($requestData['order'][0]['column'])) {
             $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']] ." ".$requestData['order'][0]['dir'];
         }
         if ($requestData['length'] != "-1") {
             $sql .= " LIMIT " . $requestData['start'] . " ," . $requestData['length'];
         }
-    
+        $result = mysqli_query($connection, $sql);
+        $totalData = mysqli_num_rows($result);
+        $totalFiltered = $totalData;
         $data = array();
         $counter = $start;
     }
@@ -136,9 +133,11 @@ if ($_REQUEST['action'] == 'fetch_users'){
 
         $nestedData['estatusped'] = $Estatusnew;
 
+        $data[] = $nestedData;
     }
-    $data[] = $nestedData;
+
     echo $data;
+
     header('Content-Type: application/json; charset=utf-8');
     $json_data = array(
         "draw" => intval($requestData['draw']),
