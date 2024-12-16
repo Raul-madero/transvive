@@ -15,7 +15,10 @@ $sql = "TRUNCATE tempregistro_viajes";
 if (!$conection->query($sql)) {
     die("Error al limpiar la tabla temporal.");
 }
-
+echo "<pre>";
+print_r($conection);
+echo "<pre>";
+exit;
 $tipo_viaje = 'Normal';
 $valor_vuelta = 'Completa';
 date_default_timezone_set('America/Mexico_City');
