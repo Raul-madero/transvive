@@ -39,9 +39,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                 // Leer archivo línea por línea
                 while ($line = fgets($file, 4096)) {
                     $data = explode(",", trim($line)); // Eliminar saltos de línea
-                    echo "<pre>";
-                    print_r($data);
-                    echo "<pre>";
                     
 
                     if (count($data) >= 12) {
@@ -56,9 +53,8 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                         $sql_insert = "INSERT INTO tempregistro_viajes 
                         (fecha, cliente, ruta, operador, unidad, tipo_viaje, num_unidad, valor_vuelta, hora_inicio, hora_fin, id_supervisor, jefe_operaciones, usuario_id, usuario_reg, fecha_carga) 
                         VALUES 
-                        ('$fecha_mysql', '$data[3]', '$data[8]', '$nombre', '$data[6]', '$tipo_viaje', '$data[7]', '$valor_vuelta', '$data[1]', '$data[2]', '$data[11]', '$data[5]', '$data[11]', '$usuario', '$fechac')";
-                        $conection->query($sql_insert);
-                        echo "<script> alert('Error en la inserción SQL: ".$conection->error."'); </script>";
+                        ('$fecha_mysql', '$data[3]', '$data[8]', '$data[10]', '$data[6]', '$tipo_viaje', '$data[7]', '$valor_vuelta', '$data[1]', '$data[2]', '$data[11]', '$data[5]', '$data[11]', '$usuario', '$fechac')";
+                        
                         if (!$conection->query($sql_insert)) {
                             echo "<script> alert('Error en la inserción SQL: {$conection->error}'); </script>";
                         }
@@ -97,9 +93,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                 ];
 
                 foreach ($updates as $sql) {
-                    //echo "<script> alert('"$sql"'); </script>";
-                    $conection->query($sql);
-                    echo "<script> alert('Error en actualización SQL: {$conection->error}'); </script>";
                     if (!$conection->query($sql)) {
                         echo "<script> alert('Error en actualización SQL: {$conection->error}'); </script>";
                     }
