@@ -130,7 +130,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $nestedData['estatusped'] = $Estatusnew;
     
         // Se añade el dato al array
-        $data[] = $nestedData;
+        $data = $nestedData;
     }
 
     // Configuración del encabezado de respuesta JSON
@@ -141,7 +141,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
         "draw" => intval($requestData['draw']),
         "recordsTotal" => intval($totalData),
         "recordsFiltered" => intval($totalFiltered),
-        "records" => $nestedData
+        "records" => $data
     );
     
     // Se devuelve la respuesta en formato JSON
