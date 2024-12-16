@@ -137,7 +137,9 @@ if ($_REQUEST['action'] == 'fetch_users'){
         // Se añade el dato al array
         $data[] = $nestedData;
     }
-    
+    echo json_encode($data);
+    echo $data;
+
     // Configuración del encabezado de respuesta JSON
     header('Content-Type: application/json; charset=utf-8');
     
