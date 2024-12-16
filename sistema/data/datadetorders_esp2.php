@@ -50,7 +50,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         9 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM registro_viajes AS p";
+    $sql = "SELECT ".$columns." FROM registro_viajes p";
     // .$table;
     // ." ".$where;
     echo $sql;
