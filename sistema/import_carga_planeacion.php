@@ -55,7 +55,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                         if ($conection->error) {
                             $error++;
                         }else {
-                            ok++;
+                            $ok++;
                         }
                         
                         if (!$conection->query($sql_insert)) {
