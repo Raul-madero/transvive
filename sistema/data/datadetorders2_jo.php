@@ -81,6 +81,8 @@ if($_REQUEST['action'] == 'fetch_userss'){
     $counter = $start;
 
     $count = $start;
+    $nestedData = array();
+
     while($row = mysqli_fetch_array($result)){
         switch ($row['estatus']) {
             case 1:
