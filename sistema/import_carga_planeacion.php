@@ -64,6 +64,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                         VALUES 
                         ('$fecha_mysql', '$data[3]', '$data[8]', '$nombre', '$data[6]', '$tipo_viaje', '$data[7]', '$valor_vuelta', '$data[1]', '$data[2]', '$data[11]', '$data[5]', '$data[11]', '$usuario', '$fechac')";
                         $conection->query($sql_insert);
+                        echo "<script> alert('Error en la inserción SQL: ".$conection->error."'); </script>";
                         if (!$conection->query($sql_insert)) {
                             echo "<script> alert('Error en la inserción SQL: {$conection->error}'); </script>";
                         }
