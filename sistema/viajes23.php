@@ -880,7 +880,7 @@ function validateFilter(initial_date, final_date) {
           $('#fetch_generated_willss').DataTable().destroy();
           load_data("", "", buscaid); // filter immortalize only
         }
-        else{
+        // else{
           // var date1 = new Date(inicio_date);
           // var date2 = new Date(fin_date);
           // var diffTime = Math.abs(date2 - date1);
