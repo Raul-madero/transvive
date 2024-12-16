@@ -52,7 +52,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
     
     // Consulta con LIMIT y OFFSET para la paginación
     $sql = "SELECT " . $columns . " FROM " . $table . $where;
-    
+
     if (!empty($requestData['order'][0]['column'])) {
         $sql .= " ORDER BY " . $columns_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'];
     }
@@ -62,6 +62,8 @@ if ($_REQUEST['action'] == 'fetch_users'){
     
     // Ejecutar la consulta con paginación
     $result = mysqli_query($connection, $sql);
+    $totalData = mysqli_num_rows($result);
+    $totalFiltered = $totalData;
     
     $data = array();
     $counter = $start;

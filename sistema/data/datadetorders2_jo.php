@@ -3,8 +3,8 @@ session_start();
 include '../config/db-config.php';
 
  date_default_timezone_set('America/Mexico_City');
-// $fcha2 = date("Y-m-d");
-// $fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fcha2 ) ) );
+// $fecha2 = date("Y-m-d");
+// $fecha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fcha2 ) ) );
 global $connection;
 
 if($_REQUEST['action'] == 'fetch_userss'){
@@ -15,19 +15,18 @@ if($_REQUEST['action'] == 'fetch_userss'){
     // $final_date = $fecha2;
   
     $gender = $_REQUEST['buscarid'];
-
-    // if(!empty($initial_date) && !empty($final_date)){
-    //     $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    // }else{
-    //     $date_range = " ";
-    // }
+    $length = $_REQUEST['length'];
+    $fcha1 = $_REQUEST['fecha1'];
+    $fcha2 = $_REQUEST['fecha2'];
 
     if($gender != ""){
         $gender =  " AND p.id = '$gender' ";
     }
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
+
     $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
+
     $where = " WHERE p.tipo_viaje <> 'Especial' ".$gender ;
     //p.fecha >= '".$fcha1."' and p.fecha <='".$fcha2."' and 
 
@@ -77,16 +76,11 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
     $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
 
-    if($requestData['length'] != "-1"){
-        $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
-        $result = mysqli_query($connection, $sql);
-        $totalData = mysqli_num_rows($result);
-        $totalFiltered = $totalData;
-    }
-
-    
+    $result = mysqli_query($connection, $sql);
     $data = array();
     $counter = $start;
+
+    $count = $start
     while($row = mysqli_fetch_array($result)){
         switch ($row['estatus']) {
             case 1:
@@ -109,15 +103,16 @@ if($_REQUEST['action'] == 'fetch_userss'){
         }
 
         $counter++;
-        $nestedData = array();
 
         $nestedData['counter'] = $count;
         $nestedData['pedidono'] =  $row["id"];
 
         $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id='.($row["id"]).'" target="_blank">'.($row["id"]).'</a>';
+
         $time = strtotime($row["fecha"]);
         $time2 = strtotime($row["hora_inicio"]);
         $time3 = strtotime($row["hora_fin"]);
+
         $nestedData['fecha'] = date('d/m/Y', $time);
         $nestedData['horainicio'] = date('H:i', $time2);
         $nestedData['horafin'] = date('H:i', $time3);
@@ -138,6 +133,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
         $data[] = $nestedData;
     }
+    
     header('Content-Type: application/json charset=utf-8');
     
     $json_data = array(
