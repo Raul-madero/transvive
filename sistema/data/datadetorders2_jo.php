@@ -80,7 +80,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
     $data = array();
     $counter = $start;
 
-    $count = $start
+    $count = $start;
     while($row = mysqli_fetch_array($result)){
         switch ($row['estatus']) {
             case 1:
@@ -133,7 +133,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
         $data[] = $nestedData;
     }
-    
+
     header('Content-Type: application/json charset=utf-8');
     
     $json_data = array(
