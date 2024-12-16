@@ -133,8 +133,8 @@ if ($_REQUEST['action'] == 'fetch_users'){
 
         $nestedData['estatusped'] = $Estatusnew;
 
+        $data[] = $nestedData;
     }
-    $data[] = $nestedData;
 
     echo $data;
 
