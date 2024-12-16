@@ -64,7 +64,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $sql .= " OR tipo_viaje LIKE '%" .$requestData['search']['value'] . "%' ";
         $sql .= " OR direccion LIKE '%" .$requestData['search']['value'] . "%' ";
         $sql .= " OR destino LIKE '%" .$requestData['search']['value'] . "%'  )";
-        
+
         if (!empty($requestData['order'][0]['column'])) {
             $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']] ." ".$requestData['order'][0]['dir'];
         }
@@ -143,7 +143,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
         "draw" => intval($requestData['draw']),
         "recordsTotal" => intval($totalData),
         "recordsFiltered" => intval($totalFiltered),
-        "data" => $data
+        "records" => $data
     );
 
     echo json_encode($json_data);
