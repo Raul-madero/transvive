@@ -33,7 +33,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto 
     LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
     LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
-    // $where = " WHERE p.tipo_viaje LIKE '%Especial%' "
+    $where = " WHERE p.tipo_viaje = 'Especial' "
     // .$date_range.$gender ;
 
     $columns_order = array(
