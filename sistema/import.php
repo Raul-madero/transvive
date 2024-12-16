@@ -5,7 +5,7 @@ session_start();
 
 $usuario     = $_SESSION['idUser'];
 $sql = "TRUNCATE tempregistro_viajes";
-    $conection->query($sql);
+$conection->query($sql);
 
 /*$datos = $conection->query("select * from folio_entrada where serie = 'EPT' ");
 $d= $datos->fetch_object();

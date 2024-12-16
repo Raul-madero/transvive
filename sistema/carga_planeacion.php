@@ -110,7 +110,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <div class="card-header p-2">
               <!-- /.card-header -->
               <!-- form start -->
-              <form class="form-horizontal" method="post" id="addproduct" action="import.php" enctype="multipart/form-data"*>
+              <form class="form-horizontal" method="post" id="addproduct" action="import_carga_planeacion.php" enctype="multipart/form-data"*>
               <div class="form-group row">
                     <div class="col-sm-10">
                     </div>
