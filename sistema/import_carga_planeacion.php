@@ -37,7 +37,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
         echo "<pre";
         echo "<script> alert('subido'); </script>";
         echo "<script> alert('Estado de $up->processed: " . ($up->processed ? 'true' : 'false') . "'); </script>";
-        echo 
         if (!$up->processed) {
             echo "<script> alert('Error en el procesamiento: " . $up->error . "'); </script>";
         }
