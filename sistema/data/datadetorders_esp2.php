@@ -50,10 +50,10 @@ if($_REQUEST['action'] == 'fetch_users'){
         9 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+    $sql = "SELECT ".$columns." FROM ".$table;
+    // ." ".$where;
     echo "Número de filas: " . mysqli_num_rows($result);
-exit();
-    // exit;
+    exit;
 
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
