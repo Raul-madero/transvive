@@ -156,6 +156,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     );
 
     echo json_encode($json_data);
+    die();
 }
 
 ?>
