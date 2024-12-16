@@ -66,10 +66,10 @@ if ($_REQUEST['action'] == 'fetch_users'){
         if ($requestData['length'] != "-1") {
             $sql .= " LIMIT " . $requestData['start'] . " ," . $requestData['length'];
         }
-        $result = mysqli_query($connection, $sql);
-        $totalData = mysqli_num_rows($result);
-        $totalFiltered = $totalData;
     }
+    $result = mysqli_query($connection, $sql);
+    $totalData = mysqli_num_rows($result);
+    $totalFiltered = $totalData;
 
     $data = array();
     $counter = $start;
