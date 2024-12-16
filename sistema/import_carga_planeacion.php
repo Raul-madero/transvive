@@ -43,6 +43,8 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                 // Leer archivo línea por línea
                 while ($line = fgets($file, 4096)) {
                     $data = explode(",", trim($line)); // Eliminar saltos de línea
+                    echo "<script> alert('Leyendo...'); </script>";
+
                     if (count($data) >= 12) {
                         $ok++;
                         
