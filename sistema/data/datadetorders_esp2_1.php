@@ -109,23 +109,23 @@ if ($_REQUEST['action'] == 'fetch_users'){
         $nestedData['horafin'] = date('H:i', $time3);
         $nestedData['nosemana'] = $row["semana"];
     
-        $nestedData['razonsocial'] = $row["cliente"];
-        $nestedData['rutacte'] = $row["ruta"];
+        $nestedData['razonsocial'] = utf8_encode($row["cliente"]);
+        $nestedData['rutacte'] = utf8_encode($row["ruta"]);
         
         $time2 = strtotime($row["fechacomp"]);
         $nestedData['fechacomp'] = date('d M, Y', $time2);
     
-        $nestedData['conductor'] = $row["operador"];
-        $nestedData['tipounidad'] = $row["unidad"];
-        $nestedData['nounidad'] = $row["numero_unidades"];
-        $nestedData['supervisor'] = $row["name"];
-        $nestedData['jefeopera'] = $row["jefeo"];
-        $nestedData['origen'] = $row["direccion"];
-        $nestedData['Destino'] = $row["destino"];
+        $nestedData['conductor'] = utf8_encode($row["operador"]);
+        $nestedData['tipounidad'] = utf8_encode($row["unidad"]);
+        $nestedData['nounidad'] = utf8_encode($row["numero_unidades"]);
+        $nestedData['supervisor'] = utf8_encode($row["name"]);
+        $nestedData['jefeopera'] = utf8_encode($row["jefeo"]);
+        $nestedData['origen'] = utf8_encode($row["direccion"]);
+        $nestedData['Destino'] = utf8_encode($row["destino"]);
         $nestedData['Costo'] = $row["costo_viaje"];
         $nestedData['Valor_vuelta'] = $row["sueldo_vuelta"];
         $nestedData['Datenew'] = $row["fecha"];
-        $nestedData['TipoViaje'] = $row["tipo_viaje"];
+        $nestedData['TipoViaje'] = utf8_encode($row["tipo_viaje"]);
         $nestedData['estatusped'] = $Estatusnew;
     
         // Se añade el dato al array
