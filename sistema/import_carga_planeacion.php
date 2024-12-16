@@ -29,7 +29,7 @@ if (isset($_FILES['name'])) {
                         $fcha = $data[9];
                         $nombre = utf8_encode($data[10]);
                         $fecha = str_replace('/', '-', $fcha);
-                        $sql = "INSERT INTO tempregistro_viajes (fecha, cliente, ruta, operador, unidad, tipo_viaje, num_unidad, valor_vuelta, hora_inicio, hora_fin, id_supervisor, jefe_operaciones, usuario_id, usuario_reg, fecha_carga) value (\"$fecha\", \"$data[3]\", \"$data[8]\", \"$nombre\", \"$data[6]\", \"$tipo_viaje\", \"$data[7]\", \"$valor_vuelta\", \"$data[1]\", \"$data[2]\", \"$data[11]\", \"$data[5]\", \"$data[11]\", \"$usuario\", \"$fechac\")"
+                        $sql = "INSERT INTO tempregistro_viajes (fecha, cliente, ruta, operador, unidad, tipo_viaje, num_unidad, valor_vuelta, hora_inicio, hora_fin, id_supervisor, jefe_operaciones, usuario_id, usuario_reg, fecha_carga) value (\"$fecha\", \"$data[3]\", \"$data[8]\", \"$nombre\", \"$data[6]\", \"$tipo_viaje\", \"$data[7]\", \"$valor_vuelta\", \"$data[1]\", \"$data[2]\", \"$data[11]\", \"$data[5]\", \"$data[11]\", \"$usuario\", \"$fechac\")";
                         $conection->query($sql);
                     }else {
                         $error++;
