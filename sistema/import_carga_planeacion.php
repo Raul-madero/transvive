@@ -26,12 +26,18 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
     echo "<script> alert('".$_FILES['name']['error']."'); </script>";
     echo "<script> alert('".$_FILES['name']."'); </script>";
     $up = new Upload($_FILES['name']);
+    echo "<pre>";
+    print_r($up);
+    echo "<pre";
 
     if ($up->uploaded) {
         $up->Process("./");
+        echo "<pre>";
+        print_r($up);
+        echo "<pre";
         echo "<script> alert('subido'); </script>";
         echo "<script> alert('Estado de $up->processed: " . ($up->processed ? 'true' : 'false') . "'); </script>";
-    
+        echo 
         if (!$up->processed) {
             echo "<script> alert('Error en el procesamiento: " . $up->error . "'); </script>";
         }
