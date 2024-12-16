@@ -897,7 +897,7 @@ function validateFilter(initial_date, final_date) {
                load_data(inicio_date, fin_date, buscaid);
             }
           }
-        }
+        
       });
 
       
