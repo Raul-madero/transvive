@@ -32,8 +32,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     // us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, 
     // p.sueldo_vuelta, p.tipo_viaje';
     $columns = ' id, fecha, hora_inicio, hora_fin, semana, cliente, operador, unidad, 
-    num_unidad, personas, estatus, 
-    us.nombre AS jefeo, ruta, direccion, destino, costo_viaje, 
+    num_unidad, personas, estatus, ruta, direccion, destino, costo_viaje, 
     sueldo_vuelta, tipo_viaje';
     $table = ' registro_viajes ' ;
     $where = " WHERE p.tipo_viaje LIKE '%Especial%' ".$date_range.$gender;
