@@ -3,8 +3,8 @@ session_start();
 include '../config/db-config.php';
 
  date_default_timezone_set('America/Mexico_City');
-// $fecha2 = date("Y-m-d");
-// $fecha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fcha2 ) ) );
+// $fcha2 = date("Y-m-d");
+// $fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fcha2 ) ) );
 global $connection;
 
 if($_REQUEST['action'] == 'fetch_userss'){
@@ -60,17 +60,21 @@ if($_REQUEST['action'] == 'fetch_userss'){
         $sql.=" OR semana LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR nombres LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
+       
+        
     }
-
-    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
-
-    // if($requestData['length'] != "-1"){
-    //     $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
-    // }
-
+    
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
+
+    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
+
+    if($requestData['length'] != "-1"){
+        $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
+    }
+
+    $result = mysqli_query($connection, $sql);
     $data = array();
     $counter = $start;
 
