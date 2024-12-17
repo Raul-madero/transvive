@@ -26,7 +26,7 @@ $iniciapol    = $_POST['inputIniciopol'];
 $terminapol   = $_POST['inputFinpol'];
 $notarjeta    = $_POST['inputTarjetac'];
 $vencetarjeta = $_POST['inputVencetar'];
-$entregadoc   = $_POST['inputEntregadoc'];
+$entregadoc   = $_POST['inputEntregadoc'] || null;
 $parametro    = $_POST['inputRestandar'];
 $notas        = $_POST['inputNotas'];
 
