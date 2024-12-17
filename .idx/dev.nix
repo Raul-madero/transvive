@@ -15,6 +15,7 @@ services.docker = {
     # pkgs.nodePackages.nodemon
     pkgs.docker-compose
     pkgs.phpdocumentor
+    pkgs.php
   ];
 
   # Sets environment variables in the workspace

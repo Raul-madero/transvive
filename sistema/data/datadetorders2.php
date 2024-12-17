@@ -1,8 +1,8 @@
 <?php
 session_start();
-include '../config/db-config.php';
+include '../../conexion.php';
 
-global $connection;
+global $conection;
 
 if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
     echo json_encode(["error" => "Acción no válida o no proporcionada."]);
@@ -31,8 +31,8 @@ $columns = array(
 $start = isset($requestData['start']) ? intval($requestData['start']) : 0;
 $length = isset($requestData['length']) ? intval($requestData['length']) : 10;
 $draw = isset($requestData['draw']) ? intval($requestData['draw']) : 1;
-$initial_date = filter_var($requestData['initial_date'], FILTER_SANITIZE_STRING);
-$final_date = filter_var($requestData['final_date'], FILTER_SANITIZE_STRING);
+$initial_date = mysqli_real_escape_string($conection, $requestData['initial_date']);
+$final_date = mysqli_real_escape_string($conection, $requestData['final_date']);
 $gender = isset($_POST['gender']) ? intval($_POST['gender']) : null;
 
 // Filtros
@@ -44,17 +44,20 @@ $gender_filter = ($gender !== null && $gender > 0)
     : "";
 
 // Consultas SQL
-$columns = 'p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, 
-    CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno) as name, us.nombre AS jefeo, p.ruta';
-$table = 'registro_viajes p 
+$columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, 
+    CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
+$table = ' registro_viajes p 
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
-        LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
-$where = "WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) $date_range $gender_filter";
+        LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
+$where = " WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) $date_range $gender_filter ";
 
 // Conteo total
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
-$totalData = $connection->query($count_sql)->fetch_assoc()['total'] ?? 0;
+$totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
+
+$sql = "SELECT $columns FROM $table $where LIMIT $start, $length";
+$result = $conection->query($sql);
 
 // Ordenamiento
 if (!empty($requestData['order'])) {
@@ -62,15 +65,13 @@ if (!empty($requestData['order'])) {
     $orderDir = $requestData['order'][0]['dir']; 
     $sql .= " ORDER BY $orderColumn $orderDir"; 
 }
-
 // Datos con paginación
 $sql = "SELECT $columns FROM $table $where $order_by LIMIT $start, $length"; 
-$result = $connection->query($sql);
-
+$result = $conection->query($sql);
 // Resto del código...
 
 if (!$result) {
-    echo json_encode(["error" => $connection->error]);
+    echo json_encode(["error" => $conection->error]);
     exit;
 }
 
