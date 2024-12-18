@@ -800,7 +800,7 @@ function validateFilter(initial_date, final_date) {
     <script type="text/javascript">
       load_data(); //Primera carga
       function load_data(inicio_date, fin_date, buscaid) {
-          const ajax_url = "data/datadetorders2_jo_1.php";
+          const ajax_url = "data/datadetorders2_jo.php";
           $.ajax({
             url: ajax_url,
             type: "POST",
