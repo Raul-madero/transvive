@@ -3,9 +3,6 @@
 { pkgs, ... }: {
   # Which nixpkgs channel to use.
   channel = "stable-24.05"; # or "unstable"
-services.docker = {
-  enable = true;
-};
   # Use https://search.nixos.org/packages to find packages
   packages = [
     # pkgs.go
@@ -13,7 +10,6 @@ services.docker = {
     # pkgs.python311Packages.pip
     # pkgs.nodejs_20
     # pkgs.nodePackages.nodemon
-    pkgs.docker-compose
     pkgs.phpdocumentor
     pkgs.php
   ];

@@ -2306,6 +2306,7 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
     if($_POST['action'] == 'AddEditVuelta')
     {
       if(!empty($_POST['idc']) )
+
       {
         $idc       = $_POST['idc'];
         $datefin   = $_POST['datefin'];
@@ -2320,12 +2321,16 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
         $usuario  = $_SESSION['idUser'];
 
         $query_busca = mysqli_query($conection,"SELECT semana from semanas WHERE dia_inicial <= '$datefin' AND dia_final >= '$datefin' ");
+        if (!$conection){
+            echo "Error: " . mysqli_error();
+        }
                     $result_busca = mysqli_num_rows($query_busca);
                      while ($data = mysqli_fetch_assoc($query_busca)){
                      $semana = $data['semana'];
-                     }   
+                     }
+        
 
-        $query_procesar = mysqli_query($conection,"CALL add_vuelta($idc, '$datefin', '$semana', '$hregreso', $sueldovta, '$origen', '$destino', $unidades, $costo, $usuario)");
+        $query_procesar = mysqli_query($conection,"CALL add_vuelta($idc, '$datefin', '$semana', '$hregreso', $sueldovta, '$origen', '$destino', '$unidades', '$costo', '$usuario')");
         $result_detalle = mysqli_num_rows($query_procesar);
 
         
@@ -2334,7 +2339,7 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
              mysqli_close($conection);
         }else{
-            echo "error";
+            echo "error" . mysqli_error();
         }
        
      }else{
