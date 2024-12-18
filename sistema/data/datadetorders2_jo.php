@@ -31,8 +31,6 @@ if($_REQUEST['action'] == 'fetch_userss'){
     $where = " WHERE p.tipo_viaje <> 'Especial' ".$gender ;
     //p.fecha >= '".$fcha1."' and p.fecha <='".$fcha2."' and 
 
-    
-
     $columns_order = array(
         0 => 'id',
         1 => 'fecha',
@@ -54,7 +52,11 @@ if($_REQUEST['action'] == 'fetch_userss'){
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
-
+    if (!$result) {
+        die(mysqli_error($conection));
+    } else {
+        echo "Query executed successfully: " . $sql . "<br>"; // Print the executed query
+    }
     if( !empty($requestData['search']['value']) ) {
         $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR cliente LIKE '%".$requestData['search']['value']."%' ";
