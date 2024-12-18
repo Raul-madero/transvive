@@ -33,8 +33,8 @@ ini_set("default_socket_timeout",5000);
 
 
 
-	//$conection = pg_connect("host=$host port=$port dbname=$database user=$user password=$password");
-	$conection = mysqli_connect($host2, $user2, $password2, $database2, $port2);
+	$conection = pg_connect("host=$host port=$port dbname=$database user=$user password=$password");
+	//$conection = mysqli_connect($host2, $user2, $password2, $database2, $port2);
 	$conection->set_charset('utf8');
 
 	if(!$conection){
