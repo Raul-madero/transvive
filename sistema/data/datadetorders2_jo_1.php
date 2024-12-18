@@ -12,11 +12,11 @@ if($_REQUEST['action'] == 'fetch_users'){
         $gender = " AND p.id = '$gender' ";
     }
 
-    $columns = ' p.id, p.fecha, p.hora_inicio, p,hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONVCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
-    $table = ' registro_viajes p
-                LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto
-                LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
-                LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
+    $columns = ' p.id, p.fecha, p.hora_inicio, p,hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
+    $table = ' registro_viajes AS p
+                LEFT JOIN clientes AS ct ON p.cliente=ct.nombre_corto
+                LEFT JOIN usuario AS us ON ct.id_supervisor = us.idusuario
+                LEFT JOIN supervisores AS sp ON p.id_supervisor = sp.idacceso ';
     $where = " WHERE p.tipo_viaje <> 'Especial' $gender";
     $order = " ORDER BY p.fecha DESC ";
 
