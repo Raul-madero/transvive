@@ -31,6 +31,8 @@ if($_REQUEST['action'] == 'fetch_userss'){
     $where = " WHERE p.tipo_viaje <> 'Especial' ".$gender ;
     //p.fecha >= '".$fcha1."' and p.fecha <='".$fcha2."' and 
 
+    
+
     $columns_order = array(
         0 => 'id',
         1 => 'fecha',

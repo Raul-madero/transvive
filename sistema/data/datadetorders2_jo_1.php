@@ -20,6 +20,8 @@ if($_REQUEST['action'] == 'fetch_users'){
     $where = " WHERE p.tipo_viaje <> 'Especial' $gender";
     $order = " ORDER BY p.fecha DESC ";
 
+    
+
     $columns_order = array(
         0 => 'id',
         1 => 'fecha',
