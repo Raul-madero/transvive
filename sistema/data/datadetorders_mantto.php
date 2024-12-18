@@ -14,10 +14,6 @@ if ($_REQUEST['action'] === 'fetch_users') {
     $finalDate = $_REQUEST['final_date'] ?? '';
     $gender = $_REQUEST['gender'] ?? '';
 
-    echo "<pre>";
-    print_r($gender);
-    echo "</pre>";
-
     $dateRangeQuery = (!empty($initialDate) && !empty($finalDate)) ? " AND p.fecha BETWEEN ? AND ? " : '';
 
     $statusMapping = [
