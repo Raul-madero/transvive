@@ -20,7 +20,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     $where = " WHERE p.tipo_viaje <> 'Especial' $gender";
     $order = " ORDER BY p.fecha DESC ";
 
-    
+
 
     $columns_order = array(
         0 => 'id',
@@ -38,7 +38,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         12 => 'estatus'
     );
 
-    $sql = "SELECT " . $columns . " FROM " . $tabla . $where;
+    $sql = "SELECT " . $columns . " FROM " . $table . $where;
     $result = mysqli_query($conection, $sql);
     if (!$result) {
         die(mysqli_error($conection));
