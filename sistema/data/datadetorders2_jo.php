@@ -107,7 +107,6 @@ if($_REQUEST['action'] == 'fetch_userss'){
     }
 
         $count++;
-        $nestedData = array();
 
         $nestedData['counter'] = $count;
         $nestedData['pedidono'] =  $row["id"];
