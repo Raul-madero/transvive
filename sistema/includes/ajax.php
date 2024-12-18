@@ -7,9 +7,7 @@ session_start();
 if($_POST['action'] == 'AlmacenaCliente')
 {
     if(!empty($_POST['nocte']) || !empty($_POST['namecte']) )
-    {
-        
-             
+    {     
         $nocte        = $_POST['nocte'];
         $namecte      = $_POST['namecte'];
         $callenum     = $_POST['callenum'];
