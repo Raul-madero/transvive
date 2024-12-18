@@ -3,24 +3,24 @@ session_start();
 include '../config/db-config.php';
 
  date_default_timezone_set('America/Mexico_City');
-// $fcha2 = date("Y-m-d");
-// $fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fcha2 ) ) );
+$fcha2 = date("Y-m-d");
+$fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fcha2 ) ) );
 global $connection;
 
 if($_REQUEST['action'] == 'fetch_userss'){
 
     $requestData = $_REQUEST;
     $start = $_REQUEST['start'];
-    // $initial_date = $fecha1;
-    // $final_date = $fecha2;
+     $initial_date = $fecha1;
+    $final_date = $fecha2;
   
     $gender = $_REQUEST['buscarid'];
 
-    // if(!empty($initial_date) && !empty($final_date)){
-    //     $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    // }else{
-    //     $date_range = " ";
-    // }
+    if(!empty($initial_date) && !empty($final_date)){
+        $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
+    }else{
+        $date_range = " ";
+    }
 
     if($gender != ""){
         $gender =  " AND p.id = '$gender' ";
@@ -28,8 +28,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
     $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
-    $where = " WHERE p.tipo_viaje <> 'Especial' ".$gender ;
-    //p.fecha >= '".$fcha1."' and p.fecha <='".$fcha2."' and 
+    $where = " WHERE p.fecha >= '".$fcha1."' and p.fecha <='".$fcha2."' and p.tipo_viaje <> 'Especial' ".$gender ;
 
     $columns_order = array(
         0 => 'id',
@@ -52,11 +51,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
     $result = mysqli_query($connection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
-    if (!$result) {
-        die(mysqli_error($conection));
-    } else {
-        echo "Query executed successfully: " . $sql . "<br>"; // Print the executed query
-    }
+
     if( !empty($requestData['search']['value']) ) {
         $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR cliente LIKE '%".$requestData['search']['value']."%' ";
@@ -107,6 +102,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
     }
 
         $count++;
+        $nestedData = array();
 
         $nestedData['counter'] = $count;
         $nestedData['pedidono'] =  $row["id"];
@@ -135,8 +131,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
         $data[] = $nestedData;
     }
-    header('Content-Type: application/json charset=utf-8');
-    
+    header('Content-Type: application/json');
     $json_data = array(
         "draw"            => intval( $requestData['draw'] ),
         "recordsTotal"    => intval( $totalData),
