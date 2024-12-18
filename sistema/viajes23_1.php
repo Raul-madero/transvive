@@ -3,7 +3,7 @@
       load_data(); // first load
 
       function load_data(inicio_date, fin_date, buscaid){
-        var ajax_url = "data/datadetorders2_jo_1.php";
+        var ajax_url = "data/datadetorders2_jo.php";
         $.ajax({
             url: ajax_url,
             type: "POST",
