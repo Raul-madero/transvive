@@ -1,8 +1,8 @@
 <?php
 session_start();
-include '../config/db-config.php';
+include '../../conexion.php';
 
-global $connection;
+global $conection;
 
 if ($_REQUEST['action'] === 'fetch_users') {
     $requestData = $_REQUEST;
@@ -62,7 +62,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
         $paramTypes .= 'sss';
     }
 
-    $stmt = $connection->prepare($query);
+    $stmt = $conection->prepare($query);
 
     if ($stmt) {
         if (!empty($paramTypes)) {
@@ -78,7 +78,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
         $params[] = $length;
         $paramTypes .= 'ii';
 
-        $stmt = $connection->prepare($query);
+        $stmt = $conection->prepare($query);
         $stmt->bind_param($paramTypes, ...$params);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -114,7 +114,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
                 'estatusped' => $estatusNew
             ];
         }
-
+        header('Content-Type: application/json; charset=uitf-8');
         $json_data = [
             'draw' => intval($requestData['draw']),
             'recordsTotal' => $totalData,
