@@ -117,7 +117,6 @@ if ($_REQUEST['action'] === 'fetch_users') {
             'recordsFiltered' => $totalData,
             'records' => $data
         ];
-        var_dump($json_data);
         echo json_encode($json_data);
     } else {
         echo json_encode(['error' => 'Error en la consulta SQL']);
