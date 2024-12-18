@@ -8,37 +8,11 @@ session_start();
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 
-  
 
   $namerol = $filas['rol'];
   if (!isset($_SESSION['idUser'])) {
   header('Location: ../index.php');
 }
-
-$registros_por_pagina = 10;
-
-//Verificar en que pagina estamos y setear por default pagina 1
-$pagina_actual = isset($_GET['page']) ? intval($_GET['page']) : 1;
-$pagina_actual < 1 ? $pagina_actual = 1 : $pagina_actual;
-
-//Calculamos el offset
-$offset = ($pagina_actual - 1) * $registros_por_pagina;
-
-// Consulta total de registros (para calcular el total de páginas)
-$sql_total = "SELECT COUNT(*) as total FROM solicitud_mantenimiento WHERE id > 0";
-$resultado_total = mysqli_query($conection, $sql_total);
-$total_registros = mysqli_fetch_assoc($resultado_total)['total'];
-
-//Calcular el numero total de paginas
-$paginas_totales = ceil($total_registros / $registros_por_pagina);
-
-// $sqlordenes = "SELECT * FROM solicitud_mantenimiento WHERE id > 0 LIMIT $registros_por_pagina OFFSET $offset";
-// $query_ordenes = mysqli_query($conection, $sqlordenes);
-
-// if (!$query_ordenes) {
-//   die("Error al ejecutar la consulta: " . mysqli_error($conection));
-// }
-
 
   
   //*include "../conexion.php";
@@ -101,22 +75,6 @@ $paginas_totales = ceil($total_registros / $registros_por_pagina);
     <style type="text/css">
       th { font-size: 12px; font-weight:bold; }
       td { font-size: 13px; }
-      .paginador a {
-            margin: 0 5px;
-            padding: 8px 12px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            color: #007bff;
-        }
-        .paginador a.activo {
-            font-weight: bold;
-            background-color: #007bff;
-            color: #fff;
-            border-color: #007bff;
-        }
-        .paginador a:hover {
-            background-color: #ddd;
-        }
   </style>
     <!-- Dashboard Core -->
 </head>
@@ -251,8 +209,8 @@ $paginas_totales = ceil($total_registros / $registros_por_pagina);
             </table>   
           
             <br>
-            <!--  -->
-              <table id="fetch_generated_wills"  class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+           
+              <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
                 <th style="text-align: center; font-size: 12px;">ID</th>
@@ -267,10 +225,8 @@ $paginas_totales = ceil($total_registros / $registros_por_pagina);
                 <th style="text-align: center; font-size: 12px;">Accion</th>
               </tr>
             </thead>
-            <tbody>
-              
           </table>
-          
+        
 
       </div>
             <!-- /.box-body -->
@@ -283,22 +239,6 @@ $paginas_totales = ceil($total_registros / $registros_por_pagina);
   </div>
       <!-- /.row -->
     </section>
-    <div class="paginador">
-                <?php
-                echo "Pagina actual: " . $pagina_actual;
-                echo "Total de paginas: " . $paginas_totales;
-                if ($pagina_actual > 1) { ?>
-                    <a href='orden_trabajo23.php?pagina=<?php echo($pagina_actual - 1) ?>'>Anterior</a>
-                <?php }; 
-                for ($i = 1; $i <= $total_paginas; $i++) {
-                    $clase_activo = $pagina_actual == $i ? 'activo' : ''; ?>
-                  <a class="<?php echo $clase_activo ?>" href="?pagina=<? echo $i ?>"><?php echo $i ?></a>
-                <?php };
-                if ($pagina_actual < $total_paginas) { ?>
-                   <a href="?pagina=<?php echo ($pagina_actual + 1) ?>">Siguiente</a>
-                <?php };
-                ?>
-         </div>
     <!-- /.content -->
  </div>
   <!-- /.content-wrapper -->
@@ -345,100 +285,119 @@ $paginas_totales = ceil($total_registros / $registros_por_pagina);
 
 
  
-	<script type="text/javascript">
+    <script type="text/javascript">
 
-Cargar datos iniciales
-load_data();
+      load_data(); // first load
 
-function load_data(initial_date = "", final_date = "", gender = "") {
-	const ajax_url = "data/datadetorders_mantto.php";
+      function load_data(initial_date, final_date, gender){
+        var ajax_url = "data/datadetorders_mantto.php";
 
-	// Configuración común de DataTable
-	const tableConfig = {
-		"order": [[0, "desc"]],
-		dom: 'Bfrtip',
-		lengthMenu: [
-			[20, 25, 50, -1],
-			['20 rows', '25 rows', '50 rows', 'Show all']
-		],
-		buttons: [
-			'excelHtml5',
-			'pageLength'
-		],
-		"processing": true,
-		"serverSide": true,
-		"stateSave": true,
-		"responsive": true,
-		"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-		"ajax": {
-			"url": ajax_url,
-			"dataType": "json",
-			"type": "POST",
-			"data": {
-				"action": "fetch_users",
-				"initial_date": initial_date,
-				"final_date": final_date,
-				"gender": gender
-			},
-			"dataSrc": "records"
-		},
-		"columns": [
-			{ "data": "pedidono", "width": "3%", className: "text-right" },
-			{ "data": "noorden", "width": "5%" },
-			{ "data": "fechaa", "width": "5%", className: "text-right", "orderable": false },
-			{ "data": "unidad", "width": "5%", "orderable": false },
-			{ "data": "solicita", "width": "18%", "orderable": false },
-			{ "data": "tipojob", "width": "12%", "orderable": false },
-			{ "data": "tipomantto", "width": "8%" },
-			{ "data": "trabsolicitado", "width": "12%" },
-			{ "data": "estatusped", "width": "8%", "orderable": false },
-			{
-				"render": function (data, type, full, meta) {
-					return `<a class="link_edit" style="color:#007bff;" href='edit_solicitudmantto.php?id=${full.pedidono}'><i class="far fa-edit"></i> Editar</a> |
-							<a href='factura/form_ordenmantto.php?id=${full.noorden}' target="_blank"><i class="fa fa-print" style="color:white; font-size: 1.3em"></i> Print</a> |
-							<a data-toggle="modal" data-target="#modalEditcliente" data-id='${full.pedidono}' data-name='${full.noorden}' href="javascript:void(0)" class="link_delete" style="color:red"><i class="fa fa-ban"></i> Cancelar</a>`;
-				}
-			}
-		]
-	};
+        $('#fetch_generated_wills').DataTable({
+          "order": [[ 0, "desc" ]],
+          dom: 'Bfrtip',
+lengthMenu: [
+[20, 25, 50, -1],
+['20 rows', '25 rows', '50 rows', 'Show all']
+],
+buttons: [
+'excelHtml5',
+'pageLength'
+],
+          "processing": true,
+          "serverSide": true,
+          "stateSave": true,
+          "responsive": true,
+          "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+          "ajax" : {
+            "url" : ajax_url,
+            "dataType": "json",
+            "type": "POST",
+            "data" : { 
+              "action" : "fetch_users", 
+              "initial_date" : initial_date, 
+              "final_date" : final_date,
+              "gender" : gender 
+              
+            },
+            "dataSrc": "records"
+          },
+          "columns": [
+            { "data" : "pedidono", "width": "3%", className: "text-right" },
+            { "data" : "noorden", "width": "5%" },
+            { "data" : "fechaa", "width": "5%", className: "text-right", "orderable": false},
+            { "data" : "unidad", "width": "5%", "orderable": false},
+            { "data" : "solicita", "width": "18%", "orderable":false },
+            { "data" : "tipojob", "width": "12%", "orderable":false },
+            { "data" : "tipomantto", "width": "8%" },
+            { "data" : "trabsolicitado", "width": "12%" },
+            { "data" : "estatusped", "width": "8%", "orderable":false },
+              
+          
+            {
+                    "render": function ( data, type, full, meta ) {
+        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a>';
+    }
+                    
+            
+ } 
 
-	$('#fetch_generated_wills').DataTable(tableConfig);
-}
+         
+            
+          ],
+          "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
+    "buttons": [
+        'copyHtml5',
+        'excelHtml5',
+        'csvHtml5',     
+        {
+            extend: 'colvis',
+            postfixButtons: [ 'colvisRestore' ],
+            columns: '0,1,2,3,4,5,6'
+        }
+    ],
+         
+        }); 
+      }  
 
-// Evento de filtro
-$("#filter").click(function () {
-	const initial_date = $("#initial_date").val();
-	const final_date = $("#final_date").val();
-	const gender = $("#gender").val();
+      $("#filter").click(function(){
+        var initial_date = $("#initial_date").val();
+        var final_date = $("#final_date").val();
+        var gender = $("#gender").val();
 
-	// Validar fechas
-	if (!initial_date && !final_date) {
-		$('#fetch_generated_wills').DataTable().destroy();
-		load_data("", "", gender);
-	} else if (!initial_date || !final_date) {
-		$("#error_log").html("<span class='text-warning'>Warning: You must select both (start and end) dates.</span>");
-	} else {
-		const date1 = new Date(initial_date);
-		const date2 = new Date(final_date);
+        if(initial_date == '' && final_date == ''){
+          $('#fetch_generated_wills').DataTable().destroy();
+          load_data("", "", gender); // filter immortalize only
+        }else{
+          var date1 = new Date(initial_date);
+          var date2 = new Date(final_date);
+          var diffTime = Math.abs(date2 - date1);
+          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
-		if (date1 > date2) {
-			$("#error_log").html("<span class='text-warning'>Warning: End date should be greater than start date.</span>");
-		} else {
-			$("#error_log").html(""); // Limpiar mensajes de error
-			$('#fetch_generated_wills').DataTable().destroy();
-			load_data(initial_date, final_date, gender);
-		}
-	}
-});
+          if(initial_date == '' || final_date == ''){
+              $("#error_log").html("Warning: You must select both (start and end) date.</span>");
+          }else{
+            if(date1 > date2){
+                $("#error_log").html("Warning: End date should be greater then start date.");
+            }else{
+               $("#error_log").html(""); 
+               $('#fetch_generated_wills').DataTable().destroy();
+               load_data(initial_date, final_date, gender);
+            }
+          }
+        }
+      });
 
-// Configuración del Datepicker
-$(".datepicker").datepicker({
-	language: 'es',
-	dateFormat: "yy-mm-dd",
-	changeYear: true
-});
+      
 
-</script>
+            // Datapicker 
+            $( ".datepicker" ).datepicker({
+                language: 'es',
+                "dateFormat": "yy-mm-dd",
+                changeYear: true
+            });
+
+
+    </script>
 
 
 
