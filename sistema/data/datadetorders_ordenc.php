@@ -1,8 +1,8 @@
 <?php
 session_start();
-include '../config/db-config.php';
+include '../../conexion.php';
 
-global $connection;
+global $conection;
 
 if ($_REQUEST['action'] == 'fetch_users') {
 
@@ -36,7 +36,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     }
 
     // Obtención de datos totales filtrados
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $totalFiltered = mysqli_num_rows($result);
 
     // Ordenar y limitar datos
@@ -47,7 +47,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     $sql .= " ORDER BY $column_order $column_dir LIMIT $start, $length";
 
     // Ejecución de la consulta final
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $data = array();
 
     while ($row = mysqli_fetch_array($result)) {
@@ -83,7 +83,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     // Preparar datos JSON
     $json_data = [
         "draw" => intval($requestData['draw']),
-        "recordsTotal" => intval(mysqli_num_rows(mysqli_query($connection, "SELECT * FROM $table"))),
+        "recordsTotal" => intval(mysqli_num_rows(mysqli_query($conection, "SELECT * FROM $table"))),
         "recordsFiltered" => intval($totalFiltered),
         "records" => $data
     ];

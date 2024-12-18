@@ -1,6 +1,6 @@
 <?php
-include '../config/db-config.php';
-global $connection;
+include '../../conexion.php';
+global $conection;
 
 if($_REQUEST['action'] == 'fetch_users'){
 
@@ -21,7 +21,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         $gender = " AND estatus = '$gender' ";
     }
 
-    $columns = ' id, fecha, hora_inicio, hora_fin, semana, cliente, operador, unidad, num_unidad, id_supervisor, if(estatus = 1,'Activo',if(estatus = 2, 'Realizado', if(estatus=3 ,'Cancelado',if(estatus=4,'Iniciado',if(estatus=5,'Terminado',''))))) as Status ';
+    $columns = " id, fecha, hora_inicio, hora_fin, semana, cliente, operador, unidad, num_unidad, id_supervisor, if(estatus = 1,Activo),if(estatus = 2, Realizado, if(estatus=3 ,Cancelado,if(estatus=4,Iniciado,if(estatus=5,Terminado,''))))) as Status" ;
     $table = ' registro_viajes ';
     $where = " WHERE id !='' ".$date_range ;
 
@@ -41,7 +41,7 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     $sql = "SELECT ".$columns." FROM ".$table." ".$where;
 
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
@@ -59,7 +59,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         $sql.=" OR Status LIKE '%".$requestData['search']['value']."%' )";
     }
 
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
@@ -69,7 +69,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
     }
 
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $data = array();
     $counter = $start;
 
@@ -107,7 +107,7 @@ if($_REQUEST['action'] == 'fetch_users'){
        
         //*$data[] = $nestedData;
     }
-
+    header('Content-Type: application/json; charset=utf-8');
     $json_data = array(
         "draw"            => intval( $requestData['draw'] ),
         "recordsTotal"    => intval( $totalData),

@@ -1,8 +1,8 @@
 <?php
-include '../config/db-config.php';
+include '../../conexion.php';
 session_start();
 
-global $connection;
+global $conection;
 if ($_REQUEST['action'] == 'fetch_users'){
     $requestData = $_REQUEST;
 
@@ -46,7 +46,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
 
     // Obtener el total de registros sin LIMIT (para el conteo total de páginas)
     $sql_total = "SELECT COUNT(*) FROM " . $table . $where;
-    $result_total = mysqli_query($connection, $sql_total);
+    $result_total = mysqli_query($conection, $sql_total);
     $row_total = mysqli_fetch_array($result_total);
     $totalData = $row_total[0];
     
@@ -61,7 +61,7 @@ if ($_REQUEST['action'] == 'fetch_users'){
     }
     
     // Ejecutar la consulta con paginación
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
     

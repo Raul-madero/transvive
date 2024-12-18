@@ -1,9 +1,9 @@
 <?php
 session_start();
-include '../config/db-config.php';
+include '../../conexion.php';
 
 
-global $connection;
+global $conection;
 
 if($_REQUEST['action'] == 'fetch_users'){
 
@@ -42,7 +42,7 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     $sql = "SELECT ".$columns." FROM ".$table." ".$where;
 
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
@@ -53,7 +53,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         
     }
 
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
@@ -63,7 +63,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
     }
 
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $data = array();
     $counter = $start;
 

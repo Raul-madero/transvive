@@ -4,19 +4,19 @@ $User = $_SESSION['user'];
 $rol = $_SESSION['rol'];
 $idUser = $_SESSION['idUser'];
 
-include '../config/db-config.php';
+include '../../conexion.php';
 
 if ($_REQUEST['action'] == 'fetch_users') {
-    global $connection;
+    global $conection;
 
     // Validar y limpiar entradas
     $requestData = $_REQUEST;
     $start = intval($requestData['start']);
     $length = intval($requestData['length']);
-    $searchValue = isset($requestData['search']['value']) ? mysqli_real_escape_string($connection, $requestData['search']['value']) : '';
-    $initial_date = !empty($requestData['initial_date']) ? mysqli_real_escape_string($connection, $requestData['initial_date']) : null;
-    $final_date = !empty($requestData['final_date']) ? mysqli_real_escape_string($connection, $requestData['final_date']) : null;
-    $gender = isset($requestData['gender']) ? mysqli_real_escape_string($connection, $requestData['gender']) : '';
+    $searchValue = isset($requestData['search']['value']) ? mysqli_real_escape_string($conection, $requestData['search']['value']) : '';
+    $initial_date = !empty($requestData['initial_date']) ? mysqli_real_escape_string($conection, $requestData['initial_date']) : null;
+    $final_date = !empty($requestData['final_date']) ? mysqli_real_escape_string($conection, $requestData['final_date']) : null;
+    $gender = isset($requestData['gender']) ? mysqli_real_escape_string($conection, $requestData['gender']) : '';
 
     // Condiciones dinámicas
     $conditions = [
@@ -68,11 +68,11 @@ if ($_REQUEST['action'] == 'fetch_users') {
     $orderBy = $columnsOrder[$orderColumnIndex] ?? 'id';
 
     $sql = "SELECT $columns FROM $table $where";
-    $totalResult = mysqli_query($connection, $sql);
+    $totalResult = mysqli_query($conection, $sql);
     $totalFiltered = mysqli_num_rows($totalResult);
 
     $sql .= " ORDER BY $orderBy $orderDirection LIMIT $start, $length";
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
 
     // Procesar datos
     $data = [];
