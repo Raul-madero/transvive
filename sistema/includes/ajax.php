@@ -2321,10 +2321,10 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
         $usuario  = $_SESSION['idUser'];
 
         $query_busca = mysqli_query($conection,"SELECT semana from semanas WHERE dia_inicial <= '$datefin' AND dia_final >= '$datefin' ");
+        $result_busca = mysqli_num_rows($query_busca);
         if (!$conection){
             echo "Error: " . mysqli_error($conection);
         }
-                    $result_busca = mysqli_num_rows($query_busca);
                      while ($data = mysqli_fetch_assoc($query_busca)){
                      $semana = $data['semana'];
                      }
