@@ -17,7 +17,7 @@ if($_REQUEST['action'] == 'fetch_users'){
                 LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto
                 LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
                 LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
-    $where = " WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) '$gender' ";
+    $where = " WHERE p.tipo_viaje <> 'Especial' INTERVAL 1 MONTH) '$gender' ";
     $order = " ORDER BY p.fecha DESC ";
 
     $columns_order = array(
