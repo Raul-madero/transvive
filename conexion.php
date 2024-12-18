@@ -15,11 +15,11 @@
 // $database = "transvive";
 // $port = 3306;
 
-// $host = "mysql-transvive-transvive.g.aivencloud.com";
-// $password = "AVNS_HDRST7NXsI9UJ0fG5B3";
-// $user = "avnadmin";
-// $database = "transvive";
-// $port = 12088;
+$host2 = "mysql-transvive-transvive.g.aivencloud.com";
+$password2 = "AVNS_HDRST7NXsI9UJ0fG5B3";
+$user2 = "avnadmin";
+$database2 = "transvive";
+$port2 = 12088;
 
 $host = "localhost:3306";
 // $port = "$_ENV['BD_PORT']";
@@ -34,7 +34,7 @@ ini_set("default_socket_timeout",5000);
 
 
 	//$conection = pg_connect("host=$host port=$port dbname=$database user=$user password=$password");
-	$conection = mysqli_connect($host, $user, $password, $database, $port);
+	$conection = mysqli_connect($host2, $user2, $password2, $database2, $port2);
 	$conection->set_charset('utf8');
 
 	if(!$conection){
