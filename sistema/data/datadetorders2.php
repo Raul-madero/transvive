@@ -66,7 +66,7 @@ if (!empty($requestData['order'])) {
     $sql .= " ORDER BY $orderColumn $orderDir"; 
 }
 // Datos con paginación
-$sql = "SELECT $columns FROM $table $where $order_by LIMIT $start, $length"; 
+$sql = "SELECT $columns FROM $table $where LIMIT $start, $length"; 
 $result = $conection->query($sql);
 // Resto del código...
 
