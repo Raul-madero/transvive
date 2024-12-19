@@ -2322,17 +2322,15 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
 
         $query_busca = mysqli_query($conection,"SELECT semana from semanas WHERE dia_inicial <= '$datefin' AND dia_final >= '$datefin' ");
         $result_busca = mysqli_num_rows($query_busca);
-        if (!$conection){
-            echo "Error: " . mysqli_error($conection);
-        }
-                     while ($data = mysqli_fetch_assoc($query_busca)){
-                     $semana = $data['semana'];
-                     }
+        
         
 
         $query_procesar = mysqli_query($conection,"CALL add_vuelta($idc, '$datefin', '$semana', '$hregreso', $sueldovta, '$origen', '$destino', '$unidades', '$costo', '$usuario')");
         if(!$query_procesar){
-            echo "Error en la consulta SQL: " .mysqli_error($conection);
+            echo json_encode([
+                "error" => true,
+                "message" => "error en la consulta SQL: " . mysqli_error($conection)
+            ], JSON_UNESCAPED_UNICODE);
             mysqli_close($conection);
             exit;
         }
