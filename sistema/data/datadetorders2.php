@@ -56,7 +56,7 @@ $where = " WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) 
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
-$sql = "SELECT $columns FROM $table $where ORDER BY p.fecha LIMIT $start, $length";
+$sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
 $result = $conection->query($sql);
 
 // Ordenamiento
@@ -66,7 +66,7 @@ if (!empty($requestData['order'])) {
     $sql .= " ORDER BY $orderColumn $orderDir"; 
 }
 // Datos con paginación
-$sql = "SELECT $columns FROM $table $where $order_by LIMIT $start, $length"; 
+$sql = "SELECT $columns FROM $table $where LIMIT $start, $length"; 
 $result = $conection->query($sql);
 // Resto del código...
 
