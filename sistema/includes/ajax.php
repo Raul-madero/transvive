@@ -2331,6 +2331,11 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
         
 
         $query_procesar = mysqli_query($conection,"CALL add_vuelta($idc, '$datefin', '$semana', '$hregreso', $sueldovta, '$origen', '$destino', '$unidades', '$costo', '$usuario')");
+        if(!$query_procesar){
+            echo "Error en la consulta SQL: " .mysqli_error($conection);
+            mysqli_close($conection);
+            exit;
+        }
         $result_detalle = mysqli_num_rows($query_procesar);
 
         
