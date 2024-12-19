@@ -33,7 +33,6 @@ $draw = isset($requestData['draw']) ? intval($requestData['draw']) : 1;
 $initial_date = mysqli_real_escape_string($conection, $requestData['initial_date']);
 $final_date = mysqli_real_escape_string($conection, $requestData['final_date']);
 $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
-var_dump($gender);
 
 // Filtros
 $date_range = (!empty($initial_date) && !empty($final_date)) 
@@ -70,6 +69,16 @@ $result = $conection->query($sql);
 // $sql = "SELECT $columns FROM $table $where LIMIT $start, $length"; 
 // $result = $conection->query($sql);
 
+if( !empty($requestData['search']['value']) ) {
+    $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR cliente LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR operador LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR semana LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR nombres LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
+}
+
+$result = $conection->query($sql);
 if (!$result) {
     echo json_encode(["error" => $conection->error]);
     exit;
