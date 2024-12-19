@@ -25,7 +25,6 @@ $columns = array(
     10 => 'name',
     11 => 'jefeo',
     12 => 'estatus'
-    // ... other columns
 );
 
 $start = isset($requestData['start']) ? intval($requestData['start']) : 0;
@@ -34,7 +33,7 @@ $draw = isset($requestData['draw']) ? intval($requestData['draw']) : 1;
 $initial_date = mysqli_real_escape_string($conection, $requestData['initial_date']);
 $final_date = mysqli_real_escape_string($conection, $requestData['final_date']);
 $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
-echo $gender;
+var_dump($gender);
 
 // Filtros
 $date_range = (!empty($initial_date) && !empty($final_date)) 
@@ -42,7 +41,7 @@ $date_range = (!empty($initial_date) && !empty($final_date))
     : " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
 
 $gender_filter = ($gender !== null && $gender > 0) 
-    ? " AND p.id = '$gender'" 
+    ? " AND p.id = '$gender' " 
     : "";
 
 // Consultas SQL
