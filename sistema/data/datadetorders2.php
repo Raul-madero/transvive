@@ -33,6 +33,7 @@ $draw = isset($requestData['draw']) ? intval($requestData['draw']) : 1;
 $initial_date = mysqli_real_escape_string($conection, $requestData['initial_date']);
 $final_date = mysqli_real_escape_string($conection, $requestData['final_date']);
 $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
+var_dump($gender);
 
 // Filtros
 $date_range = (!empty($initial_date) && !empty($final_date)) 
