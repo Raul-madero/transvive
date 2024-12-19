@@ -71,10 +71,10 @@ $result = $conection->query($sql);
 
 if( !empty($requestData['search']['value']) ) {
     $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR cliente LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR operador LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR semana LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR nombres LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR p.cliente LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR p.operador LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR p.semana LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR name LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
 }
 

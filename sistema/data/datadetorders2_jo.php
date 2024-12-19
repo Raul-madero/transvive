@@ -57,8 +57,6 @@ if($_REQUEST['action'] == 'fetch_userss'){
         $sql.=" OR semana LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR nombres LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
-       
-        
     }
     
     $result = mysqli_query($conection, $sql);
