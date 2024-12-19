@@ -50,7 +50,7 @@ $table = ' registro_viajes p
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
         LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
-$where = " WHERE p.tipo_viaje <> 'Especial' " . $date_range;
+$where = " WHERE p.tipo_viaje <> 'Especial' " . $date_range . $gender_filter;
 
 // Conteo total
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
