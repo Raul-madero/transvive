@@ -50,7 +50,7 @@ $table = ' registro_viajes p
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
         LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
-$where = " WHERE p.tipo_viaje <> 'Especial' AND YEAR(p.fecha) = YEAR(CURDATE()) $date_range $gender_filter ";
+$where = " WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
 
 // Conteo total
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
@@ -60,14 +60,14 @@ $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $
 $result = $conection->query($sql);
 
 // Ordenamiento
-if (!empty($requestData['order'])) {
-    $orderColumn = $columns[$requestData['order'][0]['column']]; 
-    $orderDir = $requestData['order'][0]['dir']; 
-    $sql .= " ORDER BY $orderColumn $orderDir"; 
-}
+// if (!empty($requestData['order'])) {
+//     $orderColumn = $columns[$requestData['order'][0]['column']]; 
+//     $orderDir = $requestData['order'][0]['dir']; 
+//     $sql .= " ORDER BY $orderColumn $orderDir"; 
+// }
 // Datos con paginación
-$sql = "SELECT $columns FROM $table $where LIMIT $start, $length"; 
-$result = $conection->query($sql);
+// $sql = "SELECT $columns FROM $table $where LIMIT $start, $length"; 
+// $result = $conection->query($sql);
 // Resto del código...
 
 if (!$result) {
