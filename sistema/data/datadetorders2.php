@@ -36,11 +36,11 @@ $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
 
 // Filtros
 $date_range = (!empty($initial_date) && !empty($final_date)) 
-    ? " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" 
-    : " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
+    ? "  p.fecha BETWEEN '$initial_date' AND '$final_date'" 
+    : "  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
 
 $gender_filter = ($gender !== null && $gender > 0) 
-    ? " AND p.id = '$gender' " 
+    ? "  p.id = '$gender' " 
     : "";
 
 // Consultas SQL
@@ -70,7 +70,7 @@ $result = $conection->query($sql);
 // $result = $conection->query($sql);
 
 if( !empty($requestData['search']['value']) ) {
-    $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" ( p.id LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.cliente LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.operador LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.semana LIKE '%".$requestData['search']['value']."%' ";
