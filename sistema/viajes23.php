@@ -564,6 +564,7 @@ $(document).ready(function () {
     if (validateFilter(initial_date, final_date)) {
         // Actualiza el URL del DataTable con nuevos parámetros
         table.ajax.url("data/datadetorders2.php").load(null, false); // Omitimos parámetros aquí
+		
 
         // Actualiza la configuración Ajax del DataTable
         table.settings()[0].ajax.data = {
