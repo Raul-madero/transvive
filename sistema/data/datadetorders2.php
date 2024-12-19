@@ -50,7 +50,7 @@ $table = ' registro_viajes p
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
         LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
-$where = " WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) " . $gender;
+$where = " WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
 
 // Conteo total
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
