@@ -38,7 +38,7 @@ $gender = isset($_POST['gender']) ? intval($_POST['gender']) : "";
 // Filtros
 $date_range = (!empty($initial_date) && !empty($final_date)) 
     ? " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" 
-    : "";
+    : " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
 $gender_filter = ($gender !== null && $gender > 0) 
     ? " AND p.id = '$gender'" 
     : "";
@@ -50,7 +50,7 @@ $table = ' registro_viajes p
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
         LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
-$where = " WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
+$where = " WHERE p.tipo_viaje <> 'Especial' " . $date_range;
 
 // Conteo total
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
