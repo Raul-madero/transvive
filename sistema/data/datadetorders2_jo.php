@@ -1,17 +1,15 @@
 <?php
 session_start();
-include '../config/db-config.php';
+include '../../conexion.php';
 
  date_default_timezone_set('America/Mexico_City');
-$fcha2 = date("Y-m-d");
-$fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fcha2 ) ) );
-global $connection;
+global $conection;
 
 if($_REQUEST['action'] == 'fetch_userss'){
 
     $requestData = $_REQUEST;
     $start = $_REQUEST['start'];
-     $initial_date = $fecha1;
+    $initial_date = $fecha1;
     $final_date = $fecha2;
   
     $gender = $_REQUEST['buscarid'];
@@ -48,7 +46,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
 
     $sql = "SELECT ".$columns." FROM ".$table." ".$where;
 
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
@@ -63,7 +61,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
         
     }
     
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
@@ -73,7 +71,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
         $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
     }
 
-    $result = mysqli_query($connection, $sql);
+    $result = mysqli_query($conection, $sql);
     $data = array();
     $counter = $start;
 
