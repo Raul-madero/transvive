@@ -1,2 +1,2 @@
 <?php
-    $db = ['servidor' => getenv('BD_HOST'),'usuario' => getenv('BD_USER'), 'password' => getenv('BD_PASSWORD'),'db' => getenv('BD_NAME')];
+    $db = ['servidor' => 'localhost:3306','usuario' => 'rmadero', 'password' => '8_86y2Myk','db' => 'transvive'];
