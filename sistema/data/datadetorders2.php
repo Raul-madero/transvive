@@ -74,7 +74,7 @@ if( !empty($requestData['search']['value']) ) {
     $sql.=" OR p.cliente LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.operador LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.semana LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR name LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" OR sp.nombres LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
 }
 
