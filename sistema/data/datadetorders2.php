@@ -36,11 +36,11 @@ $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
 
 // Filtros
 $date_range = (!empty($initial_date) && !empty($final_date)) 
-    ? "  p.fecha BETWEEN '$initial_date' AND '$final_date'" 
-    : "  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
+    ? " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" 
+    : " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
 
 $gender_filter = ($gender !== null && $gender > 0) 
-    ? "  p.id = '$gender' " 
+    ? " AND p.id = '$gender' " 
     : "";
 
 // Consultas SQL
