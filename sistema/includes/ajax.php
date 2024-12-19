@@ -2331,6 +2331,8 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
                 "error" => true,
                 "message" => "Error en la consulta SQL: " . mysqli_error($conection)
             ], JSON_UNESCAPED_UNICODE);
+            mysqli_close($conection);
+            exit;
         }
         $result_detalle = mysqli_num_rows($query_procesar);
 
