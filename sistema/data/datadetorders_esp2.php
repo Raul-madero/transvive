@@ -8,22 +8,10 @@ global $conection;
 if($_REQUEST['action'] == 'fetch_users'){
 
     $requestData = $_REQUEST;
-
-    $start = $_REQUEST['start'];
-
-    $initial_date = $_REQUEST['initial_date'];
-    $final_date = $_REQUEST['final_date'];
-    $gender = $_REQUEST['gender'];
-
-    if(!empty($initial_date) && !empty($final_date)){
-        $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    }else{
-        $date_range = "";
-    }
-
-    if($gender != ""){
-        $gender = " AND YEAR(p.fecha) = '$gender' ";
-    }
+    $start = $requestData['start'];
+    $initial_date = $requestdata['initial_date'];
+    $final_date = $requestData['final_date'];
+    $gender = $requestData['gender'];
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, 
     p.num_unidad, p.personas, p.estatus, 
@@ -35,125 +23,89 @@ if($_REQUEST['action'] == 'fetch_users'){
     LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto
     LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
     LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso' ;
-    $where = " WHERE p.tipo_viaje LIKE '%Especial%' ".$date_range.$gender;
+    $where = " WHERE p.tipo_viaje LIKE '%Especial%' ";
 
-    $columns_order = array(
-        0 => 'id',
-        1 => 'fecha',
-        2 => 'cliente',
-        3 => 'direccion',
-        4 => 'hora_inicio',
-        5 => 'hora_fin',
-        6 => 'unidad',
-        7 => 'destino',
-        8 => 'jefeo',
-        9 => 'estatus'
-    );
+    (!empty($initial_date)) && (!empty($final_date)) ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date" : $where .= " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
+    ($gender !== null && $gender > 0) ? $where .= " AND p.id = '$gender' " : "";
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
-    // ." ".$where;
-    while($row = mysqli_fetch_assoc($result)) {
-    print_r($row);
-}
+    // $columns_order = array(
+    //     0 => 'id',
+    //     1 => 'fecha',
+    //     2 => 'cliente',
+    //     3 => 'direccion',
+    //     4 => 'hora_inicio',
+    //     5 => 'hora_fin',
+    //     6 => 'unidad',
+    //     7 => 'destino',
+    //     8 => 'jefeo',
+    //     9 => 'estatus'
+    // );
 
-    $result = mysqli_query($conection, $sql);
+    if(!empty($requestData['search']['value'])) {
+        $where .= " AND (p.id LIKE '%" . $requestData['search']['value'] . "%' OR p.cliente LIKE '%" . $requestData['search']['value'] . "%' OR p.operador LIKE '%" . $requestData['search']['value'] . "%' OR p.semana LIKE '%" . $requestData['search']['value'] . "%' OR sp.nombres LIKE '%" . $requestData['search']['value'] . "%' OR sp.apellido_materno LIKE '%" . $requestdata['search']['value'] . "%' OR sp.apellido_materno LIKE '%" . $requestData['search']['value'] . "%' OR p.fecha LIKE '%" . $requestData['search']['value'] . "%') ";
+    };
+
+    $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
+    $total_data = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
+    
+    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
+    $result = $conection->query($sql);
+
+    if(!$result) {
+        echo json_encode([ "error" => $conection->error ]);
+        exit;
+    }
+
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
+    $data = [];
+    while($row = $result->fetch_assoc()) {
+        $status_labels = [
+            1 => 'label-primary">Activo',
+            2 => 'label-success">Realizado',
+            3 => 'label-danger">Cancelado',
+            4 => 'label-primary">Iniciado',
+            5 => 'label-info">Terminado',
+            6 => 'label-success">CERRADO'
+        ];
+        $Estatusnew = '<span class="label ' . ($status_labels[$row['estatus']] ?? 'label-default">Desconocido') . '</span>';
 
-    if( !empty($requestData['search']['value']) ) {
-        $sql.="AND ( cliente LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR p.id LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR tipo_viaje LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR direccion LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR destino LIKE '%".$requestData['search']['value']."%'  )";
-       
+        $data[] = [
+            'counter' => ++$start,
+            'pedidono' => $row['id'],
+            'nopedido' => '<a style="text-decoration:none" href="factura/pedidonw.php?id='.($row["id"]).'" target="_blank">'.($row["id"]).'</a>',
+            'fecha' => date('d/m/Y', strtotime($row["fecha"])),
+            'horainicio' => date('H:i', strtotime($row["hora_inicio"])),
+            'horafin' => date('H:i', strtotime($row["hora_fin"])),
+            'nosemana' => $row["semana"],
+            'razonsocial' => $row["cliente"],
+            'rutacte' => $row["ruta"],
+            'conductor' => $row["operador"],
+            'tipounidad' => $row["unidad"],
+            'nounidad' => $row["num_unidad"],
+            'supervisor' => $row["name"],
+            'jefeopera' => $row["jefeo"],
+            'origen' => $row["direccion"],
+            'Destino' => $row["destino"],
+            'Costo' => $row["costo_viaje"],
+            'Valor_vuelta' => $row["sueldo_vuelta"],
+            'Datenew' => $row['fecha'],
+            'TipoViaje' => $row['tipo_viaje'],
+            'estatusped' => $Estatusnew
+        ];
+    };
         
-    }
-
-    $result = mysqli_query($conection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
-
-    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
-
-    if($requestData['length'] != "-1"){
-        $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
-    }
-
-    $result = mysqli_query($conection, $sql);
-    $data = array();
-    $counter = $start;
-
-    $count = $start;
-    while($row = mysqli_fetch_assoc($result)){
-        if ($row['estatus'] == 1){
-        $Estatusnew = '<span class="label label-primary">Activo</span>'; 
-        }else{
-            if ($row['estatus'] == 2){
-            $Estatusnew = '<span class="label label-success">Realizado</span>';
-            }else{
-                if ($row['estatus'] == 3) {
-                $Estatusnew = '<span class="label label-danger">Cancelado</span>';
-                }else {
-                    if ($row['estatus'] == 4) {
-                    $Estatusnew = '<span class="label label-primary">Iniciado</span>';
-                    }else {
-                        if ($row['estatus'] == 5) {
-                        $Estatusnew = '<span class="label label-info">Terminado</span>';
-                        }else {
-                        $Estatusnew = '<span class="label label-success">CERRADO</span>';
-                        } 
-                }     
-        }
-    }
-    }
-
-        $count++;
-        $nestedData = array();
-
-        $nestedData['counter'] = $count;
-        $nestedData['pedidono'] =  $row["id"];
-
-        $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id='.($row["id"]).'" target="_blank">'.($row["id"]).'</a>';
-        $time = strtotime($row["fecha"]);
-        $time2 = strtotime($row["hora_inicio"]);
-        $time3 = strtotime($row["hora_fin"]);
-        $nestedData['fechaa'] = date('d/m/Y', $time);
-        $nestedData['horainicio'] = date('H:i', $time2);
-        $nestedData['horafin'] = date('H:i', $time3);
-        $nestedData['nosemana'] = $row["semana"];
-
-        $nestedData['razonsocial'] = $row["cliente"];
-        $nestedData['rutacte'] = $row["ruta"];
-        $time2 = strtotime($row["fechacomp"]);
-        $nestedData['fechacomp'] = date('d M, Y', $time);
-        
-        $nestedData['conductor'] = $row["operador"];
-        $nestedData['tipounidad'] = $row["unidad"];
-        $nestedData['nounidad'] = $row["numero_unidades"];
-        $nestedData['supervisor'] = $row["name"];
-        $nestedData['jefeopera'] = $row["jefeo"];
-        $nestedData['origen'] = $row["direccion"];
-        $nestedData['Destino'] = $row["destino"];
-        $nestedData['Costo'] = $row["costo_viaje"];
-        $nestedData['Valor_vuelta'] = $row["sueldo_vuelta"];
-        $nestedData['Datenew'] = $row["fecha"];
-        $nestedData['TipoViaje'] = $row["tipo_viaje"];
-
-        $nestedData['estatusped'] = $Estatusnew;
-
-        $data[] = $nestedData;
-    }
     header('Content-Type: application/json; charset=utf-8');
-    $json_data = array(
-        "draw"            => intval( $requestData['draw'] ),
-        "recordsTotal"    => intval( $totalData),
-        "recordsFiltered" => intval( $totalFiltered ),
-        "data"         => $data
-    );
-
-    echo json_encode($json_data);
-    die();
+    echo json_encode([
+        "draw" => $draw,
+        "recordsTotal" => $totalData,
+        "recordsFiltered" => $totalFiltered,
+        "records" => $data
+    ], JSON_UNESCAPED_UNICODE);
+} else {
+    echo json_encode([
+        "error" => "Acción no válida o no proporcionada."
+    ]);
 }
 
 ?>
