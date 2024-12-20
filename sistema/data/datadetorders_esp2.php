@@ -15,10 +15,11 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno)AS name, us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, p.sueldo_vuelta, p.tipo_viaje';
     $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
-    $where = " WHERE p.tipo_viaje LIKE '%Especial%'";
+    $where = "WHERE p.tipo_viaje LIKE '%Especial%'";
 
-    (!empty($initial_date)) && (!empty($final_date)) ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" : $where .= " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
+    (!empty($initial_date)) && (!empty($final_date)) ? $where .= "AND p.fecha BETWEEN '$initial_date' AND '$final_date'" : $where .= "AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
     ($gender !== null && $gender > 0) ? $where .= " AND p.id = '$gender'" : null;
+    (!empty($requestData['length'])) ? $limit = $requestData['start'] . ", " . $requestData['length'] : $limit = 10;
 
     // $columns_order = array(
     //     0 => 'id',
@@ -40,7 +41,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
     $total_data = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
     
-    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
+    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $limt";
     echo $sql;
     $result = $conection->query($sql);
 
