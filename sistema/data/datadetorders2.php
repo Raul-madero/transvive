@@ -42,7 +42,7 @@ $table = ' registro_viajes p
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
         LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
-$where = " WHERE p.tipo_viaje <> 'Especial'";
+$where = " WHERE p.tipo_viaje <> 'Especial' ";
 
 // Filtros
 (!empty($initial_date) && !empty($final_date)) 
@@ -73,7 +73,7 @@ $result = $conection->query($sql);
 if( !empty($requestData['search']['value']) ) {
     $where .= " AND ( p.id LIKE '%".$requestData['search']['value']."%' OR p.cliente LIKE '%".$requestData['search']['value']."%' OR p.operador LIKE '%".$requestData['search']['value']."%' OR p.semana LIKE '%".$requestData['search']['value']."%' OR sp.nombres LIKE '%".$requestData['search']['value']."%' OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
 }
-echo $sql;
+
 $result = $conection->query($sql);
 if (!$result) {
     echo json_encode(["error" => $conection->error]);
