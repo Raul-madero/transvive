@@ -13,20 +13,12 @@ if($_REQUEST['action'] == 'fetch_users'){
     $final_date = $requestData['final_date'];
     $gender = $requestData['gender'];
 
-    $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, 
-    p.num_unidad, p.personas, p.estatus, 
-    CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno)
-    AS name, 
-    us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, 
-    p.sueldo_vuelta, p.tipo_viaje ';
-    $table = ' registro_viajes p 
-    LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto
-    LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
-    LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ' ;
+    $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno)AS name, us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, p.sueldo_vuelta, p.tipo_viaje';
+    $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
     $where = " WHERE p.tipo_viaje LIKE '%Especial%'";
 
-    (!empty($initial_date)) && (!empty($final_date)) ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date' " : $where .= " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
-    ($gender !== null && $gender > 0) ? $where .= " AND p.id = '$gender' " : null;
+    (!empty($initial_date)) && (!empty($final_date)) ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" : $where .= " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
+    ($gender !== null && $gender > 0) ? $where .= " AND p.id = '$gender'" : null;
 
     // $columns_order = array(
     //     0 => 'id',
@@ -42,7 +34,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     // );
 
     if(!empty($requestData['search']['value'])) {
-        $where .= " AND (p.id LIKE '%" . $requestData['search']['value'] . "%' OR p.cliente LIKE '%" . $requestData['search']['value'] . "%' OR p.operador LIKE '%" . $requestData['search']['value'] . "%' OR p.semana LIKE '%" . $requestData['search']['value'] . "%' OR sp.nombres LIKE '%" . $requestData['search']['value'] . "%' OR sp.apellido_materno LIKE '%" . $requestdata['search']['value'] . "%' OR sp.apellido_materno LIKE '%" . $requestData['search']['value'] . "%' OR p.fecha LIKE '%" . $requestData['search']['value'] . "%') ";
+        $where .= " AND (p.id LIKE '%" . $requestData['search']['value'] . "%' OR p.cliente LIKE '%" . $requestData['search']['value'] . "%' OR p.operador LIKE '%" . $requestData['search']['value'] . "%' OR p.semana LIKE '%" . $requestData['search']['value'] . "%' OR sp.nombres LIKE '%" . $requestData['search']['value'] . "%' OR sp.apellido_materno LIKE '%" . $requestdata['search']['value'] . "%' OR sp.apellido_materno LIKE '%" . $requestData['search']['value'] . "%' OR p.fecha LIKE '%" . $requestData['search']['value'] . "%')";
     };
 
     $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
@@ -54,6 +46,7 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     if(!$result) {
         echo json_encode([ "error" => $conection->error ]);
+        echo $sql;
         exit;
     }
 
