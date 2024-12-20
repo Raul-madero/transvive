@@ -53,13 +53,6 @@ $where = " WHERE p.tipo_viaje <> 'Especial' ";
     ? $where .= " AND p.id = '$gender' " 
     : "";
 
-// Conteo total
-$count_sql = "SELECT COUNT(*) AS total FROM $table $where";
-$totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
-
-$sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
-$result = $conection->query($sql);
-
 // Ordenamiento
 // if (!empty($requestData['order'])) {
 //     $orderColumn = $columns[$requestData['order'][0]['column']]; 
@@ -72,8 +65,13 @@ $result = $conection->query($sql);
 
 if( !empty($requestData['search']['value']) ) {
     $where .= " AND ( p.id LIKE '%".$requestData['search']['value']."%' OR p.cliente LIKE '%".$requestData['search']['value']."%' OR p.operador LIKE '%".$requestData['search']['value']."%' OR p.semana LIKE '%".$requestData['search']['value']."%' OR sp.nombres LIKE '%".$requestData['search']['value']."%' OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
-}
+};
 
+// Conteo total
+$count_sql = "SELECT COUNT(*) AS total FROM $table $where";
+$totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
+
+$sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
 $result = $conection->query($sql);
 if (!$result) {
     echo json_encode(["error" => $conection->error]);
