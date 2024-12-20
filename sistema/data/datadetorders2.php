@@ -70,16 +70,27 @@ $result = $conection->query($sql);
 // $sql = "SELECT $columns FROM $table $where LIMIT $start, $length"; 
 // $result = $conection->query($sql);
 
-if( !empty($requestData['search']['value']) ) {
-    $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR p.cliente LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR p.operador LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR p.semana LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR sp.nombres LIKE '%".$requestData['search']['value']."%' ";
-    $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
+if (!empty($requestData['search']['value'])) {
+    $search_value = '\'%' . $requestData . '%\'';
+    $sql.= " AND (p.id LIKE ? OR p.cliente LIKE ? OR p.operador LIKE ? OR p.semana LIKE ? OR sp.nombres LIKE ? OR p.fecha LIKE ?)";
+    $stmt = $conection->prepare($sql);
+    $stmt->bind_params('ssssss', $search_value, $search_value, $search_value, $search_value, $search_value);
+    $result = $stmt->execute();
+    $result = $stmt->get_result();
+}else {
+    $result = $conection->query($sql);
 }
 
-$result = $conection->query($sql);
+// if( !empty($requestData['search']['value']) ) {
+//     $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
+//     $sql.=" OR p.cliente LIKE '%".$requestData['search']['value']."%' ";
+//     $sql.=" OR p.operador LIKE '%".$requestData['search']['value']."%' ";
+//     $sql.=" OR p.semana LIKE '%".$requestData['search']['value']."%' ";
+//     $sql.=" OR sp.nombres LIKE '%".$requestData['search']['value']."%' ";
+//     $sql.=" OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
+// }
+
+// $result = $conection->query($sql);
 if (!$result) {
     echo json_encode(["error" => $conection->error]);
     exit;
