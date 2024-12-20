@@ -47,7 +47,7 @@ $where = " WHERE p.tipo_viaje <> 'Especial' ";
 // Filtros
 (!empty($initial_date) && !empty($final_date)) 
     ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date' " 
-    : $where .= " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
+    : $where .= " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) ";
 
 ($gender !== null && $gender > 0) 
     ? $where .= " AND p.id = '$gender' " 
