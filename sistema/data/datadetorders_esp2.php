@@ -8,12 +8,12 @@ global $conection;
 if($_REQUEST['action'] == 'fetch_users'){
 
     $requestData = $_REQUEST;
-    $start = $requestData['start'];
-    $length = $requestData['length'];
-    $initial_date = $requestdata['initial_date'];
-    $final_date = $requestData['final_date'];
-    $gender = $requestData['gender'];
-    $draw = $requestData['draw'];
+    $start = isset($requestData['start']) ? intval($requestData['start']) : 0;
+    $length = isset($requestData['length']) ? intval($requestData['length']) : 10;
+    $initial_date = isset($requestdata['initial_date']) ? $requestdata['initial_date'] : null;
+    $final_date = isset($requestData['final_date']) ? $requestData['final_date'] : null;
+    $gender = isset($requestData['gender']) ? $requestData['gender'] : null;
+    $draw = isset($requestData['draw']) ? intval($requestData['draw']) : 1;
 
     $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno)AS name, us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, p.sueldo_vuelta, p.tipo_viaje';
     $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
