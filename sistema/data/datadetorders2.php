@@ -71,7 +71,7 @@ $result = $conection->query($sql);
 // $result = $conection->query($sql);
 
 if( !empty($requestData['search']['value']) ) {
-    $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' OR p.cliente LIKE '%".$requestData['search']['value']."%' OR p.operador LIKE '%".$requestData['search']['value']."%' OR p.semana LIKE '%".$requestData['search']['value']."%' OR sp.nombres LIKE '%".$requestData['search']['value']."%' OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
+    $where .= " AND ( p.id LIKE '%".$requestData['search']['value']."%' OR p.cliente LIKE '%".$requestData['search']['value']."%' OR p.operador LIKE '%".$requestData['search']['value']."%' OR p.semana LIKE '%".$requestData['search']['value']."%' OR sp.nombres LIKE '%".$requestData['search']['value']."%' OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
 }
 echo $sql;
 $result = $conection->query($sql);
