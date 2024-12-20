@@ -557,28 +557,28 @@ $(document).ready(function () {
     let table = initializeDataTable();
     // Listener para el botón de filtro
     $("#filter").on("click", function () {
-    let initial_date = $("#initial_date").val();
-    let final_date = $("#final_date").val();
-    let gender = $("#gender").val();
+		let initial_date = $("#initial_date").val();
+		let final_date = $("#final_date").val();
+		let gender = $("#gender").val();
 
-    if (validateFilter(initial_date, final_date)) {
-        // Actualiza el URL del DataTable con nuevos parámetros
-        table.ajax.url("data/datadetorders2.php").load(null, false); // Omitimos parámetros aquí
-		
+		if (validateFilter(initial_date, final_date)) {
+			// Actualiza el URL del DataTable con nuevos parámetros
+			table.ajax.url("data/datadetorders2.php").load(null, false); // Omitimos parámetros aquí
+			
 
-        // Actualiza la configuración Ajax del DataTable
-        table.settings()[0].ajax.data = {
-            action: "fetch_users",
-            initial_date: initial_date,
-            final_date: final_date,
-            gender: gender
-        };
+			// Actualiza la configuración Ajax del DataTable
+			table.settings()[0].ajax.data = {
+				action: "fetch_users",
+				initial_date: initial_date,
+				final_date: final_date,
+				gender: gender
+			};
 
-        // Recarga la tabla
-		table.state.clear(); //Limpia el estado de almacenado
-        table.ajax.reload(null, false); // No reinicia la paginación
-    }
-});
+			// Recarga la tabla
+			table.state.clear(); //Limpia el estado de almacenado
+			table.ajax.reload(null, false); // No reinicia la paginación
+    	}
+	});
 
 
     // Configura el DatePicker
