@@ -9,6 +9,7 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     $requestData = $_REQUEST;
     $start = $requestData['start'];
+    $length = $requestData['length'];
     $initial_date = $requestdata['initial_date'];
     $final_date = $requestData['final_date'];
     $gender = $requestData['gender'];
@@ -41,8 +42,8 @@ if($_REQUEST['action'] == 'fetch_users'){
     $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
     $total_data = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
     
-    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC";
-    (!empty($requestData['length'])) ? $sql .= " LIMIT " . $requestData['start'] . ", " . $requestData['length'] : "";
+    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
+    // (!empty($requestData['length'])) ? $sql .= " LIMIT " . $requestData['start'] . ", " . $requestData['length'] : "";
 
     $result = $conection->query($sql);
 
