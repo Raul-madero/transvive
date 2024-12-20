@@ -382,10 +382,10 @@ mysqli_close($conection);
 							<input type='text' readonly name='final_date' id='final_date' class="datepicker" placeholder='A Fecha'>
 						</td>
 						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td>
+						<!-- <td>
 							<input type='text' name='gender' id='gender' placeholder="ID a buscar">
 						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
 
 						<td>
 							<button class="btn btn-success btn-block" type="submit" name="filter" id="filter" >
