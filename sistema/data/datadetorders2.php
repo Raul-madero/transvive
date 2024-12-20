@@ -34,14 +34,6 @@ $initial_date = mysqli_real_escape_string($conection, $requestData['initial_date
 $final_date = mysqli_real_escape_string($conection, $requestData['final_date']);
 $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
 
-// Filtros
-$date_range = (!empty($initial_date) && !empty($final_date)) 
-    ? " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" 
-    : " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) ";
-
-$gender_filter = ($gender !== null && $gender > 0) 
-    ? " AND p.id = '$gender' " 
-    : "";
 
 // Consultas SQL
 $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, 
@@ -50,7 +42,16 @@ $table = ' registro_viajes p
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario 
         LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso ';
-$where = " WHERE p.tipo_viaje <> 'Especial' " . $date_range . $gender_filter;
+$where = " WHERE p.tipo_viaje <> 'Especial'";
+
+// Filtros
+(!empty($initial_date) && !empty($final_date)) 
+    ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" 
+    : $where .= " AND  p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
+
+($gender !== null && $gender > 0) 
+    ? $where .= " AND p.id = '$gender' " 
+    : "";
 
 // Conteo total
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
@@ -70,7 +71,7 @@ $result = $conection->query($sql);
 // $result = $conection->query($sql);
 
 if( !empty($requestData['search']['value']) ) {
-    $sql.=" ( p.id LIKE '%".$requestData['search']['value']."%' ";
+    $sql.=" AND ( p.id LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.cliente LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.operador LIKE '%".$requestData['search']['value']."%' ";
     $sql.=" OR p.semana LIKE '%".$requestData['search']['value']."%' ";
