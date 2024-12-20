@@ -520,7 +520,7 @@ session_start();
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
 			defRender: true,
 			ajax: {
-				url: "data/datdetorders_esp2.php",
+				url: "data/datadetorders_esp2.php",
 				type: "POST",
 				dataType: "json",
 				data: function(d) {
