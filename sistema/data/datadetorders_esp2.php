@@ -49,6 +49,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     $total_data = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
     
     $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
+    echo $sql;
     $result = $conection->query($sql);
 
     if(!$result) {
