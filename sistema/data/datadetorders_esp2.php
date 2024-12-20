@@ -19,7 +19,6 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     (!empty($initial_date)) && (!empty($final_date)) ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" : $where .= " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
     ($gender !== null && $gender > 0) ? $where .= " AND p.id = '$gender'" : null;
-    (!empty($requestData['length'])) ? $limit = $requestData['start'] . ", " . $requestData['length'] : $limit = 10;
 
     // $columns_order = array(
     //     0 => 'id',
@@ -41,7 +40,9 @@ if($_REQUEST['action'] == 'fetch_users'){
     $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
     $total_data = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
     
-    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $limit";
+    $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC";
+    (!empty($requestData['length'])) ? $sql .= "LIMIT " . $requestData['start'] . ", " . $requestData['length'] : "";
+
     $result = $conection->query($sql);
 
     if(!$result) {
