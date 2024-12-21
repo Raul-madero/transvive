@@ -516,7 +516,7 @@ session_start();
             serverSide: true,
             stateSave: true,
             responsive: true,
-            lengthMenu[[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
             deferRender: true,
             ajax: {
               url: "data/datadetorders_esp2.php",
@@ -575,6 +575,7 @@ session_start();
             <?php
             	}}
             ?>
+
             ],
 			buttons: [
 				'copyHtml5',
