@@ -524,9 +524,9 @@ session_start();
               dataType: 'json',
               data: function(d) {
                 d.action = 'fetch_users'
-                d.initial_date = initial_date
-                d.final_date = final_date
-                d.gender = gender
+                d.initial_date = $('#initial_date').val() || null
+                d.final_date = $('#final_date').val() || null
+                d.gender = $('#gender').val() || null
                 console.log(d)
               },
               dataSrc: function(json) {
