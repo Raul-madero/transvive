@@ -983,6 +983,7 @@ $(document).on('click', '#cancel_pedido', function(e){
               <input type="file" class="form-control" id="image" name="image" multiple>
            </div>
         </div>-->
+        
     
       <div class="modal-footer">
         <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>

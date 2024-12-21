@@ -5,9 +5,26 @@ include '../../conexion.php';
 
 global $conection;
 
-if($_REQUEST['action'] == 'fetch_users'){
+if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
+    echo json_encode(["error" => "Acción no válida o no proporcionada."]);
+    exit;
+}
 
-    $requestData = $_REQUEST;
+$requestData = $_REQUEST;
+    echo $requestData;
+    $columns = array(
+        0 => 'id',
+        1 => 'fecha',
+        2 => 'cliente',
+        3 => 'direccion',
+        4 => 'hora_inicio',
+        5 => 'hora_fin',
+        6 => 'unidad',
+        7 => 'destino',
+        8 => 'jefeo',
+        9 => 'estatus'
+    );
+    
     $start = isset($requestData['start']) ? intval($requestData['start']) : 0;
     $length = isset($requestData['length']) ? intval($requestData['length']) : 10;
     $initial_date = isset($requestdata['initial_date']) ? $requestdata['initial_date'] : null;
@@ -23,18 +40,6 @@ if($_REQUEST['action'] == 'fetch_users'){
     // $where .= " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
     ($gender !== null) ? $where .= " AND YEAR(p.fecha) = '$gender'" : null;
 
-    // $columns_order = array(
-    //     0 => 'id',
-    //     1 => 'fecha',
-    //     2 => 'cliente',
-    //     3 => 'direccion',
-    //     4 => 'hora_inicio',
-    //     5 => 'hora_fin',
-    //     6 => 'unidad',
-    //     7 => 'destino',
-    //     8 => 'jefeo',
-    //     9 => 'estatus'
-    // );
 
     if(!empty($requestData['search']['value'])) {
         $where .= " AND (p.id LIKE '%" . $requestData['search']['value'] . "%' OR p.cliente LIKE '%" . $requestData['search']['value'] . "%' OR p.operador LIKE '%" . $requestData['search']['value'] . "%' OR p.semana LIKE '%" . $requestData['search']['value'] . "%' OR sp.nombres LIKE '%" . $requestData['search']['value'] . "%' OR sp.apellido_materno LIKE '%" . $requestdata['search']['value'] . "%' OR sp.apellido_materno LIKE '%" . $requestData['search']['value'] . "%' OR p.fecha LIKE '%" . $requestData['search']['value'] . "%')";
@@ -52,6 +57,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         echo json_encode([ "error" => $conection->error ]);
         exit;
     }
+
     $totalFiltered = $totalData;
     $data = [];
     while($row = $result->fetch_assoc()) {
@@ -97,10 +103,6 @@ if($_REQUEST['action'] == 'fetch_users'){
         "recordsFiltered" => $totalFiltered,
         "records" => $data
     ], JSON_UNESCAPED_UNICODE);
-} else {
-    echo json_encode([
-        "error" => "Acción no válida o no proporcionada."
-    ]);
-}
+
 
 ?>
