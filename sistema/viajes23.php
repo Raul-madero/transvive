@@ -554,7 +554,7 @@ mysqli_close($conection);
 <script>
 $(document).ready(function () {
     // Inicializa la tabla
-    let table = initializeDataTable();
+    const table = initializeDataTable();
     // Listener para el botón de filtro
     $("#filter").on("click", function () {
 		let initial_date = $("#initial_date").val();
