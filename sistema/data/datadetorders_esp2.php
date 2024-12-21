@@ -11,18 +11,18 @@ if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
 }
 
 $requestData = $_REQUEST;
-    // $columns = array(
-    //     0 => 'id',
-    //     1 => 'fecha',
-    //     2 => 'cliente',
-    //     3 => 'direccion',
-    //     4 => 'hora_inicio',
-    //     5 => 'hora_fin',
-    //     6 => 'unidad',
-    //     7 => 'destino',
-    //     8 => 'jefeo',
-    //     9 => 'estatus'
-    // );
+    $columns = array(
+        0 => 'id',
+        1 => 'fecha',
+        2 => 'cliente',
+        3 => 'direccion',
+        4 => 'hora_inicio',
+        5 => 'hora_fin',
+        6 => 'unidad',
+        7 => 'destino',
+        8 => 'jefeo',
+        9 => 'estatus'
+    );
     
     $start = isset($requestData['start']) ? intval($requestData['start']) : 0;
     $length = isset($requestData['length']) ? intval($requestData['length']) : 10;
@@ -94,7 +94,7 @@ $requestData = $_REQUEST;
             'estatusped' => $Estatusnew
         ];
     };
-        
+        echo $sql;
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
         "draw" => $draw,
