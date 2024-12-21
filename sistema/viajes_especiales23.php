@@ -530,6 +530,7 @@ session_start();
                 console.log(d)
               },
               dataSrc: function(json) {
+				console.log()
                 if (!json || !json.records) {
                   console.error("Invalid JSON:", json)
                   return []
