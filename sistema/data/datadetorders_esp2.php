@@ -7,12 +7,10 @@ global $conection;
 
 if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
     echo json_encode(["error" => "Acción no válida o no proporcionada."]);
-    echo $_REQUEST;
     exit;
 }
 
 $requestData = $_REQUEST;
-echo $requestData;
     $columns = array(
         0 => 'id',
         1 => 'fecha',
@@ -96,6 +94,7 @@ echo $requestData;
             'estatusped' => $Estatusnew
         ];
     };
+    echo $_REQUEST;
         
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
