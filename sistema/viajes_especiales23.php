@@ -509,7 +509,7 @@ session_start();
         })
 
         function initializeDataTable() {
-          return $("#fetch_generated_wills").DataTable({
+          return $('#fetch_generated_wills').DataTable({
             order: [[1, 'desc']],
             dom: 'Bfrtip',
             processing: true,
