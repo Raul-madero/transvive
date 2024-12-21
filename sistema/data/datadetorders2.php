@@ -78,7 +78,6 @@ if (!$result) {
     exit;
 }
 
-
 // Construir datos
 $data = [];
 while ($row = $result->fetch_assoc()) {
