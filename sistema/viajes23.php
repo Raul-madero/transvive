@@ -629,17 +629,17 @@ function initializeDataTable() {
         columns: [
             { data: "pedidono", width: "10px", className: "text-right" },
             { data: "fecha", width: "60px" },
-            { data: "horainicio", width: "50px", className: "text-center", orderable: false },
-            { data: "horafin", width: "50px", className: "text-center", orderable: false },
-            { data: "nosemana", width: "80px", orderable: false },
-            { data: "razonsocial", width: "100px", orderable: false },
-            { data: "rutacte", width: "40px", orderable: false },
-            { data: "conductor", width: "100px", orderable: false },
-            { data: "tipounidad", width: "80px", orderable: false },
-            { data: "nounidad", width: "30px", orderable: false },
-            { data: "supervisor", width: "50px", orderable: false },
-            { data: "jefeopera", width: "50px", orderable: false },
-            { data: "estatusped", width: "30px", orderable: false },
+            { data: "horainicio", width: "50px", className: "text-center", orderable: true },
+            { data: "horafin", width: "50px", className: "text-center", orderable: true },
+            { data: "nosemana", width: "80px", orderable: true },
+            { data: "razonsocial", width: "100px", orderable: true },
+            { data: "rutacte", width: "40px", orderable: true },
+            { data: "conductor", width: "100px", orderable: true },
+            { data: "tipounidad", width: "80px", orderable: true },
+            { data: "nounidad", width: "30px", orderable: true },
+            { data: "supervisor", width: "50px", orderable: true },
+            { data: "jefeopera", width: "50px", orderable: true },
+            { data: "estatusped", width: "30px", orderable: true },
             {
                 render: function (data, type, full) {
                     return `<center>
