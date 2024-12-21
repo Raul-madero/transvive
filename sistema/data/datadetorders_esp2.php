@@ -7,11 +7,12 @@ global $conection;
 
 if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
     echo json_encode(["error" => "Acción no válida o no proporcionada."]);
+    echo $_REQUEST;
     exit;
 }
 
 $requestData = $_REQUEST;
-    echo $requestData;
+echo $requestData;
     $columns = array(
         0 => 'id',
         1 => 'fecha',
