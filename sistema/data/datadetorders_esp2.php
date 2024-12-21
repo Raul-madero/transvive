@@ -37,7 +37,7 @@ $requestData = $_REQUEST;
 
     (!empty($initial_date)) && (!empty($final_date)) ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" : null;
     // $where .= " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
-    ($gender !== null) ? $where .= " AND YEAR(p.fecha) = '$gender'" : null;
+    ($gender !== null && $gender > 0) ? $where .= " AND YEAR(p.fecha) = '$gender'" : null;
 
 
     if(!empty($requestData['search']['value'])) {
