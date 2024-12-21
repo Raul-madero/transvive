@@ -19,8 +19,9 @@ if($_REQUEST['action'] == 'fetch_users'){
     $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
     $where = "WHERE p.tipo_viaje LIKE '%Especial%'";
 
-    (!empty($initial_date)) && (!empty($final_date)) ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" : $where .= " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
-    ($gender !== null && $gender > 0) ? $where .= " AND p.id = '$gender'" : null;
+    (!empty($initial_date)) && (!empty($final_date)) ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" : null;
+    // $where .= " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
+    ($gender !== null) ? $where .= " AND YEAR(p.fecha) = '$gender'" : null;
 
     // $columns_order = array(
     //     0 => 'id',
@@ -40,7 +41,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     };
 
     $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
-    $total_data = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
+    $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
     
     $sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
     // (!empty($requestData['length'])) ? $sql .= " LIMIT " . $requestData['start'] . ", " . $requestData['length'] : "";
@@ -51,8 +52,6 @@ if($_REQUEST['action'] == 'fetch_users'){
         echo json_encode([ "error" => $conection->error ]);
         exit;
     }
-
-    $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
     $data = [];
     while($row = $result->fetch_assoc()) {
