@@ -94,7 +94,6 @@ $requestData = $_REQUEST;
             'estatusped' => $Estatusnew
         ];
     };
-    echo $_REQUEST;
         
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
