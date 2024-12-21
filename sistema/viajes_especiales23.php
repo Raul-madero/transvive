@@ -482,31 +482,32 @@ session_start();
 
     <script type="text/javascript">
         $(document).ready(function () {
-          const table = initializeDataTable()
+          	const table = initializeDataTable()
 
-          $("#filter").on("click", function () {
-            let initial_date = $("#initial_date").val()
-            let final_date = $("#final_date").val()
-            let gender = $("#gender").val()
+			$("#filter").on("click", function () {
+				let initial_date = $("#initial_date").val()
+				let final_date = $("#final_date").val()
+				let gender = $("#gender").val()
 
-            if (validateFilter(initial_date, final_date)) {
-              table.ajax.url("data/datadetorders_esp2.php").load(null, false)
-              table.settings()[0].ajax.data = {
-                action: 'fetch_users',
-                initial_date: initial_date,
-                final_date: final_date,
-                gender: gender
-              }
-              table.state.clear()
-              table.ajax.reload(null, false)
-            }
-          })
-          $(".datepicker").datepicker({
-            language: 'es',
-            dateFormat: 'yy-mm-dd',
-            changeYear: true
-          })
-        })
+				if (validateFilter(initial_date, final_date)) {
+				table.ajax.url("data/datadetorders_esp2.php").load(null, false)
+				table.settings()[0].ajax.data = {
+					action: 'fetch_users',
+					initial_date: initial_date,
+					final_date: final_date,
+					gender: gender
+				}
+				table.state.clear()
+				table.ajax.reload(null, false)
+				}
+			})
+
+			$(".datepicker").datepicker({
+				language: 'es',
+				dateFormat: 'yy-mm-dd',
+				changeYear: true
+			})
+		})
 
         function initializeDataTable() {
           return $('#fetch_generated_wills').DataTable({
@@ -523,14 +524,13 @@ session_start();
               type: 'POST',
               dataType: 'json',
               data: function(d) {
-                d.action = 'fetch_users'
-                d.initial_date = $('#initial_date').val() || null
-                d.final_date = $('#final_date').val() || null
-                d.gender = $('#gender').val() || null
+                d.action = "fetch_users"
+                d.initial_date = $("#initial_date").val() || ""
+                d.final_date = $("#final_date").val() || ""
+                d.gender = $("#gender").val() || ""
                 console.log(d)
               },
               dataSrc: function(json) {
-				console.log()
                 if (!json || !json.records) {
                   console.error("Invalid JSON:", json)
                   return []
@@ -543,23 +543,23 @@ session_start();
               }
             },
             columns: [
-              { "data" : "pedidono", "width": "3%", className: "text-right" },
-              { "data" : "fecha", "width": "5%"},
-              { "data" : "razonsocial", "width": "10%" },
-              { "data" : "origen", "width": "18%" },
-              { "data" : "horainicio", "width": "5%", className: "text-center", "orderable": false },
-              { "data" : "horafin", "width": "5%", className: "text-center", "orderable": false },
-              { "data" : "tipounidad", "width": "10%", "orderable":false },
-              { "data" : "Destino", "width": "15%" },
-              { "data" : "TipoViaje", "width": "10%" },
-              { "data" : "estatusped", "width": "8%", "orderable":false },
+              { data : "pedidono", width: "3%", className: "text-right" },
+              { data : "fecha", width: "5%"},
+              { data : "razonsocial", width: "10%" },
+              { data: "origen", width: "18%" },
+              { data: "horainicio", width: "5%", className: "text-center", orderable: false },
+              { data : "horafin", width: "5%", className: "text-center", orderable: false },
+              { data: "tipounidad", width: "10%", orderable:false },
+              { data : "Destino", width: "15%" },
+              { data: "TipoViaje", width: "10%" },
+              { data: "estatusped", width: "8%", orderable:false },
 
               <?php 
                   if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 ){
               ?>
             
               {
-                  "render": function ( data, type, full, meta ) {
+                  render: function ( data, type, full, meta ) {
                   return '<a class="link_edit" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" data-id=\'' + full.pedidono + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.pedidono  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.origen  + '\' data-destino=\'' + full.Destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
                   }   
               }
@@ -569,7 +569,7 @@ session_start();
             ?>
 
 				{
-					"render": function ( data, type, full, meta ) {
+					render: function ( data, type, full, meta ) {
 					return '<a class="link_edit" style="color:#007bff;" href= \'editgcia_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Registrar/Editar</a>';
 					}        
 				} 
@@ -610,6 +610,7 @@ session_start();
 			$("#error_log").html("");
 			return true;
 		}
+
 //       load_data(); // first load
 
 //       function load_data(initial_date, final_date, gender){
