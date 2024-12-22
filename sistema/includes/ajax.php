@@ -2325,7 +2325,8 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
                      $semana = $data['semana'];
                      }   
 
-        $query_procesar = mysqli_query($conection,"CALL add_vuelta($idc, '$datefin', '$semana', '$hregreso', $sueldovta, '$origen', '$destino', $unidades, $costo, $usuario)");
+        $query_procesar = mysqli_query($conection,"INSERT INTO registro_viajes (fecha, semana, cliente, unidad, tipo_viaje, direccion, hora_fin, destino, numero_unidades, sueldo_vuelta, notas, telefono_contacto, costo_viaje, id_supervisor, usuario_id) 
+                                                    SELECT $datefin, $semana, cliente, unidad, tipo_viaje, $origen, $hregreso, $destino, $unidades, $sueldovta, notas, telefono_contacto, $costo, id_supervisor,$usuario FROM registro_viajes WHERE id = $idc");
         if(!$query_procesar){
             echo json_encode([
                 "error" => true,
