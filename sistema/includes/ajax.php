@@ -2330,15 +2330,13 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
         if(!$query_procesar){
             echo json_encode([
                 "error" => true,
-                "message" => "Error en la consulta SQL: " . mysqli_error($conection) . $query_procesar
+                "message" => "Error en la consulta SQL: " . mysqli_error($conection)
             ], JSON_UNESCAPED_UNICODE);
-            mysqli_close($conection);
         }
-        $result_detalle = mysqli_num_rows($query_procesar);
+        $result_detalle = mysqli_affected_rows($conection);
 
         
         if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
              mysqli_close($conection);
         }else{
