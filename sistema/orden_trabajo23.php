@@ -291,7 +291,6 @@ session_start();
 
       function load_data(initial_date, final_date, gender){
         var ajax_url = "data/datadetorders_mantto.php";
-
         $('#fetch_generated_wills').DataTable({
           "order": [[ 0, "desc" ]],
           dom: 'Bfrtip',
