@@ -2344,7 +2344,7 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
                 die("Error al preparar la consulta: " . mysqli_error($conection));
             }
     
-            $stmt->bind_param("sssssssssiii", $datefin, $semana, $origen, $hregreso, $destino, $unidades, $sueldovta, $costo, $id_supervisor, $usuario, $idc);
+            $stmt->bind_param("sssssiiiiii", $datefin, $semana, $origen, $hregreso, $destino, $unidades, $sueldovta, $costo, $id_supervisor, $usuario, $idc);
     
             if ($stmt->execute()) {
                 $affected_rows = mysqli_affected_rows($conection);
