@@ -2341,7 +2341,7 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
             SELECT ?, ?, cliente, unidad, tipo_viaje, ?, ?, ?, ?, ?, notas, telefono_contacto, ?, id_supervisor, ? 
             FROM registro_viajes WHERE id = ?");
 
-            $stmt->bind_param("sssssiiiiii", $datefin, $semana, $origen, $hregreso, $destino, $unidades, $sueldovta, $costo, $id_supervisor, $usuario, $idc);
+            $stmt->bind_param("sssssiddiii", $datefin, $semana, $origen, $hregreso, $destino, $unidades, $sueldovta, $costo, $id_supervisor, $usuario, $idc);
     
             if ($stmt->execute()) {
                 $affected_rows = mysqli_affected_rows($conection);
