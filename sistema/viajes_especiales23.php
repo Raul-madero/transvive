@@ -540,6 +540,7 @@ session_start();
               error: function(xhr, error, code) {
                 console.error("Error en Ajax:", xhr.responseText)
                 alert("Ocurrio un error al procesar la solicitud")
+                
               }
             },
             columns: [

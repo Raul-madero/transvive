@@ -2303,49 +2303,72 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
         }  
 
     // Generar Vuelta
-    if($_POST['action'] == 'AddEditVuelta')
-    {
-      if(!empty($_POST['idc']) )
-      {
-        $idc       = $_POST['idc'];
-        $datefin   = $_POST['datefin'];
-        $hregreso  = $_POST['hregreso'];
-        $sueldovta = $_POST['sueldovta'];
-        $origen    = $_POST['origen'];
-        $destino   = $_POST['destino'];
-        $unidades   = $_POST['unidades'];
-        $costo     = $_POST['costo'];
-
-        $token    = md5($_SESSION['idUser']);
-        $usuario  = $_SESSION['idUser'];
-
-        $query_busca = mysqli_query($conection,"SELECT semana from semanas WHERE dia_inicial <= '$datefin' AND dia_final >= '$datefin' ");
-                    $result_busca = mysqli_num_rows($query_busca);
-                     while ($data = mysqli_fetch_assoc($query_busca)){
-                     $semana = $data['semana'];
-                     }   
-
-        $query_procesar = mysqli_query($conection,"INSERT INTO registro_viajes (fecha, semana, cliente, unidad, tipo_viaje, direccion, hora_fin, destino, numero_unidades, sueldo_vuelta, notas, telefono_contacto, costo_viaje, id_supervisor, usuario_id) 
-                                                    SELECT $datefin, $semana, cliente, unidad, tipo_viaje, $origen, $hregreso, $destino, $unidades, $sueldovta, notas, telefono_contacto, $costo, id_supervisor,$usuario FROM registro_viajes WHERE id = $idc");
-        if(!$query_procesar){
+    if($_POST['action'] == 'AddEditVuelta') {
+        if(!empty($_POST['idc'])) {
+            $idc       = $_POST['idc'];
+            $datefin   = $_POST['datefin'];
+            $hregreso  = $_POST['hregreso'];
+            $sueldovta = $_POST['sueldovta'];
+            $origen    = $_POST['origen'];
+            $destino   = $_POST['destino'];
+            $unidades  = $_POST['unidades'];
+            $costo     = $_POST['costo'];
+    
+            $token  = md5($_SESSION['idUser']);
+            $usuario = $_SESSION['idUser'];
+    
+            $query_busca = mysqli_query($conection,"SELECT semana from semanas WHERE dia_inicial <= '$datefin' AND dia_final >= '$datefin'");
+            if (!$query_busca) {
+                die("Error en la consulta de semana: " . mysqli_error($conection)); 
+            }
+            $result_busca = mysqli_num_rows($query_busca);
+            $semana = null; // Inicializar $semana
+            if ($result_busca > 0) {
+                while ($data = mysqli_fetch_assoc($query_busca)){
+                    $semana = $data['semana'];
+                }
+            } else {
+                // Manejar el caso donde no se encuentra la semana
+                echo json_encode([
+                    "error" => true,
+                    "message" => "No se encontró la semana para la fecha especificada."
+                ], JSON_UNESCAPED_UNICODE);
+                exit; // Salir del script si no se encuentra la semana
+            }
+    
+            // Sentencia preparada
+            $stmt = $conection->prepare("INSERT INTO registro_viajes (fecha, semana, cliente, unidad, tipo_viaje, direccion, hora_fin, destino, numero_unidades, sueldo_vuelta, notas, telefono_contacto, costo_viaje, id_supervisor, usuario_id) 
+                                        SELECT ?, ?, cliente, unidad, tipo_viaje, ?, ?, ?, ?, sueldo_vuelta, notas, telefono_contacto, ?, id_supervisor, ? 
+                                        FROM registro_viajes WHERE id = ?");
+            if (!$stmt) {
+                die("Error al preparar la consulta: " . mysqli_error($conection));
+            }
+    
+            $stmt->bind_param("sssssssssiii", $datefin, $semana, $origen, $hregreso, $destino, $unidades, $sueldovta, $costo, $id_supervisor, $usuario, $idc);
+    
+            if ($stmt->execute()) {
+                $affected_rows = mysqli_affected_rows($conection);
+                echo json_encode([
+                    "error" => false,
+                    "message" => "Registro agregado correctamente.",
+                    "affected_rows" => $affected_rows 
+                ], JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode([
+                    "error" => true,
+                    "message" => "Error al ejecutar la consulta: " . $stmt->error
+                ], JSON_UNESCAPED_UNICODE);
+            }
+    
+            $stmt->close();
+            mysqli_close($conection); 
+    
+        } else {
             echo json_encode([
                 "error" => true,
-                "message" => "Error en la consulta SQL: " . mysqli_error($conection)
+                "message" => "Falta el ID del registro (idc)."
             ], JSON_UNESCAPED_UNICODE);
         }
-        $result_detalle = mysqli_affected_rows($conection);
-
-        
-        if($result_detalle > 0){
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-             mysqli_close($conection);
-        }else{
-            echo "error";
-        }
-       
-     }else{
-        echo 'error';
-     }
     }
 
 //Inicio de Viaje
