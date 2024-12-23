@@ -51,7 +51,7 @@ if (!empty($requestData['search']['value'])) {
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
-$sql = "SELECT $columns FROM $table $where DESC LIMIT $start, $length";
+$sql = "SELECT $columns FROM $table $where LIMIT $start, $length";
 
 // Imprimir la consulta SQL para depuración
 // echo $sql; 
