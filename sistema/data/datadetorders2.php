@@ -67,11 +67,15 @@ if( !empty($requestData['search']['value']) ) {
     $where .= " AND ( p.id LIKE '%".$requestData['search']['value']."%' OR p.cliente LIKE '%".$requestData['search']['value']."%' OR p.operador LIKE '%".$requestData['search']['value']."%' OR p.semana LIKE '%".$requestData['search']['value']."%' OR sp.nombres LIKE '%".$requestData['search']['value']."%' OR sp.apellido_paterno LIKE '%" . $requestData['search']['value'] . "%' OR sp.apellido_materno LIKE '%".$requestData['search']['value']."%' OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
 };
 
+
+$orderColumn = $columnsOrder[$requestData['order'][1]['column']] ?? 'id';
+$orderDir = $requestData['order'][0]['dir'] === 'desc' ? 'DESC' : 'ASC';
+
 // Conteo total
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
-$sql = "SELECT $columns FROM $table $where ORDER BY p.fecha DESC LIMIT $start, $length";
+$sql = "SELECT $columns FROM $table $where ORDER BY $orderColumn $orderDir LIMIT $start, $length";
 $result = $conection->query($sql);
 if (!$result) {
     echo json_encode(["error" => $conection->error]);
