@@ -2338,7 +2338,7 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
     
             // Sentencia preparada
             $stmt = $conection->prepare("INSERT INTO registro_viajes (fecha, semana, cliente, unidad, tipo_viaje, direccion, hora_fin, destino, numero_unidades, sueldo_vuelta, notas, telefono_contacto, costo_viaje, id_supervisor, usuario_id) 
-                                        SELECT ?, ?, cliente, unidad, tipo_viaje, ?, ?, ?, ?, sueldo_vuelta, notas, telefono_contacto, ?, id_supervisor, ? 
+                                        SELECT ?, ?, cliente, unidad, tipo_viaje, ?, ?, ?, ?, ?, notas, telefono_contacto, ?, id_supervisor, ? 
                                         FROM registro_viajes WHERE id = ?");
             if (!$stmt) {
                 die("Error al preparar la consulta: " . mysqli_error($conection));
