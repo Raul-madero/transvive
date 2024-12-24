@@ -8553,13 +8553,12 @@ if($_POST['action'] == 'AlmacenaSolicitudmpreventivo')
 
         // $query_procesar = mysqli_query($conection,"CALL procesar_solicitudmpreventivo($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$filtro_aceite', '$filtro_aire', '$filtro_gas', '$cambio_aceite', '$cambio_bujias', '$km_bujias', '$rev_balatas', '$engrasado', '$anti_congela', '$liquido_frenos', '$aceite_hidraul', '$rota_llantas', '$banda_acessor', '$rev_muelles', '$amortiguadores', '$rev_luces', '$rev_bateria', '$inyectores', '$masas_frente', '$trabajo_sol', $kilometraje, '$fecha_inicio', '$fecha_fin', '$notasgen', $usuario)");
         $result_mtto_preventivo = mysqli_query($conection, $query_insertar_mantto_preventivo);
-        $result_detalle = mysqli_num_rows($result_mtto_preventivo);
+        $filas_afectadas = mysqli_affected_rows($conection);
         
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($result_mtto_preventivo);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
+        if($filas_afectadas > 0){
+            echo json_encode(['mensaje' => 'Solicitud d e mantenimiento preventivo almacenada correctamente'], JSON_UNESCAPED_UNICODE);
         }else{
-            echo "error";
+            echo "error: " . mysqli_error($conection);
         }
     
     mysqli_close($conection);
