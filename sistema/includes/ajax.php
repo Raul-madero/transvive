@@ -8602,7 +8602,7 @@ if ($count === 0) {
 
         // $query_procesar = mysqli_query($conection,"CALL procesar_solicitudmpreventivo($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$filtro_aceite', '$filtro_aire', '$filtro_gas', '$cambio_aceite', '$cambio_bujias', '$km_bujias', '$rev_balatas', '$engrasado', '$anti_congela', '$liquido_frenos', '$aceite_hidraul', '$rota_llantas', '$banda_acessor', '$rev_muelles', '$amortiguadores', '$rev_luces', '$rev_bateria', '$inyectores', '$masas_frente', '$trabajo_sol', $kilometraje, '$fecha_inicio', '$fecha_fin', '$notasgen', $usuario)");
         // echo $query_insertar_mantto_preventivo;
-
+        echo $query_insertar_mantto_preventivo;
         $result_mtto_preventivo = mysqli_query($conection, $query_insertar_mantto_preventivo);
         $filas_afectadas = mysqli_affected_rows($conection);
         
