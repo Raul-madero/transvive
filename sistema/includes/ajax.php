@@ -8570,9 +8570,7 @@ if ($count === 0) {
         $query_insertar_mantto_preventivo = "
             INSERT INTO mantenimiento_preventivo (no_orden, fecha, usuario, solicitada, unidad, tipo_unidad, tipo_trabajo, kilometraje, filtro_aceite, filtro_aire, filtro_combustible, cambio_aceite, cambio_bujias, km_bujias, revision_balatas, engrasado, anticongelante, liquido_freno, aceite_hidraulico, rotacion_llantas, banda_accesorios, muelles, amortiguadores, luces, baterias, inyectores, masas_delanteras, fecha_inicio, fecha_culminacion, observaciones, usuario_id) 
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        echo $query_insertar_mantto_preventivo;
         $stmt = mysqli_prepare($conection, $query_insertar_mantto_preventivo);
-        echo $stmt;
         mysqli_stmt_bind_param($stmt, "issssssissssssssssssssssssssssi", $folio, $fecha_formateada, $usuario, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_inicio_formateada, $fecha_fin_formateada, $notasgen, $usuario);
 
         if (mysqli_stmt_execute($stmt)) {
