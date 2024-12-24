@@ -331,7 +331,7 @@ buttons: [
             { "data" : "trabsolicitado", "width": "12%" },
             { "data" : "estatusped", "width": "8%", "orderable":false },
               
-          <?php if ($rol = 10 || $idUser = 13) { ?>
+          <?php if ($User = 'Elena' || $idUser = 13) { ?>
             {
                     "render": function ( data, type, full, meta ) {
         return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a>';
