@@ -8530,7 +8530,7 @@ if($_POST['action'] == 'AlmacenaSolicitudmpreventivo')
         $trabajo_sol    = $_POST['trabajosolic'];
         $kilometraje    = $_POST['kilometraje'];
         $fecha_inicio   = $_POST['dateinicio'];
-        $fecha_fin      = $_POST['datefin'];
+        $fecha_fin      = $_POST['datefin'] || "0000-00-00";
         $notasgen       = $_POST['notasgen'];
         //$delanteraizq   = $_POST['delanteraizq'];
         //$delanterader   = $_POST['delanterader'];
