@@ -8539,7 +8539,9 @@ if($_POST['action'] == 'AlmacenaSolicitudmpreventivo')
 
 
        
-
+        $fecha_fin_formateada = date('Y-m-d', strtotime(str_replace('/', '-', $fecha_fin)));
+        $fecha_inicio_formateada = date('Y-m-d', strtotime(str_replace('/', '-', $fecha_inicio)));
+        $fecha_formateada = date('Y-m-d', strtotime(str_replace('/', '-', $fecha)));
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
         $query_insertar_mantto_preventivo = "";
@@ -8570,7 +8572,7 @@ if ($count === 0) {
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = mysqli_prepare($conection, $query_insertar_mantto_preventivo);
-        mysqli_stmt_bind_param($stmt, "issssssissssssssssssssssssssssi", $folio, $fecha, $usuario, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_ini, $fecha_fin, $notasgen, $usuario);
+        mysqli_stmt_bind_param($stmt, "issssssissssssssssssssssssssssi", $folio, $fecha_formateada, $usuario, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_inicio_formateada, $fecha_fin_formateada, $notasgen, $usuario);
 
         if (mysqli_stmt_execute($stmt)) {
             // 4. Insertar en detalle_manttoprev
