@@ -8544,16 +8544,16 @@ if($_POST['action'] == 'AlmacenaSolicitudmpreventivo')
         $usuario     = $_SESSION['idUser'];
 
         $query_insertar_mantto_preventivo = "SELECT COUNT(*) INTO @verifica FROM mantenimiento_preventivo   
-                            WHERE no_orden = $folio;
+                            WHERE no_orden = $folio
                             IF @verifica = 0 THEN 
-                                SELECT COUNT(*) INTO @verifica2 FROM solicitud_mantenimiento WHERE no_orden = $folio;
+                                SELECT COUNT(*) INTO @verifica2 FROM solicitud_mantenimiento WHERE no_orden = $folio
                                 IF @verifica2 = 0 THEN
                                     INSERT INTO mantenimiento_preventivo (no_orden, fecha, usuario, solicitada, unidad, tipo_unidad, tipo_trabajo, kilometraje, filtro_aceite, filtro_aire, filtro_combustible, cambio_aceite, cambio_bujias, km_bujias, revision_balatas, engrasado, anticongelante, liquido_freno, aceite_hidraulico, rotacion_llantas, banda_accesorios, muelles, amortiguadores, luces, baterias, inyectores, masas_delanteras,  fecha_inicio, fecha_culminacion, observaciones, usuario_id) VALUES($folio, $fecha, $usuario, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_ini, $fecha_fin, $notasgen, $usuario);
      
                                     INSERT INTO detalle_manttoprev (folio, codigo, cantidad, descripcion, costo) SELECT newfolio, codigo, cantidad, descripcion, costo FROM detalle_temp_manttoprev WHERE folio = $folio
      
-                                END IF;
-                            END IF;";
+                                END IF
+                            END IF";
 
         // $query_procesar = mysqli_query($conection,"CALL procesar_solicitudmpreventivo($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$filtro_aceite', '$filtro_aire', '$filtro_gas', '$cambio_aceite', '$cambio_bujias', '$km_bujias', '$rev_balatas', '$engrasado', '$anti_congela', '$liquido_frenos', '$aceite_hidraul', '$rota_llantas', '$banda_acessor', '$rev_muelles', '$amortiguadores', '$rev_luces', '$rev_bateria', '$inyectores', '$masas_frente', '$trabajo_sol', $kilometraje, '$fecha_inicio', '$fecha_fin', '$notasgen', $usuario)");
         $result_mtto_preventivo = mysqli_query($conection, $query_insertar_mantto_preventivo);
