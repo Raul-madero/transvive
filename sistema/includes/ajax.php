@@ -8570,7 +8570,7 @@ if ($count === 0) {
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = mysqli_prepare($conection, $query_insertar_mantto_preventivo);
-        mysqli_stmt_bind_param($stmt, "isssssssssssssssssssssssssssssssi", $folio, $fecha, $usuario, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_ini, $fecha_fin, $notasgen, $usuario);
+        mysqli_stmt_bind_param($stmt, "issssssissssssssssssssssssssssi", $folio, $fecha, $usuario, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_ini, $fecha_fin, $notasgen, $usuario);
 
         if (mysqli_stmt_execute($stmt)) {
             // 4. Insertar en detalle_manttoprev
