@@ -8543,6 +8543,12 @@ if($_POST['action'] == 'AlmacenaSolicitudmpreventivo')
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
 
+        $query_insertar = "SELECT COUNT(*) INTO @verifica FROM mantenimiento_preventivo WHERE no_orden = $folio;
+                            IF @verifica = 0 THEN 
+                            SELECT COUNT(*) INTO @verica2 FROM solicitud_mantenimiento WHERE no_orden = $folio;
+                            IF @verifica2 = 0 THEN
+                            INSERT INTO mantenimiento_preventivo (folio, ";
+
         $query_procesar = mysqli_query($conection,"CALL procesar_solicitudmpreventivo($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$filtro_aceite', '$filtro_aire', '$filtro_gas', '$cambio_aceite', '$cambio_bujias', '$km_bujias', '$rev_balatas', '$engrasado', '$anti_congela', '$liquido_frenos', '$aceite_hidraul', '$rota_llantas', '$banda_acessor', '$rev_muelles', '$amortiguadores', '$rev_luces', '$rev_bateria', '$inyectores', '$masas_frente', '$trabajo_sol', $kilometraje, '$fecha_inicio', '$fecha_fin', '$notasgen', $usuario)");
         $result_detalle = mysqli_num_rows($query_procesar);
         

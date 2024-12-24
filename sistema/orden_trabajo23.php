@@ -331,17 +331,23 @@ buttons: [
             { "data" : "trabsolicitado", "width": "12%" },
             { "data" : "estatusped", "width": "8%", "orderable":false },
               
-          
+          <?php if ($idUser == 19 || $idUser == 13) { ?>
             {
                     "render": function ( data, type, full, meta ) {
         return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a>';
-    }
-                    
-            
+    }       
  } 
 
-         
-            
+         <?php }else { ?>
+          {
+                    "render": function ( data, type, full, meta ) {
+        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a>
+                    }
+                  }
+                  <?php } ?>
+          
+
+
           ],
           "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
     "buttons": [
