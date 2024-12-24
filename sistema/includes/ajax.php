@@ -8542,7 +8542,7 @@ if($_POST['action'] == 'AlmacenaSolicitudmpreventivo')
 
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
-
+        $query_insertar_mantto_preventivo = "";
         $query_busqueda_folio = "SELECT COUNT(*) FROM mantenimiento_preventivo   
                                     WHERE no_orden = $folio";
         $folio_existente = mysqli_num_rows($conection, $query_busqueda_folio);
@@ -8552,7 +8552,11 @@ if($_POST['action'] == 'AlmacenaSolicitudmpreventivo')
             if($folio_existente === 0) {
                 $query_insertar_mantto_preventivo = "INSERT INTO mantenimiento_preventivo (no_orden, fecha, usuario, solicitada, unidad, tipo_unidad, tipo_trabajo, kilometraje, filtro_aceite, filtro_aire, filtro_combustible, cambio_aceite, cambio_bujias, km_bujias, revision_balatas, engrasado, anticongelante, liquido_freno, aceite_hidraulico, rotacion_llantas, banda_accesorios, muelles, amortiguadores, luces, baterias, inyectores, masas_delanteras,  fecha_inicio, fecha_culminacion, observaciones, usuario_id) VALUES($folio, $fecha, $usuario, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_ini, $fecha_fin, $notasgen, $usuario);
                 INSERT INTO detalle_manttoprev (folio, codigo, cantidad, descripcion, costo) SELECT newfolio, codigo, cantidad, descripcion, costo FROM detalle_temp_manttoprev WHERE folio = $folio";
+            }else {
+                echo "error: " . mysqli_error($conection);
             };
+        }else {
+            "error: " . mysqli_error($conection);
         };
                            
 
