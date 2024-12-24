@@ -503,7 +503,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       var info = JSON.parse(response);
                       console.log(response); 
                       location.href = 'mantenimiento_preventivo.php';
-                       //*location.reload();
+                       /* location.reload(); */
 
                
                         
