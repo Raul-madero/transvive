@@ -1242,7 +1242,7 @@ if($_POST['action'] == 'AlmacenaViaje')
             WHERE noempleado = ?");
 
             if ($stmt) {
-                $stmt->bind_param("sssssssssssssssssssssssssssssssssssssssssssssssi", 
+                $stmt->bind_param("ssssssssssssssssdddddddddddddddsdddddddsssisssssssdddsssssii", 
                     $nombreEmpleado, $apellidoPaterno, $materno, $cargo, 
                     $telefono, $rfc, $unidad, $nounidad, $tipo_lic, 
                     $nolicencia, $fecha_vence, $supervisor, $tipocontrato, 
