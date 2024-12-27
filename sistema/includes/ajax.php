@@ -1835,13 +1835,13 @@ if($_POST['action'] == 'EditaViajeSpecial')
             $data = mysqli_fetch_assoc($query_procesar);
             echo json_encode($data,JSON_UNESCAPED_UNICODE);
         }else{
-            echo "error";
+            echo json_encode(array('error' => 'Error al actualizar el viaje.'));
         }
     
     mysqli_close($conection);
 
     }else{
-        echo 'error';
+        echo json_encode(array('error' => 'Por favor, complete todos los campos requeridos.')); 
     }
     exit;
  

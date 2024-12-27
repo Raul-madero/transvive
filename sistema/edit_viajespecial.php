@@ -640,60 +640,36 @@ $('#btn_salir').click(function(e){
 
                     success: function(response)
                     {
-                      if(response != 'error')
-                        {
-                         console.log(response);
                         var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "REGISTRO DE VIAJE ESPECIAL EDITADO CORRECTAMENTE",
-                          icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'viajes_especiales23.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'viajes_especiales23.php';
-                        }
-                        });
-
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
+                        if( info.error) {
                           Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
+                            icon: 'error',
+                            title: 'Ooops',
+                            text: info.error
+                          })
+                        }else {
+                              Swal
+                          .fire({
+                            title: "Exito!",
+                            text: "REGISTRO DE VIAJE ESPECIAL EDITADO CORRECTAMENTE",
+                            icon: 'success',
+
+                            //showCancelButton: true,
+                            //confirmButtonText: "Regresar",
+                            //cancelButtonText: "Salir",
         
+                        })
+                          .then(resultado => {
+                        if (resultado.value) {
+                          //* generarimpformulaPDF(info.folio);
+                          location.href = 'viajes_especiales23.php';
+                          } else {
+                            // Dijeron que no
+                            location.reload();
+                          location.href = 'viajes_especiales23.php';
+                          }
+                          });
                         }
-                        //viewProcesar();
                  },
                  error: function(error) {
                  }
