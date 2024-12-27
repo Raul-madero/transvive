@@ -1152,7 +1152,10 @@ if($_POST['action'] == 'AlmacenaViaje')
 
     //Agregar Productos a Entrada
     if($_POST['action'] == 'AlmacenaEditEmpleado') {
-
+        echo "<pre>";
+        print_r($_POST);
+        echo "<pre>";
+        exit;
         // Validar datos (implementar validaciones específicas)
         if (!empty($_POST['name']) && !empty($_POST['paterno']) && !empty($_POST['materno'])) { 
             var_dump($_POST);
