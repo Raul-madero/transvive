@@ -903,10 +903,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             datebaja: datebaja,
             datereingreso: datereingreso
           },
-          console.log(data)
           success: function(response) {
             if (response != 'error') {
               console.log(response);
+              break;
               var info = JSON.parse(response);
               console.log(info);
               let mensaje = (info.mensaje);
