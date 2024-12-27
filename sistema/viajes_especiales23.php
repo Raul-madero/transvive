@@ -15,7 +15,7 @@ session_start();
   header('Location: ../index.php');
 }
 
-  $sql01= mysqli_query($conection,"SELECT * FROM registro_viajes WHERE estatus= 1 and (tipo_viaje like '%Especial%' or tipo_viaje  = 'Sprinter') ");
+  $sql01= mysqli_query($conection,"SELECT * FROM registro_viajes WHERE estatus= 1 and (tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter') ");
   mysqli_close($conection);
   $result_sql01 = mysqli_num_rows($sql01);
 
@@ -50,7 +50,7 @@ session_start();
 
   if ($rol == 1) {
     include "../conexion.php";
-    $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and (tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter')");
+    $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and (tipo_viaje like '%Especial%' or tipo_viaje  = 'Sprinter')");
     mysqli_close($conection);
     $result_sql02 = mysqli_num_rows($sql02);
 
