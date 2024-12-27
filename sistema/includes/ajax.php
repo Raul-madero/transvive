@@ -1224,7 +1224,7 @@ if($_POST['action'] == 'AlmacenaViaje')
         
 
 
-        $stmt = $conection->prepare("UPDATE empleados SET 
+            $stmt = $conection->prepare("UPDATE empleados SET 
             nombres = ?, apellido_paterno = ?, apellido_materno = ?, 
             cargo = ?, telefono = ?, rfc = ?, tipo_unidad = ?, 
             unidad = ?, tipo_licencia = ?, no_licencia = ?, 
@@ -1249,40 +1249,41 @@ if($_POST['action'] == 'AlmacenaViaje')
 
             if ($stmt) {
                 $stmt->bind_param("ssssssssssssssssdddddddddddddddsdddddddsssisssssssdddsssssii", 
-                    $nombreEmpleado, $apellidoPaterno, $materno, $cargo, 
-                    $telefono, $rfc, $unidad, $nounidad, $tipo_lic, 
-                    $nolicencia, $fecha_vence, $supervisor, $tipocontrato, 
-                    $contrato, $fincontrato, $imss, $salariodia, $sueldobase, 
-                    $sueldo, $sueldob2, $bonosemanal, $vdgmv, $vdgao, 
-                    $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, 
-                    $saldo_adeudo, $bono, $clasif_cat, $bonoc2, $apoyomes, 
-                    $vales, $caja, $vacaciones, $efectivo, $descfiscal, 
-                    $tipo_nomina, $sexo, $fechanac, $edad, $edocivil, 
-                    $domicilio, $estudios, $contactoe, $elcurp, $fchaaltaimss, 
-                    $noss, $salarioxdia, $sueldoauto, $sdosprinter, 
-                    $es_recontrata, $recontratable, $comentarios, $datebaja, 
-                    $datereingreso, $usuario, $noempleado);
+                $nombreEmpleado, $apellidoPaterno, $materno, $cargo, 
+                $telefono, $rfc, $unidad, $nounidad, $tipo_lic, 
+                $nolicencia, $fecha_vence, $supervisor, $tipocontrato, 
+                $contrato, $fincontrato, $imss, $salariodia, $sueldobase, 
+                $sueldo, $sueldob2, $bonosemanal, $vdgmv, $vdgao, 
+                $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, 
+                $saldo_adeudo, $bono, $clasif_cat, $bonoc2, $apoyomes, 
+                $vales, $caja, $vacaciones, $efectivo, $descfiscal, 
+                $tipo_nomina, $sexo, $fechanac, $edad, $edocivil, 
+                $domicilio, $estudios, $contactoe, $elcurp, $fchaaltaimss, 
+                $noss, $salarioxdia, $sueldoauto, $sdosprinter, 
+                $es_recontrata, $recontratable, $comentarios, $datebaja, 
+                $datereingreso, $usuario, $noempleado);
 
-                    if ($stmt->execute()) {
-                        // Actualización exitosa
-                        echo "success"; 
-                    } else {
-                        // Error al ejecutar la consulta
-                        error_log("Error al actualizar empleado: " . $stmt->error); 
-                        echo "error"; 
-                    }
-                    $stmt->close();
+                if ($stmt->execute()) {
+                    // Actualización exitosa
+                    echo "success"; 
                 } else {
-                    // Error al preparar la consulta
-                    error_log("Error al preparar la consulta: " . $conection->error); 
+                    // Error al ejecutar la consulta
+                    error_log("Error al actualizar empleado: " . $stmt->error); 
                     echo "error"; 
                 }
-        
-                mysqli_close($conection);
-        
+                $stmt->close();
             } else {
-                echo 'error';
+                // Error al preparar la consulta
+                error_log("Error al preparar la consulta: " . $conection->error); 
+                echo "error"; 
             }
+    
+            mysqli_close($conection);
+    
+        } else {
+            echo $_POST;
+            echo 'error';
+        }
     exit;
 };
 
