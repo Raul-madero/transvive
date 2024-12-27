@@ -1155,7 +1155,8 @@ if($_POST['action'] == 'AlmacenaViaje')
 
         // Validar datos (implementar validaciones específicas)
         if (!empty($_POST['name']) && !empty($_POST['paterno']) && !empty($_POST['materno'])) { 
-    
+            var_dump($_POST);
+            exit;
             $nombreEmpleado = isset($_POST['name']) ? trim($_POST['name']) : "";
             $apellidoPaterno = isset($_POST['paterno']) ? trim($_POST['paterno']) : "";
             $materno = isset($_POST['materno']) ? trim($_POST['materno']) : "";
