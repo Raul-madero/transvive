@@ -1281,7 +1281,7 @@ if($_POST['action'] == 'AlmacenaViaje')
             mysqli_close($conection);
     
         } else {
-            echo $_POST;
+            var_dump($_POST);
             echo 'error';
         }
     exit;
