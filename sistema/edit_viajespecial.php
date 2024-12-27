@@ -11,7 +11,6 @@ session_start();
   if (!isset($_SESSION['idUser'])) {
   header('Location: ../index.php');
 }
-
    //Mostrar Datos
   if(empty($_REQUEST['id']))
   {

@@ -1828,6 +1828,7 @@ if($_POST['action'] == 'EditaViajeSpecial')
         $usuario     = $_SESSION['idUser'];
     
         $query_procesar = mysqli_query($conection,"CALL editar_viajespecial($Idmov, '$fechaviaje', '$cliente', '$tipo_viaje', $numunidades, '$unidad', '$horaini', '$direccion', '$horafin', '$destino', '$notas', '$phone_cont', $costo, $supervisor, $sueldo_vta, $usuario)");
+        echo $conection;
         $result_detalle = mysqli_num_rows($query_procesar);
         
         if($result_detalle > 0){
