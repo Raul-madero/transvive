@@ -1265,14 +1265,6 @@ if($_POST['action'] == 'AlmacenaViaje')
                         error_log("Error al actualizar empleado: " . $stmt->error); 
                         echo "error"; 
                     }
-                    $result_detalle = mysqli_num_rows($query_procesar);
-                    
-                    if($result_detalle > 0){
-                        $data = mysqli_fetch_assoc($query_procesar);
-                        echo json_encode($data,JSON_UNESCAPED_UNICODE);
-                    }else{
-                        echo "error";
-                    }
                     $stmt->close();
                 } else {
                     // Error al preparar la consulta
