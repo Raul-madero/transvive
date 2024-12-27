@@ -1186,7 +1186,8 @@ if($_POST['action'] == 'AlmacenaViaje')
             $datebaja = isset($_POST['datebaja']) ? trim($_POST['datebaja']) : ""; 
             $datereingreso = isset($_POST['datereingreso']) ? trim($_POST['datereingreso']) : "";
             $es_recontrata = isset($_POST['es_recontrata']) ? trim($_POST['es_recontrata']) : ""; 
-            $recontratable = isset($_POST['recontratable']) ? trim($_POST['recontratable']) : ""; 
+            $recontratable = isset($_POST['recontratable']) ? trim($_POST['recontratable']) : "";
+            $clasif_cat = isset($_POST['clasif_cat']) ? trim($_POST['clasif_cat']) : ""; 
 
 
             $salariodia = isset($_POST['salariodia']) ? (float)$_POST['salariodia'] : 0.0;

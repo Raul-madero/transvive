@@ -844,21 +844,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
             action: action,
             Id: Id,
             noempleado: noempleado,
-            name: name,
-            paterno: paterno,
+            name: nombreEmpleado,
+            paterno: apellidoPaterno,
             materno: materno,
             cargo: cargo,
             telefono: telefono,
-            rfccte: rfccte,
+            rfccte: rfc,
             unidad: unidad,
             nounidad: nounidad,
             tipo_lic: tipo_lic,
             nolicencia: nolicencia,
-            fvencimiento: fvencimiento,
+            fvencimiento: fecha_vence,
             supervisor: supervisor,
             tipocontrato: tipocontrato,
-            fcontrato: fcontrato,
-            vencontrato: vencontrato,
+            fcontrato: contrato,
+            vencontrato: fincontrato,
             imss: imss,
             salariodia: salariodia,
             sueldobase: sueldobase,
@@ -867,22 +867,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
             vdgmv: vdgmv,
             vdgao: vdgao,
             sprinter: sprinter,
-            sueldo_auto: sueldo_auto,
+            sueldo_auto: sauto,
             ssemi: ssemi,
             deuda: deuda,
             descuento: descuento,
             adeudo: adeudo,
             saldo_adeudo: saldo_adeudo,
-            bonos: bonos,
+            bonos: bono,
             clasif_cat: clasif_cat,
-            bonosc2: bonosc2,
+            bonosc2: bonoc2,
             bonosemanal: bonosemanal,
             apoyomes: apoyomes,
             vales: vales,
             caja: caja,
             vacaciones: vacaciones,
             efectivo: efectivo,
-            descefectivo: descefectivo,
+            descefectivo: descfiscal,
             tipo_nomina: tipo_nomina,
             sexo: sexo,
             fechanac: fechanac,
@@ -909,7 +909,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               console.log(response);
               var info = JSON.parse(response);
               console.log(info);
-              $mensaje = (info.mensaje);
+              let mensaje = (info.mensaje);
               if ($mensaje === undefined) {
                 Swal
                   .fire({
@@ -942,7 +942,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: $mensaje,
+                  text: mensaje,
                 })
               }
 
