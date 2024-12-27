@@ -343,7 +343,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           </div>
                         </div>
                         <button type="button" class="btn btn-secondary btn_salir">Regresar</button>
-                        <button type="submit" class="btn btn-success" id="guardar_cliente">Guardar</button>
+                        <button type="submit" class="btn btn-success guardar_cliente">Guardar</button>
                       </form>
                     </div>
                     <!-- /.post -->
@@ -412,7 +412,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           </div>
                         </div>
                         <button type="button" class="btn btn-secondary btn_salir">Regresar</button>
-                        <button type="submit" class="btn btn-success" id="guardar_cliente">Guardar</button>
+                        <button type="submit" class="btn btn-success guardar_cliente" >Guardar</button>
                         <br>
                         <p>&nbsp;</p>
                       </form>
@@ -570,7 +570,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           </div>
                         </div>
                         <button type="button" class="btn btn-secondary btn_salir">Regresar</button>
-                        <button type="submit" class="btn btn-success" id="guardar_cliente">Guardar</button>
+                        <button type="submit" class="btn btn-success guardar_cliente">Guardar</button>
                       </form>
                     </div>
                   </div>
@@ -675,7 +675,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="form-group row" style="text-align:right;">
                           <div class="offset-sm-2 col-sm-10">
                             <button type="button" class="btn btn-secondary btn_salir">Regresar</button>
-                            <button type="submit" class="btn btn-success" id="guardar_cliente">Guardar</button>
+                            <button type="submit" class="btn btn-success guardar_cliente">Guardar</button>
                           </div>
                         </div>
                       </form>
@@ -770,7 +770,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </script>
 
     <script>
-      $('#guardar_cliente').click(function(e) {
+      $('.guardar_cliente').click(function(e) {
         e.preventDefault();
 
         var Id = $('#inputId').val();
