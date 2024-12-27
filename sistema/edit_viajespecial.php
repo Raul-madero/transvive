@@ -3,7 +3,7 @@ include "../conexion.php";
 session_start();
   $User=$_SESSION['user'];
   $rol=$_SESSION['rol'];
-  $sql = "select * from rol where idrol =$rol ";
+  $sql = "SELECT * FROM rol WHERE idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 
 
@@ -19,9 +19,9 @@ session_start();
     mysqli_close($conection);
   }
   $idact = $_REQUEST['id'];
-
+  echo $idact;
   $sqlact= mysqli_query($conection,"SELECT id, fecha, fechafinal, semana, cliente, ruta, operador, unidad, tipo_viaje, numero_unidades, num_unidad, personas, turno, valor_vuelta, hora_inicio, direccion, hora_fin, destino, notas, estatus, costo_viaje, id_supervisor, telefono_contacto, sueldo_vuelta FROM registro_viajes
-   WHERE id=$idact");
+   WHERE id= $idact");
   mysqli_close($conection);
   $result_sqlact = mysqli_num_rows($sqlact);
 

@@ -234,7 +234,6 @@ $('#btn_salir').click(function(e){
 <script>
    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
-
        var ejercicio_actual = $('#inputEjeractual').val();
        var ejercicio_nuevo  = $('#inputEjernuevo').val();
       

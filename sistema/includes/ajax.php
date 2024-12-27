@@ -1151,10 +1151,11 @@ if($_POST['action'] == 'AlmacenaViaje')
         }        
 
     //Agregar Productos a Entrada
-if($_POST['action'] == 'AlmacenaEditEmpleado')
-{
-    if(!empty($_POST['name']) || !empty($_POST['paterno']) || !empty($_POST['materno']) )
-    {
+    if($_POST['action'] == 'AlmacenaEditEmpleado') {
+
+        // Validar datos (implementar validaciones específicas)
+        if (!empty($_POST['name']) && !empty($_POST['paterno']) && !empty($_POST['materno'])) { 
+    
         $id           = $_POST['Id'];
         $noempleado   = $_POST['noempleado'];
         $name         = $_POST['name'];
@@ -1217,26 +1218,75 @@ if($_POST['action'] == 'AlmacenaEditEmpleado')
         $datereingreso = $_POST['datereingreso'];
 
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+        $stmt = $conection->prepare("UPDATE empleados SET 
+            nombres = ?, apellido_paterno = ?, apellido_materno = ?, 
+            cargo = ?, telefono = ?, rfc = ?, tipo_unidad = ?, 
+            unidad = ?, tipo_licencia = ?, no_licencia = ?, 
+            fecha_vencimiento = ?, supervisor = ?, tipo_contrato = ?, 
+            fecha_contrato = ?, fecha_fincontrato = ?, imss = ?, 
+            salario_diario = ?, sueldo_base = ?, sueldo = ?, 
+            sueldo_camioneta = ?, bono_semanal = ?, 
+            sueldo_especialcamion = ?, sueldo_especialcamioneta = ?, 
+            sueldo_especialsprinter = ?, sueldo_especialauto = ?, 
+            sueldo_especialsemi = ?, deuda_general = ?, descuento = ?, 
+            adeudo = ?, saldo_adeudo = ?, bono_supervisor = ?, 
+            clasifica_categoria = ?, bono_categoria = ?, apoyo_mes = ?, 
+            sueldo_adicional = ?, caja_ahorro = ?, vacaciones = ?, 
+            efectivo = ?, descuento_fiscal = ?, tipo_nomina = ?, 
+            sexo = ?, date_nacimiento = ?, edad = ?, estado_civil = ?, 
+            domicilio = ?, estudios = ?, contacto_emergencia = ?, 
+            curp = ?, fecha_altaimss = ?, numeross = ?, salarioxdia = ?, 
+            sueldo_coche = ?, sueldo_sprinter = ?, recontratable = ?, 
+            pqrecontrata = ?, comentarios = ?, fecha_baja = ?, 
+            fecha_reingreso = ?, edit_id = ? 
+            WHERE noempleado = ?");
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_editempleado($id, $noempleado, '$name', '$paterno', '$materno', '$cargo', '$telefono', '$rfc', '$unidad', '$nounidad', '$tipo_lic', '$nolicencia', '$fecha_vence', '$supervisor', '$tipocontrato', '$contrato', '$fincontrato', '$imss', $salariodia, $sueldobase, $sueldo, $sueldob2, $vdgmv, $vdgao, $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, $saldo_adeudo, $bono, '$clasif_cat', $bonoc2, $bonosemanal, $apoyomes, $vales, $caja, $vacaciones, $efectivo, $descfiscal, '$tipo_nomina', '$sexo', '$fechanac', $edad, '$edocivil', '$domicilio', '$estudios', '$contactoe', '$elcurp', '$fchaaltaimss', '$noss', $salarioxdia, $sueldoauto, $sdosprinter, '$es_recontrata', '$recontratable', '$comentarios', '$datebaja', '$datereingreso', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
+            if ($stmt) {
+                $stmt->bind_param("sssssssssssssssssssssssssssssssssssssssssssssssi", 
+                    $nombreEmpleado, $apellidoPaterno, $materno, $cargo, 
+                    $telefono, $rfc, $unidad, $nounidad, $tipo_lic, 
+                    $nolicencia, $fecha_vence, $supervisor, $tipocontrato, 
+                    $contrato, $fincontrato, $imss, $salariodia, $sueldobase, 
+                    $sueldo, $sueldob2, $bonosemanal, $vdgmv, $vdgao, 
+                    $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, 
+                    $saldo_adeudo, $bono, $clasif_cat, $bonoc2, $apoyomes, 
+                    $vales, $caja, $vacaciones, $efectivo, $descfiscal, 
+                    $tipo_nomina, $sexo, $fechanac, $edad, $edocivil, 
+                    $domicilio, $estudios, $contactoe, $elcurp, $fchaaltaimss, 
+                    $noss, $salarioxdia, $sueldoauto, $sdosprinter, 
+                    $es_recontrata, $recontratable, $comentarios, $datebaja, 
+                    $datereingreso, $usuario, $noempleado);
+
+                    if ($stmt->execute()) {
+                        // Actualización exitosa
+                        echo "success"; 
+                    } else {
+                        // Error al ejecutar la consulta
+                        error_log("Error al actualizar empleado: " . $stmt->error); 
+                        echo "error"; 
+                    }
+                    $result_detalle = mysqli_num_rows($query_procesar);
+                    
+                    if($result_detalle > 0){
+                        $data = mysqli_fetch_assoc($query_procesar);
+                        echo json_encode($data,JSON_UNESCAPED_UNICODE);
+                    }else{
+                        echo "error";
+                    }
+                    $stmt->close();
+                } else {
+                    // Error al preparar la consulta
+                    error_log("Error al preparar la consulta: " . $conection->error); 
+                    echo "error"; 
+                }
         
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
-        }
-    
-    mysqli_close($conection);
-
-    }else{
-        echo 'error';
-    }
+                mysqli_close($conection);
+        
+            } else {
+                echo 'error';
+            }
     exit;
-} 
+};
 
 
 // ***** Agrega participantes minutas //

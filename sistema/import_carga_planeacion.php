@@ -16,7 +16,7 @@ if (!$conection->query($sql)) {
     die("Error al limpiar la tabla temporal.");
 }
 $tipo_viaje = 'Normal';
-$valor_vuelta = 1.00;
+$valor_vuelta = 0.00;
 date_default_timezone_set('America/Mexico_City');
 $fechac = date("Y-m-d");
 
