@@ -1218,9 +1218,7 @@ if($_POST['action'] == 'AlmacenaViaje')
             $usuario = isset($_POST['usuario']) ? (int)$_POST['usuario'] : 0; 
             $noempleado = isset($_POST['noempleado']) ? (int)$_POST['noempleado'] : 0;
 
-
-        
-
+            var_dump($_POST);
 
             $stmt_edit_empleado = $conection->prepare("UPDATE empleados SET 
             nombres = ?, apellido_paterno = ?, apellido_materno = ?, 
