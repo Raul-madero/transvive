@@ -1151,74 +1151,75 @@ if($_POST['action'] == 'AlmacenaViaje')
         }        
 
     //Agregar Productos a Entrada
-    if($_POST['action'] == 'AlmacenaEditEmpleado') {
+    if($data['action'] == 'AlmacenaEditEmpleado') {
+        $data = json_decode(file_get_contents('php://input'), true);
         // Validar datos (implementar validaciones específicas)
-        if (!empty($_POST['name']) && !empty($_POST['paterno']) && !empty($_POST['materno'])) { 
-            $nombreEmpleado = isset($_POST['name']) ? trim($_POST['name']) : "";
-            $apellidoPaterno = isset($_POST['paterno']) ? trim($_POST['paterno']) : "";
-            $materno = isset($_POST['materno']) ? trim($_POST['materno']) : "";
-            $cargo = isset($_POST['cargo']) ? trim($_POST['cargo']) : ""; 
-            $telefono = isset($_POST['telefono']) ? trim($_POST['telefono']) : "";
-            $rfc = isset($_POST['rfccte']) ? trim($_POST['rfccte']) : "";
-            $unidad = isset($_POST['unidad']) ? trim($_POST['unidad']) : ""; 
-            $nounidad = isset($_POST['nounidad']) ? trim($_POST['nounidad']) : "";
-            $tipo_lic = isset($_POST['tipo_lic']) ? trim($_POST['tipo_lic']) : "";
-            $nolicencia = isset($_POST['nolicencia']) ? trim($_POST['nolicencia']) : "";
-            $fecha_vence = isset($_POST['fvencimiento']) ? trim($_POST['fvencimiento']) : ""; 
-            $supervisor = isset($_POST['supervisor']) ? trim($_POST['supervisor']) : ""; 
-            $tipocontrato = isset($_POST['tipocontrato']) ? trim($_POST['tipocontrato']) : "";
-            $contrato = isset($_POST['fcontrato']) ? trim($_POST['fcontrato']) : ""; 
-            $fincontrato = isset($_POST['vencontrato']) ? trim($_POST['vencontrato']) : "";
-            $imss = isset($_POST['imss']) ? trim($_POST['imss']) : ""; 
-            $tipo_nomina = isset($_POST['tipo_nomina']) ? trim($_POST['tipo_nomina']) : "";
-            $sexo = isset($_POST['sexo']) ? trim($_POST['sexo']) : "";
-            $fechanac = isset($_POST['fechanac']) ? trim($_POST['fechanac']) : ""; 
-            $edocivil = isset($_POST['edocivil']) ? trim($_POST['edocivil']) : "";
-            $domicilio = isset($_POST['domicilio']) ? trim($_POST['domicilio']) : "";
-            $estudios = isset($_POST['estudios']) ? trim($_POST['estudios']) : "";
-            $contactoe = isset($_POST['contactoe']) ? trim($_POST['contactoe']) : "";
-            $elcurp = isset($_POST['elcurp']) ? trim($_POST['elcurp']) : "";
-            $fchaaltaimss = isset($_POST['fchaaltaimss']) ? trim($_POST['fchaaltaimss']) : ""; 
-            $noss = isset($_POST['noss']) ? trim($_POST['noss']) : "";
-            $comentarios = isset($_POST['comentarios']) ? trim($_POST['comentarios']) : "";
-            $datebaja = isset($_POST['datebaja']) ? trim($_POST['datebaja']) : ""; 
-            $datereingreso = isset($_POST['datereingreso']) ? trim($_POST['datereingreso']) : "";
-            $es_recontrata = isset($_POST['es_recontrata']) ? trim($_POST['es_recontrata']) : ""; 
-            $recontratable = isset($_POST['recontratable']) ? trim($_POST['recontratable']) : "";
-            $clasif_cat = isset($_POST['clasif_cat']) ? trim($_POST['clasif_cat']) : ""; 
+        if (!empty($data['name']) && !empty($data['paterno']) && !empty($data['materno'])) { 
+            $nombreEmpleado = isset($data['name']) ? trim($data['name']) : "";
+            $apellidoPaterno = isset($data['paterno']) ? trim($data['paterno']) : "";
+            $materno = isset($data['materno']) ? trim($data['materno']) : "";
+            $cargo = isset($data['cargo']) ? trim($data['cargo']) : ""; 
+            $telefono = isset($data['telefono']) ? trim($data['telefono']) : "";
+            $rfc = isset($data['rfccte']) ? trim($data['rfccte']) : "";
+            $unidad = isset($data['unidad']) ? trim($data['unidad']) : ""; 
+            $nounidad = isset($data['nounidad']) ? trim($data['nounidad']) : "";
+            $tipo_lic = isset($data['tipo_lic']) ? trim($data['tipo_lic']) : "";
+            $nolicencia = isset($data['nolicencia']) ? trim($data['nolicencia']) : "";
+            $fecha_vence = isset($data['fvencimiento']) ? trim($data['fvencimiento']) : ""; 
+            $supervisor = isset($data['supervisor']) ? trim($data['supervisor']) : ""; 
+            $tipocontrato = isset($data['tipocontrato']) ? trim($data['tipocontrato']) : "";
+            $contrato = isset($data['fcontrato']) ? trim($data['fcontrato']) : ""; 
+            $fincontrato = isset($data['vencontrato']) ? trim($data['vencontrato']) : "";
+            $imss = isset($data['imss']) ? trim($data['imss']) : ""; 
+            $tipo_nomina = isset($data['tipo_nomina']) ? trim($data['tipo_nomina']) : "";
+            $sexo = isset($data['sexo']) ? trim($data['sexo']) : "";
+            $fechanac = isset($data['fechanac']) ? trim($data['fechanac']) : ""; 
+            $edocivil = isset($data['edocivil']) ? trim($data['edocivil']) : "";
+            $domicilio = isset($data['domicilio']) ? trim($data['domicilio']) : "";
+            $estudios = isset($data['estudios']) ? trim($data['estudios']) : "";
+            $contactoe = isset($data['contactoe']) ? trim($data['contactoe']) : "";
+            $elcurp = isset($data['elcurp']) ? trim($data['elcurp']) : "";
+            $fchaaltaimss = isset($data['fchaaltaimss']) ? trim($data['fchaaltaimss']) : ""; 
+            $noss = isset($data['noss']) ? trim($data['noss']) : "";
+            $comentarios = isset($data['comentarios']) ? trim($data['comentarios']) : "";
+            $datebaja = isset($data['datebaja']) ? trim($data['datebaja']) : ""; 
+            $datereingreso = isset($data['datereingreso']) ? trim($data['datereingreso']) : "";
+            $es_recontrata = isset($data['es_recontrata']) ? trim($data['es_recontrata']) : ""; 
+            $recontratable = isset($data['recontratable']) ? trim($data['recontratable']) : "";
+            $clasif_cat = isset($data['clasif_cat']) ? trim($data['clasif_cat']) : ""; 
 
 
-            $salariodia = isset($_POST['salariodia']) ? (float)$_POST['salariodia'] : 0.0;
-            $sueldobase = isset($_POST['sueldobase']) ? (float)$_POST['sueldobase'] : 0.0;
-            $sueldo = isset($_POST['sueldo']) ? (float)$_POST['sueldo'] : 0.0;
-            $sueldob2 = isset($_POST['sueldob2']) ? (float)$_POST['sueldob2'] : 0.0;
-            $vdgmv = isset($_POST['vdgmv']) ? (float)$_POST['vdgmv'] : 0.0;
-            $vdgao = isset($_POST['vdgao']) ? (float)$_POST['vdgao'] : 0.0;
-            $sprinter = isset($_POST['sprinter']) ? (float)$_POST['sprinter'] : 0.0;
-            $sauto = isset($_POST['sueldo_auto']) ? (float)$_POST['sueldo_auto'] : 0.0;
-            $ssemi = isset($_POST['ssemi']) ? (float)$_POST['ssemi'] : 0.0;
-            $deuda = isset($_POST['deuda']) ? (float)$_POST['deuda'] : 0.0;
-            $descuento = isset($_POST['descuento']) ? (float)$_POST['descuento'] : 0.0;
-            $adeudo = isset($_POST['adeudo']) ? (float)$_POST['adeudo'] : 0.0;
-            $saldo_adeudo = isset($_POST['saldo_adeudo']) ? (float)$_POST['saldo_adeudo'] : 0.0;
-            $bono = isset($_POST['bonos']) ? (float)$_POST['bonos'] : 0.0;
-            $bonoc2 = isset($_POST['bonosc2']) ? (float)$_POST['bonosc2'] : 0.0;
-            $bonosemanal = isset($_POST['bonosemanal']) ? (float)$_POST['bonosemanal'] : 0.0;
-            $apoyomes = isset($_POST['apoyomes']) ? (float)$_POST['apoyomes'] : 0.0;
-            $vales = isset($_POST['vales']) ? (float)$_POST['vales'] : 0.0;
-            $caja = isset($_POST['caja']) ? (float)$_POST['caja'] : 0.0;
-            $vacaciones = isset($_POST['vacaciones']) ? (float)$_POST['vacaciones'] : 0.0;
-            $efectivo = isset($_POST['efectivo']) ? (float)$_POST['efectivo'] : 0.0;
-            $descfiscal = isset($_POST['descefectivo']) ? (float)$_POST['descefectivo'] : 0.0;
-            $salarioxdia = isset($_POST['salarioxdia']) ? (float)$_POST['salarioxdia'] : 0.0;
-            $sueldoauto = isset($_POST['sueldoauto']) ? (float)$_POST['sueldoauto'] : 0.0;
-            $sdosprinter = isset($_POST['sdosprinter']) ? (float)$_POST['sdosprinter'] : 0.0;
+            $salariodia = isset($data['salariodia']) ? (float)$data['salariodia'] : 0.0;
+            $sueldobase = isset($data['sueldobase']) ? (float)$data['sueldobase'] : 0.0;
+            $sueldo = isset($data['sueldo']) ? (float)$data['sueldo'] : 0.0;
+            $sueldob2 = isset($data['sueldob2']) ? (float)$data['sueldob2'] : 0.0;
+            $vdgmv = isset($data['vdgmv']) ? (float)$data['vdgmv'] : 0.0;
+            $vdgao = isset($data['vdgao']) ? (float)$data['vdgao'] : 0.0;
+            $sprinter = isset($data['sprinter']) ? (float)$data['sprinter'] : 0.0;
+            $sauto = isset($data['sueldo_auto']) ? (float)$data['sueldo_auto'] : 0.0;
+            $ssemi = isset($_POST['ssemi']) ? (float)$data['ssemi'] : 0.0;
+            $deuda = isset($data['deuda']) ? (float)$data['deuda'] : 0.0;
+            $descuento = isset($data['descuento']) ? (float)$data['descuento'] : 0.0;
+            $adeudo = isset($data['adeudo']) ? (float)$data['adeudo'] : 0.0;
+            $saldo_adeudo = isset($data['saldo_adeudo']) ? (float)$data['saldo_adeudo'] : 0.0;
+            $bono = isset($data['bonos']) ? (float)$data['bonos'] : 0.0;
+            $bonoc2 = isset($data['bonosc2']) ? (float)$data['bonosc2'] : 0.0;
+            $bonosemanal = isset($data['bonosemanal']) ? (float)$data['bonosemanal'] : 0.0;
+            $apoyomes = isset($data['apoyomes']) ? (float)$data['apoyomes'] : 0.0;
+            $vales = isset($data['vales']) ? (float)$data['vales'] : 0.0;
+            $caja = isset($data['caja']) ? (float)$data['caja'] : 0.0;
+            $vacaciones = isset($data['vacaciones']) ? (float)$data['vacaciones'] : 0.0;
+            $efectivo = isset($data['efectivo']) ? (float)$data['efectivo'] : 0.0;
+            $descfiscal = isset($data['descefectivo']) ? (float)$data['descefectivo'] : 0.0;
+            $salarioxdia = isset($data['salarioxdia']) ? (float)$data['salarioxdia'] : 0.0;
+            $sueldoauto = isset($data['sueldoauto']) ? (float)$data['sueldoauto'] : 0.0;
+            $sdosprinter = isset($data['sdosprinter']) ? (float)$data['sdosprinter'] : 0.0;
 
-            $edad = isset($_POST['edad']) ? (int)$_POST['edad'] : 0; 
-            $usuario = isset($_POST['usuario']) ? (int)$_POST['usuario'] : 0; 
-            $noempleado = isset($_POST['noempleado']) ? (int)$_POST['noempleado'] : 0;
+            $edad = isset($data['edad']) ? (int)$data['edad'] : 0; 
+            $usuario = isset($data['usuario']) ? (int)$data['usuario'] : 0; 
+            $noempleado = isset($data['noempleado']) ? (int)$data['noempleado'] : 0;
 
-            var_dump($_POST);
+            var_dump($data);
 
             $stmt_edit_empleado = $conection->prepare("UPDATE empleados SET 
             nombres = ?, apellido_paterno = ?, apellido_materno = ?, 
@@ -1278,7 +1279,7 @@ if($_POST['action'] == 'AlmacenaViaje')
             mysqli_close($conection);
     
         } else {
-            var_dump($_POST);
+            var_dump($data);
             echo 'error';
         }
 };

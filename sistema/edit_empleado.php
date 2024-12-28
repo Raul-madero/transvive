@@ -833,14 +833,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var datebaja = $('#inputDatebaja').val();
         var datereingreso = $('#inputDatereingreso').val();
 		    let usuario = <?php echo $User; ?>
-
-        var action = 'AlmacenaEditEmpleado';
-
-        $.ajax({
-          url: 'includes/ajax.php',
-          type: "POST",
-          async: true,
-          data: {
+        let data = {
             action: action,
             Id: parseInt(Id),
             noempleado: parseInt(noempleado),
@@ -903,7 +896,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
             datebaja: datebaja,
             datereingreso: datereingreso,
 			      usuario: parseInt(usuario)
-          },
+        }
+
+        var action = 'AlmacenaEditEmpleado';
+
+        $.ajax({
+          url: 'includes/ajax.php',
+          type: "POST",
+          async: true,
+          data: JSON.stringify(data),
+		  contentType: 'application/json',
+		  dataType: 'json',
           success: function(response) {
             if (response.startsWith('error')) {
               Swal.fire({
