@@ -1261,8 +1261,8 @@ if($_POST['action'] == 'AlmacenaViaje')
                 $es_recontrata, $recontratable, $comentarios, $datebaja, 
                 $datereingreso, $usuario, $noempleado);
 
-                echo "Consyulta SQL: " . $stmt_edit_empleado->queryString;
-                ob_flush();
+                // echo "Consulta SQL: " . $stmt_edit_empleado->queryString;
+                // ob_flush();
                 if ($stmt_edit_empleado->execute()) {
                     // Actualización exitosa
                     echo "success"; 
