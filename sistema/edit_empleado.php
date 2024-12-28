@@ -832,8 +832,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var comentarios = $('#comentarios').val();
         var datebaja = $('#inputDatebaja').val();
         var datereingreso = $('#inputDatereingreso').val();
-		    let usuario = <?php echo $User; ?>
-        
+		let usuario = <?php echo $User ?>
         var action = 'AlmacenaEditEmpleado';
 
         $.ajax({
@@ -842,8 +841,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
           async: true,
           data: {
             action: action,
-            Id: parseInt(Id),
-            noempleado: parseInt(noempleado),
+            Id: Id,
+            noempleado: noempleado,
             name: name,
             paterno: paterno,
             materno: materno,
@@ -860,33 +859,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
             fcontrato: fcontrato,
             vencontrato: vencontrato,
             imss: imss,
-            salariodia: parseFloat(salariodia),
-            sueldobase: parseFloat(sueldobase),
-            sueldo: parseFloat(sueldo),
-            sueldob2: parseFloat(sueldob2),
-            vdgmv: parseFloat(vdgmv),
-            vdgao: parseFloat(vdgao),
-            sprinter: parseFloat(sprinter),
-            sueldo_auto: parseFloat(sueldo_auto),
-            ssemi: parseFloat(ssemi),
-            deuda: parseFloat(deuda),
-            descuento:parseFloat(descuento),
-            adeudo: parseFloat(adeudo),
-            saldo_adeudo: parseFloat(saldo_adeudo),
-            bonos: parseFloat(bonos),
+            salariodia: salariodia,
+            sueldobase: sueldobase,
+            sueldo: sueldo,
+            sueldob2: sueldob2,
+            vdgmv: vdgmv,
+            vdgao: vdgao,
+            sprinter: sprinter,
+            sueldo_auto: sueldo_auto,
+            ssemi: ssemi,
+            deuda: deuda,
+            descuento:descuento,
+            adeudo: adeudo,
+            saldo_adeudo: saldo_adeudo,
+            bonos: bonos,
             clasif_cat: clasif_cat,
-            bonosc2: parseFloat(bonosc2),
-            bonosemanal: parseFloat(bonosemanal),
-            apoyomes: parseFloat(apoyomes),
-            vales: parseFloat(vales),
-            caja: parseFloat(caja),
-            vacaciones: parseFloat(vacaciones),
-            efectivo: parseFloat(efectivo),
-            descefectivo: parseFloat(descefectivo),
+            bonosc2: bonosc2,
+            bonosemanal: bonosemanal,
+            apoyomes: apoyomes,
+            vales: vales,
+            caja: caja,
+            vacaciones: vacaciones,
+            efectivo: efectivo,
+            descefectivo: descefectivo,
             tipo_nomina: tipo_nomina,
             sexo: sexo,
             fechanac: fechanac,
-            edad: parseInt(edad),
+            edad: edad,
             edocivil: edocivil,
             domicilio: domicilio,
             estudios: estudios,
@@ -894,15 +893,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
             elcurp: elcurp,
             fchaaltaimss: fchaaltaimss,
             noss: noss,
-            salarioxdia: parseFloat(salarioxdia),
-            sueldoauto: parseFloat(sueldoauto),
-            sdosprinter: parseFloat(sdosprinter),
+            salarioxdia: salarioxdia,
+            sueldoauto: sueldoauto,
+            sdosprinter: sdosprinter,
             es_recontrata: es_recontrata,
             recontratable: recontratable,
             comentarios: comentarios,
             datebaja: datebaja,
             datereingreso: datereingreso,
-			      usuario: parseInt(usuario)
+			usuario: usuario
           },
           success: function(response) {
             if (response.startsWith('error')) {
@@ -953,8 +952,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
       });
     </script>
-
-
     <script src="js/sweetalert2.all.min.js"></script>
     <!-- Page specific script -->
     <script>
