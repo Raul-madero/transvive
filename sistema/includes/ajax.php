@@ -1826,7 +1826,7 @@ if($_POST['action'] == 'EditaViajeSpecial')
 
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
-    
+        echo "Consulta: " . "CALL editar_viajespecial($Idmov, '$fechaviaje', '$cliente', '$tipo_viaje', $numunidades, '$unidad', '$horaini', '$direccion', '$horafin', '$destino', '$notas', '$phone_cont', $costo, $supervisor, $sueldo_vta, $usuario)";
         $query_procesar = mysqli_query($conection,"CALL editar_viajespecial($Idmov, '$fechaviaje', '$cliente', '$tipo_viaje', $numunidades, '$unidad', '$horaini', '$direccion', '$horafin', '$destino', '$notas', '$phone_cont', $costo, $supervisor, $sueldo_vta, $usuario)");
         
         $result_detalle = mysqli_affected_rows($conection);
