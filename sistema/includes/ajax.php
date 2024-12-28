@@ -1152,14 +1152,8 @@ if($_POST['action'] == 'AlmacenaViaje')
 
     //Agregar Productos a Entrada
     if($_POST['action'] == 'AlmacenaEditEmpleado') {
-        echo "<pre>";
-        print_r($_POST);
-        echo "<pre>";
-        exit;
         // Validar datos (implementar validaciones específicas)
         if (!empty($_POST['name']) && !empty($_POST['paterno']) && !empty($_POST['materno'])) { 
-            var_dump($_POST);
-            exit;
             $nombreEmpleado = isset($_POST['name']) ? trim($_POST['name']) : "";
             $apellidoPaterno = isset($_POST['paterno']) ? trim($_POST['paterno']) : "";
             $materno = isset($_POST['materno']) ? trim($_POST['materno']) : "";
@@ -1228,7 +1222,7 @@ if($_POST['action'] == 'AlmacenaViaje')
         
 
 
-            $stmt = $conection->prepare("UPDATE empleados SET 
+            $stmt_edit_empleado = $conection->prepare("UPDATE empleados SET 
             nombres = ?, apellido_paterno = ?, apellido_materno = ?, 
             cargo = ?, telefono = ?, rfc = ?, tipo_unidad = ?, 
             unidad = ?, tipo_licencia = ?, no_licencia = ?, 
@@ -1251,8 +1245,8 @@ if($_POST['action'] == 'AlmacenaViaje')
             fecha_reingreso = ?, edit_id = ? 
             WHERE noempleado = ?");
 
-            if ($stmt) {
-                $stmt->bind_param("ssssssssssssssssdddddddddddddddsdddddddsssisssssssdddsssssii", 
+            if ($stmt_edit_empleado) {
+                $stmt_edit_empleado->bind_param("ssssssssssssssssdddddddddddddddsdddddddsssisssssssdddsssssii", 
                 $nombreEmpleado, $apellidoPaterno, $materno, $cargo, 
                 $telefono, $rfc, $unidad, $nounidad, $tipo_lic, 
                 $nolicencia, $fecha_vence, $supervisor, $tipocontrato, 
@@ -1266,16 +1260,16 @@ if($_POST['action'] == 'AlmacenaViaje')
                 $noss, $salarioxdia, $sueldoauto, $sdosprinter, 
                 $es_recontrata, $recontratable, $comentarios, $datebaja, 
                 $datereingreso, $usuario, $noempleado);
-
-                if ($stmt->execute()) {
+                echo "Consyulta SQL: " . $stmt_edit_empleado;
+                if ($stmt_edit_empleado->execute()) {
                     // Actualización exitosa
                     echo "success"; 
                 } else {
                     // Error al ejecutar la consulta
-                    error_log("Error al actualizar empleado: " . $stmt->error); 
+                    error_log("Error al actualizar empleado: " . $stmt_edit_empleado->error); 
                     echo "error"; 
                 }
-                $stmt->close();
+                $stmt_edit_empleado->close();
             } else {
                 // Error al preparar la consulta
                 error_log("Error al preparar la consulta: " . $conection->error); 

@@ -772,8 +772,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
       $('.guardar_cliente').click(function(e) {
         e.preventDefault();
-        console.log('Click en guardar')
-        break;
         var Id = $('#inputId').val();
         var noempleado = $('#inputNoempleado').val();
         var name = $('#inputName').val();
