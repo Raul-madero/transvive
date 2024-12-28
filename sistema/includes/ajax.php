@@ -1260,7 +1260,8 @@ if($_POST['action'] == 'AlmacenaViaje')
                 $noss, $salarioxdia, $sueldoauto, $sdosprinter, 
                 $es_recontrata, $recontratable, $comentarios, $datebaja, 
                 $datereingreso, $usuario, $noempleado);
-                echo "Consyulta SQL: " . $stmt_edit_empleado;
+
+                echo "Consyulta SQL: " . $stmt_edit_empleado->queryString;
                 if ($stmt_edit_empleado->execute()) {
                     // Actualización exitosa
                     echo "success"; 
@@ -1282,7 +1283,6 @@ if($_POST['action'] == 'AlmacenaViaje')
             var_dump($_POST);
             echo 'error';
         }
-    exit;
 };
 
 
