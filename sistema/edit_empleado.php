@@ -901,7 +901,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             comentarios: comentarios,
             datebaja: datebaja,
             datereingreso: datereingreso,
-			usuario: parseInt(usuario)
+			      usuario: parseInt(usuario)
           },
           success: function(response) {
             if (response.startsWith('error')) {
