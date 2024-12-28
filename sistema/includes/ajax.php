@@ -1826,7 +1826,7 @@ if($_POST['action'] == 'EditaViajeSpecial')
 
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
-        
+
         $query_procesar = mysqli_query($conection,"CALL editar_viajespecial($Idmov, '$fechaviaje', '$cliente', '$tipo_viaje', $numunidades, '$unidad', '$horaini', '$direccion', '$horafin', '$destino', '$notas', '$phone_cont', $costo, $supervisor, $sueldo_vta, $usuario)");
         
         $result_detalle = mysqli_affected_rows($conection);
@@ -2392,10 +2392,10 @@ if($_POST['action'] == 'EditaAlmacenaViaje')
     
             // Sentencia preparada
             $stmt = $conection->prepare("INSERT INTO registro_viajes (fecha, semana, cliente, unidad, tipo_viaje, direccion, hora_fin, destino, numero_unidades, sueldo_vuelta, notas, telefono_contacto, costo_viaje, id_supervisor, usuario_id) 
-            SELECT ?, ?, cliente, unidad, tipo_viaje, ?, ?, ?, ?, ?, notas, telefono_contacto, ?, ?, ? 
+            SELECT ?, ?, cliente, unidad, tipo_viaje, ?, ?, ?, ?, ?, notas, telefono_contacto, ?, ?, id_supervisor 
             FROM registro_viajes WHERE id = ?");
 
-            $stmt->bind_param("sssssiddiii", $datefin, $semana, $origen, $hregreso, $destino, $unidades, $sueldovta, $costo, $id_supervisor, $usuario, $idc);
+            $stmt->bind_param("sssssiddiii", $datefin, $semana, $origen, $hregreso, $destino, $unidades, $sueldovta, $costo, $usuario, $idc);
     
             if ($stmt->execute()) {
                 $affected_rows = mysqli_affected_rows($conection);
