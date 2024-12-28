@@ -1802,18 +1802,18 @@ if($_POST['action'] == 'EditaViajeSpecial')
 
         $Idmov       = $_POST['Idmov'];
         $fechaviaje  = $_POST['fechaviaje'];
-        $fechafinal  = $_POST['fechafinal'];
-        $semana      = $_POST['semana'];
+        // $fechafinal  = $_POST['fechafinal'];
+        // $semana      = $_POST['semana'];
         $cliente     = $_POST['cliente'];
-        $ruta        = $_POST['ruta'];
-        $supervisor  = $_POST['supervisor'];
+        // $ruta        = $_POST['ruta'];
+        // $supervisor  = $_POST['supervisor'];
         $unidad      = $_POST['unidad'];
         $tipo_viaje  = $_POST['tipoviaje'];
         $numunidades = $_POST['numunidades'];
-        $nopersonas  = $_POST['nopersonas'];
-        $horarios    = implode(', ', $_POST['horarios']);
-        $turno       = $_POST['turno'];
-        $tipovuelta  = $_POST['tipovuelta'];
+        // $nopersonas  = $_POST['nopersonas'];
+        // $horarios    = implode(', ', $_POST['horarios']);
+        // $turno       = $_POST['turno'];
+        // $tipovuelta  = $_POST['tipovuelta'];
         $horaini     = $_POST['horainicio'];
         $direccion   = $_POST['direccion'];
         $horafin     = $_POST['horafin'];
