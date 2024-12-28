@@ -832,7 +832,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var comentarios = $('#comentarios').val();
         var datebaja = $('#inputDatebaja').val();
         var datereingreso = $('#inputDatereingreso').val();
-		let usuario = <?php echo $User; ?>
         var action = 'AlmacenaEditEmpleado';
 
         $.ajax({
@@ -900,8 +899,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             recontratable: recontratable,
             comentarios: comentarios,
             datebaja: datebaja,
-            datereingreso: datereingreso,
-			usuario: usuario
+            datereingreso: datereingreso
           },
           success: function(response) {
             if (response.startsWith('error')) {
