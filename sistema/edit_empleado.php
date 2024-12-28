@@ -903,23 +903,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
             datereingreso: datereingreso
           },
           success: function(response) {
-            if (response != 'error') {
-              console.log(response);
-              break;
-              var info = JSON.parse(response);
-              console.log(info);
-              let mensaje = (info.mensaje);
-              if ($mensaje === undefined) {
+            if (response.startsWith('error')) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Ooopsss...',
+                text: 'Error en el servidor: ' + response
+              })
+              return
+            }
+            let info = JSON.parse(response)
+            let mensaje = info.mensaje
+            
+              if (mensaje === undefined) {
                 Swal
                   .fire({
                     title: "Exito!",
                     text: "EMPLEADO EDITADO CORRECTAMENTE",
                     icon: 'success',
-
-                    //showCancelButton: true,
-                    //confirmButtonText: "Regresar",
-                    //cancelButtonText: "Salir",
-
                   })
                   .then(resultado => {
                     if (resultado.value) {
@@ -932,35 +932,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       location.href = 'empleados.php';
                     }
                   });
-
-
-              } else {
-
-                //swal('Mensaje del sistema', $mensaje, 'warning');
-                //location.reload();
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: mensaje,
-                })
-              }
-
-
-
             } else {
               Swal.fire({
-                icon: 'info',
-                title: '',
-                text: 'Capture los datos requeridos',
+                icon: 'error',
+                title: 'Ooops...',
+                text: mensaje
               })
-
             }
-            //viewProcesar();
           },
-          error: function(error) {}
-
+          error: function(error) {
+			console.error("Error en la consulta de AJAX: ", error)
+			Swal.fire({
+				icon: 'error',
+				title: 'Ooops...',
+				text: 'Error en la solicitud AJAX'
+			})
+		  }
         });
-
       });
     </script>
     <script src="js/sweetalert2.all.min.js"></script>
