@@ -832,7 +832,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var comentarios = $('#comentarios').val();
         var datebaja = $('#inputDatebaja').val();
         var datereingreso = $('#inputDatereingreso').val();
-		let usuario = <?php echo $User ?>
+		let usuario = <?php echo $User; ?>
         var action = 'AlmacenaEditEmpleado';
 
         $.ajax({
