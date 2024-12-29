@@ -1224,7 +1224,7 @@ if($_POST['action'] == 'AlmacenaViaje')
 
             $sql_editar_empleado = "CALL procesar_editempleado($id, $noempleado, '$name', '$paterno', '$materno', '$cargo', '$telefono', '$rfc', '$unidad', '$nounidad', '$tipo_lic', '$nolicencia', '$fecha_vence', '$supervisor', '$tipocontrato', '$contrato', '$fincontrato', '$imss', $salariodia, $sueldobase, $sueldo, $sueldob2, $vdgmv, $vdgao, $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, $saldo_adeudo, $bono, '$clasif_cat', $bonoc2, $bonosemanal, $apoyomes, $vales, $caja, $vacaciones, $efectivo, $descfiscal, '$tipo_nomina', '$sexo', '$fechanac', $edad, '$edocivil', '$domicilio', '$estudios', '$contactoe', '$elcurp', '$fchaaltaimss', '$noss', $salarioxdia, $sueldoauto, $sdosprinter, '$es_recontrata', '$recontratable', '$comentarios', '$datebaja', '$datereingreso', $usuario)";
 
-            // echo "Consulta: " . $sql_editar_empleado . "\n";
+            echo "Consulta: " . $sql_editar_empleado . "\n";
 
             $query_editar_empleado = mysqli_query($conection, $sql_editar_empleado);
 
@@ -1236,14 +1236,8 @@ if($_POST['action'] == 'AlmacenaViaje')
             $result_detalle = mysqli_affected_rows($conection);
             
             if($result_detalle > 0){
-                $sql_select = "SELECT * FROM empleados WHERE id = $id";
-                $result_select = mysqli_query($conection, $sql_select);
-                if($result_select) {
-                    $data = mysqli_fetch_assoc($result_select);
+                    $data = mysqli_fetch_assoc($result_detalle);
                     echo json_encode($data,JSON_UNESCAPED_UNICODE);
-                }else {
-                    echo json_encode(array('error' => 'Error al obtener los datos'));
-                }
             }else{
                 echo json_encode(array('error' => 'Error en la consulta'));
             }
