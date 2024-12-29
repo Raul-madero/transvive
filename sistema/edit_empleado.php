@@ -769,175 +769,174 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
     </script>
 
-    <script>
-      $('.guardar_cliente').click(function(e) {
-        e.preventDefault();
-        var Id = $('#inputId').val();
-        var noempleado = $('#inputNoempleado').val();
-        var name = $('#inputName').val();
-        var paterno = $('#inputPaterno').val();
-        var materno = $('#inputMaterno').val();
-        var cargo = $('#inputCargo').val();
-        var telefono = $('#inputTelefono').val();
-        var rfccte = $('#inputRfc').val();
-        var unidad = $('#inputUnidad').val();
-        var nounidad = $('#inputNounidad').val();
-        var tipo_lic = $('#inputTipolic').val();
-        var nolicencia = $('#inputNolicencia').val();
-        var fvencimiento = $('#inputVencelicencia').val();
-        var supervisor = $('#inputSupervisor').val();
-        var tipocontrato = $('#inputTipoContrato').val();
-        var fcontrato = $('#inputInicoc').val();
-        var vencontrato = $('#inputVence').val();
-        var imss = $('#inputImss').val();
-        var salariodia = $('#inputSalariodiario').val();
-        var sueldobase = $('#inputSueldobase').val();
-        var sueldo = $('#inputSueldo').val();
-        var sueldob2 = $('#inputSueldob2').val();
-        var vdgmv = $('#inputVdgmv').val();
-        var vdgao = $('#inputVdgao').val();
-        var sprinter = $('#inputSprinter').val();
-        var sueldo_auto = $('#inputSauto').val();
-        var ssemi = $('#inputSemi').val();
-        var deuda = $('#inputDeuda').val();
-        var descuento = $('#inputDescuento').val();
-        var adeudo = $('#inputAdeudo').val();
-        var saldo_adeudo = $('#inputSaldoAdeudo').val();
-        var bonos = $('#inputBonos').val();
-        var clasif_cat = $('#inputClasifcat').val();
-        var bonosc2 = $('#inputBonosc2').val();
-        var bonosemanal = $('#inputBonosemanal').val();
-        var apoyomes = $('#inputApoyomes').val();
-        var vales = $('#inputSueldoadd').val();
-        var caja = $('#inputCajaAhorro').val();
-        var vacaciones = $('#inputVacaciones').val();
-        var efectivo = $('#inputEfectivo').val();
-        var descefectivo = $('#inputDesfiscal').val();
-        var tipo_nomina = $('#inputTiponomina').val();
-        var sexo = $('#inputSexo').val();
-        var fechanac = $('#inputNace').val();
-        var edad = $('#inputEdad').val();
-        var edocivil = $('#inputEdocivil').val();
-        var domicilio = $('#inputDireccion').val();
-        var estudios = $('#inputEstudios').val();
-        var contactoe = $('#inputCemergencia').val();
-        var elcurp = $('#inputCurp').val();
-        var fchaaltaimss = $('#inputDatealtaimss').val();
-        var noss = $('#inputNss').val();
-        var salarioxdia = $('#inputSalariodia').val();
-        var sueldoauto = $('#inputsCoche').val();
-        var sdosprinter = $('#inputsSprinter').val();
-        var es_recontrata = $('#inputsEsrecontra').val();
-        var recontratable = $('#inputRecontrable').val();
-        var comentarios = $('#comentarios').val();
-        var datebaja = $('#inputDatebaja').val();
-        var datereingreso = $('#inputDatereingreso').val();
-        var action = 'AlmacenaEditEmpleado';
+	<script>
+      	$('.guardar_cliente').click(function(e) {
+			e.preventDefault();
+			var Id = $('#inputId').val();
+			var noempleado = $('#inputNoempleado').val();
+			var name = $('#inputName').val();
+			var paterno = $('#inputPaterno').val();
+			var materno = $('#inputMaterno').val();
+			var cargo = $('#inputCargo').val();
+			var telefono = $('#inputTelefono').val();
+			var rfccte = $('#inputRfc').val();
+			var unidad = $('#inputUnidad').val();
+			var nounidad = $('#inputNounidad').val();
+			var tipo_lic = $('#inputTipolic').val();
+			var nolicencia = $('#inputNolicencia').val();
+			var fvencimiento = $('#inputVencelicencia').val();
+			var supervisor = $('#inputSupervisor').val();
+			var tipocontrato = $('#inputTipoContrato').val();
+			var fcontrato = $('#inputInicoc').val();
+			var vencontrato = $('#inputVence').val();
+			var imss = $('#inputImss').val();
+			var salariodia = $('#inputSalariodiario').val();
+			var sueldobase = $('#inputSueldobase').val();
+			var sueldo = $('#inputSueldo').val();
+			var sueldob2 = $('#inputSueldob2').val();
+			var vdgmv = $('#inputVdgmv').val();
+			var vdgao = $('#inputVdgao').val();
+			var sprinter = $('#inputSprinter').val();
+			var sueldo_auto = $('#inputSauto').val();
+			var ssemi = $('#inputSemi').val();
+			var deuda = $('#inputDeuda').val();
+			var descuento = $('#inputDescuento').val();
+			var adeudo = $('#inputAdeudo').val();
+			var saldo_adeudo = $('#inputSaldoAdeudo').val();
+			var bonos = $('#inputBonos').val();
+			var clasif_cat = $('#inputClasifcat').val();
+			var bonosc2 = $('#inputBonosc2').val();
+			var bonosemanal = $('#inputBonosemanal').val();
+			var apoyomes = $('#inputApoyomes').val();
+			var vales = $('#inputSueldoadd').val();
+			var caja = $('#inputCajaAhorro').val();
+			var vacaciones = $('#inputVacaciones').val();
+			var efectivo = $('#inputEfectivo').val();
+			var descefectivo = $('#inputDesfiscal').val();
+			var tipo_nomina = $('#inputTiponomina').val();
+			var sexo = $('#inputSexo').val();
+			var fechanac = $('#inputNace').val();
+			var edad = $('#inputEdad').val();
+			var edocivil = $('#inputEdocivil').val();
+			var domicilio = $('#inputDireccion').val();
+			var estudios = $('#inputEstudios').val();
+			var contactoe = $('#inputCemergencia').val();
+			var elcurp = $('#inputCurp').val();
+			var fchaaltaimss = $('#inputDatealtaimss').val();
+			var noss = $('#inputNss').val();
+			var salarioxdia = $('#inputSalariodia').val();
+			var sueldoauto = $('#inputsCoche').val();
+			var sdosprinter = $('#inputsSprinter').val();
+			var es_recontrata = $('#inputsEsrecontra').val();
+			var recontratable = $('#inputRecontrable').val();
+			var comentarios = $('#comentarios').val();
+			var datebaja = $('#inputDatebaja').val();
+			var datereingreso = $('#inputDatereingreso').val();
+			var action = 'AlmacenaEditEmpleado';
 
-        $.ajax({
-          url: 'includes/ajax.php',
-          type: "POST",
-          async: true,
-          data: {
-            action: action,
-            Id: Id,
-            noempleado: noempleado,
-            name: name,
-            paterno: paterno,
-            materno: materno,
-            cargo: cargo,
-            telefono: telefono,
-            rfccte: rfccte,
-            unidad: unidad,
-            nounidad: nounidad,
-            tipo_lic: tipo_lic,
-            nolicencia: nolicencia,
-            fvencimiento: fvencimiento,
-            supervisor: supervisor,
-            tipocontrato: tipocontrato,
-            fcontrato: fcontrato,
-            vencontrato: vencontrato,
-            imss: imss,
-            salariodia: salariodia,
-            sueldobase: sueldobase,
-            sueldo: sueldo,
-            sueldob2: sueldob2,
-            vdgmv: vdgmv,
-            vdgao: vdgao,
-            sprinter: sprinter,
-            sueldo_auto: sueldo_auto,
-            ssemi: ssemi,
-            deuda: deuda,
-            descuento:descuento,
-            adeudo: adeudo,
-            saldo_adeudo: saldo_adeudo,
-            bonos: bonos,
-            clasif_cat: clasif_cat,
-            bonosc2: bonosc2,
-            bonosemanal: bonosemanal,
-            apoyomes: apoyomes,
-            vales: vales,
-            caja: caja,
-            vacaciones: vacaciones,
-            efectivo: efectivo,
-            descefectivo: descefectivo,
-            tipo_nomina: tipo_nomina,
-            sexo: sexo,
-            fechanac: fechanac,
-            edad: edad,
-            edocivil: edocivil,
-            domicilio: domicilio,
-            estudios: estudios,
-            contactoe: contactoe,
-            elcurp: elcurp,
-            fchaaltaimss: fchaaltaimss,
-            noss: noss,
-            salarioxdia: salarioxdia,
-            sueldoauto: sueldoauto,
-            sdosprinter: sdosprinter,
-            es_recontrata: es_recontrata,
-            recontratable: recontratable,
-            comentarios: comentarios,
-            datebaja: datebaja,
-            datereingreso: datereingreso
-          },
-          success: function(response) {
-			    let info = JSON.parse(response)
-				if (info.error) {
-					Swal.fire({
+			$.ajax({
+				url: 'includes/ajax.php',
+				type: "POST",
+				async: true,
+				data: {
+					action: action,
+					Id: Id,
+					noempleado: noempleado,
+					name: name,
+					paterno: paterno,
+					materno: materno,
+					cargo: cargo,
+					telefono: telefono,
+					rfccte: rfccte,
+					unidad: unidad,
+					nounidad: nounidad,
+					tipo_lic: tipo_lic,
+					nolicencia: nolicencia,
+					fvencimiento: fvencimiento,
+					supervisor: supervisor,
+					tipocontrato: tipocontrato,
+					fcontrato: fcontrato,
+					vencontrato: vencontrato,
+					imss: imss,
+					salariodia: salariodia,
+					sueldobase: sueldobase,
+					sueldo: sueldo,
+					sueldob2: sueldob2,
+					vdgmv: vdgmv,
+					vdgao: vdgao,
+					sprinter: sprinter,
+					sueldo_auto: sueldo_auto,
+					ssemi: ssemi,
+					deuda: deuda,
+					descuento:descuento,
+					adeudo: adeudo,
+					saldo_adeudo: saldo_adeudo,
+					bonos: bonos,
+					clasif_cat: clasif_cat,
+					bonosc2: bonosc2,
+					bonosemanal: bonosemanal,
+					apoyomes: apoyomes,
+					vales: vales,
+					caja: caja,
+					vacaciones: vacaciones,
+					efectivo: efectivo,
+					descefectivo: descefectivo,
+					tipo_nomina: tipo_nomina,
+					sexo: sexo,
+					fechanac: fechanac,
+					edad: edad,
+					edocivil: edocivil,
+					domicilio: domicilio,
+					estudios: estudios,
+					contactoe: contactoe,
+					elcurp: elcurp,
+					fchaaltaimss: fchaaltaimss,
+					noss: noss,
+					salarioxdia: salarioxdia,
+					sueldoauto: sueldoauto,
+					sdosprinter: sdosprinter,
+					es_recontrata: es_recontrata,
+					recontratable: recontratable,
+					comentarios: comentarios,
+					datebaja: datebaja,
+					datereingreso: datereingreso
+				},
+				success: function(response) {
+					let info = JSON.parse(response)
+					if (info.error) {
+						Swal.fire({
 						icon: 'error',
 						title: 'Ooops...',
 						text: info.error
-					})
-				}else {
-					Swal
-                  .fire({
-                    title: "Exito!",
-                    text: "EMPLEADO EDITADO CORRECTAMENTE",
-                    icon: 'success',
-                  })
-                  .then(resultado => {
-                    if (resultado.value) {
-                      //* generarimpformulaPDF(info.folio);
-                      location.href = 'empleados.php';
-					} else {
-                      // Dijeron que no
-                      location.reload();
-                      location.href = 'empleados.php';
-                    }
-                  });
+						})
+					}else {
+						Swal.fire({
+							title: "Exito!",
+							text: "EMPLEADO EDITADO CORRECTAMENTE",
+							icon: 'success',
+							})
+							.then(resultado => {
+							if (resultado.value) {
+								//* generarimpformulaPDF(info.folio);
+								location.href = 'empleados.php';
+							} else {
+								// Dijeron que no
+								location.reload();
+								location.href = 'empleados.php';
+							}
+						});
+					}
 				},
-          error: function(error) {
-			console.error("Error en la consulta de AJAX: ", error)
-			Swal.fire({
-				icon: 'error',
-				title: 'Ooops...',
-				text: 'Error en la solicitud AJAX'
-			})
-		  } 
-      };
-	});
-})
+				error: function(error) {
+					console.error("Error en la consulta de AJAX: ", error)
+					Swal.fire({
+						icon: 'error',
+						title: 'Ooops...',
+						text: 'Error en la solicitud AJAX'
+					})
+				} 
+			});
+		});
     </script>
 
     <script src="js/sweetalert2.all.min.js"></script>
