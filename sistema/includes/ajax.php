@@ -1230,7 +1230,7 @@ if($_POST['action'] == 'AlmacenaViaje')
                 $data = mysqli_fetch_assoc($query_editar_empleado);
                 echo json_encode($data,JSON_UNESCAPED_UNICODE);
             }else{
-                echo json_encode(array('error' => 'Consulta: ' . $query_editar_empleado));
+                echo json_encode(array('error' => 'Error en la consulta'));
             }
         
         mysqli_close($conection);
