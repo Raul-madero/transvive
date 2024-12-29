@@ -1236,7 +1236,7 @@ if($_POST['action'] == 'AlmacenaViaje')
             
             if($result_detalle > 0){
                 $sql_select = "SELECT * FROM empleados WHERE id = $id";
-                $result_select = mysql_query($conection, $sql_select);
+                $result_select = mysqli_query($conection, $sql_select);
                 if($result_select) {
                     $data = mysqli_fetch_assoc($result_select);
                     echo json_encode($data,JSON_UNESCAPED_UNICODE);
