@@ -1167,11 +1167,8 @@ if($_POST['action'] == 'AlmacenaViaje')
             $nounidad     = $_POST['nounidad'];
             $tipo_lic     = $_POST['tipo_lic'];
             $nolicencia   = $_POST['nolicencia'];
-            $fecha_vence  = $_POST['fvencimiento'];
             $supervisor   = $_POST['supervisor'];
             $tipocontrato = $_POST['tipocontrato'];
-            $contrato     = $_POST['fcontrato'];
-            $fincontrato  = $_POST['vencontrato'];
             $imss         = $_POST['imss'];
             $salariodia   = $_POST['salariodia'];
             $sueldobase   = $_POST['sueldobase'];
@@ -1205,7 +1202,6 @@ if($_POST['action'] == 'AlmacenaViaje')
             $estudios     = $_POST['estudios'];
             $contactoe    = $_POST['contactoe'];
             $elcurp       = $_POST['elcurp'];
-            $fchaaltaimss = !empty($_POST['fchaaltaimss']) ? $_POST['fchaaltaimss'] : '0000-00-00';
             $noss         = $_POST['noss'];
             $salarioxdia  = $_POST['salarioxdia'];
             $sueldoauto   = $_POST['sueldoauto'];
@@ -1213,10 +1209,15 @@ if($_POST['action'] == 'AlmacenaViaje')
             $es_recontrata = $_POST['es_recontrata'];
             $recontratable = $_POST['recontratable'];
             $comentarios   = $_POST['comentarios'];
-            $datebaja      = $_POST['datebaja'];
-            $datereingreso = $_POST['datereingreso'];
-    
-    
+
+            $datebaja      = !empty($_POST['datebaja']) ? $_POST['datebaja'] : '0000-00-00';
+            $datereingreso = !empty($_POST['datereingreso']) ? $_POST['datereingreso'] : '0000-00-00';
+            $fecha_vence  = !empty($_POST['fvencimiento']) ? $_POST['fvencimiento'] : '0000-00-00';
+            $contrato     = !empty($_POST['fcontrato']) ? $_POST['fcontrato'] : '0000-00-00';
+            $fincontrato  = !empty($_POST['vencontrato']) ? $_POST['vencontrato'] : '0000-00-00';
+            $fchaaltaimss = !empty($_POST['fchaaltaimss']) ? $_POST['fchaaltaimss'] : '0000-00-00';
+            
+            
             $token       = md5($_SESSION['idUser']);
             $usuario     = $_SESSION['idUser'];
             var_dump($_POST);
