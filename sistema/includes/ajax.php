@@ -1220,10 +1220,11 @@ if($_POST['action'] == 'AlmacenaViaje')
             
             $token       = md5($_SESSION['idUser']);
             $usuario     = $_SESSION['idUser'];
-            var_dump($_POST);
+            // var_dump($_POST);
+
             $sql_editar_empleado = "CALL procesar_editempleado($id, $noempleado, '$name', '$paterno', '$materno', '$cargo', '$telefono', '$rfc', '$unidad', '$nounidad', '$tipo_lic', '$nolicencia', '$fecha_vence', '$supervisor', '$tipocontrato', '$contrato', '$fincontrato', '$imss', $salariodia, $sueldobase, $sueldo, $sueldob2, $vdgmv, $vdgao, $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, $saldo_adeudo, $bono, '$clasif_cat', $bonoc2, $bonosemanal, $apoyomes, $vales, $caja, $vacaciones, $efectivo, $descfiscal, '$tipo_nomina', '$sexo', '$fechanac', $edad, '$edocivil', '$domicilio', '$estudios', '$contactoe', '$elcurp', '$fchaaltaimss', '$noss', $salarioxdia, $sueldoauto, $sdosprinter, '$es_recontrata', '$recontratable', '$comentarios', '$datebaja', '$datereingreso', $usuario)";
 
-            echo "Consulta: " . $sql_editar_empleado . "\n";
+            // echo "Consulta: " . $sql_editar_empleado . "\n";
 
             $query_editar_empleado = mysqli_query($conection, $sql_editar_empleado);
 
