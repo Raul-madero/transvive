@@ -902,19 +902,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
             datereingreso: datereingreso
           },
           success: function(response) {
-            if (response.startsWith('error')) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Ooopsss...',
-                text: 'Error en el servidor: ' + response
-              })
-              return
-            }
-            let info = JSON.parse(response)
-            let mensaje = info.mensaje
-            
-              if (mensaje === undefined) {
-                Swal
+			    let info = JSON.parse(response)
+				if (info.error) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Ooops...',
+						text: info.error
+					})
+				}else {
+					Swal
                   .fire({
                     title: "Exito!",
                     text: "EMPLEADO EDITADO CORRECTAMENTE",
@@ -924,21 +920,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     if (resultado.value) {
                       //* generarimpformulaPDF(info.folio);
                       location.href = 'empleados.php';
-
-                    } else {
+					} else {
                       // Dijeron que no
                       location.reload();
                       location.href = 'empleados.php';
                     }
                   });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Ooops...',
-                text: mensaje
-              })
-            }
-          },
+				},
           error: function(error) {
 			console.error("Error en la consulta de AJAX: ", error)
 			Swal.fire({
@@ -946,10 +934,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				title: 'Ooops...',
 				text: 'Error en la solicitud AJAX'
 			})
-		  }
-        });
-      });
+		  } 
+      };
+	});
+})
     </script>
+
     <script src="js/sweetalert2.all.min.js"></script>
     <!-- Page specific script -->
     <script>

@@ -643,7 +643,7 @@ $('#btn_salir').click(function(e){
                         if( info.error) {
                           Swal.fire({
                             icon: 'error',
-                            title: 'Ooops',
+                            title: 'Ooops...',
                             text: info.error
                           })
                         }else {
