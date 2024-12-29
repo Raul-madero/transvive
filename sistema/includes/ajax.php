@@ -1220,17 +1220,17 @@ if($_POST['action'] == 'AlmacenaViaje')
             $token       = md5($_SESSION['idUser']);
             $usuario     = $_SESSION['idUser'];
     
-            $query_procesar = mysqli_query($conection,"CALL procesar_editempleado($id, $noempleado, '$name', '$paterno', '$materno', '$cargo', '$telefono', '$rfc', '$unidad', '$nounidad', '$tipo_lic', '$nolicencia', '$fecha_vence', '$supervisor', '$tipocontrato', '$contrato', '$fincontrato', '$imss', $salariodia, $sueldobase, $sueldo, $sueldob2, $vdgmv, $vdgao, $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, $saldo_adeudo, $bono, '$clasif_cat', $bonoc2, $bonosemanal, $apoyomes, $vales, $caja, $vacaciones, $efectivo, $descfiscal, '$tipo_nomina', '$sexo', '$fechanac', $edad, '$edocivil', '$domicilio', '$estudios', '$contactoe', '$elcurp', '$fchaaltaimss', '$noss', $salarioxdia, $sueldoauto, $sdosprinter, '$es_recontrata', '$recontratable', '$comentarios', '$datebaja', '$datereingreso', $usuario)");
+            $query_editar_empleado = mysqli_query($conection,"CALL procesar_editempleado($id, $noempleado, '$name', '$paterno', '$materno', '$cargo', '$telefono', '$rfc', '$unidad', '$nounidad', '$tipo_lic', '$nolicencia', '$fecha_vence', '$supervisor', '$tipocontrato', '$contrato', '$fincontrato', '$imss', $salariodia, $sueldobase, $sueldo, $sueldob2, $vdgmv, $vdgao, $sprinter, $sauto, $ssemi, $deuda, $descuento, $adeudo, $saldo_adeudo, $bono, '$clasif_cat', $bonoc2, $bonosemanal, $apoyomes, $vales, $caja, $vacaciones, $efectivo, $descfiscal, '$tipo_nomina', '$sexo', '$fechanac', $edad, '$edocivil', '$domicilio', '$estudios', '$contactoe', '$elcurp', '$fchaaltaimss', '$noss', $salarioxdia, $sueldoauto, $sdosprinter, '$es_recontrata', '$recontratable', '$comentarios', '$datebaja', '$datereingreso', $usuario)");
 
-            echo $query_procesar;
+            echo $query_editar_empleado;
 
             $result_detalle = mysqli_affected_rows($conection);
             
             if($result_detalle > 0){
-                $data = mysqli_fetch_assoc($query_procesar);
+                $data = mysqli_fetch_assoc($query_editar_empleado);
                 echo json_encode($data,JSON_UNESCAPED_UNICODE);
             }else{
-                echo json_encode(array('error' => 'Consulta: ' . $query_procesar));
+                echo json_encode(array('error' => 'Consulta: ' . $query_editar_empleado));
             }
         
         mysqli_close($conection);
