@@ -1227,10 +1227,10 @@ if($_POST['action'] == 'AlmacenaViaje')
             $result_detalle = mysqli_affected_rows($conection);
             
             if($result_detalle > 0){
-                $data = mysqli_fetch_assoc($query_procesar);
+                $data = mysqli_fetch_assoc($conection);
                 echo json_encode($data,JSON_UNESCAPED_UNICODE);
             }else{
-                echo "error";
+                echo json_encode(array('Consulta: ' . $query_procesar));
             }
         
         mysqli_close($conection);
