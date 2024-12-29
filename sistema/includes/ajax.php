@@ -1230,7 +1230,7 @@ if($_POST['action'] == 'AlmacenaViaje')
                 $data = mysqli_fetch_assoc($conection);
                 echo json_encode($data,JSON_UNESCAPED_UNICODE);
             }else{
-                echo json_encode(array('Consulta: ' . $query_procesar));
+                echo 'Consulta: ' . $query_procesar;
             }
         
         mysqli_close($conection);
