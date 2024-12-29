@@ -1205,7 +1205,7 @@ if($_POST['action'] == 'AlmacenaViaje')
             $estudios     = $_POST['estudios'];
             $contactoe    = $_POST['contactoe'];
             $elcurp       = $_POST['elcurp'];
-            $fchaaltaimss = $_POST['fchaaltaimss'] || '0000-00-00';
+            $fchaaltaimss = !empty($_POST['fchaaltaimss']) ? $_POST['fchaaltaimss'] : null;
             $noss         = $_POST['noss'];
             $salarioxdia  = $_POST['salarioxdia'];
             $sueldoauto   = $_POST['sueldoauto'];
