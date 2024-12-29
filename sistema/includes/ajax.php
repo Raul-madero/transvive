@@ -1236,7 +1236,7 @@ if($_POST['action'] == 'AlmacenaViaje')
             $result_detalle = mysqli_affected_rows($conection);
             
             if($result_detalle > 0){
-                    $data = mysqli_fetch_assoc($$query_editar_empleado);
+                    $data = mysqli_fetch_assoc($query_editar_empleado);
                     echo json_encode($data,JSON_UNESCAPED_UNICODE);
             }else{
                 echo json_encode(array('error' => 'Error en la consulta'));
