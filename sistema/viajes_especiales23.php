@@ -527,6 +527,10 @@ session_start();
                 d.initial_date = $("#initial_date").val() || ""
                 d.final_date = $("#final_date").val() || ""
                 d.gender = $("#gender").val() || ""
+                if (d.order.length > 0) {
+                  d.order_column = d.columns[d.order[0].column].data;
+                  d.order_dir = d.order[0].dir;
+                }
                 console.log(d)
               },
               dataSrc: function(json) {
