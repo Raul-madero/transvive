@@ -15,6 +15,7 @@ $name_semana = '';
 $diaini = '';
 $diafin = '';
 
+
 $sqlnsem = mysqli_query($conection, "SELECT semana as Nsemana, dia_inicial as Dini, dia_final as Dfin FROM semanas WHERE '$dhoy' BETWEEN dia_inicial AND dia_final");
 if (!$sqlnsem) {
     die("Error en la consulta de la semana: " . mysqli_error($conection));

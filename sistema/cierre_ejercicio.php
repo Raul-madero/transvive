@@ -239,6 +239,7 @@ $('#btn_salir').click(function(e){
       
        var action       = 'ActualizaEjercicio';
 
+       
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",
