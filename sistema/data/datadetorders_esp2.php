@@ -48,8 +48,8 @@ if (!empty($requestData['search']['value'])) {
     $where .= " AND (p.id LIKE '%$searchValue%' OR p.cliente LIKE '%$searchValue%' OR p.operador LIKE '%$searchValue%' OR p.semana LIKE '%$searchValue%' OR sp.nombres LIKE '%$searchValue%' OR sp.apellido_paterno LIKE '%$searchValue%' OR sp.apellido_materno LIKE '%$searchValue%' OR p.fecha LIKE '%$searchValue%')";
 }
 
-$orderColumn = $columnsOrder[$requestData['order'][1]['column']] ?? 'id';
-$orderDir = $requestData['order'][0]['dir'] === 'desc' ? 'DESC' : 'ASC';
+$orderColumn = $_POST['order_column'];
+$orderDir = $_POST['order_dir'];
 
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
