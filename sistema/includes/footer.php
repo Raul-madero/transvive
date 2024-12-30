@@ -4,7 +4,7 @@
     <img src="../images/transvive.png" width="85" height="30">
     </div>
     <!-- Default to the left -->
-    <div class="flex gap-2">
+    <div style="display: flex; gap: 4rem">
         <p><strong>Copyright &copy; <?php echo date('Y'); ?></strong> </p>
         <a href=""> <img src="./img/logoRM/logo.png" width="85" height="30"></a>
         <p>All rights reserved.</p>
