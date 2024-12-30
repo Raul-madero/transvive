@@ -1936,6 +1936,7 @@ if($_POST['action'] == 'RegistraViajeSpecialgcia')
 
 //Almacena Solicitud de combustible
 if($_POST['action'] == 'AlmacenaSolicitudmantto')
+
 {
     if(empty($_POST['fecha']) || empty($_POST['nounidad']) || empty($_POST['operador']) || empty($_POST['solicita']) || empty($_POST['trabajosolic']) )
     {
