@@ -116,7 +116,7 @@ if (!empty($_SESSION['active'])) {
                                
                             </div>
                             <div class="card-footer text-center">
-                                <small><a href="https://dasha-web.com" target="_blank"><img src="images/dasha_2023n.png" alt="PRODLINE ERP" class="img-fluid mb-4" style="width: 105px;"></a></small>
+                                <small><a href="" ><img src="./sistema/img/logoRM/logo.png" alt="PRODLINE ERP" class="img-fluid mb-4" style="width: 105px;"></a></small>
                             </div>
                            
                         </div>
