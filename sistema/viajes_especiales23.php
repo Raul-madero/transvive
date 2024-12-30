@@ -544,7 +544,7 @@ session_start();
             },
             columns: [
               { data : "pedidono", width: "3%", className: "text-right", orderable: true },
-              { data : "fecha", width: "5%"},
+              { data : "fecha", width: "5%", orderable: true},
               { data : "razonsocial", width: "10%" },
               { data: "origen", width: "18%" },
               { data: "horainicio", width: "5%", className: "text-center", orderable: false },
