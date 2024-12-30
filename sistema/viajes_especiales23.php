@@ -488,7 +488,6 @@ session_start();
 				let initial_date = $("#initial_date").val()
 				let final_date = $("#final_date").val()
 				let gender = $("#gender").val()
-
 				if (validateFilter(initial_date, final_date)) {
 				table.ajax.url("data/datadetorders_esp2.php").load(null, false)
 				table.settings()[0].ajax.data = {

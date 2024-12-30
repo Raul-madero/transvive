@@ -34,21 +34,21 @@ $columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.op
 $table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
 $where = "WHERE p.tipo_viaje LIKE '%Especial%'";
 
-if (!empty($initial_date) && !empty($final_date)) {
-    $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'";
-}
+(!empty($initial_date) && !empty($final_date)) 
+    ? $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'" : $where .= " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)";
+
 
 // Validar que $year sea un número entero positivo
-if (is_numeric($year) && $year > 0 && $year == intval($year)) { 
-    $where .= " AND YEAR(p.fecha) = '$year'";
-}
+(is_numeric($year) && $year > 0 && $year == intval($year)) ?
+    $where .= " AND YEAR(p.fecha) = '$year'" : $where .= " AND YEAR(p.fecha) = YEAR(CURDATE())";
+
 
 if (!empty($requestData['search']['value'])) {
     $searchValue = $requestData['search']['value'];
     $where .= " AND (p.id LIKE '%$searchValue%' OR p.cliente LIKE '%$searchValue%' OR p.operador LIKE '%$searchValue%' OR p.semana LIKE '%$searchValue%' OR sp.nombres LIKE '%$searchValue%' OR sp.apellido_paterno LIKE '%$searchValue%' OR sp.apellido_materno LIKE '%$searchValue%' OR p.fecha LIKE '%$searchValue%')";
 }
 
-$orderColumn = $columnsOrder[$requestData['order'][0]['column']] ?? 'id';
+$orderColumn = $columnsOrder[$requestData['order'][1]['column']] ?? 'id';
 $orderDir = $requestData['order'][0]['dir'] === 'desc' ? 'DESC' : 'ASC';
 
 $count_sql = "SELECT COUNT(*) AS total FROM $table $where";

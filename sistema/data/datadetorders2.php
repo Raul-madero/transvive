@@ -10,7 +10,6 @@ if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
 }
 
 $requestData = $_REQUEST;
-
 $columns = array(
     0 => 'id', 
     1 => 'fecha',
