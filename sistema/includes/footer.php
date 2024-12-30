@@ -4,5 +4,10 @@
     <img src="../images/transvive.png" width="85" height="30">
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; <?php echo date('Y'); ?> <a href=""> <img src="./img/logoRM/logo.png" width="85" height="30"></a></strong> All rights reserved.
+    <div class="flex gap-2">
+        <p><strong>Copyright &copy; <?php echo date('Y'); ?></strong> </p>
+        <a href=""> <img src="./img/logoRM/logo.png" width="85" height="30"></a>
+        <p>All rights reserved.</p>
+    </div>
+    <!-- <strong>Copyright &copy; <?php echo date('Y'); ?> <a href=""> <img src="./img/logoRM/logo.png" width="85" height="30"></a></strong> All rights reserved. -->
 </footer>
