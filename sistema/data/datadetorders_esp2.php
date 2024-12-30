@@ -62,7 +62,7 @@ $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 $sql = "SELECT $columns FROM $table $where ORDER BY `$orderColumn` $orderDir LIMIT $start, $length";
 
 // Imprimir la consulta SQL para depuración
-echo $sql; 
+// echo $sql; 
 
 $result = $conection->query($sql);
 
