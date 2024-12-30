@@ -24,7 +24,7 @@ $fecha_ejercicio = substr($idoentrada, $final3, 10);
 
 if ($fecha_ini != '') {
   $nosemana = $fecha_ini;
-  $query_productos = mysqli_query($conection,"SELECT id, semana, fecha, cliente, direccion, destino, costo_viaje, hora_inicio, hora_fin, hora_llegadareal, notas, unidad, unidad_ejecuta, num_unidad, numero_unidades, if(estatus = 1,'Activo',if(estatus = 2, 'Realizado', if(estatus= 3,'Cancelado', if(estatus = 4,'Iniciado',if(estatus=5, 'Finalizado', ''))))) as Status, valor_vuelta, sueldo_vuelta FROM registro_viajes WHERE tipo_viaje like '%Especial%' and semana = '$nosemana' and YEAR(fecha) = $fecha_ejercicio ORDER by fecha, id");
+  $query_productos = mysqli_query($conection,"SELECT id, semana, fecha, cliente, direccion, destino, costo_viaje, hora_inicio, hora_fin, hora_llegadareal, notas, unidad, unidad_ejecuta, num_unidad, numero_unidades, if(estatus = 1,'Activo',if(estatus = 2, 'Realizado', if(estatus= 3,'Cancelado', if(estatus = 4,'Iniciado',if(estatus=5, 'Finalizado', ''))))) as Status, valor_vuelta, sueldo_vuelta FROM registro_viajes WHERE tipo_viaje like '%Especial%' and semana = '$nosemana' and YEAR(fecha) = $fecha_ejercicio OR semana = 'Semana 01' AND MONTH(fecha) = 12 AND YEAR(fecha) = ($fecha_ejercicio - 1) ORDER by fecha, id");
 $result_detalle = mysqli_num_rows($query_productos);
 mysqli_close($conection);
 
