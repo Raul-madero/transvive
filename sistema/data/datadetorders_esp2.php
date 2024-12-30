@@ -51,7 +51,7 @@ if (!empty($requestData['search']['value'])) {
 $orderColumn = $_POST['order_column'];
 $orderDir = $_POST['order_dir'];
 
-$allowed_columns = array("id", "fecha", "cliente", "direccion", "unidad", "destino", "us.nombre", "p.estatus"); // Agrega aquí todas las columnas permitidas
+$allowed_columns = array("p.id", "p.fecha", "p.cliente", "p.direccion", "p.unidad", "p.destino", "us.nombre", "p.estatus"); // Agrega aquí todas las columnas permitidas
 if (!in_array($order_column, $allowed_columns)) {
   $order_column = "fecha"; // Columna por defecto si la recibida no es válida
 }
