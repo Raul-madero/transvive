@@ -2926,7 +2926,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
     }else{
         
         $folio        = (isset($_POST['folio'])) ? $_POST['folio'] : null;
-        $fecha        = (isset($_POST['fecha'])) ? $_POST['fecha'] : null;
+        $fecha        = (isset($_POST['fecha'])) ? $_POST['fecha'] : '0000-00-00';
         $nounidad     = (isset($_POST['nounidad'])) ? $_POST['nounidad'] : null;
         $tipo_unidad  = (isset($_POST['tipo_unidad'])) ? $_POST['tipo_unidad'] : null;
         $operador     = (isset($_POST['operador'])) ? $_POST['operador'] : null;
@@ -2938,8 +2938,8 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
         $trabajo_sol  = (isset($_POST['trabajosolic'])) ? $_POST['trabajosolic'] : null;
         $trabajohecho = (isset($_POST['trabajohecho'])) ? $_POST['trabajohecho'] : null;
         $costos_desc  = (isset($_POST['costosdesc'])) ? $_POST['costodesc'] : null;
-        $fechaini     = (isset($_POST['fechaini'])) ? $_POST['fechaini'] : null;
-        $fechafin     = (isset($_POST['fechafin'])) ? $_POST['fechafin'] : null;
+        $fechaini     = (isset($_POST['fechaini'])) ? $_POST['fechaini'] : '0000-00-00';
+        $fechafin     = (isset($_POST['fechafin'])) ? $_POST['fechafin'] : '0000-00-00';
         $notas        = (isset($_POST['notas'])) ? $_POST['notas'] : null;
         $notas_genera = (isset($_POST['notas_genera'])) ? $_POST['notas_genera'] : null;
         $causas       = (isset($_POST['causas'])) ? $_POST['causas'] : null;
