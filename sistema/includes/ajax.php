@@ -2964,7 +2964,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
                 'status' => 'error',
                 'message' => 'Error al procesar la solicitud'
             );
-            echo json-encode($response, JSON_UNESCAPED_UNICODE);
+            echo json_encode($response, JSON_UNESCAPED_UNICODE);
         }
     
     mysqli_close($conection);
