@@ -3,7 +3,7 @@ include "../conexion.php";
 session_start();
   $User=$_SESSION['user'];
   $rol=$_SESSION['rol'];
-  $usuario=$_SESSION['idUser'];
+  $id_usuario=$_SESSION['idUser'];
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 
@@ -500,7 +500,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
        var notas         = $('#inputNotas').val();
        var notas_genera  = $('#inputNotasgen').val();
        var causas        = $('#inputCausas').val();
-       let usuario       = "<?php echo $usuario; ?>"
+       let usuario       = "<?php echo $id_usuario; ?>";
+
        var action       = 'AlmacenaEditSolicitudmantto';
 
         $.ajax({
