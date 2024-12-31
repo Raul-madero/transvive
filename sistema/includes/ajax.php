@@ -1980,7 +1980,6 @@ if($_POST['action'] == 'AlmacenaSolicitudmantto')
     exit;
 }  
 
-
 //****************************//
         //Canclar control
    if($_POST['action'] == 'procesarSalirSolicitudmt'){
@@ -2949,7 +2948,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
         $usuario     = $_SESSION['idUser'];
 
         $query_procesar = mysqli_query($conection,"CALL procesar_editsolicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$tipo_trab', '$kmneumatico', '$tipo_mantto', '$programado', '$trabajo_sol', '$trabajohecho', '$costos_desc', '$fechaini', '$fechafin', '$notas', '$notas_genera', '$causas', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
+        $result_detalle = mysqli_affected_rows($query_procesar);
         
         if($result_detalle > 0){
             $data = mysqli_fetch_assoc($query_procesar);

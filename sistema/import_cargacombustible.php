@@ -13,7 +13,7 @@ $folioe = $d->folio;
 //$tipo_viaje = 'Normal';
 //$valor_vuelta = "Completa";
 //$fcha = date("Y-m-d");
-date_default_timezone_set('America/Mazatlan');
+date_default_timezone_set('America/Mexico_City');
          $fechac = date("Y-m-d");
 if(isset($_FILES["name"])){
 	$up = new Upload($_FILES["name"]);
