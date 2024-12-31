@@ -2948,7 +2948,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
         $usuario     = (isset($_SESSION['idUser'])) ? $_SESSION['idUser'] : null;
 
         $sql_editar_orden = "CALL procesar_editsolicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$tipo_trab', '$kmneumatico', '$tipo_mantto', '$programado', '$trabajo_sol', '$trabajohecho', '$costos_desc', '$fechaini', '$fechafin', '$notas', '$notas_genera', '$causas', '$usuario')";
-        echo $sql_editar_orden;
+        // echo $sql_editar_orden;
 
         $query_procesar = mysqli_query($conection, $sql_editar_orden);
 
