@@ -504,8 +504,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
        var causas        = $('#inputCausas').val();
        let usuario       = <?php echo $usuario; ?>
        var action       = 'AlmacenaEditSolicitudmantto';
-		console.log(usuario)
-		break;
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",
