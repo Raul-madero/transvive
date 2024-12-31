@@ -2925,27 +2925,27 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
        echo 'error';
     }else{
         
-        $folio        = (isset($_POST['folio'])) ? $_POST['folio'] : null;
-        $fecha        = (isset($_POST['fecha'])) ? $_POST['fecha'] : '0000-00-00';
-        $nounidad     = (isset($_POST['nounidad'])) ? $_POST['nounidad'] : null;
-        $tipo_unidad  = (isset($_POST['tipo_unidad'])) ? $_POST['tipo_unidad'] : null;
-        $operador     = (isset($_POST['operador'])) ? $_POST['operador'] : null;
-        $solicita     = (isset($_POST['solicita'])) ? $_POST['solicita'] : null;
-        $tipo_trab    = (isset($_POST['tipotrabajo'])) ? $_POST['tipotrabajo'] : null;
-        $kmneumatico  = (isset($_POST['kmneumatico'])) ? $_POST['kmneumatico'] : null;
-        $tipo_mantto  = (isset($_POST['tipomantto'])) ? $_POST['tipomantto'] : null;
-        $programado   = (isset($_POST['programado'])) ? $_POST['programado'] : null;
-        $trabajo_sol  = (isset($_POST['trabajosolic'])) ? $_POST['trabajosolic'] : null;
-        $trabajohecho = (isset($_POST['trabajohecho'])) ? $_POST['trabajohecho'] : null;
-        $costos_desc  = (isset($_POST['costosdesc'])) ? $_POST['costodesc'] : null;
-        $fechaini     = (isset($_POST['fechaini'])) ? $_POST['fechaini'] : '0000-00-00';
-        $fechafin     = (isset($_POST['fechafin'])) ? $_POST['fechafin'] : '0000-00-00';
-        $notas        = (isset($_POST['notas'])) ? $_POST['notas'] : null;
-        $notas_genera = (isset($_POST['notas_genera'])) ? $_POST['notas_genera'] : null;
-        $causas       = (isset($_POST['causas'])) ? $_POST['causas'] : null;
+        $folio        = (isset($_POST['folio']) && !empty($_POST['folio'])) ? $_POST['folio'] : null;
+        $fecha        = (isset($_POST['fecha']) && !empty($_POST['fecha'])) ? $_POST['fecha'] : '0000-00-00';
+        $nounidad     = (isset($_POST['nounidad']) && !empty($_POST['nounidad'])) ? $_POST['nounidad'] : null;
+        $tipo_unidad  = (isset($_POST['tipo_unidad']) && !empty($_POST['tipo_unidad'])) ? $_POST['tipo_unidad'] : null;
+        $operador     = (isset($_POST['operador']) && !empty($_POST['operador'])) ? $_POST['operador'] : null;
+        $solicita     = (isset($_POST['solicita']) && !empty($_POST['solicita'])) ? $_POST['solicita'] : null;
+        $tipo_trab    = (isset($_POST['tipotrabajo']) && !empty($_POST['tipotrabajo'])) ? $_POST['tipotrabajo'] : null;
+        $kmneumatico  = (isset($_POST['kmneumatico']) && !empty($_POST['kmneumatico'])) ? $_POST['kmneumatico'] : null;
+        $tipo_mantto  = (isset($_POST['tipomantto']) && !empty($_POST['tipomantto'])) ? $_POST['tipomantto'] : null;
+        $programado   = (isset($_POST['programado']) && !empty($_POST['programado'])) ? $_POST['programado'] : null;
+        $trabajo_sol  = (isset($_POST['trabajosolic']) && !empty($_POST['trabajosolic'])) ? $_POST['trabajosolic'] : null;
+        $trabajohecho = (isset($_POST['trabajohecho']) && !empty($_POST['trabajohecho'])) ? $_POST['trabajohecho'] : null;
+        $costos_desc  = (isset($_POST['costosdesc']) && !empty($_POST['costodesc'])) ? $_POST['costodesc'] : null;
+        $fechaini     = (isset($_POST['fechaini']) && !empty($_POST['fechaini'])) ? $_POST['fechaini'] : '0000-00-00';
+        $fechafin     = (isset($_POST['fechafin']) && !empty($_POST['fechafin'])) ? $_POST['fechafin'] : '0000-00-00';
+        $notas        = (isset($_POST['notas']) && !empty($_POST['notas'])) ? $_POST['notas'] : null;
+        $notas_genera = (isset($_POST['notas_genera']) && !empty($_POST['notas_genera'])) ? $_POST['notas_genera'] : null;
+        $causas       = (isset($_POST['causas']) && !empty($_POST['causas'])) ? $_POST['causas'] : null;
 
         $token       = md5($_SESSION['idUser']);
-        $usuario     = (isset($_SESSION['idUser'])) ? $_SESSION['idUser'] : null;
+        $usuario     = (isset($_SESSION['idUser']) && !empty($_POST['idUser'])) ? $_SESSION['idUser'] : null;
 
         $sql_editar_orden = "CALL procesar_editsolicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$tipo_trab', '$kmneumatico', '$tipo_mantto', '$programado', '$trabajo_sol', '$trabajohecho', '$costos_desc', '$fechaini', '$fechafin', '$notas', '$notas_genera', '$causas', '$usuario')";
         echo $sql_editar_orden;
