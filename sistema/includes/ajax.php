@@ -2925,24 +2925,24 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
        echo 'error';
     }else{
         
-        $folio        = $_POST['folio'];
-        $fecha        = $_POST['fecha'];
-        $nounidad     = $_POST['nounidad'];
-        $tipo_unidad  = $_POST['tipo_unidad'];
-        $operador     = $_POST['operador'];
-        $solicita     = $_POST['solicita'];
-        $tipo_trab    = $_POST['tipotrabajo'];
-        $kmneumatico  = $_POST['kmneumatico'];
-        $tipo_mantto  = $_POST['tipomantto'];
-        $programado   = $_POST['programado'];
-        $trabajo_sol  = $_POST['trabajosolic'];
-        $trabajohecho = $_POST['trabajohecho'];
-        $costos_desc  = $_POST['costosdesc'];
-        $fechaini     = $_POST['fechaini'];
-        $fechafin     = $_POST['fechafin'];
-        $notas        = $_POST['notas'];
-        $notas_genera = $_POST['notas_genera'];
-        $causas       = $_POST['causas'];
+        $folio        = $_POST['folio'] ? $_POST['folio'] : null;
+        $fecha        = $_POST['fecha'] ? $_POST['fecha'] : null;
+        $nounidad     = $_POST['nounidad'] ? $_POST['nounidad'] : null;
+        $tipo_unidad  = $_POST['tipo_unidad'] ? $_POST['tipo_unidad'] : null;
+        $operador     = $_POST['operador'] ? $_POST['operador'] : null;
+        $solicita     = $_POST['solicita'] ? $_POST['solicita'] : null;
+        $tipo_trab    = $_POST['tipotrabajo'] ? $_POST['tipotrabajo'] : null;
+        $kmneumatico  = $_POST['kmneumatico'] ? $_POST['kmneumatico'] : null;
+        $tipo_mantto  = $_POST['tipomantto'] ? $_POST['tipomantto'] : null;
+        $programado   = $_POST['programado'] ? $_POST['programado'] : null;
+        $trabajo_sol  = $_POST['trabajosolic'] ? $_POST['trabajosolic'] : null;
+        $trabajohecho = $_POST['trabajohecho'] ? $_POST['trabajohecho'] : null;
+        $costos_desc  = $_POST['costosdesc'] ? $_POST['costodesc'] : null;
+        $fechaini     = $_POST['fechaini'] ? $_POST['fechaini'] : null;
+        $fechafin     = $_POST['fechafin'] ? $_POST['fechafin'] : null;
+        $notas        = $_POST['notas'] ? $_POST['notas'] : null;
+        $notas_genera = $_POST['notas_genera'] ? $_POST['notas_genera'] : null;
+        $causas       = $_POST['causas'] ? $_POST['causas'] : null;
 
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
