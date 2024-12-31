@@ -501,7 +501,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
        var notas_genera  = $('#inputNotasgen').val();
        var causas        = $('#inputCausas').val();
        let usuario       = "<?php echo $usuario; ?>"
-        console.log(usuario)
        var action       = 'AlmacenaEditSolicitudmantto';
 
         $.ajax({
@@ -512,38 +511,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     success: function(response)
                     {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "ORDEN DE MANTENIMIENTO ALMACENADA CORRECTAMENTE",
-                          icon: 'success',
+                        let data = JSON.parse(response)
+                          if ($data === 'success')
+                            {
+                              Swal
+                          .fire({
+                            title: "Exito!",
+                            text: "ORDEN DE MANTENIMIENTO ALMACENADA CORRECTAMENTE",
+                            icon: 'success',
 
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'orden_trabajo23.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'orden_trabajo23.php';
-                        }
+                            //showCancelButton: true,
+                            //confirmButtonText: "Regresar",
+                            //cancelButtonText: "Salir",
+        
+                        })
+                          .then(resultado => {
+                          if (response.value) {
+                            //* generarimpformulaPDF(info.folio);
+                            location.href = 'orden_trabajo23.php';
+                          
+                            } else {
+                              // Dijeron que no
+                              location.reload();
+                            location.href = 'orden_trabajo23.php';
+                            }
                         });
-
-
                          }else {  
                             
                             //swal('Mensaje del sistema', $mensaje, 'warning');
@@ -557,16 +549,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                                                         
     
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
+                        },
                  error: function(error) {
                  }
 
