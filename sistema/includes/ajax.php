@@ -2945,7 +2945,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
         $causas       = (isset($_POST['causas'])) ? $_POST['causas'] : null;
 
         $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+        $usuario     = (isset($_SESSION['idUser'])) ? $_SESSION['idUser'] : null;
 
         $sql_editar_orden = "CALL procesar_editsolicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$tipo_trab', '$kmneumatico', '$tipo_mantto', '$programado', '$trabajo_sol', '$trabajohecho', '$costos_desc', '$fechaini', '$fechafin', '$notas', '$notas_genera', '$causas', $usuario)";
         echo $sql_editar_orden;
