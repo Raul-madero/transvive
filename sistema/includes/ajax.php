@@ -2947,7 +2947,11 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_editsolicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$tipo_trab', '$kmneumatico', '$tipo_mantto', '$programado', '$trabajo_sol', '$trabajohecho', '$costos_desc', '$fechaini', '$fechafin', '$notas', '$notas_genera', '$causas', $usuario)");
+        $sql_editar_orden = "CALL procesar_editsolicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$tipo_trab', '$kmneumatico', '$tipo_mantto', '$programado', '$trabajo_sol', '$trabajohecho', '$costos_desc', '$fechaini', '$fechafin', '$notas', '$notas_genera', '$causas', $usuario)";
+        echo $sql_editar_orden;
+
+        $query_procesar = mysqli_query($conection, $sql_editar_orden);
+
         $result_detalle = mysqli_affected_rows($query_procesar);
         
         if($result_detalle > 0){
