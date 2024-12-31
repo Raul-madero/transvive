@@ -483,78 +483,81 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
+		let usuario = "<?php echo $usuario; ?>"
+		console.log(usuario)
 
-       var folio         = $('#inputFolio').val();
-       var fecha         = $('#inputFecha').val();
-       var nounidad      = $('#inputNounidad').val();
-       var tipo_unidad   = $('#inputTipounidad').val();
-       var operador      = $('#inputOperador').val();
-       var solicita      = $('#inputSolicita').val();
-       var tipotrabajo   = $('#inputTipotrabajo').val();
-       var kmneumatico   = $('#inputKmt').val();
-       var tipomantto    = $('#inputTipomantto').val();
-       var programado    = $('#inputProgramado').val();
-       var trabajosolic  = $('#inputTrabajosolicitado').val();
-       var trabajohecho  = $('#inputTrabajoejecutado').val();
-       var costosdesc    = $('#inputCostosdesc').val();
-       var fechaini      = $('#inputFechaini').val();
-       var fechafin      = $('#inputFechafin').val();
-       var notas         = $('#inputNotas').val();
-       var notas_genera  = $('#inputNotasgen').val();
-       var causas        = $('#inputCausas').val();
-       let usuario       = "<?php echo $usuario; ?>"
-       var action       = 'AlmacenaEditSolicitudmantto';
+    //    var folio         = $('#inputFolio').val();
+    //    var fecha         = $('#inputFecha').val();
+    //    var nounidad      = $('#inputNounidad').val();
+    //    var tipo_unidad   = $('#inputTipounidad').val();
+    //    var operador      = $('#inputOperador').val();
+    //    var solicita      = $('#inputSolicita').val();
+    //    var tipotrabajo   = $('#inputTipotrabajo').val();
+    //    var kmneumatico   = $('#inputKmt').val();
+    //    var tipomantto    = $('#inputTipomantto').val();
+    //    var programado    = $('#inputProgramado').val();
+    //    var trabajosolic  = $('#inputTrabajosolicitado').val();
+    //    var trabajohecho  = $('#inputTrabajoejecutado').val();
+    //    var costosdesc    = $('#inputCostosdesc').val();
+    //    var fechaini      = $('#inputFechaini').val();
+    //    var fechafin      = $('#inputFechafin').val();
+    //    var notas         = $('#inputNotas').val();
+    //    var notas_genera  = $('#inputNotasgen').val();
+    //    var causas        = $('#inputCausas').val();
+    //    let usuario       = "<?php echo $usuario; ?>"
+    //    var action       = 'AlmacenaEditSolicitudmantto';
+	// 	console.log(usuario)
+	// 	break;
+    //     $.ajax({
+    //                 url: 'includes/ajax.php',
+    //                 type: "POST",
+    //                 async : true,
+    //                 data: {action:action, folio:folio, fecha:fecha, nounidad:nounidad, tipo_unidad:tipo_unidad, operador:operador, solicita:solicita, tipotrabajo:tipotrabajo, kmneumatico:kmneumatico, tipomantto:tipomantto, programado:programado, trabajosolic:trabajosolic, trabajohecho:trabajohecho, costosdesc:costosdesc, fechaini:fechaini, fechafin:fechafin, notas:notas, notas_genera:notas_genera, causas:causas, usuario:usuario},
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, folio:folio, fecha:fecha, nounidad:nounidad, tipo_unidad:tipo_unidad, operador:operador, solicita:solicita, tipotrabajo:tipotrabajo, kmneumatico:kmneumatico, tipomantto:tipomantto, programado:programado, trabajosolic:trabajosolic, trabajohecho:trabajohecho, costosdesc:costosdesc, fechaini:fechaini, fechafin:fechafin, notas:notas, notas_genera:notas_genera, causas:causas, usuario:usuario},
+    //                 success: function(response)
+    //                 {
+    //                     let data = JSON.parse(response)
+    //                       if ($data === 'success')
+    //                         {
+    //                           Swal
+    //                       .fire({
+    //                         title: "Exito!",
+    //                         text: "ORDEN DE MANTENIMIENTO ALMACENADA CORRECTAMENTE",
+    //                         icon: 'success',
 
-                    success: function(response)
-                    {
-                        let data = JSON.parse(response)
-                          if ($data === 'success')
-                            {
-                              Swal
-                          .fire({
-                            title: "Exito!",
-                            text: "ORDEN DE MANTENIMIENTO ALMACENADA CORRECTAMENTE",
-                            icon: 'success',
-
-                            //showCancelButton: true,
-                            //confirmButtonText: "Regresar",
-                            //cancelButtonText: "Salir",
+    //                         //showCancelButton: true,
+    //                         //confirmButtonText: "Regresar",
+    //                         //cancelButtonText: "Salir",
         
-                        })
-                          .then(resultado => {
-                          if (response.value) {
-                            //* generarimpformulaPDF(info.folio);
-                            location.href = 'orden_trabajo23.php';
+    //                     })
+    //                       .then(resultado => {
+    //                       if (response.value) {
+    //                         //* generarimpformulaPDF(info.folio);
+    //                         location.href = 'orden_trabajo23.php';
                           
-                            } else {
-                              // Dijeron que no
-                              location.reload();
-                            location.href = 'orden_trabajo23.php';
-                            }
-                        });
-                         }else {  
+    //                         } else {
+    //                           // Dijeron que no
+    //                           location.reload();
+    //                         location.href = 'orden_trabajo23.php';
+    //                         }
+    //                     });
+    //                      }else {  
                             
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
+    //                         //swal('Mensaje del sistema', $mensaje, 'warning');
+    //                         //location.reload();
+    //                         Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Oops...',
+    //                         text: $mensaje,
+    //                         })
+    //                     }
 
                                               
-                        },
-                 error: function(error) {
-                 }
+    //                     },
+    //              error: function(error) {
+    //              }
 
-               });
+    //            });
 
     });
 
