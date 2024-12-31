@@ -1,20 +1,18 @@
 <?php
 include "../conexion.php";
 session_start();
-if (!isset($_SESSION['idUser'])) {
-header('Location: ../index.php');
-}
   $User=$_SESSION['user'];
   $rol=$_SESSION['rol'];
   $usuario=$_SESSION['idUser'];
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 
-	echo "<pre>";
-	print_r($usuario);
-	echo "</pre>";
+
   $namerol = $filas['rol'];
 
+  if (!isset($_SESSION['idUser'])) {
+  header('Location: ../index.php');
+}
 
     //Mostrar Datos
   if(empty($_REQUEST['id']))
@@ -513,7 +511,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     success: function(response)
                     {
-                        let data = JSON.parse(response)
+                        var info = JSON.parse(response);
                           if ($data === 'success')
                             {
                               Swal
@@ -549,7 +547,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             })
                         }
 
-                                              
+                                                        
+    
                         },
                  error: function(error) {
                  }
