@@ -2920,6 +2920,7 @@ if($_POST['action'] == 'deleteCargac')
         //Almacena Edicion Solicitud Mantenimiento
 if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
 {
+    echo $_POST;
     if(empty($_POST['fecha']) || empty($_POST['nounidad']) || empty($_POST['operador']) || empty($_POST['solicita']) || empty($_POST['tipotrabajo']) || empty($_POST['programado']) || empty($_POST['trabajosolic']) || empty($_POST['trabajohecho']) || empty($_POST['causas']) )
     {
        echo 'error';
