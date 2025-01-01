@@ -513,9 +513,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     success: function(response)
                     {
-                      console.log(response)
                         var info = JSON.parse(response);
-                          if (info['status'] == 'success')
+                          if ($data.status == 'success')
                             {
                               Swal
                           .fire({
@@ -546,7 +545,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: mensaje,
+                            text: $mensaje,
                             })
                         }
 
