@@ -8636,9 +8636,9 @@ if ($count === 0) {
         // $filas_afectadas = mysqli_affected_rows($conection);
         
         // if($filas_afectadas > 0){
-        //     echo json_encode(['mensaje' => 'Solicitud d e mantenimiento preventivo almacenada correctamente'], JSON_UNESCAPED_UNICODE);
+        //     echo json_encode(['mensaje' => 'success'], JSON_UNESCAPED_UNICODE);
         // }else{
-        //     echo "error: " . mysqli_error($conection);
+        //     echo json_encode(['error' => mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
         // }
     
     mysqli_close($conection);

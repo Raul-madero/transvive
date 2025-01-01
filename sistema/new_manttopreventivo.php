@@ -658,13 +658,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     success: function(response)
                     {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
+                      let info = JSON.parse(response)
+                          if (info['mensaje'] === 'success')
                           {
                             Swal
                          .fire({
@@ -697,23 +692,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: $mensaje,
+                            text: info.error,
                             })
                         }
 
                                                         
     
-                        }else{
+                        /* }else{
                           Swal.fire({
                             icon: 'info',
                             title: '',
                             text: 'Capture los datos requeridos',
                             })
         
-                        }
+                        } */
                         //viewProcesar();
                  },
                  error: function(error) {
+                  console.error("Error en la solicitud AJAX:", error)
                  }
 
                });
