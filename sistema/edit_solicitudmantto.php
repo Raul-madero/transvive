@@ -513,8 +513,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     success: function(response)
                     {
+                      console.log(response)
                         var info = JSON.parse(response);
-                        console.log(info)
                           if (info.status == 'success')
                             {
                               Swal
