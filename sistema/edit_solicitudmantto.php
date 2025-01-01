@@ -514,7 +514,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     success: function(response)
                     {
                         var info = JSON.parse(response);
-                          if ($data.status === 'success')
+                          if (info.status == 'success')
                             {
                               Swal
                           .fire({
