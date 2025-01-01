@@ -503,7 +503,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
        var notas_genera  = $('#inputNotasgen').val();
        var causas        = $('#inputCausas').val();
        let idUsuario       = "<?php echo $id_usuario; ?>";
-
+      console.log(  idUsuario)
        var action       = 'AlmacenaEditSolicitudmantto';
         $.ajax({
                     url: 'includes/ajax.php',
