@@ -510,7 +510,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     url: 'includes/ajax.php',
                     type: "POST",
                     async : true,
-                    data: {action:action, folio:folio, fecha:fecha, nounidad:nounidad, tipo_unidad:tipo_unidad, operador:operador, solicita:solicita, tipotrabajo:tipotrabajo, kmneumatico:kmneumatico, tipomantto:tipomantto, programado:programado, trabajosolic:trabajosolic, trabajohecho:trabajohecho, costosdesc:costosdesc, fechaini:fechaini, fechafin:fechafin, notas:notas, notas_genera:notas_genera, causas:causas, idUsuario:idUsuario},
+                    data: {action:action, folio:folio, fecha:fecha, nounidad:nounidad, tipo_unidad:tipo_unidad, operador:operador, solicita:solicita, tipotrabajo:tipotrabajo, kmneumatico:kmneumatico, tipomantto:tipomantto, programado:programado, trabajosolic:trabajosolic, trabajohecho:trabajohecho, costosdesc:costosdesc, fechaini:fechaini, fechafin:fechafin, notas:notas, notas_genera:notas_genera, causas:causas, usuario:idUsuario},
 
                     success: function(response)
                     {
