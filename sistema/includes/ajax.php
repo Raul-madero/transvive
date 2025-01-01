@@ -2951,7 +2951,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
 
         $query_procesar = mysqli_query($conection, $sql_editar_orden);
 
-        $result_detalle = mysqli_affected_rows($query_procesar);
+        $result_detalle = mysqli_affected_rows($conection);
         
         if($result_detalle > 0){
             $data = mysqli_fetch_assoc($query_procesar);
