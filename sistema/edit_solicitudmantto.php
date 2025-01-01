@@ -553,6 +553,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     
                         },
                  error: function(error) {
+					console.error("Error en la peticion AJAX:", error)
                  }
 
                });
