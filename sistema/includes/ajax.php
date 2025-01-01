@@ -2961,7 +2961,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
             $data = mysqli_fetch_assoc($query_procesar);
             $response = array(
                 'status' => 'success',
-                'data' => $data
+                'data' => $valor_de_retorno
             );
             echo json_encode($response,JSON_UNESCAPED_UNICODE);
         }else{
