@@ -2964,7 +2964,6 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
                 'data' => $data
             );
             echo json_encode($response,JSON_UNESCAPED_UNICODE);
-            var_dump( $response);
         }else{
             $response = array(
                 'status' => 'error',
