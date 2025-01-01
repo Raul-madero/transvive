@@ -505,7 +505,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
        let usuario       = "<?php echo $id_usuario; ?>";
 
        var action       = 'AlmacenaEditSolicitudmantto';
-        console.log(usuario)
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",
