@@ -502,15 +502,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
        var notas         = $('#inputNotas').val();
        var notas_genera  = $('#inputNotasgen').val();
        var causas        = $('#inputCausas').val();
-       let idUsuario       = "<?php echo $id_usuario; ?>";
+       let usuario       = "<?php echo $id_usuario; ?>";
 
        var action       = 'AlmacenaEditSolicitudmantto';
-        console.log(idUsuario)
+        console.log(usuario)
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",
                     async : true,
-                    data: {action:action, folio:folio, fecha:fecha, nounidad:nounidad, tipo_unidad:tipo_unidad, operador:operador, solicita:solicita, tipotrabajo:tipotrabajo, kmneumatico:kmneumatico, tipomantto:tipomantto, programado:programado, trabajosolic:trabajosolic, trabajohecho:trabajohecho, costosdesc:costosdesc, fechaini:fechaini, fechafin:fechafin, notas:notas, notas_genera:notas_genera, causas:causas, usuario:idUsuario},
+                    data: {action:action, folio:folio, fecha:fecha, nounidad:nounidad, tipo_unidad:tipo_unidad, operador:operador, solicita:solicita, tipotrabajo:tipotrabajo, kmneumatico:kmneumatico, tipomantto:tipomantto, programado:programado, trabajosolic:trabajosolic, trabajohecho:trabajohecho, costosdesc:costosdesc, fechaini:fechaini, fechafin:fechafin, notas:notas, notas_genera:notas_genera, causas:causas, usuario:usuario},
 
                     success: function(response)
                     {
