@@ -503,7 +503,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
        var notas_genera  = $('#inputNotasgen').val();
        var causas        = $('#inputCausas').val();
        let idUsuario       = "<?php echo $id_usuario; ?>";
-      console.log(  idUsuario)
        var action       = 'AlmacenaEditSolicitudmantto';
         $.ajax({
                     url: 'includes/ajax.php',
@@ -515,7 +514,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     {
                         var info = JSON.parse(response);
                         console.log(info)
-                          if (info === 'success')
+                          if (info['success'] === 'success')
                             {
                               Swal
                           .fire({
@@ -554,7 +553,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     
                         },
                  error: function(error) {
-					console.error("Error en la peticion AJAX:", error)
+					        console.error("Error en la peticion AJAX:", error)
                  }
 
                });
