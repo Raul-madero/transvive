@@ -514,7 +514,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     success: function(response)
                     {
                         var info = JSON.parse(response);
-                          if ($data.status == 'success')
+                          if (info.status == 'success')
                             {
                               Swal
                           .fire({
@@ -528,7 +528,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         
                         })
                           .then(resultado => {
-                          if (response.value) {
+                          if (resultado.value) {
                             //* generarimpformulaPDF(info.folio);
                             location.href = 'orden_trabajo23.php';
                           
@@ -545,7 +545,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: $mensaje,
+                            text: info.message,
                             })
                         }
 
