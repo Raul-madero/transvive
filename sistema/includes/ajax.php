@@ -2950,6 +2950,9 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
         // echo $sql_editar_orden;
 
         $query_procesar = mysqli_query($conection, $sql_editar_orden);
+        if(!$query_procesar) {
+            die("Error en la consulta: " . mysqli_error($conection));
+        }
 
         $result_detalle = mysqli_affected_rows($conection);
         
