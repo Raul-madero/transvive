@@ -2944,8 +2944,8 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
         $notas        = (isset($_POST['notas']) && !empty($_POST['notas'])) ? $_POST['notas'] : null;
         $notas_genera = (isset($_POST['notas_genera']) && !empty($_POST['notas_genera'])) ? $_POST['notas_genera'] : null;
         $causas       = (isset($_POST['causas']) && !empty($_POST['causas'])) ? $_POST['causas'] : null;
-        echo "Valor de usuario: " . $_POST['usuario'];
-        $usuario     = (isset($_POST['ususario']) && !empty($_POST['ususario'])) ? intval($_POST['ususario']) : null;
+        echo "Valor de usuario: " . $_POST['idUsuario'];
+        $usuario     = (isset($_POST['idUsuario']) && !empty($_POST['idUsuario'])) ? intval($_POST['idUsuario']) : null;
 
         $sql_editar_orden = "CALL procesar_editsolicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$tipo_trab', '$kmneumatico', '$tipo_mantto', '$programado', '$trabajo_sol', '$trabajohecho', '$costos_desc', '$fechaini', '$fechafin', '$notas', '$notas_genera', '$causas', '$usuario')";
         echo $sql_editar_orden;
