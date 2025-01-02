@@ -45,7 +45,14 @@ $where = "WHERE p.tipo_viaje LIKE '%Especial%'";
 
 if (!empty($requestData['search']['value'])) {
     $searchValue = $requestData['search']['value'];
-    $where .= " AND (p.id LIKE '%$searchValue%' OR p.cliente LIKE '%$searchValue%' OR p.operador LIKE '%$searchValue%' OR p.semana LIKE '%$searchValue%' OR sp.nombres LIKE '%$searchValue%' OR sp.apellido_paterno LIKE '%$searchValue%' OR sp.apellido_materno LIKE '%$searchValue%' OR p.fecha LIKE '%$searchValue%')";
+    $where .= " AND (p.id LIKE '%$searchValue%'
+                OR p.cliente LIKE '%$searchValue%' 
+                OR p.operador LIKE '%$searchValue%' 
+                OR p.semana LIKE '%$searchValue%' 
+                OR sp.nombres LIKE '%$searchValue%' 
+                OR sp.apellido_paterno LIKE '%$searchValue%' 
+                OR sp.apellido_materno LIKE '%$searchValue%' 
+                OR p.fecha LIKE '%$searchValue%')";
 }
 
 $orderColumn = $_POST['order_column'];
@@ -60,7 +67,7 @@ $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
 $sql = "SELECT $columns FROM $table $where ORDER BY `$orderColumn` $orderDir LIMIT $start, $length";
-
+echo $sql;
 // Imprimir la consulta SQL para depuración
 // echo $sql; 
 
