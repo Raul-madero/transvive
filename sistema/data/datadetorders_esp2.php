@@ -40,7 +40,7 @@ $where = "WHERE p.tipo_viaje LIKE '%Especial%'";
 
 // Validar que $year sea un número entero positivo
 (is_numeric($year) && $year > 0 && $year == intval($year)) ?
-    $where .= " AND YEAR(p.fecha) = '$year'" : $where .= " AND YEAR(p.fecha) = YEAR(CURDATE())";
+    $where .= " AND YEAR(p.fecha) = '$year'" : "";
 
 
 if (!empty($requestData['search']['value'])) {
