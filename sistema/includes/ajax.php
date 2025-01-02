@@ -595,7 +595,7 @@ if ($_POST['action'] == 'AlmacenaAdeudo') {
         // Ejecutar la consulta
         $query_insertar = mysqli_query(
             $conection,
-            "CALL insertar_adeudo('$cantidad', '$comentarios', '$descuento', '$estado', '$fecha_inicial', '$motivo_adeudo', '$noempleado', '$semanas_totales', '$fecha_final')"
+            "INSERT INTO adeudos cantidad, comentarios, descuento, estado, fecha_inicial, motivo_adeudo, noempleado, semanas_totales, fecha_final VALUES ('$cantidad', '$comentarios', '$descuento', '$estado', '$fecha_inicial', '$motivo_adeudo', '$noempleado', '$semanas_totales', '$fecha_final')"
         );
 
         // Verificar si la consulta fue exitosa
