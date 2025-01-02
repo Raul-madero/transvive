@@ -10,7 +10,7 @@ session_start();
   $namerol = $filas['rol'];
 
 
-  $sqlemp = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name, noempleado, id from empleados ORDER BY noempleado";
+  $sqlemp = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name, noempleado, id from empleados WHERE estatus = 1 ORDER BY noempleado";
   $queryemp = mysqli_query($conection, $sqlemp);
   $filasemp = mysqli_fetch_all($queryemp, MYSQLI_ASSOC); 
 
@@ -405,19 +405,29 @@ $('#btn_salir').click(function(e){
     $('.select2bs4').select2({
       theme: 'bootstrap4'
     });
-  }
+  })
 </script> 
+<!-- <script>
+  $(document).ready(function() {
+    $('.select2bs4').select2({
+        // Opciones de configuración (opcional)
+        placeholder: "- Selecciona -",
+        allowClear: true, 
+        language: "es" // Para usar el idioma español
+    });
+});
+</script> -->
 
-// <script>
-//     document.addEventListener("DOMContentLoaded", function(){
-//       // Invocamos cada 5 segundos ;)
-//       const milisegundos = 5 *1000;
-//       setInterval(function(){
-//       // No esperamos la respuesta de la petición porque no nos importa
-//          fetch("./refrescar.php");
-//       },milisegundos);
-//     });
-// </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+      // Invocamos cada 5 segundos ;)
+      const milisegundos = 5 *1000;
+      setInterval(function(){
+      // No esperamos la respuesta de la petición porque no nos importa
+         fetch("./refrescar.php");
+      },milisegundos);
+    });
+</script>
 
 </body>
 </html>
