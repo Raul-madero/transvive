@@ -267,7 +267,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     
                     return `<p>${semanasRestantes > 0 ? semanasRestantes : 0}</p>`;
                   }
-              }
+              },
+              {
+                    mData: 'comentarios',
+                    "sWidth": "50px",
+                    "render": function(data) {
+                        return '<p>' + data + '</p>';
+                    }
+                },
             ],
             "oLanguage": {
                 "sEmptyTable": "No hay registros disponibles",
