@@ -1243,7 +1243,7 @@ e.preventDefault();
      var direc  = $(e.relatedTarget).data().direcc;
      var desti  = $(e.relatedTarget).data().destino;
      
-    
+      console.log(direc)
       $(e.currentTarget).find('#form_pass_idc').val(idi);
       $(e.currentTarget).find('#inputCostov').val(costoa);
       $(e.currentTarget).find('#form_pass_dfinal').val(fchaa);
