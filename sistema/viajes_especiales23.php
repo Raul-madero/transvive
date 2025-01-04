@@ -1240,7 +1240,7 @@ e.preventDefault();
      var fchaa  = $(e.relatedTarget).data().fchaa;
      var sdovta = $(e.relatedTarget).data().sueldo;
      var nunida = $(e.relatedTarget).data().unidades;
-     var direc  = $(e.relatedTarget).data().direcc;
+     var direc  = $(e.relatedTarget).data().origen;
      var desti  = $(e.relatedTarget).data().destino;
      
       console.log(direc)
