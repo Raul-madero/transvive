@@ -2,13 +2,10 @@
 session_start();
 include '../../conexion.php';
 
-global $conection;
-
 if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
     echo json_encode(["error" => "Acción no válida o no proporcionada."]);
     exit;
 }
-
 $requestData = $_REQUEST;
 $columns = array(
     0 => 'id',
