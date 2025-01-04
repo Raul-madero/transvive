@@ -553,7 +553,7 @@ session_start();
               { data: "horainicio", width: "5%", className: "text-center", orderable: false },
               { data : "horafin", width: "5%", className: "text-center", orderable: false },
               { data: "tipounidad", width: "10%", orderable:false },
-              { data : "destino", width: "15%" },
+              { data : "Destino", width: "15%" },
               { data: "TipoViaje", width: "10%" },
               { data: "estatusped", width: "8%", orderable:false },
 
@@ -563,7 +563,7 @@ session_start();
             
               {
                   render: function ( data, type, full, meta ) {
-                  return '<a class="link_edit" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.id +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.id + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" data-id=\'' + full.id + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.id + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.id  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.origen  + '\' data-destino=\'' + full.destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
+                  return '<a class="link_edit" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.id +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.id + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" data-id=\'' + full.id + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.id + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.id  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.origen  + '\' data-destino=\'' + full.Destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
                   }   
               }
             <?php
@@ -687,7 +687,7 @@ session_start();
 //             { "data" : "horainicio", "width": "5%", className: "text-center", "orderable": false },
 //             { "data" : "horafin", "width": "5%", className: "text-center", "orderable": false },
 //             { "data" : "tipounidad", "width": "10%", "orderable":false },
-//             { "data" : "destino", "width": "15%" },
+//             { "data" : "Destino", "width": "15%" },
 //             { "data" : "TipoViaje", "width": "10%" },
 //             { "data" : "estatusped", "width": "8%", "orderable":false },
 
@@ -697,7 +697,7 @@ session_start();
           
 //             {
 //                     "render": function ( data, type, full, meta ) {
-//         return '<a class="link_edit" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" data-id=\'' + full.pedidono + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.pedidono  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.origen  + '\' data-destino=\'' + full.destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
+//         return '<a class="link_edit" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" data-id=\'' + full.pedidono + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.pedidono + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.pedidono  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.origen  + '\' data-destino=\'' + full.Destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
 //           }   
 //           }
 //           <?php
@@ -818,7 +818,7 @@ buttons: [
            { "data" : "horainicio", "width": "5%", className: "text-center", "orderable": false },
            { "data" : "horafin", "width": "5%", className: "text-center", "orderable": false },
            { "data" : "tipounidad", "width": "10%", "orderable":false },
-           { "data" : "destino", "width": "16%"},
+           { "data" : "Destino", "width": "16%"},
            { "data" : "TipoViaje", "width": "8%"},
            { "data" : "estatusped", "width": "8%", "orderable":false },
            {
