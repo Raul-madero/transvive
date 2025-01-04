@@ -1241,7 +1241,7 @@ e.preventDefault();
      var sdovta = $(e.relatedTarget).data().sueldo;
      var nunida = $(e.relatedTarget).data().unidades;
      var direc  = $(e.relatedTarget).data().direcc;
-     var desti  = $(e.relatedTarget).data().Destino;
+     var desti  = $(e.relatedTarget).data().destino;
      
     
       $(e.currentTarget).find('#form_pass_idc').val(idi);
