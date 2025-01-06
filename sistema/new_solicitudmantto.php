@@ -96,7 +96,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           $result_folio = mysqli_num_rows($query_folio);
 
           $folioe = mysqli_fetch_array($query_folio);
-          $nuevofolio=$folioe["siguiente_folio"]+1; 
+          $nuevofolio=$folioe["siguiente_folio"]; 
 
           // $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'SM'");
           
