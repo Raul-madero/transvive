@@ -673,7 +673,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     success: function(response)
                     {
                       let info = JSON.parse(response)
-                          if (info['mensaje'] === 'success')
+                          if (info['success']
                           {
                             Swal
                          .fire({
@@ -723,7 +723,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         //viewProcesar();
                  },
                  error: function(error) {
-                  console.error("Error en la solicitud AJAX:", error)
+                  console.error("Error en la solicitud AJAX", error)
                  }
 
                });
