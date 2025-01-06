@@ -302,8 +302,8 @@ buttons: [
             "type": "POST",
             "data" : { 
               "action" : "fetch_users", 
-              "initial_date" : fecha1, 
-              "final_date" : fecha2,
+              "initial_date" : date1, 
+              "final_date" : date2,
               "gender" : buscar 
               
             },
