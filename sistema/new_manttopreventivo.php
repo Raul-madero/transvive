@@ -95,13 +95,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
        <?php
                     
           include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT * FROM folios where serie = 'SM'");
+          $query_folio = mysqli_query($conection,"SELECT MAX(no_orden) + 1 AS siguiente_folio FROM mantenimiento_preventivo");
           $result_folio = mysqli_num_rows($query_folio);
 
           $folioe = mysqli_fetch_array($query_folio);
-          $nuevofolio=$folioe["folio"]+1; 
+          $nuevofolio=$folioe["siguiente_folio"]+1; 
 
-          $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'SM'");
+          // $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'SM'");
           
 
           mysqli_close($conection);
@@ -485,7 +485,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
  <script>
    $('#btn_salir').click(function(e){
         e.preventDefault();
-
+/* 
             var norecibo  = $('#inputFolio').val();
             var action = 'procesarSalirManttoprev';
                        
@@ -501,18 +501,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     if(response != 'error')
                     {
                       var info = JSON.parse(response);
-                      console.log(response); 
+                      console.log(response);  */
+                      Swal
+                        .fire({
+                        title: "DESEA SALIR!",
+                        text: "",
+                        icon: 'info',
+
+                        showCancelButton: true,
+                        confirmButtonText: "Regresar",
+                        cancelButtonText: "Salir",
+                    })
+                    .then(resultado => {
+                        if (resultado.value) {
+                            console.log("Alerta cerrada");
+                        } else {
                       location.href = 'mantenimiento_preventivo.php';
                        /* location.reload(); */
 
                
-                        
+/*                         
                     }else{
                         console.log('no data');
                     }
                 },
                 error: function(error){                
-                }
+                } */
             });
         
 

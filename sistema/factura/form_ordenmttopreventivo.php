@@ -73,7 +73,7 @@ $entrada = mysqli_fetch_assoc($query);
     //$contenido = 'Certificado '.$certificado.' Almacen '.$almacen;
    
 
-       $subtitulo1=utf8_decode('Orden de Trabajo de Mantenimiento Preventivo');
+       $subtitulo1=mb_convert_encoding('Orden de Trabajo de Mantenimiento Preventivo', 'ISO-8859-1', 'UTF-8');
 
 //Logo
 
@@ -97,8 +97,8 @@ $this->Cell(25,10,'FO-TV-MT-07',1,1,'C');
 $this->SetFont('Arial','',10);
 $this->Cell(65,10,'',0,0,'r');
 $this->Cell(15,5,'Area',1,0,'C','T');
-$this->Cell(65,5,utf8_decode('Mantenimiento'),1,0,'C');
-$this->Cell(19,5,utf8_decode(''),1,0,'C','T');
+$this->Cell(65,5,mb_convert_encoding('Mantenimiento', 'ISO-8859-1', 'UTF-8'),1,0,'C');
+$this->Cell(19,5,mb_convert_encoding(''),1,0,'C','T');
 $this->SetFont('Arial','',8);
 $this->Cell(25,5,'',1,0,'C');
 
@@ -123,32 +123,32 @@ $this->SetTextcolor(0,0,0);
 $this->SetFont('Arial','I',8);
 /*
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(45,5,utf8_decode(''),0,0,'C');
+$this->Cell(45,5,mb_convert_encoding(''),0,0,'C');
 $this->Cell(20,5,'',0,0,'L');
-$this->Cell(45,5,utf8_decode(''),0,0,'C');
+$this->Cell(45,5,mb_convert_encoding(''),0,0,'C');
 $this->Cell(20,5,'',0,0,'L');
-$this->Cell(45,5,utf8_decode(''),0,1,'C');
+$this->Cell(45,5,mb_convert_encoding(''),0,1,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Elabora'),0,0,'C');
+$this->Cell(52,5,mb_convert_encoding('Elabora'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Revisa'),0,0,'C');
+$this->Cell(52,5,mb_convert_encoding('Revisa'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Autoriza'),0,1,'C');
+$this->Cell(52,5,mb_convert_encoding('Autoriza'),0,1,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Ma. Guadalupe Balcárcel'),0,0,'C');
+$this->Cell(52,5,mb_convert_encoding('Ma. Guadalupe Balcárcel'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Karina López Salazar'),0,0,'C');
+$this->Cell(52,5,mb_convert_encoding('Karina López Salazar'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Angelina Durán Garibay'),0,1,'C');
+$this->Cell(52,5,mb_convert_encoding('Angelina Durán Garibay'),0,1,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Compras'),0,0,'C');
+$this->Cell(52,5,mb_convert_encoding('Compras'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Aseguramiento de Calidad'),0,0,'C');
+$this->Cell(52,5,mb_convert_encoding('Aseguramiento de Calidad'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Administración SGC'),0,1,'C');
+$this->Cell(52,5,mb_convert_encoding('Administración SGC'),0,1,'C');
 */
-$this->Cell(0,10,utf8_decode('Transvive ERP'),0,0,'C');
-$this->Cell(-15,10,utf8_decode('Página ') . $this->PageNo(),0,0,'C');
+$this->Cell(0,10,mb_convert_encoding('Transvive ERP', 'ISO-8859-1', 'UTF-8'),0,0,'C');
+$this->Cell(-15,10,mb_convert_encoding('Página ', 'ISO-8859-1', 'UTF-8') . $this->PageNo(),0,0,'C');
 
 }
 }
@@ -350,8 +350,8 @@ $pdf->SetTextcolor(0,0,0);
 $pdf->SetTextcolor(0,0,0);
 $pdf->SetFont('Arial','',8);
 $pdf->SetTextcolor(0,0,0);
-$pdf->Cell(20,5,utf8_decode('No. Orden'),1,0,'C', 'T');
-$pdf->Cell(35,5,utf8_decode('Fecha de Solicitud'),1,0,'C', 'T');
+$pdf->Cell(20,5,mb_convert_encoding('No. Orden', 'ISO-8859-1', 'UTF-8'),1,0,'C', 'T');
+$pdf->Cell(35,5,mb_convert_encoding('Fecha de Solicitud', 'ISO-8859-1', 'UTF-8'),1,0,'C', 'T');
 $pdf->Cell(50,5,'Usuario',1,0,'C', 'T');
 $pdf->Cell(55,5,'Solicitado por',1,0,'C','T');
 $pdf->Cell(29,5,'Unidad',1,1,'C','T');
@@ -366,44 +366,44 @@ $pdf->Cell(130,5,'Tipo de Trabaja a Ejecutar',1,0,'C', 'T');
 $pdf->Cell(30,5,'Kilometraje',1,0,'C', 'T');
 $pdf->Cell(29,5,'Estatus',1,1,'C', 'T');
 $pdf->SetFont('Arial','',7);
-$pdf->Cell(130,5,utf8_decode($t_trabajo),1,0,'C');
+$pdf->Cell(130,5,mb_convert_encoding($t_trabajo, 'ISO-8859-1', 'UTF-8'),1,0,'C');
 $pdf->Cell(30,5,$kilometraje,1,0,'C');
-$pdf->Cell(29,5,utf8_decode($Status),1,1,'C');
+$pdf->Cell(29,5,mb_convert_encoding($Status, 'ISO-8859-1', 'UTF-8'),1,1,'C');
 $pdf->Ln(5);
-$pdf->Cell(189,5,utf8_decode('CHECKLIST'),1,1,'C', 'T');
+$pdf->Cell(189,5,mb_convert_encoding('CHECKLIST', 'ISO-8859-1', 'UTF-8'),1,1,'C', 'T');
 $pdf->Ln(2);
 $pdf->SetFont('Arial','B',8);
-$pdf->Cell(189,5,utf8_decode('***Campo llenado por Coordinador y/o Tecnico en mantenimiento'),0,1,'L', 'T');
+$pdf->Cell(189,5,mb_convert_encoding('***Campo llenado por Coordinador y/o Tecnico en mantenimiento', 'ISO-8859-1', 'UTF-8'),0,1,'L', 'T');
 if ($corto == "C") {
-$pdf->Cell(90,5,utf8_decode('Revisión Camiones'),0,0,'C');   
+$pdf->Cell(90,5,mb_convert_encoding('Revisión Camiones', 'ISO-8859-1', 'UTF-8'),0,0,'C');   
 }else {
-$pdf->Cell(90,5,utf8_decode('Revisión Camionetas y Autos'),0,0,'C');     
+$pdf->Cell(90,5,mb_convert_encoding('Revisión Camionetas y Autos', 'ISO-8859-1', 'UTF-8'),0,0,'C');     
 }
-$pdf->Cell(90,5,utf8_decode('Rotación de Llantas'),0,1,'C');
+$pdf->Cell(90,5,mb_convert_encoding('Rotación de Llantas', 'ISO-8859-1', 'UTF-8'),0,1,'C');
 $pdf->Ln(5);
 
 $pdf->Image("../img/autollantas.jpg",120,80,58,83,"jpg",0,'C');
-$pdf->Cell(80,5,utf8_decode('Cambio de filtro de aceite'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Cambio de filtro de aceite', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check1,0,0,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(40,5,utf8_decode(''),0,0,'R');/* ROTACION IZQ */
-$pdf->Cell(10,5,utf8_decode(''),0,0,'R');
-$pdf->Cell(40,5,utf8_decode(''),0,1,'L');/* ROTACION DER */
-$pdf->Cell(80,5,utf8_decode('Cambio de filtro de aire'),0,0,'L');
+$pdf->Cell(40,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),0,0,'R');/* ROTACION IZQ */
+$pdf->Cell(10,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),0,0,'R');
+$pdf->Cell(40,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),0,1,'L');/* ROTACION DER */
+$pdf->Cell(80,5,mb_convert_encoding('Cambio de filtro de aire', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check2,0,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Cambio de filtro de combustible'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Cambio de filtro de combustible', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check3,0,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Cambio de aceite'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Cambio de aceite', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check4,0,1,'R');
 $pdf->SetFont('Arial','',8);
 if ($corto <> "C") {
-$pdf->Cell(80,5,utf8_decode('Cambio de bujias (anotar km)'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Cambio de bujias (anotar km)', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check5,0,0,'R');
 $pdf->SetFont('Arial','',8);
@@ -411,67 +411,67 @@ $pdf->Cell(10,5,$km_bujias,0,1,'L');
 
 }
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisión de balatas'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisión de balatas', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check6,0,1,'R');
 $pdf->SetFont('Arial','',8);
 if ($corto == "C") {
-$pdf->Cell(80,5,utf8_decode('Engrasado'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Engrasado', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check7,0,1,'R');
 }
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Nivel de anti congelante'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Nivel de anti congelante', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check8,0,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisión de líquido de frenos'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisión de líquido de frenos', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check9,0,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisión de aceite hidraúlico'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisión de aceite hidraúlico', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check10,0,1,'R');
 $pdf->SetFont('Arial','',8);
 if ($corto <> "C") {
-$pdf->Cell(80,5,utf8_decode('Rotación de llantas'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Rotación de llantas', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check11,0,1,'R');
 }
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisar banda de accesorios'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisar banda de accesorios', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check12,0,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisión de muelles'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisión de muelles', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check13,0,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisión de amortiguadores'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisión de amortiguadores', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check14,0,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisión de luces'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisión de luces', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check15,0,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisión de batería'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisión de batería', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check16,0,1,'R');
 $pdf->SetFont('Arial','',8);
 if ($corto <> "C") {
-$pdf->Cell(80,5,utf8_decode('Limpieza de inyectores'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Limpieza de inyectores', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check17,0,1,'R');
 }
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(80,5,utf8_decode('Revisión de masas delanteras'),0,0,'L');
+$pdf->Cell(80,5,mb_convert_encoding('Revisión de masas delanteras', 'ISO-8859-1', 'UTF-8'),0,0,'L');
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check18,0,0,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(40,5,utf8_decode(''),0,0,'R'); /* ROTACION TRAS IZ1 */
-$pdf->Cell(10,5,utf8_decode(''),0,0,'R');
-$pdf->Cell(40,5,utf8_decode(''),0,1,'L'); /* ROTACION TRAS DER */ 
+$pdf->Cell(40,5,mb_convert_encoding(''),0,0,'R'); /* ROTACION TRAS IZ1 */
+$pdf->Cell(10,5,mb_convert_encoding(''),0,0,'R');
+$pdf->Cell(40,5,mb_convert_encoding(''),0,1,'L'); /* ROTACION TRAS DER */ 
 $pdf->Ln(5);
 include('../../conexion.php');
 $noor = $_REQUEST['id'];
@@ -480,10 +480,10 @@ $queryr = mysqli_query($conection,"SELECT * FROM detalle_manttoprev WHERE folio 
 $resultr = mysqli_num_rows($queryr);
 $pdf->SetFillColor(231,233,238);
 $pdf->SetFont('Arial','B',8);
-$pdf->Cell(189,5,utf8_decode('Refacciones y Materiales'),1,1,'C','T');
+$pdf->Cell(189,5,mb_convert_encoding('Refacciones y Materiales', 'ISO-8859-1', 'UTF-8'),1,1,'C','T');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(20,5,utf8_decode('Cantidad'),1,0,'C','T');
-$pdf->Cell(169,5,utf8_decode('Descripcion'),1,1,'C','T');
+$pdf->Cell(20,5,mb_convert_encoding('Cantidad', 'ISO-8859-1', 'UTF-8'),1,0,'C','T');
+$pdf->Cell(169,5,mb_convert_encoding('Descripcion', 'ISO-8859-1', 'UTF-8'),1,1,'C','T');
 
 
 $subtotal    = 0;
@@ -508,40 +508,40 @@ while ($row = mysqli_fetch_assoc($queryr)){
 
 $pdf->SetFont('Arial','',7);
 $pdf->Cell(20,5,number_format($row['cantidad'],2),1,0,'R');
-$pdf->Cell(169,5,utf8_decode($row['descripcion']),1,1,'L');
+$pdf->Cell(169,5,mb_convert_encoding($row['descripcion']),1,1,'L');
 //$pdf->Cell(20,5,number_format($row['costo'],2),1,1,'R');
 }
 
 $pdf->SetFont('Arial','',7);
 $pdf->Cell(20,5,'',1,0,'R');
-$pdf->Cell(169,5,utf8_decode(''),1,1,'L');
+$pdf->Cell(169,5,mb_convert_encoding(''),1,1,'L');
 //$pdf->Cell(20,5,'',1,1,'R');
 
 }
 /*$pdf->SetFont('Arial','',7);
 $pdf->Cell(20,5,'',1,0,'R');
-$pdf->Cell(28,5,utf8_decode('Subtotal:'),1,0,'R', 'T');
+$pdf->Cell(28,5,mb_convert_encoding('Subtotal:'),1,0,'R', 'T');
 $pdf->Cell(28,5,number_format($totsubtotal,2),1,0,'R');
-$pdf->Cell(28,5,utf8_decode('IVA:'),1,0,'R', 'T');
+$pdf->Cell(28,5,mb_convert_encoding('IVA:'),1,0,'R', 'T');
 $pdf->Cell(28,5,number_format($total - $totsubtotal,2),1,0,'R');
-$pdf->Cell(28,5,utf8_decode('Total:'),1,0,'R', 'T');
+$pdf->Cell(28,5,mb_convert_encoding('Total:'),1,0,'R', 'T');
 $pdf->Cell(29,5,number_format($total,2),1,1,'R');
 */
 
 $pdf->Ln(5);
 $pdf->SetFont('Arial','',8);
 
-$pdf->cell(90,5,utf8_decode('Fecha de inicio de mantenimiento'),1,0, 'C', 'T');
-$pdf->cell(9,5,utf8_decode(''),0,0, 'C');
-$pdf->cell(90,5,utf8_decode('Fecha de culminación de mantenimiento'),1,1, 'C', 'T');
+$pdf->cell(90,5,mb_convert_encoding('Fecha de inicio de mantenimiento', 'ISO-8859-1', 'UTF-8'),1,0, 'C', 'T');
+$pdf->cell(9,5,mb_convert_encoding(''),0,0, 'C');
+$pdf->cell(90,5,mb_convert_encoding('Fecha de culminación de mantenimiento', 'ISO-8859-1', 'UTF-8'),1,1, 'C', 'T');
 $pdf->cell(90,5,$newDate2,1,0, 'C');
-$pdf->cell(9,5,utf8_decode(''),0,0, 'C');
+$pdf->cell(9,5,mb_convert_encoding(''),0,0, 'C');
 $pdf->cell(90,5,$newDate3,1,1, 'C');
 $pdf->Ln(5);
-$pdf->cell(189,5,utf8_decode('Observaciones'),1,1, 'L', 'T');
+$pdf->cell(189,5,mb_convert_encoding('Observaciones', 'ISO-8859-1', 'UTF-8'),1,1, 'L', 'T');
 $pdf->SetFillColor(255,255,255);
 $pdf->SetFont('Arial','',7);
-$pdf->Multicell(189,5,utf8_decode($observaciones),1,1, 'L');
+$pdf->Multicell(189,5,mb_convert_encoding($observaciones, 'ISO-8859-1', 'UTF-8'),1,1, 'L');
 $pdf->Ln(5);
 $pdf->SetFillColor(231,233,238);
 $pdf->SetFont('Arial','',8);

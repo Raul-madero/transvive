@@ -34,7 +34,7 @@ session_start();
       $noorden       = $data['no_orden'];
       $fecha         = $data['fecha'];
       //$hora          = $data['hora'];
-      $usuario       = $data['usuario'];
+      $operador       = $data['usuario'];
       $solicita      = $data['solicitada'];
       $unidad        = $data['unidad'];
       $tipo_unidad   = $data['tipo_unidad'];
@@ -73,7 +73,9 @@ session_start();
 
   if ($estatus == 1) {
     $newestatus = "Activa";
-  }else {
+  }else if ( $estatus == 0 ) {
+    $newstatus = "Cancelada";
+  } else {
     if ($estatus == 2) {
       $newestatus = "Cerrada";
     }
@@ -404,7 +406,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <label for="inputEmail3" class="col-sm-2 col-form-label" style="text-align: left;">Usuario</label>
                     <div class="col-sm-10">
                       <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputOperador" name="inputOperador">
-                       <option value="<?php echo $usuario;?>"><?php echo $usuario;?></option>
+                       <option value="<?php echo $operador;?>"><?php echo $operador;?></option>
                        <?php foreach ($filasoper as $oper): //llenar las opciones del primer select ?>
                        <option value="<?= $oper['operador'] ?>"><?= $oper['operador'] ?></option>  
                        <?php endforeach; ?>

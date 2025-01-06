@@ -15,11 +15,11 @@
 // $database = "transvive";
 // $port = 3306;
 
-$host2 = "mysql-transvive-transvive.g.aivencloud.com";
-$password2 = "AVNS_HDRST7NXsI9UJ0fG5B3";
-$user2 = "avnadmin";
-$database2 = "transvive";
-$port2 = 12088;
+// $host2 = "mysql-transvive-transvive.g.aivencloud.com";
+// $password2 = "AVNS_HDRST7NXsI9UJ0fG5B3";
+// $user2 = "avnadmin";
+// $database2 = "transvive";
+// $port2 = 12088;
 
 $host = "localhost:3306";
 // $port = "$_ENV['BD_PORT']";

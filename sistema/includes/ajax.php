@@ -3012,9 +3012,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
 
         
         if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-             mysqli_close($conection);
+            echo "success";
         }else{
             echo "error";
         }
@@ -3567,9 +3565,9 @@ if($_POST['action'] == 'AlmacenaFiniquito')
                     $token  = md5($_SESSION['idUser']);
                     
                     $query_delete = mysqli_query($conection,"TRUNCATE dias_alertas ");
-                    $query_insert = mysqli_query($conection,"INSERT INTO dias_alertas (name_empleado, noalertas) SELECT operador, noalertas from alertas where semana = '$semana' and YEAR(fecha) = YEAR(CURDATE()) group by operador ");
+                    $query_insert = mysqli_query($conection,"INSERT INTO dias_alertas (name_empleado, noalertas) SELECT operador, noalertas from alertas where semana = '$semana' and YEAR(fecha) = YEAR(CURDATE()) group by operador, noalertas ");
 
-                    $query_procesarcf = mysqli_query($conection,"CALL procesa_nomsemanal23('$semana')");
+                    $query_procesarcf = mysqli_query($conection,"CALL procesar_nomina('$semana')");
                 $result_procesarcf = mysqli_num_rows($query_procesarcf);
                 
                 if($result_procesarcf > 0){
@@ -8575,58 +8573,58 @@ if($_POST['action'] == 'AlmacenaSolicitudmpreventivo')
         $query_insertar_mantto_preventivo = "";
 
 // 1. Verificar si el folio existe en mantenimiento_preventivo
-$query_busqueda_folio = "SELECT COUNT(*) FROM mantenimiento_preventivo WHERE no_orden = ?"; 
-$stmt = mysqli_prepare($conection, $query_busqueda_folio);
-mysqli_stmt_bind_param($stmt, "i", $folio); // "i" indica que $folio es un entero
-mysqli_stmt_execute($stmt);
-mysqli_stmt_bind_result($stmt, $count);
-mysqli_stmt_fetch($stmt);
-mysqli_stmt_close($stmt);
+// $query_busqueda_folio = "SELECT COUNT(*) FROM mantenimiento_preventivo WHERE no_orden = ?"; 
+// $stmt = mysqli_prepare($conection, $query_busqueda_folio);
+// mysqli_stmt_bind_param($stmt, "i", $folio); // "i" indica que $folio es un entero
+// mysqli_stmt_execute($stmt);
+// mysqli_stmt_bind_result($stmt, $count);
+// mysqli_stmt_fetch($stmt);
+// mysqli_stmt_close($stmt);
 
-if ($count === 0) {
-    // 2. Si no existe en mantenimiento_preventivo, verificar en solicitud_mantenimiento
-    $query_busqueda_folio = "SELECT COUNT(*) FROM solicitud_mantenimiento WHERE no_orden = ?";
-    $stmt = mysqli_prepare($conection, $query_busqueda_folio);
-    mysqli_stmt_bind_param($stmt, "i", $folio);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_bind_result($stmt, $count);
-    mysqli_stmt_fetch($stmt);
-    mysqli_stmt_close($stmt);
+// if ($count === 0) {
+//     // 2. Si no existe en mantenimiento_preventivo, verificar en solicitud_mantenimiento
+//     $query_busqueda_folio = "SELECT COUNT(*) FROM solicitud_mantenimiento WHERE no_orden = ?";
+//     $stmt = mysqli_prepare($conection, $query_busqueda_folio);
+//     mysqli_stmt_bind_param($stmt, "i", $folio);
+//     mysqli_stmt_execute($stmt);
+//     mysqli_stmt_bind_result($stmt, $count);
+//     mysqli_stmt_fetch($stmt);
+//     mysqli_stmt_close($stmt);
 
-    if ($count === 0) {
+//     if ($count === 0) {
         // 3. Si no existe en ninguna tabla, insertar en mantenimiento_preventivo
         $query_insertar_mantto_preventivo = "
             INSERT INTO mantenimiento_preventivo (no_orden, fecha, usuario, solicitada, unidad, tipo_unidad, tipo_trabajo, kilometraje, filtro_aceite, filtro_aire, filtro_combustible, cambio_aceite, cambio_bujias, km_bujias, revision_balatas, engrasado, anticongelante, liquido_freno, aceite_hidraulico, rotacion_llantas, banda_accesorios, muelles, amortiguadores, luces, baterias, inyectores, masas_delanteras, fecha_inicio, fecha_culminacion, observaciones, usuario_id) 
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conection, $query_insertar_mantto_preventivo);
-        mysqli_stmt_bind_param($stmt, "issssssissssssssssssssssssssssi", $folio, $fecha_formateada, $usuario, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_inicio_formateada, $fecha_fin_formateada, $notasgen, $usuario);
+        mysqli_stmt_bind_param($stmt, "issssssissssssssssssssssssssssi", $folio, $fecha_formateada, $operador, $solicita, $nounidad, $tipo_unidad, $trabajo_sol, $kilometraje, $filtro_aceite, $filtro_aire, $filtro_gas, $cambio_aceite, $cambio_bujias, $km_bujias, $rev_balatas, $engrasado, $anti_congela, $liquido_frenos, $aceite_hidraul, $rota_llantas, $banda_acessor, $rev_muelles, $amortiguadores, $rev_luces, $rev_bateria, $inyectores, $masas_frente, $fecha_inicio_formateada, $fecha_fin_formateada, $notasgen, $usuario);
 
         if (mysqli_stmt_execute($stmt)) {
             // 4. Insertar en detalle_manttoprev
             $query_insertar_detalle = "
                 INSERT INTO detalle_manttoprev (folio, codigo, cantidad, descripcion, costo) 
-                SELECT newfolio, codigo, cantidad, descripcion, costo 
+                SELECT folio, codigo, cantidad, descripcion, costo 
                 FROM detalle_temp_manttoprev WHERE folio = ?";
 
             $stmt_detalle = mysqli_prepare($conection, $query_insertar_detalle);
             mysqli_stmt_bind_param($stmt_detalle, "i", $folio); 
 
             if (mysqli_stmt_execute($stmt_detalle)) {
-                echo json_encode(['mensaje' => 'Solicitud de mantenimiento preventivo almacenada correctamente'], JSON_UNESCAPED_UNICODE);
+                echo json_encode(['success' => 'Solicitud de mantenimiento preventivo almacenada correctamente'], JSON_UNESCAPED_UNICODE);
             } else {
                 echo "error al insertar en detalle_manttoprev: " . mysqli_error($conection);
             }
             mysqli_stmt_close($stmt_detalle); 
-        } else {
-            echo "error al insertar en mantenimiento_preventivo: " . mysqli_error($conection);
-        }
-        mysqli_stmt_close($stmt);
-    } else {
-        echo "error: El folio ya existe en solicitud_mantenimiento";
-    }
-} else {
-    echo "error: El folio ya existe en mantenimiento_preventivo";
-}
+//         } else {
+//             echo "error al insertar en mantenimiento_preventivo: " . mysqli_error($conection);
+//         }
+//         mysqli_stmt_close($stmt);
+//     } else {
+//         echo "error: El folio ya existe en solicitud_mantenimiento";
+//     }
+// } else {
+//     echo "error: El folio ya existe en mantenimiento_preventivo";
+// }
                            
 
         // $query_procesar = mysqli_query($conection,"CALL procesar_solicitudmpreventivo($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$filtro_aceite', '$filtro_aire', '$filtro_gas', '$cambio_aceite', '$cambio_bujias', '$km_bujias', '$rev_balatas', '$engrasado', '$anti_congela', '$liquido_frenos', '$aceite_hidraul', '$rota_llantas', '$banda_acessor', '$rev_muelles', '$amortiguadores', '$rev_luces', '$rev_bateria', '$inyectores', '$masas_frente', '$trabajo_sol', $kilometraje, '$fecha_inicio', '$fecha_fin', '$notasgen', $usuario)");
@@ -8646,7 +8644,7 @@ if ($count === 0) {
    
     exit;
 } 
-
+}
 // Buscar Cliente para Pedido
         if($_POST['action'] == 'searchCostoRefacciones')
         {
@@ -14076,12 +14074,13 @@ if($_POST['action'] == 'BajaSolicitudPreventivo')
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
 
-            $query_procesar = mysqli_query($conection,"CALL baja_solicitudprev($idc, $noorden, $usuario)");
-            $result_detalle = mysqli_num_rows($query_procesar);
+        $sql_cancelar_orden_mantto_preventivo = "UPDATE mantenimiento_preventivo SET estatus = 0, edit_id = $usuario WHERE no_orden =  $noorden";
+
+            $query_procesar = mysqli_query($conection,$sql_cancelar_orden_mantto_preventivo);
+            $result_detalle = mysqli_affected_rows($conection);
         
            if($result_detalle > 0){
-              $data = mysqli_fetch_assoc($query_procesar);
-              echo json_encode($data,JSON_UNESCAPED_UNICODE);
+              echo 'success';
            }else{
             echo "error";
            }
