@@ -673,7 +673,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     success: function(response)
                     {
                       let info = JSON.parse(response)
-                          if (info['success']
+                          if (info['success'])
                           {
                             Swal
                          .fire({
