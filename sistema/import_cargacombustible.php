@@ -9,10 +9,10 @@ if (!isset($_SESSION['idUser'])) {
 
 $usuario     = $_SESSION['idUser'];
 
-$sql = "TRUNCATE tempcarga_combustible";
-if(!$conection->query($sql)){
-	die("Error al limpiar la tabla temporal.");
-}
+// $sql = "TRUNCATE tempcarga_combustible";
+// if(!$conection->query($sql)){
+// 	die("Error al limpiar la tabla temporal.");
+// }
 
 $datos = $conection->query("select folio from carga_combustible order by folio desc limit 1 ");
 $d= $datos->fetch_object();
@@ -23,7 +23,7 @@ $fechac = date("Y-m-d");
 
 
 if(isset($_FILES["name"]) && !empty($_FILES["name"]['name'])){
-	// var_dump($_FILES);
+	
 	$file_name = $_FILES["name"]['name'];
 	$file_tmp = $_FILES["name"]['tmp_name'];
 
@@ -32,12 +32,13 @@ if(isset($_FILES["name"]) && !empty($_FILES["name"]['name'])){
 		$error = 0;
 		$nfolio = $folioe + 1;
 		while (($data = fgetcsv($handle, 409, ",")) !== FALSE) {
+			
 			if(count($data)>=6){
 				$fcha = $data[0];
 				$nameope = mysqli_real_escape_string($conection, $data[5]); 
 				$namesup = mysqli_real_escape_string($conection, $data[16]);
-				$fecha = str_replace('/', '-', $fcha);
-				$fecha_mysql = date('Y-m-d', strtotime($fecha));
+				// $fecha = str_replace('/', '-', $fcha);
+				$fecha_mysql = date('Y-m-d', strtotime(str_replace('/', '-', $fcha)));
 				$semana = date('W', strtotime($fecha_mysql));
 				$nodesemana = 'Semana ' . $semana;
 // 	}
@@ -66,13 +67,50 @@ if(isset($_FILES["name"]) && !empty($_FILES["name"]['name'])){
 // 						$fecha_mysql = date('Y-m-d', strtotime($fecha));
 
 						$sql = "INSERT INTO carga_combustible (folio, fecha, nodesemana, estacion, nounidad, placas, operador, kmanterior, kmactual_cargar, kmrecorridos, tipo_combustible, litros, precio, importe, rendimiento, rendimiento_estandar, supervisor, fecha_carga, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+						// echo $sql;
 						$stmt = $conection->prepare($sql);
 
 						if($stmt) {
-
-							$stmt->bind_param("issssssiiisdddddssi", $nfolio, $fecha_mysql, $nodesemana, $data[2], $data[3], $data[4], $nameope, $data[6], $data[7], $data[8], $data[9], $data[11], $data[12], $data[13], $data[14], $data[15], $namesup, $fechac, $usuario);
-
+							
+							 // Asignamos valores a las variables de la consulta
+							 $nfolio = (int)$nfolio;
+							 $kmanterior = (int)$data[6];
+							 $kmactual_cargar = (int)$data[7];
+							 $kmrecorridos = (int)$data[8];
+							 $litros = (float)$data[11];
+							 $precio = (float)$data[12];
+							 $importe = (float)$data[13];
+							 $rendimiento = (float)$data[14];
+							 $rendimiento_estandar = (float)$data[15];
+							 $usuario = (int)$usuario;
+					 
+							 // Vinculamos los parámetros
+							 $stmt->bind_param(
+								 "issssssiiisdddddssi",
+								 $nfolio,
+								 $fecha_mysql,
+								 $nodesemana,
+								 $data[2],
+								 $data[3],
+								 $data[4],
+								 $nameope,
+								 $kmanterior,
+								 $kmactual_cargar,
+								 $kmrecorridos,
+								 $data[9],
+								 $litros,
+								 $precio,
+								 $importe,
+								 $rendimiento,
+								 $rendimiento_estandar,
+								 $namesup,
+								 $fechac,
+								 $usuario
+							 );
+							// echo "<pre>";
+							// print_r($stmt);
+							// echo "</pre>";
+							// exit;
 							if($stmt->execute()) {
 								$ok++;
 								$nfolio++;
