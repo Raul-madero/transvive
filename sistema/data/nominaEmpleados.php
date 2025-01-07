@@ -159,7 +159,7 @@ $sql_nomina .= " LIMIT $start, $length";
 $result_nomina = mysqli_query($conection, $sql_nomina); 
 
 while ($row_nomina = mysqli_fetch_assoc($result_nomina)) {
-    echo $row_nomina['neto'];
+    // echo $row_nomina['neto'];
     $data[] = $row_nomina;
 }
 
