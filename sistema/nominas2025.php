@@ -182,7 +182,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           "processing": true,
           "serverSide": true,
           "ajax": {
-            "url": "data/nominaEmpleados.php",
+            "url": "./data/nominaEmpleados.php",
             "type": "GET",
 			"data": {"semana": semana, "anio": anio}
           },
