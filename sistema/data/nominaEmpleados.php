@@ -7,9 +7,9 @@ if (!$conection) {
     die(json_encode(['error' => 'Error de conexión a la base de datos.']));
 }
 
-if(isset($_GET['semana']) && isset($_GET['anio']) && !empty($_GET['semana']) && !empty($_GET['anio'])) {
-    $semana = $_GET['semana'];
-    $anio = $_GET['anio'];
+if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) && !empty($_POST['anio'])) {
+    $semana = $_POST['semana'];
+    $anio = $_POST['anio'];
     //Vaciar tabla de nomina
     $sql = "TRUNCATE nomina_temp_2025";
     $result = mysqli_query($conection, $sql);

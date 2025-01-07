@@ -177,15 +177,30 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
     $(document).ready(function() {
         const load_data = (semana, anio) => {
+            let ajaxUrl = 'data/nominaEmpleados.php'
 			let table = $('#example1').DataTable()
 			table.destroy()
 		 table = $('#example1').DataTable({
+            "order": [[ 0, "desc" ]],
+          dom: 'Bfrtip',
+          lengthMenu: [
+          [20, 25, 50, -1],
+          ['20 rows', '25 rows', '50 rows', 'Show all']
+          ],
+          buttons: [
+          'excelHtml5',
+          'pageLength'
+          ],
           "processing": true,
           "serverSide": true,
+          "stateSave": true,
+          "responsive": true,
+          "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
           "ajax": {
-            "url": "./data/nominaEmpleados.php",
-            "type": "GET",
-			"data": {"semana": semana, "anio": anio}
+            "url": ajaxUrl,
+            "type": "POST",
+			"data": {"semana": semana, "anio": anio},
+            "dataSrc": "data"
           },
           "columns": [
 				{"data": "noempleado", "width": "50px"},
