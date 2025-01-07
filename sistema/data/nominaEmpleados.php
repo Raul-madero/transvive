@@ -74,7 +74,7 @@ $row_nomina = mysqli_fetch_row($resultado_cuenta_tabla_nomina);
 
 if($row_nomina[0] == 0) {
     while ($row = mysqli_fetch_assoc($result)) {
-        $sueldo_bruto = $row['sueldo_bruto'];
+        $sueldo_bruto = floatval($row['sueldo_bruto']);
 
         // Obtener datos fiscales (usar consultas preparadas)
         $stmt = mysqli_prepare($conection, "SELECT pago_fiscal, deduccion_fiscal, neto FROM importes_fiscales WHERE noempleado = ?");
