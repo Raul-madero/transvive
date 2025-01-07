@@ -111,11 +111,11 @@ if($row_nomina[0] == 0) {
     }
 }
 
-$start = $_GET['start'] ?? 0;
-$length = $_GET['length'] ?? 10;
-$searchValue = $_GET['search']['value'] ?? '';
-$orderColumn = intval($_GET['order'][0]['column']); // Convertir a entero
-$orderDir = $_GET['order'][0]['dir'];
+$start = $_POST['start'] ?? 0;
+$length = $_POST['length'] ?? 10;
+$searchValue = $_POST['search']['value'] ?? '';
+$orderColumn = intval($_POST['order'][0]['column']); // Convertir a entero
+$orderDir = $_POST['order'][0]['dir'];
 
 $whereClause = "WHERE cargo = 'OPERADOR'";
 if (!empty($searchValue)) {
