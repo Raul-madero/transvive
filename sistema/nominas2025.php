@@ -222,11 +222,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				{"data": "deduccion_fiscal", "width": "50px"},
 				{"data": "caja_ahorro", "width": "50px"},
 				{"data": "supervisor", "width": "50px"},
-				{"data": null,
-					"render": function(data, type, row) {
-						const neto = (parseInt(row.sueldo_bruto) - parseInt(row.nomina_fiscal)) + parseInt(row.nomina_fiscal) + parseInt(row.bonos) + parseInt(row.caja_ahorro) - parseInt(row.deducciones) - parseInt(row.deduccion_fiscal);
-						return `$ ${neto.toFixed(2)}`; // Formato moneda (2 decimales)
-					}
+				{"data": "neto",
+					// "render": function(data, type, row) {
+					// 	const neto = (parseInt(row.sueldo_bruto) - parseInt(row.nomina_fiscal)) + parseInt(row.nomina_fiscal) + parseInt(row.bonos) + parseInt(row.caja_ahorro) - parseInt(row.deducciones) - parseInt(row.deduccion_fiscal);
+					// 	return `$ ${neto.toFixed(2)}`; // Formato moneda (2 decimales)
+					// }
 				}
           ],
 		  "language": {
