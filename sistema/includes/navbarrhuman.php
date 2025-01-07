@@ -70,6 +70,7 @@
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Recursos Humanos</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
               <li><a href="nominas.php" class="dropdown-item">Nomina Semanal</a></li>
+              <li><a href="nominas2025.php" class="dropdown-item">Nomina</a></li>
               <li><a href="nominas_quincenales.php" class="dropdown-item">Nomina Quincenal</a></li>
               <li><a href="nominas_especiales.php" class="dropdown-item">Nomina Especial</a></li>
               <li><a href="adeudos.php" class="dropdown-item">Adeudos</a></li>
