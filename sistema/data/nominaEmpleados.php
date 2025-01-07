@@ -52,7 +52,7 @@ $sql = "
     LEFT JOIN 
         adeudos a ON a.noempleado = e.id
     WHERE 
-        e.estatus = 1 AND rv.fecha BETWEEN '$fecha_inicio' AND '$fecha_fin'
+        e.estatus = 1 AND rv.fecha BETWEEN '$fecha_inicio' AND '$fecha_fin' AND rv.valor_vuelta > 0
     GROUP BY 
         e.id, rv.unidad, rv.num_unidad
 ";
