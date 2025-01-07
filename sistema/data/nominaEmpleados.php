@@ -52,7 +52,7 @@ $sql = "
     LEFT JOIN 
         adeudos a ON a.noempleado = e.id
     WHERE 
-        e.estatus = 1 AND rv.fecha BETWEEN '$fecha_inicio' AND '$fecha_fin' AND rv.valor_vuelta > 0
+        e.estatus = 1 AND rv.fecha BETWEEN '$fecha_inicio' AND '$fecha_fin' AND rv.valor_vuelta > 0 AND rv.sueldo_vuelta > 0
     GROUP BY 
         e.id, rv.unidad, rv.num_unidad
 ";
@@ -74,7 +74,7 @@ $row_nomina = mysqli_fetch_row($resultado_cuenta_tabla_nomina);
 
 if($row_nomina[0] == 0) {
     while ($row = mysqli_fetch_assoc($result)) {
-        $sueldo_bruto = $row['sueldo_bruto'] || 0;
+        $sueldo_bruto = $row['sueldo_bruto'];
 
         // Obtener datos fiscales (usar consultas preparadas)
         $stmt = mysqli_prepare($conection, "SELECT pago_fiscal, deduccion_fiscal, neto FROM importes_fiscales WHERE noempleado = ?");
