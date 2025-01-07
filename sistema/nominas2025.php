@@ -90,7 +90,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<option value="0">--Selecciona la Semana--</option>
 				<?php 
 				 for($i = 0; $i < 52; $i++) {
-					echo '<option value="' . $i . '">' ."Semana " .  '</option>';
+                    $nosemana = intval($i);
+					echo '<option value="' . $nosemana . '">' ."Semana " . $nosemana + 1 .  '</option>';
 				 }
 				 ?>
 			  </select>
