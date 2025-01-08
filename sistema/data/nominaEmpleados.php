@@ -160,6 +160,8 @@ $result_nomina = mysqli_query($conection, $sql_nomina);
 
 while ($row_nomina = mysqli_fetch_assoc($result_nomina)) {
     // echo $row_nomina['neto'];
+    $row_nomina['semana'] = $semana;
+    $row_nomina['anio'] = $anio;
     $data[] = $row_nomina;
 }
 

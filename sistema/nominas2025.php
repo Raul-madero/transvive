@@ -109,7 +109,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <table id="example1" class="table table-striped table-bordered table-condensed" style="width:100%">
             <thead>
               <tr>
-			  <th>No.</th>
+                <th>Semana/Año</th>
+			          <th>No.</th>
                 <th>Nombre</th>
                 <th>Tipo unidad</th>
                 <th>Cargo</th>
@@ -203,28 +204,49 @@ scratch. This page gets rid of all links and provides the needed markup only.
             "dataSrc": "data"
           },
           "columns": [
+                {"data": null, "width": "50px", "render": function (data, type, row) {
+                  return row.semana + "/" + row.anio;
+                }},
 				{"data": "noempleado", "width": "50px"},
 				{"data": "nombre", "width": "120px"},
 				{"data": "tipo_unidad", "width": "100px"},
 				{"data": "cargo", "width": "100px"},
 				{"data": "imss", "render": function(data) {return data == 1 ? "Si" : "No";}},
-				{"data": "sueldo_bruto", "width": "50px"},
-				{"data": "nomina_fiscal", "width": "50px"},
-				{"data": "bonos", "width": "50px"},
+				{"data": null, "width": "50px", "render": function (data, type, row) {
+          const sueldo_bruto = parseFloat(row.sueldo_bruto)
+          return `$ ${sueldo_bruto.toFixed(2)}`; // Formato moneda (2 decimales)
+        }},
+				{"data": null, "width": "50px", "render": function (data, type, row) {
+          const nomina_fiscal = parseFloat(row.nomina_fiscal)
+          return `$ ${nomina_fiscal.toFixed(2)}`; // Formato moneda (2 decimales)
+        }},
+				{"data": null, "width": "50px", "render": function (data, type, row) {
+          const bonos = parseFloat(row.bonos)
+          return `$ ${bonos.toFixed(2)}`; // Formato moneda (2 decimales)
+        }},
 				{"data": "neto", "width": "50px"},
 				{"data": null, // Calculado dinámicamente
 					"render": function(data, type, row) {
-						const efectivo = row.sueldo_bruto - row.nomina_fiscal - row.caja_ahorro;
+						const efectivo = parseFloat(row.sueldo_bruto) - parseFloat(row.nomina_fiscal) - parseFloat(row.caja_ahorro) - parseFloat(row.deducciones);
 						return `$ ${efectivo.toFixed(2)}`; // Formato moneda
 					},
 					"width": "50px"},
-				{"data": "deducciones", "width": "50px"},
-				{"data": "deduccion_fiscal", "width": "50px"},
-				{"data": "caja_ahorro", "width": "50px"},
+				{"data": null, "width": "50px", "render": function (data, type, row) {
+          const deducciones = parseFloat(row.deducciones)
+          return `$ ${deducciones.toFixed(2)}`; // Formato moneda (2 decimales)
+        }},
+				{"data": null, "width": "50px", "render": function (data, type, row) {
+          const deduccion_fiscal = parseFloat(row.deduccion_fiscal)
+          return `$ ${deduccion_fiscal.toFixed(2)}`; // Formato moneda (2 decimales)
+        }},
+				{"data": null, "width": "50px", "render": function (data, type, row) {
+          const caja_ahorro = parseFloat(row.caja_ahorro)
+          return `$ ${caja_ahorro.toFixed(2)}`; // Formato moneda (2 decimales)
+        }},
 				{"data": "supervisor", "width": "50px"},
 				{"data": null,
 					"render": function(data, type, row) {
-						const neto = (parseInt(row.sueldo_bruto) - parseInt(row.nomina_fiscal)) + parseInt(row.nomina_fiscal) + parseInt(row.bonos) + parseInt(row.caja_ahorro) - parseInt(row.deducciones) - parseInt(row.deduccion_fiscal);
+						const neto = (parseFloat(row.sueldo_bruto) - parseFloat(row.nomina_fiscal)) + parseFloat(row.nomina_fiscal) + parseFloat(row.bonos) + parseFloat(row.caja_ahorro) - parseFloat(row.deducciones) - parseFloat(row.deduccion_fiscal);
 						return `$ ${neto.toFixed(2)}`; // Formato moneda (2 decimales)
 					}
 				}
