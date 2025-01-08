@@ -232,12 +232,10 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
       }else {
          $filas = 10 - $result_detalle;
       }
-
     }
       $filas = $result_detalle;
       for ($i = 1; $i < $filas; $i++) {
 
-     
       while ($row = mysqli_fetch_assoc($query_productos)){
       
 ?>
@@ -254,25 +252,25 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
 
 ?>
 
-            <tr>
+            /* <tr>
                 <td style="text-align: left; font-size: 10pt; font-family:'Arial'"><?php echo ''; ?>&nbsp;</td>
                
                 <td style="text-align: right; font-size: 10pt;"><?php echo ''; ?></td>
                 
-            </tr>
+            </tr> */
 
     <?php
    
     }
 
 ?>        
-         
+/*          
             <!--<tr style="background: #E7E7E7;">
                 <th colspan="5" style="border-top: solid 1px black; text-align: right; font-size: 12pt;">Cantidad Total:&nbsp; </th>
                 <th style="border-top: solid 1px black; text-align: right; font-size: 12pt;"><?php echo number_format($cant_totalkg, 0); ?>&nbsp;</th>
                 <th colspan="7" style="border-top: solid 1px black; text-align: right;"></th>
                 <th style="border-top: solid 1px black; text-align: right;">&nbsp;</th>
-            </tr>-->
+            </tr>--> */
             
             
         </tbody>
