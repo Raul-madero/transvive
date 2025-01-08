@@ -19,7 +19,6 @@ try {
     ob_start();
     include dirname(__FILE__).'./res/cotizacion00.php';
     $content = ob_get_clean();
-
     $html2pdf = new HTML2PDF('P', 'Letter', 'es');
     $html2pdf->setTestTdInOnePage(false);
     $html2pdf->setDefaultFont('Arial');

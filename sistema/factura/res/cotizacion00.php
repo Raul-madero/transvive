@@ -244,6 +244,8 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
 
      
       while ($row = mysqli_fetch_assoc($query_productos)){
+        echo $row;
+
       
 ?>
             <tr>
@@ -256,7 +258,7 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
             </tr>
 <?php
     }
-
+    exit;
 ?>
 
             <tr>
