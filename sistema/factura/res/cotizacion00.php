@@ -237,9 +237,9 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
         if ($result_detalle >= 15) {
          $filas = $result_detalle;
       }else {
-         $filas = 12 - $result_detalle;
       }
     }  
+    $filas =  $result_detalle;
       for ($i = 1; $i < $filas; $i++) {
 
      
