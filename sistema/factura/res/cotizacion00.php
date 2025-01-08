@@ -199,7 +199,7 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
  
     </page_footer> 
   
-    <table cellspacing="0" style="width: 100%; ">
+    <table cellspacing="0" style="width: 100%; padding: 0; margin: 0; font-size: 10pt;">
         <colgroup>
             <col style="width: 30%; text-align: center">
             <col style="width: 10%; text-align: center">
@@ -233,14 +233,9 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
          $filas = 10 - $result_detalle;
       }
 
-    }else {
-        if ($result_detalle >= 15) {
-         $filas = $result_detalle;
-      }else {
-      }
-    }  
-    $filas = $result_detalle;
-    for ($i = 1; $i < $filas; $i++) {
+    }
+      $filas = $result_detalle;
+      for ($i = 1; $i < $filas; $i++) {
 
      
       while ($row = mysqli_fetch_assoc($query_productos)){
