@@ -131,16 +131,16 @@ $sql_nomina = "SELECT noempleado,
                     tipo_unidad,
                     cargo,
                     imss,
-                    SUM(sueldo_bruto) AS sueldo_bruto,
-                    SUM(nomina_fiscal) AS nomina_fiscal,
-                    SUM(bonos) AS bonos,
-                    SUM(deposito_fiscal) AS deposito_fiscal,
-                    SUM(efectivo) AS efectivo,
-                    SUM(deducciones) AS deducciones,
-                    SUM(caja_ahorro) AS caja_ahorro,
+                    sueldo_bruto,
+                    nomina_fiscal,
+                    bonos,
+                    deposito_fiscal,
+                    efectivo,
+                    deducciones,
+                    caja_ahorro,
                     supervisor,
-                    SUM(deduccion_fiscal) AS deduccion_fiscal,
-                    SUM(neto) AS neto
+                    deduccion_fiscal,
+                    neto
                 FROM nomina_temp_2025 $whereClause 
                 GROUP BY noempleado 
                 ORDER BY $columns[$orderColumn] $orderDir"; 
