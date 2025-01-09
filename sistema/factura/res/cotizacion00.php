@@ -24,7 +24,7 @@ td .p {
 $result = mysqli_num_rows($query);
 $pedido = mysqli_fetch_assoc($query);
 
-$mesDesc = strftime("%d de %B de %Y", strtotime($pedido['fecha']));
+$mesDesc = strtoupper(strftime("%d de %B de %Y", strtotime($pedido['fecha'])));
 $Dateinicio = date("d-m-Y", strtotime($pedido['fecha_inicio']));
 $Datefin = date("d-m-Y", strtotime($pedido['fecha_fin']));
 
@@ -52,7 +52,7 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
 
  <!--<tr>
   
-  <td rowspan="1" colspan="4" style="width: 100%; font-size: 10pt;" align="right">&nbsp;<?php echo 'Guadalajara, Jal. a '. strtoupper($mesDesc) ?></td>
+  <td rowspan="1" colspan="4" style="width: 100%; font-size: 10pt;" align="right">&nbsp;<?php echo 'Guadalajara, Jal. a '. $mesDesc ?></td>
   <br>
  
   
