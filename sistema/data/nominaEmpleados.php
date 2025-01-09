@@ -142,7 +142,7 @@ $sql_nomina = "SELECT noempleado,
                     SUM(deduccion_fiscal) AS deduccion_fiscal,
                     SUM(neto) AS neto
                 FROM nomina_temp_2025 $whereClause 
-                GROUP BY nombre 
+                GROUP BY noempleado 
                 ORDER BY $columns[$orderColumn] $orderDir"; 
 
 $result_nomina = mysqli_query($conection, $sql_nomina);
