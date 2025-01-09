@@ -91,7 +91,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<?php 
 				 for($i = 0; $i < 52; $i++) {
                     $nosemana = intval($i) + 1;
-					echo '<option value="' . $i . '">' ."Semana " . $nosemana .  '</option>';
+					echo '<option value="' . $nosemana . '">' ."Semana " . $nosemana .  '</option>';
 				 }
 				 ?>
 			  </select>
