@@ -24,7 +24,7 @@ td .p {
 $result = mysqli_num_rows($query);
 $pedido = mysqli_fetch_assoc($query);
 
-$mes = ucfirst(strftime("%B"));
+$mes = strtoupper(strftime("%B"));
 $dia = strftime("%d");
 $anio = strftime("%Y");
 
