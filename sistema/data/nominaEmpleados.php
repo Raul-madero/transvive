@@ -52,10 +52,10 @@ if($row_nomina[0] == 0) {
         $tipo_unidad = $row_empleados['unidad'];
         $cargo = $row_empleados['cargo'];
         $imss = intval($row_empleados['imss']);
-        $sueldo_bruto = floatval($row_empleados['sueldo_bruto']);
-        $bonos = floatval($row_empleados['bonos']);
-        $deducciones = floatval($row_empleados['deducciones']);
-        $caja_ahorro = floatval($row_empleados['caja_ahorro']);
+        $sueldo_bruto = intval($row_empleados['sueldo_bruto']);
+        $bonos = intval($row_empleados['bonos']);
+        $deducciones = intval($row_empleados['deducciones']);
+        $caja_ahorro = intval($row_empleados['caja_ahorro']);
         $supervisor = $row_empleados['supervisor'];
 
 
