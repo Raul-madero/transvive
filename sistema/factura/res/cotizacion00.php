@@ -24,7 +24,7 @@ td .p {
 $result = mysqli_num_rows($query);
 $pedido = mysqli_fetch_assoc($query);
 
-$mesDesc = ucfirst(substr(strftime("%B", strtotime($pedido['fecha'])), 0, 1));
+$mesDesc = strftime("%d de %B de %Y", strtotime($pedido['fecha']));
 $Dateinicio = date("d-m-Y", strtotime($pedido['fecha_inicio']));
 $Datefin = date("d-m-Y", strtotime($pedido['fecha_fin']));
 
