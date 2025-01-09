@@ -336,7 +336,6 @@ buttons: [
             { "data" : "fechafin", "width": "13%", "orderable":false },
             { "data" : "estatusped", "width": "5%", "orderable":false},
               
-          
             {
                     "render": function ( data, type, full, meta ) {
         return '<a class="link_edit" style="color:#007bff;" href= \'edit_cotizacionventa.php?id=' + full.folio +  '\'><i class="far fa-edit"></i> Edit</a> | <a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.folio + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i> Copy</a> | <a href= \'factura/cotizacion_venta.php?id=' + full.folio + '\'  target="_blank">&nbsp; <i class="fa fa-print" ></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.folio +  '\' data-name=\'' + full.empresa +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-trash"></i> Delete</a>';

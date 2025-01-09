@@ -232,8 +232,10 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
       }else {
          $filas = 10 - $result_detalle;
       }
+    }else {
+      $filas = 15 - $result_detalle;
     }
-      $filas = $result_detalle;
+      // $filas = $result_detalle;
       for ($i = 1; $i < $filas; $i++) {
 
       while ($row = mysqli_fetch_assoc($query_productos)){
