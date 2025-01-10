@@ -30,7 +30,8 @@ $fecha_fin = $fecha->modify('+6 days')->format('Y-m-d');
 // Consulta principal con JOIN 
 $sql_empleados = "SELECT
 e.id,
-e.noempleado, 
+e.noempleado,
+e.sueldo_base,
 CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) AS operador, 
 e.cargo, 
 IF(e.imss = 'ASEGURADO', 1, 0) AS imss, 
@@ -73,7 +74,9 @@ WHERE e.estatus = 1 AND e.cargo = 'OPERADOR'";
 $result_empleados = mysqli_query($conection, $sql_empleados);
 if (!$result_empleados) {
     die(json_encode(['error' => 'Error en la consulta de empleados: ' . mysqli_error($conection)]));
-}$resultado_cuenta_tabla_nomina = mysqli_query($conection, "SELECT COUNT(*) FROM nomina_temp_2025");
+}
+
+$resultado_cuenta_tabla_nomina = mysqli_query($conection, "SELECT COUNT(*) FROM nomina_temp_2025");
 if (!$resultado_cuenta_tabla_nomina) {
     die(json_encode(['error' => 'Error al contar registros en nomina_temp_2025: ' . mysqli_error($conection)]));
 }
@@ -82,10 +85,14 @@ $row_nomina = mysqli_fetch_row($resultado_cuenta_tabla_nomina);
 if($row_nomina[0] == 0) {
     $data = [];
     while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
+        // var_dump($row_empleados);
+        // exit;
+        $nosemana = ($semana . '/' . $anio);
         $noempleado = intval($row_empleados['noempleado']);
         $nombre = $row_empleados['operador'];
         $no_unidad = $row_empleados['num_unidad'];
         $tipo_unidad = $row_empleados['unidad'];
+        $total_vueltas = $row_empleados['total_vueltas'];
         $cargo = $row_empleados['cargo'];
         $imss = intval($row_empleados['imss']);
         $sueldo_bruto = floatval($row_empleados['sueldo_bruto']);
@@ -93,20 +100,21 @@ if($row_nomina[0] == 0) {
         $deducciones = floatval($row_empleados['deducciones']);
         $caja_ahorro = floatval($row_empleados['caja_ahorro']);
         $supervisor = $row_empleados['supervisor'];
+        $sueldo_base = $row_empleados['sueldo_base'];
 
 
         // Preparar datos para inserción (usar consultas preparadas)
         $stmt = mysqli_prepare($conection, "
             INSERT INTO nomina_temp_2025 (
-                noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_bruto,
+                semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto,
                 bonos, deducciones, caja_ahorro,
                 supervisor
             ) VALUES (
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )
         ");
-        mysqli_stmt_bind_param($stmt, "issssidddds", 
-            $noempleado, $nombre, $no_unidad, $tipo_unidad, $cargo, $imss, $sueldo_bruto,
+        mysqli_stmt_bind_param($stmt, "sissssidddddds", 
+            $nosemana, $noempleado, $nombre, $no_unidad, $tipo_unidad, $cargo, $imss, $sueldo_base, $total_vueltas, $sueldo_bruto,
             $bonos, $deducciones, $caja_ahorro, $supervisor
         );
         
@@ -141,15 +149,18 @@ if (!empty($searchValue)) {
     $whereClause .= " AND (noempleado LIKE '%$searchValue%' OR nombre LIKE '%$searchValue%')";
 }
 
-$columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bonos', 'deposito', 'efectivo', 'deducciones','deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
+$columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bonos', 'deposito', 'efectivo', 'deducciones','deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
 
 // Recuperar datos finales
-$sql_nomina = "SELECT noempleado, 
+$sql_nomina = "SELECT semana,
+                    noempleado, 
                     nombre,
                     no_unidad,
                     tipo_unidad,
                     cargo,
                     imss,
+                    sueldo_base,
+                    total_vueltas,
                     sueldo_bruto,
                     nomina_fiscal,
                     bonos,
@@ -161,12 +172,14 @@ $sql_nomina = "SELECT noempleado,
                     deduccion_fiscal,
                     neto
                 FROM nomina_temp_2025 $whereClause 
-                GROUP BY noempleado,
+                GROUP BY semana, noempleado,
                 nombre,
                     no_unidad,
                     tipo_unidad,
                     cargo,
                     imss,
+                    sueldo_base,
+                    total_vueltas,
                     sueldo_bruto,
                     nomina_fiscal,
                     bonos,

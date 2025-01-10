@@ -37,7 +37,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </head>
-
 <body class="hold-transition layout-top-nav">
   <div class="wrapper">
     <!-- Navbar -->
@@ -90,8 +89,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<option value="0">--Selecciona la Semana--</option>
 				<?php 
 				 for($i = 0; $i < 52; $i++) {
-                    $nosemana = intval($i) + 1;
-					echo '<option value="' . $nosemana . '">' ."Semana " . $nosemana .  '</option>';
+					echo '<option value="' . $i + 1 . '">' ."Semana " . $i + 1 . '</option>';
 				 }
 				 ?>
 			  </select>
@@ -106,7 +104,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="card">
         <!-- /.card-header -->
         <div class="card-body">
-          <table id="example1" class="table table-striped table-bordered table-condensed" style="width:100%">
+          <table id="example1" class="table table-striped table-bordered table-condensed" style="width:100%; overflow-x: auto">
             <thead>
               <tr>
                 <th>Semana/Año</th>
@@ -115,13 +113,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- <th>Tipo unidad</th> -->
                 <th>Cargo</th>
                 <th>Imss</th>
+                <th>Sueldo Base</th>
+                <th>Total de Vueltas</th>
                 <th>Sueldo Bruto</th>
                 <th>Nomina Fiscal</th>
                 <th>Bonos</th>
                 <th>Deposito</th>
                 <th>Efectivo</th>
                 <th>Deducciones</th>
-                <th>Deduccion fiscal</th>
+                <th>Deduccion Fiscal</th>
                 <th>Caja de Ahorro</th>
                 <th>Supervisor</th>
                 <th>Neto</th>
@@ -176,7 +176,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../dist/js/demo.js"></script> -->
 
 <script>
-     $(document).ready(function() {
+    $(document).ready(function() {
       	const formatoMoneda = (valor) => `$ ${parseFloat(valor).toFixed(2)}`;
         const load_data = (semana, anio) => {
             let ajaxUrl = 'data/nominaEmpleados.php'
@@ -194,6 +194,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				"stateSave": true,
 				"responsive": false,
 				"scrollX": true,
+				"autoWidth": true,
 				"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
 				"ajax": {
 					"url": ajaxUrl,
@@ -206,27 +207,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					}
          		},
           		"columns": [
-					{"data": null, "width": "50px", "render": function (data, type, row) {
+					{"data": null, "render": function (data, type, row) {
 						return row.semana + "/" + row.anio;
 					}},
-					{"data": "noempleado", "width": "50px"},
-					{"data": "nombre", "width": "300px"},
+					{"data": "noempleado"},
+					{"data": "nombre"},
 					// {"data": "tipo_unidad", "width": "100px"},
-					{"data": "cargo", "width": "100px"},
+					{"data": "cargo"},
 					{"data": "imss", "render": function(data) {return data == 1 ? "Si" : "No";}},
-					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.sueldo_bruto)},
-					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.nomina_fiscal)},
-					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.bonos)},
-					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.neto)},
+          {"data": null, "render": (data) => formatoMoneda(data.sueldo_base)},
+					{"data": "total_vueltas"},
+					{"data": null, "render": (data) => formatoMoneda(data.sueldo_bruto)},
+					{"data": null, "render": (data) => formatoMoneda(data.nomina_fiscal)},
+					{"data": null, "render": (data) => formatoMoneda(data.bonos)},
+					{"data": null, "render": (data) => formatoMoneda(data.neto)},
 					{"data": null, // Calculado dinámicamente
-						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro)),
-						"width": "50px"},
-					{"data": null, "width": "50px",
-						"render": (data) => formatoMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro)),
+						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro))},
+					{"data": null, "render": (data) => formatoMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro)),
 					},
-					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.deduccion_fiscal)},
-					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.caja_ahorro)},
-					{"data": "supervisor", "width": "50px"},
+					{"data": null, "render": (data) => formatoMoneda(data.deduccion_fiscal)},
+					{"data": null, "render": (data) => formatoMoneda(data.caja_ahorro)},
+					{"data": "supervisor"},
 					{"data": null,
 						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) +parseFloat(data.caja_ahorro) - parseFloat(data.deducciones) -parseFloat(data.deduccion_fiscal)),
 					}
