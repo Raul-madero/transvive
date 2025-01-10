@@ -95,7 +95,7 @@ if($row_nomina[0] == 0) {
         $total_vueltas = $row_empleados['total_vueltas'];
         $cargo = $row_empleados['cargo'];
         $imss = intval($row_empleados['imss']);
-        $sueldo_bruto = floatval($row_empleados['sueldo_base'] * floatval($row_empleados['total_vueltas']));
+        $sueldo_bruto = floatval((floatval($row_empleados['sueldo_base']) * floatval($row_empleados['total_vueltas'])));
         $bonos = floatval($row_empleados['bonos']);
         $deducciones = floatval($row_empleados['deducciones']);
         $caja_ahorro = floatval($row_empleados['caja_ahorro']);
