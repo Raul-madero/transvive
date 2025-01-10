@@ -112,7 +112,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Semana/Año</th>
 			          <th>No.</th>
                 <th>Nombre</th>
-                <th>Tipo unidad</th>
+                <!-- <th>Tipo unidad</th> -->
                 <th>Cargo</th>
                 <th>Imss</th>
                 <th>Sueldo Bruto</th>
@@ -176,27 +176,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../dist/js/demo.js"></script> -->
 
 <script>
-    $(document).ready(function() {
+     $(document).ready(function() {
       	const formatoMoneda = (valor) => `$ ${parseFloat(valor).toFixed(2)}`;
         const load_data = (semana, anio) => {
             let ajaxUrl = 'data/nominaEmpleados.php'
 			let table = $('#example1').DataTable()
 			table.destroy()
 		 	table = $('#example1').DataTable({
-            	"order": [[ 1, "asc" ]],
+            	"order": [[ 0, "asc" ]],
           		dom: 'Bfrtip',
 				lengthMenu: [
 				[20, 25, 50, -1],
 				['20 rows', '25 rows', '50 rows', 'Show all']
 				],
-				buttons: [
-				'excelHtml5',
-				'pageLength'
-				],
 				"processing": true,
 				"serverSide": true,
 				"stateSave": true,
-				"responsive": true,
+				"responsive": false,
 				"scrollX": true,
 				"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
 				"ajax": {
@@ -214,8 +210,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						return row.semana + "/" + row.anio;
 					}},
 					{"data": "noempleado", "width": "50px"},
-					{"data": "nombre", "width": "120px"},
-					{"data": "tipo_unidad", "width": "100px"},
+					{"data": "nombre", "width": "300px"},
+					// {"data": "tipo_unidad", "width": "100px"},
 					{"data": "cargo", "width": "100px"},
 					{"data": "imss", "render": function(data) {return data == 1 ? "Si" : "No";}},
 					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.sueldo_bruto)},
@@ -223,16 +219,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.bonos)},
 					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.neto)},
 					{"data": null, // Calculado dinámicamente
-						"render": (data) => formatoMoneda(data.sueldo_bruto - data.nomina_fiscal - data.caja_ahorro),
+						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro)),
 						"width": "50px"},
 					{"data": null, "width": "50px",
-						"render": (data) => formatoMoneda(data.deducciones + data.caja_ahorro),
+						"render": (data) => formatoMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro)),
 					},
 					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.deduccion_fiscal)},
 					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.caja_ahorro)},
 					{"data": "supervisor", "width": "50px"},
 					{"data": null,
-						"render": (data) => formatoMoneda(data.sueldo_bruto + data.bonos +data.caja_ahorro - data.deducciones -data.deduccion_fiscal),
+						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) +parseFloat(data.caja_ahorro) - parseFloat(data.deducciones) -parseFloat(data.deduccion_fiscal)),
 					}
           		],
 		  		"language": {

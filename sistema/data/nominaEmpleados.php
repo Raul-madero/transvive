@@ -141,7 +141,7 @@ if (!empty($searchValue)) {
     $whereClause .= " AND (noempleado LIKE '%$searchValue%' OR nombre LIKE '%$searchValue%')";
 }
 
-$columns = array('noempleado', 'nombre', 'no_unidad', 'tipo_unidad', 'cargo', 'imss', 'supervisor');
+$columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bonos', 'deposito', 'efectivo', 'deducciones','deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
 
 // Recuperar datos finales
 $sql_nomina = "SELECT noempleado, 
