@@ -17,7 +17,7 @@ if($_REQUEST['action'] == 'fetch_userss'){
     if(!empty($initial_date) && !empty($final_date)){
         $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
     }else{
-        $date_range = " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+        $date_range = " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 2 DAY)";
     }
 
     if($gender != ""){
