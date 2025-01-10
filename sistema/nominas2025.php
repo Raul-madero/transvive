@@ -177,106 +177,90 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <script>
     $(document).ready(function() {
+      	const formatoMoneda = (valor) => `$ ${parseFloat(valor).toFixed(2)}`;
         const load_data = (semana, anio) => {
             let ajaxUrl = 'data/nominaEmpleados.php'
 			let table = $('#example1').DataTable()
 			table.destroy()
-		 table = $('#example1').DataTable({
-            "order": [[ 0, "desc" ]],
-          dom: 'Bfrtip',
-          lengthMenu: [
-          [20, 25, 50, -1],
-          ['20 rows', '25 rows', '50 rows', 'Show all']
-          ],
-          buttons: [
-          'excelHtml5',
-          'pageLength'
-          ],
-          "processing": true,
-          "serverSide": true,
-          "stateSave": true,
-          "responsive": true,
-          "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-          "ajax": {
-            "url": ajaxUrl,
-            "type": "POST",
-			"data": {"semana": semana, "anio": anio},
-            "dataSrc": "data"
-          },
-          "columns": [
-                {"data": null, "width": "50px", "render": function (data, type, row) {
-                  return row.semana + "/" + row.anio;
-                }},
-				{"data": "noempleado", "width": "50px"},
-				{"data": "nombre", "width": "120px"},
-				{"data": "tipo_unidad", "width": "100px"},
-				{"data": "cargo", "width": "100px"},
-				{"data": "imss", "render": function(data) {return data == 1 ? "Si" : "No";}},
-				{"data": null, "width": "50px", "render": function (data, type, row) {
-          const sueldo_bruto = parseFloat(row.sueldo_bruto)
-          return `$ ${sueldo_bruto.toFixed(2)}`; // Formato moneda (2 decimales)
-        }},
-				{"data": null, "width": "50px", "render": function (data, type, row) {
-          const nomina_fiscal = parseFloat(row.nomina_fiscal)
-          return `$ ${nomina_fiscal.toFixed(2)}`; // Formato moneda (2 decimales)
-        }},
-				{"data": null, "width": "50px", "render": function (data, type, row) {
-          const bonos = parseFloat(row.bonos)
-          return `$ ${bonos.toFixed(2)}`; // Formato moneda (2 decimales)
-        }},
-				{"data": "neto", "width": "50px"},
-				{"data": null, // Calculado dinámicamente
-					"render": function(data, type, row) {
-						const efectivo = parseFloat(row.sueldo_bruto) - parseFloat(row.nomina_fiscal) - parseFloat(row.caja_ahorro) - parseFloat(row.deducciones);
-						return `$ ${efectivo.toFixed(2)}`; // Formato moneda
+		 	table = $('#example1').DataTable({
+            	"order": [[ 1, "asc" ]],
+          		dom: 'Bfrtip',
+				lengthMenu: [
+				[20, 25, 50, -1],
+				['20 rows', '25 rows', '50 rows', 'Show all']
+				],
+				buttons: [
+				'excelHtml5',
+				'pageLength'
+				],
+				"processing": true,
+				"serverSide": true,
+				"stateSave": true,
+				"responsive": true,
+				"scrollX": true,
+				"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+				"ajax": {
+					"url": ajaxUrl,
+					"type": "POST",
+						"data": {"semana": semana, "anio": anio},
+					"dataSrc": "data",
+					"error": function (xhr, error, thrown) {
+					console.error(xhr, error, thrown);
+					alert("Error al cargar los datos. Por favor intenta de nuevo.")
+					}
+         		},
+          		"columns": [
+					{"data": null, "width": "50px", "render": function (data, type, row) {
+						return row.semana + "/" + row.anio;
+					}},
+					{"data": "noempleado", "width": "50px"},
+					{"data": "nombre", "width": "120px"},
+					{"data": "tipo_unidad", "width": "100px"},
+					{"data": "cargo", "width": "100px"},
+					{"data": "imss", "render": function(data) {return data == 1 ? "Si" : "No";}},
+					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.sueldo_bruto)},
+					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.nomina_fiscal)},
+					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.bonos)},
+					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.neto)},
+					{"data": null, // Calculado dinámicamente
+						"render": (data) => formatoMoneda(data.sueldo_bruto - data.nomina_fiscal - data.caja_ahorro),
+						"width": "50px"},
+					{"data": null, "width": "50px",
+						"render": (data) => formatoMoneda(data.deducciones + data.caja_ahorro),
 					},
-					"width": "50px"},
-				{"data": null, "width": "50px", "render": function (data, type, row) {
-          const deducciones = parseFloat(row.deducciones)
-          return `$ ${deducciones.toFixed(2)}`; // Formato moneda (2 decimales)
-        }},
-				{"data": null, "width": "50px", "render": function (data, type, row) {
-          const deduccion_fiscal = parseFloat(row.deduccion_fiscal)
-          return `$ ${deduccion_fiscal.toFixed(2)}`; // Formato moneda (2 decimales)
-        }},
-				{"data": null, "width": "50px", "render": function (data, type, row) {
-          const caja_ahorro = parseFloat(row.caja_ahorro)
-          return `$ ${caja_ahorro.toFixed(2)}`; // Formato moneda (2 decimales)
-        }},
-				{"data": "supervisor", "width": "50px"},
-				{"data": null,
-					"render": function(data, type, row) {
-						const neto = (parseFloat(row.sueldo_bruto) - parseFloat(row.nomina_fiscal)) + parseFloat(row.nomina_fiscal) + parseFloat(row.bonos) + parseFloat(row.caja_ahorro) - parseFloat(row.deducciones) - parseFloat(row.deduccion_fiscal);
-						return `$ ${neto.toFixed(2)}`; // Formato moneda (2 decimales)
+					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.deduccion_fiscal)},
+					{"data": null, "width": "50px", "render": (data) => formatoMoneda(data.caja_ahorro)},
+					{"data": "supervisor", "width": "50px"},
+					{"data": null,
+						"render": (data) => formatoMoneda(data.sueldo_bruto + data.bonos +data.caja_ahorro - data.deducciones -data.deduccion_fiscal),
+					}
+          		],
+		  		"language": {
+					"emptyTable": "No hay registros disponibles",
+        			"info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+        			"loadingRecords": "Cargando...",
+       				 "search": "Buscar:",
+        			"lengthMenu": "Mostrar _MENU_ registros",
+        			"paginate": {
+						"first": "Primera",
+						"previous": "Anterior",
+						"next": "Siguiente",
+						"last": "Última"
 					}
 				}
-          ],
-		  "language": {
-			"emptyTable": "No hay registros disponibles",
-        "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-        "loadingRecords": "Cargando...",
-        "search": "Buscar:",
-        "lengthMenu": "Mostrar _MENU_ registros",
-        "paginate": {
-            "first": "Primera",
-            "previous": "Anterior",
-            "next": "Siguiente",
-            "last": "Última"
-        }
-	}
-        });
-	}
-	$("#seleccionaSemana").on('click', function() {
-		console.log("Click")
-		var semana = $("#semana").val();
-		let anio = $("#anio").val();
-		if (semana < 0 || anio < 2024 || semana > 52) {
-			alert("Seleccione una semana")
-		} else {
-			load_data(semana, anio)
+        	});
 		}
-	})
-	load_data()
+		$("#seleccionaSemana").on('click', function() {
+			console.log("Click")
+			var semana = $("#semana").val();
+			let anio = $("#anio").val();
+			if (semana < 0 || anio < 2024 || semana > 52) {
+				alert("Seleccione una semana")
+			} else {
+				load_data(semana, anio)
+			}
+		})
+		load_data()
     });
 </script>
   <script>

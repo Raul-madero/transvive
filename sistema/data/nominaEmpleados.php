@@ -6,7 +6,7 @@ include("../../conexion.php");
 if (!$conection) {
     die(json_encode(['error' => 'Error de conexión a la base de datos.']));
 }
-
+// var_dump($_POST);
 if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) && !empty($_POST['anio'])) {
     $sql = "TRUNCATE nomina_temp_2025";
     $result = mysqli_query($conection, $sql);
@@ -28,12 +28,48 @@ $fecha_inicio = $fecha->format('Y-m-d');
 $fecha_fin = $fecha->modify('+6 days')->format('Y-m-d');
 
 // Consulta principal con JOIN 
-$sql_empleados = "SELECT e.id, e.noempleado, CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) AS operador, e.cargo, IF(e.imss = 'ASEGURADO', 1,0) AS imss, e.estatus, (e.bono_semanal + e.bono_categoria + e.bono_supervisor) AS bonos, e.prima_vacacional, e.caja_ahorro, e.supervisor, COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas, COALESCE(SUM(rv.sueldo_vuelta), 0) AS sueldo_bruto, rv.unidad, rv.num_unidad, rv.operador, COALESCE(SUM(a.descuento), 0) AS deducciones 
-FROM empleados e 
-LEFT JOIN registro_viajes rv ON operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno)
-LEFT JOIN adeudos a ON e.noempleado = a.noempleado
-WHERE e.estatus = 1 AND e.cargo = 'OPERADOR' AND fecha BETWEEN '" . $fecha_inicio . "' AND '" . $fecha_fin . "'
-GROUP BY e.id, e.noempleado, rv.unidad, rv.num_unidad, rv.operador";
+$sql_empleados = "SELECT
+e.id,
+e.noempleado, 
+CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) AS operador, 
+e.cargo, 
+IF(e.imss = 'ASEGURADO', 1, 0) AS imss, 
+e.estatus, 
+(e.bono_semanal + e.bono_categoria + e.bono_supervisor) AS bonos, 
+e.prima_vacacional, 
+e.caja_ahorro, 
+e.supervisor,
+(
+    SELECT COALESCE(SUM(rv.valor_vuelta), 0)
+    FROM registro_viajes rv
+    WHERE rv.operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) 
+      AND rv.fecha BETWEEN '$fecha_inicio' AND '$fecha_fin' AND valor_vuelta > 0
+) AS total_vueltas,
+(
+    SELECT COALESCE(SUM(rv.sueldo_vuelta), 0)
+    FROM registro_viajes rv
+    WHERE rv.operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) 
+      AND rv.fecha BETWEEN '$fecha_inicio' AND '$fecha_fin' AND valor_vuelta > 0
+) AS sueldo_bruto,
+(
+    SELECT rv.unidad
+    FROM registro_viajes rv
+    WHERE rv.operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno)
+    LIMIT 1 
+) AS unidad,
+(
+    SELECT rv.num_unidad
+    FROM registro_viajes rv
+    WHERE rv.operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno)
+    LIMIT 1
+) AS num_unidad,
+(
+    SELECT COALESCE(SUM(a.descuento), 0)
+    FROM adeudos a
+    WHERE a.noempleado = e.noempleado
+) AS deducciones
+FROM empleados e
+WHERE e.estatus = 1 AND e.cargo = 'OPERADOR'";
 $result_empleados = mysqli_query($conection, $sql_empleados);
 if (!$result_empleados) {
     die(json_encode(['error' => 'Error en la consulta de empleados: ' . mysqli_error($conection)]));
@@ -52,10 +88,10 @@ if($row_nomina[0] == 0) {
         $tipo_unidad = $row_empleados['unidad'];
         $cargo = $row_empleados['cargo'];
         $imss = intval($row_empleados['imss']);
-        $sueldo_bruto = intval($row_empleados['sueldo_bruto']);
-        $bonos = intval($row_empleados['bonos']);
-        $deducciones = intval($row_empleados['deducciones']);
-        $caja_ahorro = intval($row_empleados['caja_ahorro']);
+        $sueldo_bruto = floatval($row_empleados['sueldo_bruto']);
+        $bonos = floatval($row_empleados['bonos']);
+        $deducciones = floatval($row_empleados['deducciones']);
+        $caja_ahorro = floatval($row_empleados['caja_ahorro']);
         $supervisor = $row_empleados['supervisor'];
 
 
@@ -95,13 +131,11 @@ if($row_nomina[0] == 0) {
 
 //     }
 // }
-
 $start = $_POST['start'] ?? 0;
 $length = $_POST['length'] ?? 10;
 $searchValue = $_POST['search']['value'] ?? '';
 $orderColumn = intval($_POST['order'][0]['column']); // Convertir a entero
 $orderDir = $_POST['order'][0]['dir'];
-
 $whereClause = "WHERE cargo = 'OPERADOR'";
 if (!empty($searchValue)) {
     $whereClause .= " AND (noempleado LIKE '%$searchValue%' OR nombre LIKE '%$searchValue%')";
