@@ -812,13 +812,13 @@ buttons: [
             "dataSrc": "records"
           },
           "columns": [
-           { "data" : "id", "width": "3%", className: "text-right" },
+           { "data" : "pedidono", "width": "3%", className: "text-right" },
            { "data" : "fechaa", "width": "5%"},
            { "data" : "razonsocial", "width": "10%" },
            { "data" : "origen", "width": "16%" },
            { "data" : "horainicio", "width": "5%", className: "text-center", "orderable": false },
            { "data" : "horafin", "width": "5%", className: "text-center", "orderable": false },
-           { "data" : "tipounidad", "width": "10%", "orderable":false },
+           { "data" : "unidad", "width": "10%", "orderable":false },
            { "data" : "Destino", "width": "16%"},
            { "data" : "TipoViaje", "width": "8%"},
            { "data" : "estatusped", "width": "8%", "orderable":false },
