@@ -824,7 +824,7 @@ buttons: [
            { "data" : "estatusped", "width": "8%", "orderable":false },
            {
                     "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'editsup_viajespecial.php?id=' + full.id +  '\'><i class="far fa-edit"></i> Registrar</a>';
+        return '<a class="link_edit" style="color:#007bff;" href= \'editsup_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Registrar</a>';
            }
            }
             
