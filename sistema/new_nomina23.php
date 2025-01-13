@@ -13,7 +13,6 @@ session_start();
   header('Location: ../index.php');
 }
   $espacio = "--------";
-
   mysqli_close($conection);
 ?>
 <html>
