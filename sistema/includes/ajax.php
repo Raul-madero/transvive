@@ -3568,9 +3568,7 @@ if($_POST['action'] == 'AlmacenaFiniquito')
                     $query_insert = mysqli_query($conection,"INSERT INTO dias_alertas (name_empleado, noalertas) SELECT operador, noalertas from alertas where semana = '$semana' and YEAR(fecha) = YEAR(CURDATE()) group by operador, noalertas ");
 
                     $query_procesarcf = mysqli_query($conection,"CALL procesar_nomina('$semana')");
-                    if(mysqli_errno($conection)) {
-                        echo "Error de MySQLi: " . mysqli_error($conection);
-                    }
+                    var_dump($query_procesarcf);
                     $result_procesarcf = mysqli_num_rows($query_procesarcf);
                 
                 if($result_procesarcf > 0){
