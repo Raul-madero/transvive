@@ -432,7 +432,6 @@ session_start();
         //var semana = document.getElementById("semana").value;
          var semana     = $('#nosemana').val();
       
-
        var action       = 'ActualizaNominaSemanal';
 
         $.ajax({
