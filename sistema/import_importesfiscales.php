@@ -67,6 +67,7 @@ if(isset($_FILES["name"])){
 						</script>";
 						$error++;
 					}
+					exit;
 				}
 			}
 
