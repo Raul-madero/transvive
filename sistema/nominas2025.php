@@ -89,8 +89,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				<option value="0">--Selecciona la Semana--</option>
 				<?php 
 				 for($i = 0; $i < 52; $i++) {
-          $nosemana = intval($i) + 1;
-					echo '<option value="' . $nosemana . '">' ."Semana " . $nosemana . '</option>';
+					echo '<option value="' . $i + 1 . '">' ."Semana " . $i + 1 . '</option>';
 				 }
 				 ?>
 			  </select>
@@ -105,7 +104,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="card">
         <!-- /.card-header -->
         <div class="card-body">
-          <table id="example1" class="table table-striped table-bordered table-condensed" style="width:100%; overflow-x: auto">
+          <div id="total" class="text-left border-bottom mb-3 font-weight-bold font-size-lg"></div>
+          <table id="example1" class="table table-striped table-bordered table-condensed" style="width:100%; overflow-x:auto;" >
             <thead>
               <tr>
                 <th>Semana/Año</th>
@@ -223,14 +223,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{"data": null, "render": (data) => formatoMoneda(data.bonos)},
 					{"data": null, "render": (data) => formatoMoneda(data.neto)},
 					{"data": null, // Calculado dinámicamente
-						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro))},
+						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro) - parseFloat(data.deducciones))},
 					{"data": null, "render": (data) => formatoMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro)),
 					},
 					{"data": null, "render": (data) => formatoMoneda(data.deduccion_fiscal)},
 					{"data": null, "render": (data) => formatoMoneda(data.caja_ahorro)},
 					{"data": "supervisor"},
 					{"data": null,
-						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) +parseFloat(data.caja_ahorro) - parseFloat(data.deducciones) -parseFloat(data.deduccion_fiscal)),
+						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) - parseFloat(data.deducciones) - parseFloat(data.deduccion_fiscal) - parseFloat(data.caja_ahorro)),
 					}
           		],
 		  		"language": {
@@ -245,8 +245,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						"next": "Siguiente",
 						"last": "Última"
 					}
-				}
-        	});
+				},
+        "drawCallback": function(settings) {
+          console.log(settings)
+          let total = settings.json.totalNomina
+          $('#total').text("Total de la Nomina: " + formatoMoneda(total))
+          console.log("Draw callback ejecutado")
+        }
+              	});
 		}
 		$("#seleccionaSemana").on('click', function() {
 			console.log("Click")
