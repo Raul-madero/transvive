@@ -4,7 +4,7 @@ include "class.upload.php";
 session_start();
 $ok = 0;
 $error = 0;
-$usuario = $_SESSION['idUser'];
+// $usuario = $_SESSION['idUser'];
 
 $sql10 = "TRUNCATE importes_fiscales";
 $conection->query($sql10);
@@ -43,40 +43,33 @@ if(isset($_FILES["name"])){
 					$data = explode(",", $x);
 					if(count($data)>=6){
 						$ok++;
-						$noempleado = intval($data[0]);
-						$empleado = mb_convert_encoding($data[1], 'UTF-8', 'ISO-8859-1');
-						$pago_fiscal = floatval($data[2]);
-						$deduccion_fiscal = floatval($data[3]);
-						$neto = floatval($data[4]);
-						$finiquito = floatval($data[5]);
-						$estatus = mb_convert_encoding($data[6], 'UTF-8', 'ISO-8859-1');
-						$usuario_id = $usuario;
-
+						//$fecha = str_replace('/', '-', $fcha);
+						//$fecha_mysql = date('Y-m-d', strtotime($fecha));
 						$sql = "INSERT INTO importes_fiscales (noempleado, empleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) 
-						VALUES ($noempleado, '$empleado', $pago_fiscal, $deduccion_fiscal, $neto, $finiquito, '$estatus', $usuario_id)";
-						// if ($conection->query($sql)) {
-						// 	echo "<script>
-						// 	alert('Inserción exitosa')
-						// 	</script>";
-						// } else {
-						// 	echo "Error en la consulta: " . $conection->error . "<br>";
-						// }
+						VALUES (\"$data[0]\", \"$data[1]\", \"$data[2]\", \"$data[3]\", \"$data[4]\", \"$data[5]\", \"$data[6]\", \"$usuario\")";
+
+						if ($conection->query($sql)) {
+							echo "<script>
+							alert('Inserción exitosa')
+							</script>";
+						} else {
+							echo "Error en la consulta: " . $conection->error . "<br>";
+						}
 					}else{
 						echo "<script>
 						alert('Error en la linea $x')
 						</script>";
 						$error++;
 					}
-					exit;
 				}
 			}
 
-			// $sql3 = "UPDATE empleados op
-			// INNER JOIN
-			// (
-			// SELECT empleado, pago_fiscal, deduccion_fiscal 
-			// FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
-			// $conection->query($sql3);
+			$sql3 = "UPDATE empleados op
+			INNER JOIN
+			(
+			SELECT empleado, pago_fiscal, deduccion_fiscal 
+			FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
+			$conection->query($sql3);
 			
 			
 			fclose($file);
