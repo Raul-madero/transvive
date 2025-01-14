@@ -42,6 +42,8 @@ if(isset($_FILES["name"])){
 				while($x=fgets($file,4096)){
 					$data = explode(",", $x);
 					if(count($data)>=6){
+						var_dump($data);
+						exit;
 						$ok++;
 						//$fecha = str_replace('/', '-', $fcha);
 						//$fecha_mysql = date('Y-m-d', strtotime($fecha));
@@ -64,12 +66,12 @@ if(isset($_FILES["name"])){
 				}
 			}
 
-			$sql3 = "UPDATE empleados op
-			INNER JOIN
-			(
-			SELECT empleado, pago_fiscal, deduccion_fiscal 
-			FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
-			$conection->query($sql3);
+			// $sql3 = "UPDATE empleados op
+			// INNER JOIN
+			// (
+			// SELECT empleado, pago_fiscal, deduccion_fiscal 
+			// FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
+			// $conection->query($sql3);
 			
 			
 			fclose($file);
