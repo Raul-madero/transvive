@@ -54,6 +54,7 @@ if(isset($_FILES["name"])){
 
 						$sql = "INSERT INTO importes_fiscales (noempleado, empleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) 
 						VALUES ($noempleado, '$empleado', $pago_fiscal, $deduccion_fiscal, $neto, $finiquito, '$estatus', $usuario_id)";
+						exit;
 						if ($conection->query($sql)) {
 							echo "<script>
 							alert('Inserción exitosa')
