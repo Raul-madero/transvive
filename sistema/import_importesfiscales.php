@@ -44,12 +44,12 @@ if(isset($_FILES["name"])){
 					if(count($data)>=6){
 						$ok++;
 						$noempleado = intval($data[0]);
-						$empleado = $data[1];
+						$empleado = mb_convert_encoding($data[1], 'UTF-8', 'ISO-8859-1');
 						$pago_fiscal = floatval($data[2]);
 						$deduccion_fiscal = floatval($data[3]);
 						$neto = floatval($data[4]);
 						$finiquito = floatval($data[5]);
-						$estatus = $data[6];
+						$estatus = mb_convert_encoding($data[6], 'UTF-8', 'ISO-8859-1');
 						$usuario_id = $usuario;
 
 						$sql = "INSERT INTO importes_fiscales (noempleado, empleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) 
