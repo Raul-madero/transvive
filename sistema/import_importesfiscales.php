@@ -42,14 +42,18 @@ if(isset($_FILES["name"])){
 				while($x=fgets($file,4096)){
 					$data = explode(",", $x);
 					if(count($data)>=6){
-						var_dump($data);
-						exit;
 						$ok++;
-						//$fecha = str_replace('/', '-', $fcha);
-						//$fecha_mysql = date('Y-m-d', strtotime($fecha));
-						$sql = "INSERT INTO importes_fiscales (noempleado, empleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) 
-						VALUES (\"$data[0]\", \"$data[1]\", \"$data[2]\", \"$data[3]\", \"$data[4]\", \"$data[5]\", \"$data[6]\", \"$usuario\")";
+						$noempleado = intval($data[0]);
+						$empleado = $data[1];
+						$pago_fiscal = floatval($data[2]);
+						$deduccion_fiscal = floatval($data[3]);
+						$neto = floatval($data[4]);
+						$finiquito = floatval($data[5]);
+						$estatus = $data[6];
+						$usuario_id = $usuario;
 
+						$sql = "INSERT INTO importes_fiscales (noempleado, empleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) 
+						VALUES ($noempleado, '$empleado', $pago_fiscal, $deduccion_fiscal, $neto, $finiquito, '$estatus', $usuario_id)";
 						if ($conection->query($sql)) {
 							echo "<script>
 							alert('Inserción exitosa')
