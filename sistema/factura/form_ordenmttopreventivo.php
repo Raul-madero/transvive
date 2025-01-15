@@ -98,7 +98,7 @@ $this->SetFont('Arial','',10);
 $this->Cell(65,10,'',0,0,'r');
 $this->Cell(15,5,'Area',1,0,'C','T');
 $this->Cell(65,5,mb_convert_encoding('Mantenimiento', 'ISO-8859-1', 'UTF-8'),1,0,'C');
-$this->Cell(19,5,mb_convert_encoding(''),1,0,'C','T');
+$this->Cell(19,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),1,0,'C','T');
 $this->SetFont('Arial','',8);
 $this->Cell(25,5,'',1,0,'C');
 
@@ -469,9 +469,9 @@ $pdf->Cell(80,5,mb_convert_encoding('Revisión de masas delanteras', 'ISO-8859-1
 $pdf->SetFont('ZapfDingbats','', 8);
 $pdf->Cell(10,5,$check18,0,0,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(40,5,mb_convert_encoding(''),0,0,'R'); /* ROTACION TRAS IZ1 */
-$pdf->Cell(10,5,mb_convert_encoding(''),0,0,'R');
-$pdf->Cell(40,5,mb_convert_encoding(''),0,1,'L'); /* ROTACION TRAS DER */ 
+$pdf->Cell(40,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),0,0,'R'); /* ROTACION TRAS IZ1 */
+$pdf->Cell(10,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),0,0,'R');
+$pdf->Cell(40,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),0,1,'L'); /* ROTACION TRAS DER */ 
 $pdf->Ln(5);
 include('../../conexion.php');
 $noor = $_REQUEST['id'];
@@ -508,13 +508,13 @@ while ($row = mysqli_fetch_assoc($queryr)){
 
 $pdf->SetFont('Arial','',7);
 $pdf->Cell(20,5,number_format($row['cantidad'],2),1,0,'R');
-$pdf->Cell(169,5,mb_convert_encoding($row['descripcion']),1,1,'L');
+$pdf->Cell(169,5,mb_convert_encoding($row['descripcion'], 'ISO-8859-1', 'UTF-8'),1,1,'L');
 //$pdf->Cell(20,5,number_format($row['costo'],2),1,1,'R');
 }
 
 $pdf->SetFont('Arial','',7);
 $pdf->Cell(20,5,'',1,0,'R');
-$pdf->Cell(169,5,mb_convert_encoding(''),1,1,'L');
+$pdf->Cell(169,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),1,1,'L');
 //$pdf->Cell(20,5,'',1,1,'R');
 
 }
@@ -532,10 +532,10 @@ $pdf->Ln(5);
 $pdf->SetFont('Arial','',8);
 
 $pdf->cell(90,5,mb_convert_encoding('Fecha de inicio de mantenimiento', 'ISO-8859-1', 'UTF-8'),1,0, 'C', 'T');
-$pdf->cell(9,5,mb_convert_encoding(''),0,0, 'C');
+$pdf->cell(9,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),0,0, 'C');
 $pdf->cell(90,5,mb_convert_encoding('Fecha de culminación de mantenimiento', 'ISO-8859-1', 'UTF-8'),1,1, 'C', 'T');
 $pdf->cell(90,5,$newDate2,1,0, 'C');
-$pdf->cell(9,5,mb_convert_encoding(''),0,0, 'C');
+$pdf->cell(9,5,mb_convert_encoding('', 'ISO-8859-1', 'UTF-8'),0,0, 'C');
 $pdf->cell(90,5,$newDate3,1,1, 'C');
 $pdf->Ln(5);
 $pdf->cell(189,5,mb_convert_encoding('Observaciones', 'ISO-8859-1', 'UTF-8'),1,1, 'L', 'T');
