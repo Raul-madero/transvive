@@ -1327,7 +1327,13 @@ $(document).ready(function(){
          <div class="form-group row">
            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Codigo Interno:</label>
            <div class="col-sm-9">
-            <input class="form-control" id="inputCodprodnint" name="inputCodprodnint">
+           <?php 
+                      include '../conexion.php';
+                      $sql_folio = "SELECT MAX(CAST(REPLACE(codigo_interno, 'SERV', '') AS UNSIGNED)) AS folio FROM refacciones";
+                      $query_folio = mysqli_query($conection, $sql_folio);
+                      $folio = mysqli_fetch_assoc($query_folio);
+                    ?>
+            <input class="form-control" id="inputCodprodnint" name="inputCodprodnint" value="<?php echo $folio['folio']; ?>" readonly>
            </div>
         </div>
 
