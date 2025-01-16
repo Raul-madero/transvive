@@ -136,8 +136,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
 
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Codigo Interno</label>
+                    <?php 
+                      include '../conexion.php';
+                      $sql_folio = "SELECT MAX(codigo_interno) AS folio FROM refacciones";
+                      $query_folio = mysqli_query($conection, $sql_folio);
+                      $folio = mysqli_fetch_assoc($query_folio);
+                    ?>
                     <div class="col-sm-4">
-                      <input type="text" class="form-control" id="inputCodigoInter" name="inputCodigoInter" >
+                      <input type="text" class="form-control" id="inputCodigoInter" name="inputCodigoInter" value="<?php echo $folio['folio']; ?>" readonly>
                     </div>
                   </div>
 

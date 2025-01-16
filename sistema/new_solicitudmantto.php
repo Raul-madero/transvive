@@ -90,7 +90,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <center>
 
        <?php
-                    
           include "../conexion.php";
           $query_folio = mysqli_query($conection,"SELECT MAX(no_orden) + 1 AS siguiente_folio FROM solicitud_mantenimiento");
           $result_folio = mysqli_num_rows($query_folio);
