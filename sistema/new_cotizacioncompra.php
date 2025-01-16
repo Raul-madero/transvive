@@ -1332,8 +1332,9 @@ $(document).ready(function(){
                       $sql_folio = "SELECT MAX(CAST(REPLACE(codigo_interno, 'SERV', '') AS UNSIGNED)) AS folio FROM refacciones";
                       $query_folio = mysqli_query($conection, $sql_folio);
                       $folio = mysqli_fetch_assoc($query_folio);
+                      $sig_folio = intval($folio['folio']) + 1;
                     ?>
-            <input class="form-control" id="inputCodprodnint" name="inputCodprodnint" value="<?php echo $folio['folio']; ?>" readonly>
+            <input class="form-control" id="inputCodprodnint" name="inputCodprodnint" value="<?php echo $sig_folio; ?>" readonly>
            </div>
         </div>
 
