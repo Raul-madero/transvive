@@ -161,7 +161,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputEmpleado" name="inputEmpleado">
                                             <option value="">-Selecciona-</option>
                                             <?php foreach ($filasemp as $ops): ?>
-                                            <option value="<?php echo $ops['id']; ?>"> <?php echo $ops['noempleado'] . ' ' . $ops['name']; ?> </option>
+                                            <option value="<?php echo $ops['noempleado']; ?>"> <?php echo $ops['noempleado'] . ' ' . $ops['name']; ?> </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>

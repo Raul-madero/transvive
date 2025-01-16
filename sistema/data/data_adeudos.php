@@ -11,7 +11,7 @@ $sql = "SELECT a.*,
                 e.apellido_materno, 
                 m.motivo_adeudo  
         FROM adeudos a
-        LEFT JOIN empleados e ON a.noempleado = e.id
+        LEFT JOIN empleados e ON a.noempleado = e.noempleado
         LEFT JOIN motivo_adeudo m ON a.motivo_adeudo = m.id";  // Asumí que "motivo_adeudo" es un ID en la tabla "motivo_adeudo"
 
 // Ejecutar la consulta
