@@ -10,12 +10,12 @@ if (!$conection) {
 // Función para insertar datos en la tabla nomina_temp_2025
 function insertar_nomina($conection, $data) {
     $stmt = mysqli_prepare($conection, "INSERT INTO nomina_temp_2025 (
-            semana, noempleado, nombre, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto,
+            semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto,
             bonos, deducciones, caja_ahorro, supervisor, nomina_fiscal, efectivo, deduccion_fiscal
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    mysqli_stmt_bind_param($stmt, "sissiddddddsddd", 
-        $data['semana'], $data['noempleado'], $data['nombre'], 
+    mysqli_stmt_bind_param($stmt, "sissssiddddddsddd", 
+        $data['semana'], $data['noempleado'], $data['nombre'], $data['no_unidad'], $data['tipo_unidad'], 
         $data['cargo'], $data['imss'], $data['sueldo_base'], $data['total_vueltas'], $data['sueldo_bruto'], 
         $data['bonos'], $data['deducciones'], $data['caja_ahorro'], $data['supervisor'], 
         $data['pago_fiscal'], $data['efectivo'], $data['deduccion_fiscal']
@@ -85,15 +85,17 @@ SELECT
         0
     ) AS sueldo_bruto,
     COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
-    COALESCE(
-        SUM(
-            IF(
-                a.cantidad - (TIMESTAMPDIFF(WEEK, a.fecha_inicial, CURDATE()) * a.descuento) < a.descuento,
-                a.cantidad - (TIMESTAMPDIFF(WEEK, a.fecha_inicial, CURDATE()) * a.descuento),
-                a.descuento
-            )
-        ), 
-        0
+    (
+        SELECT 
+            COALESCE(
+                SUM(
+                    IF(a.cantidad - (TIMESTAMPDIFF(WEEK, a.fecha_inicial, CURDATE()) * a.descuento) < a.descuento,
+                    a.cantidad - (TIMESTAMPDIFF(WEEK, a.fecha_inicial, CURDATE()) * a.descuento),
+                    a.descuento)
+                ),
+            0) 
+        FROM adeudos a 
+        WHERE a.noempleado = e.noempleado
     ) AS deducciones";
 
     $sql_fiscal = "SELECT COUNT(*) FROM importes_fiscales";
@@ -204,9 +206,9 @@ if (!empty($searchValue)) {
 $columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bonos', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
 
 // Recuperar datos finales
-$sql_nomina = "SELECT semana, noempleado, nombre, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bonos, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto
+$sql_nomina = "SELECT semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bonos, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto
                 FROM nomina_temp_2025 $whereClause 
-                GROUP BY  noempleado, semana, nombre, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bonos, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto
+                GROUP BY  noempleado, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bonos, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto
                 ORDER BY $columns[$orderColumn] $orderDir LIMIT $start, $length"; 
 
 $result_nomina = mysqli_query($conection, $sql_nomina);
