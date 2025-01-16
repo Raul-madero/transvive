@@ -178,95 +178,118 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../dist/js/demo.js"></script> -->
 
 <script>
-    $(document).ready(function() {
-      	const formatoMoneda = (valor) => `$ ${parseFloat(valor).toFixed(2)}`;
-        const load_data = (semana, anio) => {
-            let ajaxUrl = 'data/nominaEmpleados.php'
-			let table = $('#example1').DataTable()
-			table.destroy()
-		 	table = $('#example1').DataTable({
-            	"order": [[ 0, "asc" ]],
-          		dom: 'Bfrtip',
-				lengthMenu: [
-				[20, 25, 50, -1],
-				['20 rows', '25 rows', '50 rows', 'Show all']
-				],
-				"processing": true,
-				"serverSide": true,
-				"stateSave": true,
-				"responsive": false,
-				"scrollX": true,
-				"autoWidth": true,
-				"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-				"ajax": {
-					"url": ajaxUrl,
-					"type": "POST",
-						"data": {"semana": semana, "anio": anio},
-					"dataSrc": "data",
-					"error": function (xhr, error, thrown) {
-					console.error(xhr, error, thrown);
-					alert("Error al cargar los datos. Por favor intenta de nuevo.")
-					}
-         		},
-          		"columns": [
-					{"data": null, "render": function (data, type, row) {
-						return row.semana + "/" + row.anio;
-					}},
-					{"data": "noempleado"},
-					{"data": "nombre"},
-					// {"data": "tipo_unidad", "width": "100px"},
-					{"data": "cargo"},
-					{"data": "imss", "render": function(data) {return data == 1 ? "Si" : "No";}},
-          {"data": null, "render": (data) => formatoMoneda(data.sueldo_base)},
-					{"data": "total_vueltas"},
-					{"data": null, "render": (data) => formatoMoneda(data.sueldo_bruto)},
-					{"data": null, "render": (data) => formatoMoneda(data.nomina_fiscal)},
-					{"data": null, "render": (data) => formatoMoneda(data.bonos)},
-					{"data": null, "render": (data) => formatoMoneda(data.neto)},
-					{"data": null, // Calculado dinámicamente
-						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro) - parseFloat(data.deducciones))},
-					{"data": null, "render": (data) => formatoMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro)),
-					},
-					{"data": null, "render": (data) => formatoMoneda(data.deduccion_fiscal)},
-					{"data": null, "render": (data) => formatoMoneda(data.caja_ahorro)},
-					{"data": "supervisor"},
-					{"data": null,
-						"render": (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) - parseFloat(data.deducciones) - parseFloat(data.deduccion_fiscal) - parseFloat(data.caja_ahorro)),
-					}
-          		],
-		  		"language": {
-					"emptyTable": "No hay registros disponibles",
-        			"info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-        			"loadingRecords": "Cargando...",
-       				 "search": "Buscar:",
-        			"lengthMenu": "Mostrar _MENU_ registros",
-        			"paginate": {
-						"first": "Primera",
-						"previous": "Anterior",
-						"next": "Siguiente",
-						"last": "Última"
-					}
-				},
-        "drawCallback": function(settings) {
-          console.log(settings)
-          let total = settings.json.totalNomina
-          $('#total').text("Total de la Nomina: " + formatoMoneda(total))
-          console.log("Draw callback ejecutado")
+     $(document).ready(function() {
+    const formatoMoneda = (valor) => {
+        return valor.toLocaleString('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    };
+
+    const renderMoneda = (data) => formatoMoneda(parseFloat(data) || 0); // Función reutilizable para formato moneda
+
+    const load_data = (semana = 1, anio = 2024) => {
+        const ajaxUrl = 'data/nominaEmpleados.php';
+        const table = $('#example1').DataTable()
+        table.destroy()
+        table = $('#example1').DataTable({
+            order: [[0, "asc"]],
+            dom: 'Bfrtip',
+            lengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, "All"]
+            ],
+            processing: true,
+            serverSide: true,
+            stateSave: true,
+            responsive: false,
+            scrollX: true,
+            autoWidth: true,
+            ajax: {
+                url: ajaxUrl,
+                type: "POST",
+                data: { semana, anio },
+                dataSrc: "data",
+                error(xhr, error, thrown) {
+                    console.error(xhr, error, thrown);
+                    alert("Error al cargar los datos. Por favor intenta de nuevo.");
+                }
+            },
+            columns: [
+                { data: null, render: (data) => data.semana },
+                { data: "noempleado" },
+                { data: "nombre" },
+                { data: "cargo" },
+                { data: "imss"},
+                { data: "sueldo_base", render: renderMoneda },
+                { data: "total_vueltas" },
+                { data: "sueldo_bruto", render: renderMoneda },
+                { data: "nomina_fiscal", render: renderMoneda },
+                { data: "bonos", render: renderMoneda },
+                { data: "neto", render: renderMoneda },
+                {
+                    data: null,
+                    render: (data) => renderMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro) - parseFloat(data.deducciones))
+                },
+                {
+                    data: null,
+                    render: (data) => renderMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro))
+                },
+                { data: "deduccion_fiscal", render: renderMoneda },
+                { data: "caja_ahorro", render: renderMoneda },
+                { data: "supervisor" },
+                {
+                    data: null,
+                    render: (data) => renderMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) - parseFloat(data.deducciones) - parseFloat(data.deduccion_fiscal) - parseFloat(data.caja_ahorro))
+                }
+            ],
+            language: {
+                emptyTable: "No hay registros disponibles",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                loadingRecords: "Cargando...",
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ registros",
+                paginate: {
+                    first: "Primera",
+                    previous: "Anterior",
+                    next: "Siguiente",
+                    last: "Última"
+                }
+            },
+            drawCallback: function(settings) {
+                const total = settings.json.totalNomina || 0;
+                $('#total').text("Total de la Nomina: " + formatoMoneda(parseFloat(total)));
+            }
+        });
+    };
+
+    // Validación de la semana y año
+    const validarDatos = (semana, anio) => {
+        if (semana <= 0 || semana > 52) {
+            alert("Seleccione una semana válida.");
+            return false;
         }
-              	});
-		}
-		$("#seleccionaSemana").on('click', function() {
-			console.log("Click")
-			var semana = $("#semana").val();
-			let anio = $("#anio").val();
-			if (semana < 0 || anio < 2024 || semana > 52) {
-				alert("Seleccione una semana")
-			} else {
-				load_data(semana, anio)
-			}
-		})
-		load_data()
+        if (anio < 2024) {
+            alert("El año debe ser 2024 o superior.");
+            return false;
+        }
+        return true;
+    };
+
+    $("#seleccionaSemana").on('click', function() {
+        const semana = $("#semana").val();
+        const anio = $("#anio").val();
+
+        if (validarDatos(semana, anio)) {
+            load_data(semana, anio);
+        }
     });
+
+    load_data();  // Cargar datos por defecto
+});
+
 </script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -277,7 +300,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         fetch("./refrescar.php");
       }, milisegundos);
     });
-  </script>
+</script>
 </body>
 
 </html>
