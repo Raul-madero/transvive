@@ -138,7 +138,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Codigo Interno</label>
                     <?php 
                       include '../conexion.php';
-                      $sql_folio = "SELECT MAX(codigo_interno) AS folio FROM refacciones";
+                      $sql_folio = "SELECT MAX(CAST(REPLACE(codigo_interno, 'SERV', '') AS UNSIGNED)) AS folio FROM refacciones";
                       $query_folio = mysqli_query($conection, $sql_folio);
                       $folio = mysqli_fetch_assoc($query_folio);
                     ?>
