@@ -466,7 +466,7 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
              ?>
             <tr>
                 <td style="text-align: left; font-size: 9pt; "><?php echo $rowi['ruta']; ?>&nbsp;</td>
-                <td style="text-align: center;"><img style="width: 450px; height: 250px;" src="<?php echo '../'.$rowi['imagen']; ?>"></td>
+                <td style="text-align: center;"><img style="width: 300px; height: 150px; margin: 10px, 12px;" src="<?php echo '../'.$rowi['imagen']; ?>"></td>
                 <td style="text-align: left; font-size: 9pt; ">&nbsp;</td>
                 
             </tr>
