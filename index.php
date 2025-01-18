@@ -54,6 +54,7 @@ if (!empty($_SESSION['active'])) {
                     "Calidad" => "sistema/index_calidad.php",
                     "Monitorista" => "sistema/index_monitorista.php",
                     "Compras" => "sistema/index_compras.php",
+                    "Ventas" => "sistema/index_ventas.php"
                 ];
 
                 if (isset($rolRedirects[$_SESSION['rol_name']])) {
