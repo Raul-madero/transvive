@@ -197,7 +197,7 @@ session_start();
           <div class="col-sm-6 d-none d-sm-block">
           <ol class="breadcrumb float-sm-right">
             <?php
-             if ($_SESSION['rol'] == 1 ) {
+             if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 17 ) {
 
              ?> 
                <li class="breadcrumb-item"><a href="new_viajespecial.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;',2);?>Nuevo</a></li>
@@ -277,14 +277,14 @@ session_start();
             <div class="card-header">
               <h3 class="card-title">Viajes</h3>&nbsp;&nbsp;&nbsp;
               <?php
-            if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8 ) {
+            if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8 || $_SESSION['rol'] == 17) {
 
              ?> 
                 <a href="new_viajespecial.php"><button class="btn btn-success btn-sm">Crea Nuevo <i class="icon-plus icon-white"></i></button></a>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
              <?php }   ?>   
              <?php
-             if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8 ) {
+             if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8 || $_SESSION['rol'] == 17 ) {
 
              ?> 
              <a href="factura/viajespecial_excel.php"><button class="btn btn-secondary btn-sm">Excel &nbsp;<i class="fas fa-file-excel"></i></button></a>
@@ -302,7 +302,7 @@ session_start();
               <!-- /.card-header -->
               <div class="card-body">
               <?php 
-               if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 4 || $_SESSION['rol'] == 8 || $_SESSION['rol'] == 9){
+               if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 4 || $_SESSION['rol'] == 8 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 17){
               ?>
               <table>
                 <tr>
@@ -315,7 +315,7 @@ session_start();
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                      <?php 
-                     if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 9 ){
+                     if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 17 ){
                      ?>
                     <td>
                         <input type='text' name='gender' id='gender' placeholder="Año a filtrar">
@@ -456,7 +456,7 @@ session_start();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 
     <?php 
-   if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 9 ){
+   if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 17 ){
 ?>
 
     <script type="text/javascript">
@@ -537,7 +537,7 @@ session_start();
               { data: "estatusped", width: "8%", orderable:false },
 
               <?php 
-                  if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 ){
+                  if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 17 ){
               ?>
             
               {
