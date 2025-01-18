@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../config/db-config.php';
+include '../../conexion.php';
 
 
 global $connection;
@@ -10,9 +10,9 @@ if($_REQUEST['action'] == 'fetch_users'){
     $requestData = $_REQUEST;
     $start = $_REQUEST['start'];
 
-    $initial_date = $_REQUEST['initial_date'];
-    $final_date = $_REQUEST['final_date'];
-    $gender = $_REQUEST['gender'];
+    $initial_date = $_REQUEST['initial_date'] ?? "";
+    $final_date = $_REQUEST['final_date'] ?? "";
+    $gender = $_REQUEST['gender'] ?? "";
 
     if(!empty($initial_date) && !empty($final_date)){
         $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";

@@ -54,33 +54,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <?php
-       if ($_SESSION['rol'] == 1) {
-        include('includes/navbar.php');
-      }else {
-        if ($_SESSION['rol'] == 6) {
-          include('includes/navbaroperac.php');
-        }else {
-          if ($_SESSION['rol'] == 8) {
-            include('includes/navbarjefeoper.php');
-          }else {
-            if ($_SESSION['rol'] == 9) {
-              include('includes/navbargrcia.php');
-            }else {
-              if ($_SESSION['rol'] == 14) {
-                include('includes/navbarcalidad.php');
-              }else {
-                if ($_SESSION['rol'] == 15) {
-                  include('includes/navbarmonitorista.php');
-                }else {
-                  include('includes/navbar.php'); 
-                }  
-              }  
-            }
-
-          }  
-        }
-      } ?>
+      <?php include('includes/generalnavbar.php');  ?>
       <?php include('includes/nav.php') ?>
       
     </div>
