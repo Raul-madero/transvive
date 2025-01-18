@@ -5,53 +5,7 @@ session_start();
 // Obtener información del usuario y rol
 $User = $_SESSION['user'];
 $rol = $_SESSION['rol'];
-switch($rol) {
-	case 1:
-		header('Location: index.php');
-		break;
-	case 2:
-		header('Location: index_operador.php');
-		break;
-	case 4:
-		header('Location: index_supervisor.php');
-		break;
-	case 5:
-		header('Location: index_rhumanos.php');
-		break;
-	case 6:
-		header('Location: index_operaciones.php');
-		break;
-	case 7:
-		header('Location: index_mantto.php');
-		break;
-	case 8:
-		header('Location: index_jefeoperaciones.php');
-		break;
-	case 9:
-		header('Location: index_gerencia.php');
-		break;
-	case 10:
-		header('Location: index_almacen');
-		break;
-	case 13:
-		header('Location: index_conductor.php');
-		break;
-	case 14:
-		header('Location: index_calidad.php');
-		break;
-	case 15:
-		header('Location: index_monitorista.php');
-		break;
-	case 16:
-		header('Location: index_compras.php');
-		break;
-	case 17:
-		header('Location: index_ventas.php');
-		break;
-	default:
-		header('Location: /');
-		break;
-}
+
 $sql = "SELECT * FROM rol WHERE idrol = $rol";
 $query = mysqli_query($conection, $sql);
 $filas = mysqli_fetch_assoc($query);
