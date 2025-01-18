@@ -55,33 +55,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </button>
 
       <?php
-      switch($_SESSION['rol']) {
-        case 6:
+       if ($_SESSION['rol'] == 1) {
+        include('includes/navbar.php');
+      }else {
+        if ($_SESSION['rol'] == 6) {
           include('includes/navbaroperac.php');
-          break;
-        case 7:
-          include('includes/navbarmantto.php');
-          break;
-        case 8:
-          include('includes/navbarjefeoper.php');
-          break;
-        case 9:
-          include('includes/navbargrcia.php');
-          break;
-        case 10:
-          include('includes/navbaralmacen.php');
-          break;
-        case 14:
-          include('includes/navbarcalidad.php');
-          break;
-        case 17:
-          include('includes/navbarventas.php');
-          break;
-        default:
-          include('includes/navbar.php');
-          break;
-      }
-       ?>
+        }else {
+          if ($_SESSION['rol'] == 8) {
+            include('includes/navbarjefeoper.php');
+          }else {
+            if ($_SESSION['rol'] == 9) {
+              include('includes/navbargrcia.php');
+            }else {
+              if ($_SESSION['rol'] == 7) {
+                include('includes/navbarmantto.php');
+              }else {
+                if ($_SESSION['rol'] == 10) {
+                  include('includes/navbaralmacen.php');
+                }else {
+                  if ($_SESSION['rol'] == 14) {
+                    include('includes/navbarcalidad.php');
+                  }else {
+                    include('includes/navbar.php'); 
+                  }  
+                }  
+              }
+            }
+          }  
+        }
+      } ?>
       <?php include('includes/nav.php') ?>
       
     </div>

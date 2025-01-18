@@ -83,6 +83,7 @@
         <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Configuracion</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                <li><a href="#" class="dropdown-item">Ajustes </a></li>
                 <li><a href="perfil_empresa.php" class="dropdown-item">Perfil Empresa</a></li>
                 <li class="dropdown-divider"></li>
                 <li class="dropdown-submenu dropdown-hover">

@@ -179,14 +179,6 @@ session_start();
         <span class="navbar-toggler-icon"></span>
       </button>
       <?php
-      switch ($_SESSION('rol')) {
-        case 4:
-          include('includes/navbarsup.php');
-          break;
-        case 6:
-          include('include/navbaroperac.php');
-          break;
-      }
        if ($_SESSION['rol'] == 4) {
         include('includes/navbarsup.php');
       }else {
