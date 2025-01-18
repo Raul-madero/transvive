@@ -63,15 +63,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </button>
 
        <?php
-       if ($_SESSION['rol'] == 4) {
-        include('includes/navbarsup.php');
-      }else {
-       if ($_SESSION['rol'] == 5) {
+       switch($_SESSION['rol']) {
+        case 4:
+          include('includes/navbarsup.php');
+          break;
+        case 5:
           include('includes/navbarrhuman.php');
-         }else {  
-      include('includes/navbar.php');
-      } 
-      } ?>
+          break;
+        case 17:
+          include('includes/navbarventas.php');
+          break;
+        default:
+          include('includes/navbar.php');
+          break;
+       }
+        ?>
       <?php include('includes/nav.php') ?>
       
 
