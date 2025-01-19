@@ -75,7 +75,6 @@ if (!empty($_SESSION['active'])) {
 ?>
 
 
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
