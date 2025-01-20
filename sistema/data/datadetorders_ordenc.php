@@ -53,6 +53,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     while ($row = mysqli_fetch_array($result)) {
         // Asignar etiqueta de estado
         $status_labels = [
+            0 => '<span class="label-danger">Cancelado</span>',
             1 => '<span class="label label-primary">Activa</span>',
             2 => '<span class="label label-success">Cerrada</span>',
             3 => '<span class="label label-danger">Cancelado</span>',
