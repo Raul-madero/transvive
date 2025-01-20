@@ -116,7 +116,7 @@ if (!empty($_SESSION['active'])) {
                                
                             </div>
                             <div class="card-footer text-center">
-                                <small><a href="" ><img src="./sistema/img/logoRM/logo.png" alt="PRODLINE ERP" class="img-fluid mb-4" style="width: 250px; height: 50px;"></a></small>
+                                <small><a href="" ><img src="./images/transvive.png" alt="PRODLINE ERP" class="img-fluid mb-4" style="width: 250px; height: 50px;"></a></small>
                             </div>
                            
                         </div>
