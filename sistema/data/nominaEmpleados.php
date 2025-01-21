@@ -75,11 +75,9 @@ SELECT
                      rv.valor_vuelta * rv.sueldo_vuelta, 
                      rv.valor_vuelta * rv.sueldo_vuelta)
                ),
-               IF(rv.tipo_viaje LIKE '%ESPECIAL%', 
-                  rv.sueldo_vuelta * rv.valor_vuelta, 
-                  IF(rv.tipo_viaje = 'Especial', 
-                     rv.sueldo_vuelta * rv.valor_vuelta, 
-                     0)
+               IF   (rv.tipo_viaje LIKE '%ESPECIAL%', 
+                    rv.sueldo_vuelta * rv.valor_vuelta,
+                    rv.sueldo_vuelta * rv.valor_vuelta
                )
             )
         ), 
