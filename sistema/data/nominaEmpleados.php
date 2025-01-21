@@ -70,7 +70,7 @@ SELECT
         SUM(
             IF(e.cargo = 'OPERADOR', 
                rv.valor_vuelta * rv.sueldo_vuelta,
-               rv.sueldo_base * 7
+               e.sueldo_base * 7
             )
         ), 
         0
