@@ -11,14 +11,14 @@ if (!$conection) {
 function insertar_nomina($conection, $data) {
     $stmt = mysqli_prepare($conection, "INSERT INTO nomina_temp_2025 (
             semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto,
-            bonos, deducciones, caja_ahorro, supervisor, nomina_fiscal, efectivo, deduccion_fiscal
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            bono_semanal, bono_categoria, bono_supervisor, deducciones, caja_ahorro, supervisor, nomina_fiscal, efectivo, deduccion_fiscal, deposito_fiscal
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    mysqli_stmt_bind_param($stmt, "sissssiddddddsddd", 
+    mysqli_stmt_bind_param($stmt, "sissssiddddddddsdddd", 
         $data['semana'], $data['noempleado'], $data['nombre'], $data['no_unidad'], $data['tipo_unidad'], 
         $data['cargo'], $data['imss'], $data['sueldo_base'], $data['total_vueltas'], $data['sueldo_bruto'], 
-        $data['bonos'], $data['deducciones'], $data['caja_ahorro'], $data['supervisor'], 
-        $data['pago_fiscal'], $data['efectivo'], $data['deduccion_fiscal']
+        $data['bono_semanal'], $data['bono_categoria'], $data['bono_supervisor'], $data['deducciones'], $data['caja_ahorro'], $data['supervisor'], 
+        $data['pago_fiscal'], $data['efectivo'], $data['deduccion_fiscal'], $data['deposito']
     );
     // var_dump($stmt);
     if (!mysqli_stmt_execute($stmt)) {
@@ -58,7 +58,8 @@ SELECT
     e.cargo,
     IF(e.imss = 'ASEGURADO', 1, 0) AS imss,
     e.estatus,
-    (e.bono_categoria + e.bono_supervisor) AS bonos,
+    e.bono_categoria,
+    e.bono_supervisor,
     e.bono_semanal,
     e.prima_vacacional,
     e.caja_ahorro,
@@ -124,14 +125,14 @@ SELECT
 
     if(intval($row_fiscal[0]) > 0){
         $sql_empleados .= "
-        LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) COLLATE utf8mb4_unicode_ci";
+        LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT(e.apellido_paterno, ' ', e.apellido_materno, ' ', e.nombres) COLLATE utf8mb4_unicode_ci";
     }
 
     $sql_empleados .= "
         WHERE 
             e.estatus = 1 AND e.tipo_nomina = 'Semanal'
         GROUP BY 
-            e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, bonos, 
+            e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, e.bono_categoria, e.bono_supervisor, 
             e.bono_semanal, e.prima_vacacional, e.caja_ahorro, e.supervisor";
 
     if(intval($row_fiscal[0]) > 0){
@@ -157,7 +158,9 @@ while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
     $cargo = $row_empleados['cargo'];
     $imss = intval($row_empleados['imss']);
     $sueldo_bruto = ($row_empleados['cargo'] === 'OPERADOR') ? floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])) : ((floatval($row_empleados['sueldo_base'] * 7) - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])));
-    $bonos = floatval($row_empleados['bonos']) + $bono_semanal;
+    $bono_semanal = $row_empleados['bono_semanal'] ?? 0;
+    $bono_supervisor = $row_empleados['bono_supervisor'] ?? 0;
+    $bono_categoria = $row_empleados['bono_categoria'] ?? 0;
     $deducciones = floatval($row_empleados['deducciones']);
     $caja_ahorro = floatval($row_empleados['caja_ahorro']);
     $supervisor = $row_empleados['supervisor'];
@@ -165,7 +168,7 @@ while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
     $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
     $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
     $efectivo = $sueldo_bruto - $pago_fiscal;
-    $deposito = $row_empleados['neto'] ?? 0;
+    $deposito = $pago_fiscal - $deduccion_fiscal;
 
     // Preparar los datos para la inserción
     $data = [
@@ -174,18 +177,21 @@ while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
         'nombre' => $nombre,
         // 'no_unidad' => $no_unidad,
         // 'tipo_unidad' => $tipo_unidad,
+        'bono_categoria' => $bono_categoria,
+        'bono_supervisor' => $bono_supervisor,
+        'bono_semanal' => $bono_semanal,
         'cargo' => $cargo,
         'imss' => $imss,
         'sueldo_base' => $sueldo_base,
         'total_vueltas' => $total_vueltas,
         'sueldo_bruto' => $sueldo_bruto,
-        'bonos' => $bonos,
         'deducciones' => $deducciones,
         'caja_ahorro' => $caja_ahorro,
         'supervisor' => $supervisor,
         'pago_fiscal' => $pago_fiscal,
         'efectivo' => $efectivo,
-        'deduccion_fiscal' => $deduccion_fiscal
+        'deduccion_fiscal' => $deduccion_fiscal,
+        'deposito' => $deposito
     ];
 
     insertar_nomina($conection, $data);
@@ -203,12 +209,12 @@ if (!empty($searchValue)) {
     $whereClause .= " WHERE (noempleado LIKE '%$searchValue%' OR nombre LIKE '%$searchValue%')";
 }
 
-$columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bonos', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
+$columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bono_semanal', 'bono_categoria', 'bono_supervisor', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
 
 // Recuperar datos finales
-$sql_nomina = "SELECT semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bonos, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto
+$sql_nomina = "SELECT semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto, deposito_fiscal
                 FROM nomina_temp_2025 $whereClause 
-                GROUP BY  noempleado, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bonos, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto
+                GROUP BY  noempleado, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto, deposito_fiscal
                 ORDER BY $columns[$orderColumn] $orderDir LIMIT $start, $length"; 
 
 $result_nomina = mysqli_query($conection, $sql_nomina);
@@ -225,7 +231,7 @@ $sql_total_filtered = "SELECT COUNT(*) FROM nomina_temp_2025 $whereClause";
 $result_count_filtered = mysqli_query($conection, $sql_total_filtered);
 $totalFiltered = mysqli_fetch_row($result_count_filtered)[0];
 
-$sql_total_pagar = "SELECT SUM(sueldo_bruto + bonos - deducciones - deduccion_fiscal -caja_ahorro) AS total_nomina FROM nomina_temp_2025";
+$sql_total_pagar = "SELECT SUM(sueldo_bruto + bono_semanal + bono_categoria + bono_supervisor - deducciones - deduccion_fiscal - caja_ahorro) AS total_nomina FROM nomina_temp_2025";
 $result_total_pagar = mysqli_query($conection, $sql_total_pagar);
 $total_nomina = mysqli_fetch_row($result_total_pagar)[0];
 

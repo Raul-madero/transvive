@@ -38,269 +38,296 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </head>
 <body class="hold-transition layout-top-nav">
-  <div class="wrapper">
-    <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
-      <div class="container">
-        <a href="salir.php" class="navbar-brand">
-          <span class="brand-text font-weight-light"><img src="../images/logo_easy.png" alt="TRANSVIVE CRM"></span>
-        </a>
-        <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <?php
-        switch ($_SESSION['rol']) {
-            case 4:
-                include 'includes/navbarsup.php';
-                break;
-            case 5:
-                include 'includes/navbarrhuman.php';
-                break;
-            case 6:
-                include 'includes/navbaroperac.php';
-                break;
-            case 8:
-                include 'includes/navbarjefeoper.php';
-                break;
-            case 9:
-                include 'includes/navbargrcia.php';
-                break;
-            default:
-                include 'includes/navbar.php';
-                break;
-        }
-       ?>
-        <?php include 'includes/nav.php';  ?>
-      </div>
-    </nav>
-    <!-- /.navbar -->
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h4 class="m-0"> Nomina Empleados <small>Semanal</small></h4>
-            </div><!-- /.col -->
-            <div class="col-sm-6 flex">
-				<label for="semana">Numero de Semana</label>
-              <select class="form-control select2bs4" style="text-align: left; margin-bottom: 12px" name="semana" id="semana" id="nosemana">
-				<option value="0">--Selecciona la Semana--</option>
-				<?php 
-				 for($i = 0; $i < 52; $i++) {
-          $nosemana = ($i + 1);
-					echo '<option value="' . $nosemana . '">' ."Semana " . $nosemana . '</option>';
-				 }
-				 ?>
-			  </select>
-			  <input type="number" name="anio" id="anio" value="2025" placeholder="Selecciona el anio" class="form-control" style="text-align: left; margin-bottom: 12px">
-			  <button id="seleccionaSemana" class="btn btn-success">Seleccionar</button>
-            </div><!-- /.col -->
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </div>
-      <!-- /.content-header -->
-      <!-- Main content -->
-      <div class="card">
-        <!-- /.card-header -->
-        <div class="card-body">
-          <div id="total" class="text-left border-bottom mb-3 font-weight-bold font-size-lg"></div>
-          <table id="example1" class="table table-striped table-bordered table-condensed" style="width:100%; overflow-x:auto;" >
-            <thead>
-              <tr>
-                <th>Semana/Año</th>
-			          <th>No.</th>
-                <th>Nombre</th>
-                <!-- <th>Tipo unidad</th> -->
-                <th>Cargo</th>
-                <th>Imss</th>
-                <th>Sueldo Base</th>
-                <th>Total de Vueltas</th>
-                <th>Sueldo Bruto</th>
-                <th>Nomina Fiscal</th>
-                <th>Bonos</th>
-                <th>Deposito</th>
-                <th>Efectivo</th>
-                <th>Deducciones</th>
-                <th>Deduccion Fiscal</th>
-                <th>Caja de Ahorro</th>
-                <th>Supervisor</th>
-                <th>Neto</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-        <!-- /.card-body -->
-      </div>
-      <!-- /.card -->
-    </div>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
-  <!-- Main Footer -->
-  <?php include('includes/footer.php') ?>
-  </div>
-  <!-- ./wrapper -->
-  <!-- REQUIRED SCRIPTS -->
-  <!-- jQuery -->
-  <script src="../plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap 4 -->
-  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- DataTables  & Plugins -->
-  <script src="../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-  <script src="../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-  <script src="../vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-  <script src="../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-  <script src="../vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-  <script src="../vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-  <script src="../vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-  <script src="../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-  <script src="../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-  <script src="../vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-  <script src="../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-  <script src="../vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  	<div class="wrapper">
+    	<!-- Navbar -->
+    	<nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+      		<div class="container">
+        		<a href="salir.php" class="navbar-brand">
+          			<span class="brand-text font-weight-light"><img src="../images/logo_easy.png" alt="TRANSVIVE ERP" class="image-fluid"></span>
+        		</a>
+        		<button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          			<span class="navbar-toggler-icon"></span>
+        		</button>
+				<?php
+					include ('includes/generalnavbar.php');
+				?>
+				<?php include 'includes/nav.php';  ?>
+      		</div>
+    	</nav>
+			<!-- /.navbar -->
+			<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container">
+					<div class="row mb-2">
+						<div class="col-5">
+							<h4 class="m-0"> Nomina Empleados <small>Semanal</small></h4>
+						</div><!-- /.col -->
+						<div class="col-7">
+							<div class="row">
+								<div class="col-3 align-center">
+									<label for="semana" class="text-center">Numero de Semana</label>
+								</div>
+								<div class="col-4">
+									<select class="form-control select2bs4" style="text-align: left; margin-bottom: 12px" name="semana" id="semana" id="nosemana">
+										<option value="0">--Selecciona la Semana--</option>
+										<?php 
+										for($i = 0; $i < 52; $i++) {
+										echo '<option value="' . $i + 1 . '">' ."Semana " . $i + 1 . '</option>';
+										}
+										?>
+									</select>
+								</div>
+								<div class="col-3">
+									<input type="number" name="anio" id="anio" value="2025" placeholder="Selecciona el anio" class="form-control" style="text-align: left; margin-bottom: 12px"/>
+								</div>
+								<div class="col-2">
+									<button id="seleccionaSemana" class="btn btn-success" style="height: 35px">Seleccionar</button>
+								</div>
+							</div>
+							<!-- /.row -->
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					<div class="row">
+						<div class="col-4"></div>
+						<div class="col-4 text-center">
+							<button class="btn btn-outline-success btn-lg" id="pagarNomina">Pagar</button>
+						</div>
+						<div class="col-4"></div>	
+					</div>
+				</div><!-- /.container-fluid -->
+			</div>
+		<!-- /.content-header -->
+		<!-- Main content -->
+			<div class="card">
+			<!-- /.card-header -->
+				<div class="card-body">
+					<div id="total" class="text-left border-bottom mb-3 font-weight-bold font-size-lg"></div>
+						<table id="example1" class="table table-striped table-bordered table-condensed" style="width:100%; overflow-x:auto;" >
+							<thead>
+								<tr>
+									<th>Semana/Año</th>
+										<th>No.</th>
+									<th>Nombre</th>
+									<!-- <th>Tipo unidad</th> -->
+									<th>Cargo</th>
+									<th>Imss</th>
+									<th>Sueldo Base</th>
+									<th>Total de Vueltas</th>
+									<th>Sueldo Bruto</th>
+									<th>Nomina Fiscal</th>
+									<th>Bono Semanal</th>
+									<th>Bono Categoria</th>
+									<th>Bono Supervisor</th>
+									<th>Deposito</th>
+									<th>Efectivo</th>
+									<th>Deducciones</th>
+									<th>Deduccion Fiscal</th>
+									<th>Caja de Ahorro</th>
+									<th>Supervisor</th>
+									<th>Neto</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					<!-- /.card-body -->
+				</div>
+				<!-- /.card -->
+			</div>
+			<!-- /.content -->
+		</div>
+			<!-- /.content-wrapper -->
+			<!-- Control Sidebar -->
+  		<aside class="control-sidebar control-sidebar-dark">
+    		<!-- Control sidebar content goes here -->
+  		</aside>
+		<!-- /.control-sidebar -->
+		<!-- Main Footer -->
+  		<?php include('includes/footer.php') ?>
+  	</div>
+	<!-- ./wrapper -->
+	<!-- REQUIRED SCRIPTS -->
+	<!-- jQuery -->
+	<script src="../plugins/jquery/jquery.min.js"></script>
+	<!-- Bootstrap 4 -->
+	<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- DataTables  & Plugins -->
+	<script src="../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+	<script src="../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+	<script src="../vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+	<script src="../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+	<script src="../vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+	<script src="../vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+	<script src="../vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+	<script src="../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+	<script src="../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+	<script src="../vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+	<script src="../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+	<script src="../vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
 
-  <!-- DataTables JS library -->
-  <script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-  <!-- DataTables JBootstrap -->
-  <script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
-  <!-- AdminLTE App -->
-  <script src="../dist/js/adminlte.min.js"></script>
-  <!-- AdminLTE for demo purposes
-<script src="../dist/js/demo.js"></script> -->
+	<!-- DataTables JS library -->
+	<script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+	<!-- DataTables JBootstrap -->
+	<script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="../dist/js/adminlte.min.js"></script>
+	<!-- AdminLTE for demo purposes
+	<script src="../dist/js/demo.js"></script> -->
 
-<script>
-     $(document).ready(function() {
-    const formatoMoneda = (valor) => {
-        return valor.toLocaleString('es-MX', {
-            style: 'currency',
-            currency: 'MXN',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    };
+	<script>
+		$(document).ready(function() {
+		const formatoMoneda = (valor) => {
+			return valor.toLocaleString('es-MX', {
+				style: 'currency',
+				currency: 'MXN',
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2
+			});
+		};
+		const renderMoneda = (data) => formatoMoneda(parseFloat(data) || 0); // Función reutilizable para formato moneda
 
-    const renderMoneda = (data) => formatoMoneda(parseFloat(data) || 0); // Función reutilizable para formato moneda
+		const load_data = (semana = 1, anio = 2024) => {
+			const ajaxUrl = 'data/nominaEmpleados.php';
+			const table = $('#example1').DataTable()
+			table.destroy()
+			table = $('#example1').DataTable({
+				order: [[0, "asc"]],
+				dom: 'Bfrtip',
+				lengthMenu: [
+					[10, 25, 50, 100, -1],
+					[10, 25, 50, 100, "All"]
+				],
+				processing: true,
+				serverSide: true,
+				stateSave: true,
+				responsive: false,
+				scrollX: true,
+				autoWidth: true,
+				ajax: {
+					url: ajaxUrl,
+					type: "POST",
+					data: { semana, anio },
+					dataSrc: "data",
+					error(xhr, error, thrown) {
+						console.error(xhr, error, thrown);
+						alert("Error al cargar los datos. Por favor intenta de nuevo.");
+					}
+				},
+				columns: [
+					{ data: null, render: (data) => data.semana },
+					{ data: "noempleado" },
+					{ data: "nombre" },
+					{ data: "cargo" },
+					{ data: "imss"},
+					{ data: "sueldo_base", render: renderMoneda },
+					{ data: "total_vueltas" },
+					{ data: "sueldo_bruto", render: renderMoneda },
+					{ data: "nomina_fiscal", render: renderMoneda },
+					{ data: "bono_semanal", render: renderMoneda },
+					{ data: "bono_categoria", render: renderMoneda },
+					{ data: "bono_supervisor", render: renderMoneda },
+					{ data: "deposito_fiscal", render: renderMoneda },
+					{
+						data: null,
+						render: (data) => renderMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro) - parseFloat(data.deducciones) + parseFloat(data.bono_categoria) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor))
+					},
+					{
+						data: null,
+						render: (data) => renderMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro))
+					},
+					{ data: "deduccion_fiscal", render: renderMoneda },
+					{ data: "caja_ahorro", render: renderMoneda },
+					{ data: "supervisor" },
+					{
+						data: null,
+						render: (data) => renderMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) - parseFloat(data.deducciones) - parseFloat(data.deduccion_fiscal) - parseFloat(data.caja_ahorro))
+					}
+				],
+				language: {
+					emptyTable: "No hay registros disponibles",
+					info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+					loadingRecords: "Cargando...",
+					search: "Buscar:",
+					lengthMenu: "Mostrar _MENU_ registros",
+					paginate: {
+						first: "Primera",
+						previous: "Anterior",
+						next: "Siguiente",
+						last: "Última"
+					}
+				},
+				drawCallback: function(settings) {
+					const total = settings.json.totalNomina || 0;
+					$('#total').text("Total de la Nomina: " + formatoMoneda(parseFloat(total)));
+				}
+			});
+		};
 
-    const load_data = (semana = 1, anio = 2024) => {
-        const ajaxUrl = 'data/nominaEmpleados.php';
-        const table = $('#example1').DataTable()
-        table.destroy()
-        table = $('#example1').DataTable({
-            order: [[0, "asc"]],
-            dom: 'Bfrtip',
-            lengthMenu: [
-                [10, 25, 50, 100, -1],
-                [10, 25, 50, 100, "All"]
-            ],
-            processing: true,
-            serverSide: true,
-            stateSave: true,
-            responsive: false,
-            scrollX: true,
-            autoWidth: true,
-            ajax: {
-                url: ajaxUrl,
-                type: "POST",
-                data: { semana, anio },
-                dataSrc: "data",
-                error(xhr, error, thrown) {
-                    console.error(xhr, error, thrown);
-                    alert("Error al cargar los datos. Por favor intenta de nuevo.");
-                }
-            },
-            columns: [
-                { data: null, render: (data) => data.semana },
-                { data: "noempleado" },
-                { data: "nombre" },
-                { data: "cargo" },
-                { data: "imss"},
-                { data: "sueldo_base", render: renderMoneda },
-                { data: "total_vueltas" },
-                { data: "sueldo_bruto", render: renderMoneda },
-                { data: "nomina_fiscal", render: renderMoneda },
-                { data: "bonos", render: renderMoneda },
-                { data: "neto", render: renderMoneda },
-                {
-                    data: null,
-                    render: (data) => renderMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro) - parseFloat(data.deducciones))
-                },
-                {
-                    data: null,
-                    render: (data) => renderMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro))
-                },
-                { data: "deduccion_fiscal", render: renderMoneda },
-                { data: "caja_ahorro", render: renderMoneda },
-                { data: "supervisor" },
-                {
-                    data: null,
-                    render: (data) => renderMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) - parseFloat(data.deducciones) - parseFloat(data.deduccion_fiscal) - parseFloat(data.caja_ahorro))
-                }
-            ],
-            language: {
-                emptyTable: "No hay registros disponibles",
-                info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                loadingRecords: "Cargando...",
-                search: "Buscar:",
-                lengthMenu: "Mostrar _MENU_ registros",
-                paginate: {
-                    first: "Primera",
-                    previous: "Anterior",
-                    next: "Siguiente",
-                    last: "Última"
-                }
-            },
-            drawCallback: function(settings) {
-                const total = settings.json.totalNomina || 0;
-                $('#total').text("Total de la Nomina: " + formatoMoneda(parseFloat(total)));
-            }
-        });
-    };
+		// Validación de la semana y año
+		const validarDatos = (semana, anio) => {
+			if (semana <= 0 || semana > 52) {
+				alert("Seleccione una semana válida.");
+				return false;
+			}
+			if (anio < 2024) {
+				alert("El año debe ser 2024 o superior.");
+				return false;
+			}
+			return true;
+		};
 
-    // Validación de la semana y año
-    const validarDatos = (semana, anio) => {
-        if (semana <= 0 || semana > 52) {
-            alert("Seleccione una semana válida.");
-            return false;
-        }
-        if (anio < 2024) {
-            alert("El año debe ser 2024 o superior.");
-            return false;
-        }
-        return true;
-    };
+		$("#seleccionaSemana").on('click', function() {
+			const semana = $("#semana").val();
+			const anio = $("#anio").val();
 
-    $("#seleccionaSemana").on('click', function() {
-        const semana = $("#semana").val();
-        const anio = $("#anio").val();
+			if (validarDatos(semana, anio)) {
+				load_data(semana, anio);
+			}
+		});
 
-        if (validarDatos(semana, anio)) {
-            load_data(semana, anio);
-        }
-    });
-
-    load_data();  // Cargar datos por defecto
-});
-
-</script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Invocamos cada 5 segundos ;)
-      const milisegundos = 5 * 1000;
-      setInterval(function() {
-        // No esperamos la respuesta de la petición porque no nos importa
-        fetch("./refrescar.php");
-      }, milisegundos);
-    });
-</script>
+		load_data();  // Cargar datos por defecto
+		});
+	</script>
+	<script src="js/sweetalert2.all.min.js"></script>
+	<script>
+		// $('#pagarNomina').on('click', function() {
+		// 	console.log('click');
+		// 	$.ajax({
+		// 		url: 'data/pagarNomina.php',
+		// 		type: 'POST',
+		// 		async: true,
+		// 		success: function(response) {
+		// 			console.log(response)
+		// 			if(response != 'error') {
+		// 				Swal.fire({
+		// 					title: "Nomina guardada correctamente!",
+		// 					text: "",
+		// 					icon: "success"
+		// 				});
+		// 			} else {
+		// 				Swal.fire({
+		// 					title: "Error al guardar la nomina",
+		// 					text: "",
+		// 					icon: "error"
+		// 				});
+		// 			}
+		// 		}
+		// 	})
+		// })
+	</script>
+  	<script>
+    	document.addEventListener("DOMContentLoaded", function() {
+      		// Invocamos cada 5 segundos ;)
+      		const milisegundos = 5 * 1000;
+      		setInterval(function() {
+        		// No esperamos la respuesta de la petición porque no nos importa
+        		fetch("./refrescar.php");
+      		}, milisegundos);
+    	});
+  	</script>
 </body>
 
 </html>
