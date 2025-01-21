@@ -66,6 +66,53 @@
                     </ul>
                 </li>
                 <li class="dropdown-submenu dropdown-hover">
+          <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Viajes</a>
+          <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+            <li><a href="viajes_clientesxdia.php" class="dropdown-item"> Viajes Cliente x Día</a></li>
+            <li><a href="viajes_clientesxsemana.php" class="dropdown-item"> Viajes Cliente x Semana</a></li>
+            <li><a href="viajes_planeadosvsreg.php" class="dropdown-item"> Viajes Planeados vs Registrados</a></li>
+            <li><a href="grafica_plaeadosvsregistrados.php" class="dropdown-item"> Grafica Planeados vs Registrados (Sem)</a></li>
+            <li><a href="grafica_plavsregyear.php" class="dropdown-item"> Grafica Planeados vs Registrados (Anual)</a></li>
+            <li><a href="viajes_normalesxperiodos.php" class="dropdown-item">Viajes por Periodo</a></li>
+            <li><a href="viajes_todosxperiodos.php" class="dropdown-item">Viajes por Periodo (Todos)</a></li>
+            <li><a href="viajes_porfecha.php" class="dropdown-item">Viajes por Fecha</a></li>
+
+          </ul>
+        </li>
+                <li class="dropdown-divider"></li>
+        <li class="dropdown-submenu dropdown-hover">
+          <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Calidad</a>
+          <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+
+
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Satisfaccion</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+                <li><a href="factura/detallado_encsatisfaccionew.php" target="_blank" class="dropdown-item">Detallado Encuesta Satisfacción</a></li>
+                <li><a href="factura/encuesta_calidadexcel.php" target="_blank" class="dropdown-item">Encuesta Satisfacción Excel</a></li>
+                <!--<li><a href="analisis_encuestasatisf.php" class="dropdown-item">Análisis Encuesta Satisfacción</a></li>-->
+
+              </ul>
+            </li>
+
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Calidad</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+                <li><a href="factura/detallado_encsatisfaccion.php" target="_blank" class="dropdown-item">Detallado Encuesta Satisfacción (anterior)</a></li>
+
+                <li><a href="factura/detallado_enccalidad.php" target="_blank" class="dropdown-item">Detallado Encuesta Calidad</a></li>
+
+              </ul>
+            </li>
+
+
+          </ul>
+        </li>
+                <li class="dropdown-submenu dropdown-hover">
                     <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Ventas</a>
                     <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
                         <li><a href="noventa_fechas.php" class="dropdown-item">Formato de No Venta</a></li>
@@ -99,6 +146,7 @@
             </ul>   
         </li>
     </ul>
+
 
   <div class="search-bar mb-4">
     <input class="form-control" type="text" id="searchInput" placeholder="Search" aria-label="Search">
