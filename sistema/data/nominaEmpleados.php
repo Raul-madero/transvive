@@ -71,9 +71,7 @@ SELECT
             IF(e.cargo = 'OPERADOR', 
                IF(e.sueldo_base > rv.sueldo_vuelta, 
                   e.sueldo_base * rv.valor_vuelta, 
-                  IF(rv.unidad_ejecuta <> e.tipo_unidad, 
-                     rv.valor_vuelta * rv.sueldo_vuelta, 
-                     rv.valor_vuelta * rv.sueldo_vuelta)
+                rv.valor_vuelta * rv.sueldo_vuelta
                ),
                IF   (rv.tipo_viaje LIKE '%ESPECIAL%', 
                     rv.sueldo_vuelta * rv.valor_vuelta,
