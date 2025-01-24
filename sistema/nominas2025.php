@@ -37,8 +37,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </head>
-<body class="hold-transition layout-top-nav">
-  	<div class="wrapper">
+<body class="hold-transition layout-top-nav mw-100">
+  	<div class="wrapper mw-100">
     	<!-- Navbar -->
     	<nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
       		<div class="container">
@@ -56,7 +56,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     	</nav>
 			<!-- /.navbar -->
 			<!-- Content Wrapper. Contains page content -->
-		<div class="content-wrapper">
+		<div class="content-wrapper mw-100">
 		<!-- Content Header (Page header) -->
 			<div class="content-header">
 				<div class="container">
@@ -74,7 +74,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 										<option value="0">--Selecciona la Semana--</option>
 										<?php 
 										for($i = 0; $i < 52; $i++) {
-                      $nosemana = intval($i) + 1;
+											$nosemana = $i + 1;
 										echo '<option value="' . $nosemana . '">' ."Semana " . $nosemana . '</option>';
 										}
 										?>
@@ -101,11 +101,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			</div>
 		<!-- /.content-header -->
 		<!-- Main content -->
-			<div class="card">
+			<div class="card mw-100" >
 			<!-- /.card-header -->
-				<div class="card-body">
+				<div class="card-body mw-100">
 					<div id="total" class="text-left border-bottom mb-3 font-weight-bold font-size-lg"></div>
-						<table id="example1" class="table table-striped table-bordered table-condensed" style="width:100%; overflow-x:auto;" >
+						<table id="example1" class="table table-striped table-bordered table-condensed mw-100" style="width:100%; overflow-x:auto;" >
 							<thead>
 								<tr>
 									<th>Semana/Año</th>
@@ -177,15 +177,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	<script src="../dist/js/adminlte.min.js"></script>
 	<!-- AdminLTE for demo purposes
 	<script src="../dist/js/demo.js"></script> -->
-
 	<script>
 		$(document).ready(function() {
 		const formatoMoneda = (valor) => {
 			return valor.toLocaleString('es-MX', {
 				style: 'currency',
-				currency: 'MXN',
-				minimumFractionDigits: 2,
-				maximumFractionDigits: 2
+				currency: 'MXN'
 			});
 		};
 		const renderMoneda = (data) => formatoMoneda(parseFloat(data) || 0); // Función reutilizable para formato moneda
@@ -233,18 +230,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{ data: "deposito_fiscal", render: renderMoneda },
 					{
 						data: null,
-						render: (data) => renderMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro) - parseFloat(data.deducciones) + parseFloat(data.bono_categoria) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor))
+						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro) - parseFloat(data.deducciones) + parseFloat(data.bono_categoria) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor))
 					},
 					{
 						data: null,
-						render: (data) => renderMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro))
+						render: (data) => formatoMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro))
 					},
-					{ data: "deduccion_fiscal", render: renderMoneda },
-					{ data: "caja_ahorro", render: renderMoneda },
+					{ data: "deduccion_fiscal", render: formatoMoneda },
+					{ data: "caja_ahorro", render: formatoMoneda },
 					{ data: "supervisor" },
 					{
 						data: null,
-						render: (data) => renderMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bonos) - parseFloat(data.deducciones) - parseFloat(data.deduccion_fiscal) - parseFloat(data.caja_ahorro))
+						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) - parseFloat(data.deducciones) - parseFloat(data.deduccion_fiscal) - parseFloat(data.caja_ahorro))
 					}
 				],
 				language: {
@@ -294,30 +291,30 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	</script>
 	<script src="js/sweetalert2.all.min.js"></script>
 	<script>
-		// $('#pagarNomina').on('click', function() {
-		// 	console.log('click');
-		// 	$.ajax({
-		// 		url: 'data/pagarNomina.php',
-		// 		type: 'POST',
-		// 		async: true,
-		// 		success: function(response) {
-		// 			console.log(response)
-		// 			if(response != 'error') {
-		// 				Swal.fire({
-		// 					title: "Nomina guardada correctamente!",
-		// 					text: "",
-		// 					icon: "success"
-		// 				});
-		// 			} else {
-		// 				Swal.fire({
-		// 					title: "Error al guardar la nomina",
-		// 					text: "",
-		// 					icon: "error"
-		// 				});
-		// 			}
-		// 		}
-		// 	})
-		// })
+		$('#pagarNomina').on('click', function() {
+			console.log('click');
+			$.ajax({
+				url: 'data/pagarNomina.php',
+				type: 'POST',
+				async: true,
+				success: function(response) {
+					console.log(response)
+					if(response != 'error') {
+						Swal.fire({
+							title: "Nomina guardada correctamente!",
+							text: "",
+							icon: "success"
+						});
+					} else {
+						Swal.fire({
+							title: "Error al guardar la nomina",
+							text: "",
+							icon: "error"
+						});
+					}
+				}
+			})
+		})
 	</script>
   	<script>
     	document.addEventListener("DOMContentLoaded", function() {

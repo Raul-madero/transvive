@@ -69,8 +69,18 @@ SELECT
     COALESCE(
         SUM(
             IF(e.cargo = 'OPERADOR', 
-               rv.valor_vuelta * rv.sueldo_vuelta,
-               e.sueldo_base * 7
+               IF(e.sueldo_base > rv.sueldo_vuelta, 
+                  e.sueldo_base * rv.valor_vuelta, 
+                  IF(rv.unidad_ejecuta <> e.tipo_unidad, 
+                     rv.valor_vuelta * rv.sueldo_vuelta, 
+                     rv.valor_vuelta * rv.sueldo_vuelta)
+               ),
+               IF(rv.tipo_viaje LIKE '%ESPECIAL%', 
+                  rv.sueldo_vuelta * rv.valor_vuelta, 
+                  IF(rv.tipo_viaje = 'Especial', 
+                     rv.sueldo_vuelta * rv.valor_vuelta, 
+                     0)
+               )
             )
         ), 
         0
@@ -199,12 +209,12 @@ if (!empty($searchValue)) {
     $whereClause .= " WHERE (noempleado LIKE '%$searchValue%' OR nombre LIKE '%$searchValue%')";
 }
 
-$columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bono_semanal', 'bono_categoria', 'bono_supervisor', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor');
+$columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bono_semanal', 'bono_categoria', 'bono_supervisor', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
 
 // Recuperar datos finales
-$sql_nomina = "SELECT semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal
+$sql_nomina = "SELECT semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto, deposito_fiscal
                 FROM nomina_temp_2025 $whereClause 
-                GROUP BY  noempleado, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal
+                GROUP BY  noempleado, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto, deposito_fiscal
                 ORDER BY $columns[$orderColumn] $orderDir LIMIT $start, $length"; 
 
 $result_nomina = mysqli_query($conection, $sql_nomina);
