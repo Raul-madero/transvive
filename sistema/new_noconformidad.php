@@ -171,7 +171,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           //$serie=$folioe["serie"]; 
 
 
-          $query_foliomov = mysqli_query($conection,"SELECT MAX(no_queja) AS noqueja FROM no_conformidades");
+          $query_foliomov = mysqli_query($conection,"SELECT MAX(no_queja) AS noqueja FROM no_conformidades WHERE YEAR(fecha) = YEAR(CURDATE())");
           $result_foliomov = mysqli_num_rows($query_foliomov);
 
           $foliou = mysqli_fetch_array($query_foliomov);

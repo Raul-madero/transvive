@@ -60,20 +60,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-       <?php
-       if ($_SESSION['rol'] == 4) {
-        include('includes/navbarsup.php');
-      }else {
-       if ($_SESSION['rol'] == 5) {
-          include('includes/navbarrhuman.php');
-         }else {  
-          if ($_SESSION['rol'] == 9) {
-            include('includes/navbargrcia.php');
-          }else {
-            include('includes/navbar.php');
-          }  
-      } 
-      } ?>
+       <?php include('includes/generalnavbar.php'); ?>
       <?php include('includes/nav.php') ?>
       
 
