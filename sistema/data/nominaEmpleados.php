@@ -212,9 +212,9 @@ if (!empty($searchValue)) {
 $columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bono_semanal', 'bono_categoria', 'bono_supervisor', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
 
 // Recuperar datos finales
-$sql_nomina = "SELECT semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto, deposito_fiscal
+$sql_nomina = "SELECT semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal
                 FROM nomina_temp_2025 $whereClause 
-                GROUP BY  noempleado, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, neto, deposito_fiscal
+                GROUP BY  noempleado, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal
                 ORDER BY $columns[$orderColumn] $orderDir LIMIT $start, $length"; 
 
 $result_nomina = mysqli_query($conection, $sql_nomina);
