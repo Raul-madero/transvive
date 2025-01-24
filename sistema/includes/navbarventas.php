@@ -77,7 +77,6 @@
             <li><a href="viajes_normalesxperiodos.php" class="dropdown-item">Viajes por Periodo</a></li>
             <li><a href="viajes_todosxperiodos.php" class="dropdown-item">Viajes por Periodo (Todos)</a></li>
             <li><a href="viajes_porfecha.php" class="dropdown-item">Viajes por Fecha</a></li>
-
           </ul>
         </li>
                 <li class="dropdown-divider"></li>
@@ -119,6 +118,115 @@
                     </ul>
                 </li>
             </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+      <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Calidad</a>
+
+
+      <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+
+
+        <li class="dropdown-submenu dropdown-hover">
+          <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Encuestas</a>
+          <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+
+            <li><a href="encuesta_satisfaccion.php" class="dropdown-item">Satisfaccion de Clientes </a></li>
+            <li><a href="../../transvive_eambientel/" target="_blank" class="dropdown-item">Encuesta Ambiente Laboral</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a href="grafica_encuestamesprom.php" class="dropdown-item">Grafica Promedio Mensual</a></li>
+            <li><a href="grafica_encuestames.php" class="dropdown-item">Grafica Concepto Mensual</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a href="grafica_encuestatrimprom.php" class="dropdown-item">Grafica Promedio Trimestral</a></li>
+
+          </ul>
+        </li>
+
+        <li><a href="no_conformidades.php" class="dropdown-item">Quejas - No Conformidades</a></li>
+
+        <li class="dropdown-submenu dropdown-hover">
+          <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Graficas</a>
+          <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Unidad</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                <li><a href="grafica_unidad.php" class="dropdown-item">Mensual </a></li>
+
+                <li><a href="grafica_unidadmes.php" class="dropdown-item">Mensual por unidad</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown-divider"></li>
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Motivos</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                <li><a href="grafica_motivos.php" class="dropdown-item">Motivos por Mes </a></li>
+
+                <li><a href="grafica_motivosmes.php" class="dropdown-item">Mensual por motivo </a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown-divider"></li>
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Clientes</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                <li><a href="grafica_clientesmes.php" class="dropdown-item">Mensual </a></li>
+                <li><a href="grafica_clientesmesint.php" class="dropdown-item">Mensual (Motivo Interno) </a></li>
+                <li><a href="grafica_clientesmesext.php" class="dropdown-item">Mensual (Motivo Externo) </a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown-divider"></li>
+            <li><a href="grafica_motivoie.php" class="dropdown-item">Grafica Mes(Motivo I/E) </a></li>
+
+            <li class="dropdown-divider"></li>
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Responsable</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                <li><a href="grafica_responsable.php" class="dropdown-item">Mensual </a></li>
+                <li><a href="grafica_responsableint.php" class="dropdown-item">Mensual (Interno) </a></li>
+                <li><a href="grafica_responsableext.php" class="dropdown-item">Mensual (Externo) </a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown-divider"></li>
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Operador</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                <li><a href="grafica_operador.php" class="dropdown-item">Mensual </a></li>
+                <li><a href="grafica_operadorint.php" class="dropdown-item">Mensual (Interno) </a></li>
+                <li><a href="grafica_operadorext.php" class="dropdown-item">Mensual (Externo) </a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown-divider"></li>
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Supervisor</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+                <li><a href="grafica_supervisor.php" class="dropdown-item">Mensual </a></li>
+                <li><a href="grafica_supervisorint.php" class="dropdown-item">Mensual (Interno) </a></li>
+                <li><a href="grafica_supervisorext.php" class="dropdown-item">Mensual (Externo) </a></li>
+              </ul>
+            </li>
+
+
+          </ul>
+        </li>
+
+        <li class="dropdown-submenu dropdown-hover">
+          <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">ISO 9000</a>
+          <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+
+            <li><a href="evalua_proveproductos.php" class="dropdown-item">Evaluación Proveedores (Productos) </a></li>
+            <li><a href="evalua_provemetrologia.php" class="dropdown-item">Evaluación Proveedores (Metrología)</a></li>
+            <li><a href="evalua_proveservicios.php" class="dropdown-item">Evaluación de Proveedores (Servicios)</a></li>
+
+            <li class="dropdown-divider"></li>
+
+          </ul>
         </li>
 
         <li class="nav-item dropdown">
