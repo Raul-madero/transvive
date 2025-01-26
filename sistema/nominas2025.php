@@ -121,6 +121,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<th>Bono Semanal</th>
 									<th>Bono Categoria</th>
 									<th>Bono Supervisor</th>
+									<th>Apoyo Mensual</th>
+									<th>Dias Vacaciones</th>
+									<th>Pago Vacaciones</th>
+									<th>Prima Vacacional</th>
+									<th>Sueldo Total</th>
 									<th>Deposito</th>
 									<th>Efectivo</th>
 									<th>Deducciones</th>
@@ -192,7 +197,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			const table = $('#example1').DataTable()
 			table.destroy()
 			table = $('#example1').DataTable({
-				order: [[0, "asc"]],
+				order: [[1, "asc"]],
 				dom: 'Bfrtip',
 				lengthMenu: [
 					[10, 25, 50, 100, -1],
@@ -227,21 +232,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{ data: "bono_semanal", render: renderMoneda },
 					{ data: "bono_categoria", render: renderMoneda },
 					{ data: "bono_supervisor", render: renderMoneda },
+					{ data: "apoyo_mes", render: renderMoneda },
+					{ data: "dias_vacaciones" },
+					{ data: "pago_vacaciones", render: renderMoneda },
+					{ data: "prima_vacacional", render: renderMoneda },
+					{ 
+						data: null, 
+						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes)) 
+					},
 					{ data: "deposito_fiscal", render: renderMoneda },
 					{
 						data: null,
-						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal) - parseFloat(data.caja_ahorro) - parseFloat(data.deducciones) + parseFloat(data.bono_categoria) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor))
+						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deposito_fiscal) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
 					},
-					{
-						data: null,
-						render: (data) => formatoMoneda(parseFloat(data.deducciones) + parseFloat(data.caja_ahorro))
-					},
+					{ data:"deducciones", render: formatoMoneda },
 					{ data: "deduccion_fiscal", render: formatoMoneda },
 					{ data: "caja_ahorro", render: formatoMoneda },
 					{ data: "supervisor" },
 					{
 						data: null,
-						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) - parseFloat(data.deducciones) - parseFloat(data.deduccion_fiscal) - parseFloat(data.caja_ahorro))
+						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
 					}
 				],
 				language: {
