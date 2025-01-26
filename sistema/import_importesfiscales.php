@@ -36,21 +36,20 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])){
 				// $products_array = array();
 				mysqli_set_charset($conection, "utf8mb4");
 				
-				while(($data = fgetcsv($handle, 409, ",")) !== FALSE){
+				while(($data = fgetcsv($handle, 4096))){
 					if(count($data)>=6){
 						$ok++;
-						$noempleado = intval($data[0]);
-						$empleado = mb_convert_encoding($data[1], "utf-8", "ISO-8859-1");
-						$pago_fiscal = floatval($data[2]);
-						$deduccion_fiscal = floatval($data[3]);
-						$neto = floatval($data[4]);
-						$finiquito = mb_convert_encoding($data[5], "utf-8", "ISO-8859-1");
-						$estatus = mb_convert_encoding($data[6], "utf-8", "ISO-8859-1");
+						$noempleado = intval($data[0]) ?? 0;
+						$empleado = str_replace(",", "", $data[1]);
+						$pago_fiscal = str_replace(',', '', $data[2]) ?? 0;
+						$deduccion_fiscal = str_replace(',', '', $data[3]) ?? 0;
+						$neto = str_replace(',', '',$data[4]) ?? 0;
+						$finiquito = $data[5] ?? "";
+						$estatus = $data[6] ?? "";
 						//$fecha = str_replace('/', '-', $fcha);
 						//$fecha_mysql = date('Y-m-d', strtotime($fecha));
-						$sql = "INSERT INTO importes_fiscales (noempleado, empleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) 
-						VALUES ($noempleado, '$empleado', $pago_fiscal, $deduccion_fiscal, $neto, '$finiquito', '$estatus', $usuario)";
-
+						$sql = "INSERT INTO importes_fiscales (empleado, noempleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) VALUES ('" . $empleado . "', " . $noempleado . ", " . $pago_fiscal . ", " . $deduccion_fiscal . ", " . $neto . ", '" . $finiquito . "', '" . $estatus . "', " . $usuario . ");";
+						echo $sql;
 						$conection->query($sql);
 
 					}else{
@@ -83,9 +82,6 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])){
 	// 				window.location = './carga_importesfiscal.php';
 	// </script>";
 	// }
-
-
-
 echo "<script>
 alert('Correcto $ok, Error $error !!!');
 window.location = './nominas2025.php';
