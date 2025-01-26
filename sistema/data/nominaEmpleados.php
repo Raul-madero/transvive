@@ -179,6 +179,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
 // Insertar datos en nomina_temp_2025
 while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
+    var_dump($row_empleados);
     $nosemana = ($semana . '/' . $anio);
     $alertas = intval($row_empleados['noalertas']);
     $bono_semanal = ($alertas < 5) ? floatval($row_empleados['bono_semanal']) : 0;
