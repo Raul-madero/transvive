@@ -157,7 +157,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
         if($row_fiscal[0] > 0){
             $sql_empleados .= "
-            LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT(e.apellido_paterno, ' ', e.apellido_materno, ' ', e.nombres) COLLATE utf8mb4_unicode_ci";
+            LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT(e.apellido_paterno, ' ', e.apellido_materno, ' ', e.nombres)";
         }
 
         $sql_empleados .= "
@@ -171,7 +171,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal";
         }
         // AND (e.cargo = 'OPERADOR' OR e.cargo = 'SUPERVISOR')
-        echo $sql_empleados;
+        // echo $sql_empleados;
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
         die(json_encode(['error' => 'Error en la consulta de empleados: ' . mysqli_error($conection)]));
@@ -179,7 +179,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
 // Insertar datos en nomina_temp_2025
 while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
-    var_dump($row_empleados);
+    // var_dump($row_empleados);
     $nosemana = ($semana . '/' . $anio);
     $alertas = intval($row_empleados['noalertas']);
     $bono_semanal = ($alertas < 5) ? floatval($row_empleados['bono_semanal']) : 0;
