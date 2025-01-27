@@ -10,78 +10,44 @@ $sql10 = "TRUNCATE importes_fiscales";
 $conection->query($sql10);
 
 $carga_error = "";
-// var_dump($_FILES);
 if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])){
 	$file_name = $_FILES["name"]['name'];
 	$file_tmp = $_FILES['name']['tmp_name'];
 
 	if(($handle = fopen($file_tmp, "r")) !== FALSE) {
 
-	
-	// $up = new Upload($_FILES["name"]);
-	// echo "<script>
-	// alert('Correcto se subio !!! $up->file_name');
-	// </script>";
-	// if($up->uploaded){
-	// 	$up->Process("./");
-	// 	if($up->processed){
-	// 		echo '<script>
-	// 		alert("Correcto se proceso !!!");
-	// 		</script>
-	// 		<br>';
-			// if ( $file = fopen( "./" . $up->file_dst_name , "r" ) ) {
-				$ok = 0;
-				$error = 0;
-				fgetcsv($handle, 409, ",");
-				// $products_array = array();
-				mysqli_set_charset($conection, "utf8mb4");
-				
-				while(($data = fgetcsv($handle, 4096))){
-					if(count($data)>=6){
-						$ok++;
-						$noempleado = intval($data[0]) ?? 0;
-						$empleado = str_replace(",", "", $data[1]);
-						$pago_fiscal = str_replace(',', '', $data[2]) ?? 0;
-						$deduccion_fiscal = str_replace(',', '', $data[3]) ?? 0;
-						$neto = str_replace(',', '',$data[4]) ?? 0;
-						$finiquito = $data[5] ?? "";
-						$estatus = $data[6] ?? "";
-						//$fecha = str_replace('/', '-', $fcha);
-						//$fecha_mysql = date('Y-m-d', strtotime($fecha));
-						$sql = "INSERT INTO importes_fiscales (empleado, noempleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) VALUES ('" . $empleado . "', " . $noempleado . ", " . $pago_fiscal . ", " . $deduccion_fiscal . ", " . $neto . ", '" . $finiquito . "', '" . $estatus . "', " . $usuario . ");";
-						echo $sql;
-						$conection->query($sql);
+		$ok = 0;
+		$error = 0;
+		fgetcsv($handle, 409, ",");
+		mysqli_set_charset($conection, "utf8mb4");
+		
+		while(($data = fgetcsv($handle, 4096))){
+			if(count($data)>=6){
+				$ok++;
+				$noempleado = intval($data[0]) ?? 0;
+				$empleado = str_replace(",", "", $data[1]);
+				$pago_fiscal = str_replace(',', '', $data[2]) ?? 0;
+				$deduccion_fiscal = str_replace(',', '', $data[3]) ?? 0;
+				$neto = str_replace(',', '',$data[4]) ?? 0;
+				$finiquito = $data[5] ?? "";
+				$estatus = $data[6] ?? "";
+				$sql = "INSERT INTO importes_fiscales (empleado, noempleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) VALUES ('" . $empleado . "', " . $noempleado . ", " . $pago_fiscal . ", " . $deduccion_fiscal . ", " . $neto . ", '" . $finiquito . "', '" . $estatus . "', " . $usuario . ");";
 
-					}else{
-						echo "<script>
-						alert('Error en la linea $x')
-						</script>";
-						$error++;
-					}
-				}
+				$conection->query($sql);
+
+			}else{
+				echo "<script>
+				alert('Error en la linea $x')
+				</script>";
+				$error++;
 			}
-
-		// 	$sql3 = "UPDATE empleados op
-		// 	INNER JOIN
-		// 	(
-		// 	SELECT empleado, pago_fiscal, deduccion_fiscal 
-		// 	FROM importes_fiscales) i ON CONCAT(op.apellido_paterno, ' ', op.apellido_materno, ' ', op.nombres) = i.empleado SET op.efectivo= i.pago_fiscal, op.descuento_fiscal = i.deduccion_fiscal" ; 
-		// 	$conection->query($sql3);
-			
-			
-			// fclose($file);
-			// unlink("./".$up->file_dst_name);
-		}else {
+		}
+	}
+}else {
 			echo "<script>
 			alert('Error al procesar !!! $up->error')
 			</script>";
 		}
-	// }
-	// else{
-	// 	echo "<script> alert('Es necesario proporcionar un archivo.'); 
-	// 				window.location = './carga_importesfiscal.php';
-	// </script>";
-	// }
 echo "<script>
 alert('Correcto $ok, Error $error !!!');
 window.location = './nominas2025.php';

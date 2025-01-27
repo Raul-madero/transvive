@@ -1,33 +1,35 @@
 <?php
 include "../conexion.php";
-include "class.upload.php";
 session_start();
-
-$usuario     = $_SESSION['idUser'];
-
-if(isset($_FILES["name"])){
-	$up = new Upload($_FILES["name"]);
-	if($up->uploaded){
-		$up->Process("./");
-		if($up->processed){
-if ( $file = fopen( "./" . $up->file_dst_name , "r" ) ) {
 
 $ok = 0;
 $error = 0;
-$products_array = array();
+$usuario = $_SESSION['idUser'];
 
-    while($x=fgets($file,4096)){
-    	
-    		$data = explode(",", $x);
-    		if(count($data)>=6){
-    			$ok++;
-    			$sql = "insert into alertas (semana,unidad,operador,noalertas,velocidad,limite,user_id) value (\"$data[5]\",\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$usuario\")";
-    			$conection->query($sql);
-    		}else{
-    			$error++;
-    		}
-    }
-}
+if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
+	$file_name = $_FILES["name"]['name'];
+	$file_tmp = $_FILES['name']['tmp_name'];
+
+	if ( $handle = fopen( $file_tmp, "r" ) !== FALSE ) {
+
+		$ok = 0;
+		$error = 0;
+		fgetcsv($handle, 409, ",");
+		mysqli_set_charset($conection, "utf8mb4");
+
+		while($data = fgets( $handle, 4096)){
+			if(count($data)>=6){
+				$ok++;
+				$sql = "insert into alertas (semana,unidad,operador,noalertas,velocidad,limite,user_id) value (\"$data[5]\",\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$usuario\")";
+				$conection->query($sql);
+			}else{
+				echo "<script>
+					alert('Error en la linea $x')
+					</script>";
+				$error++;
+			}
+		}
+	}
 
     $sql3 = "UPDATE alertas SET semana = REPLACE(REPLACE(REPLACE(semana,CHAR(9),''),CHAR(10),''),CHAR(13),'')";
          
@@ -36,11 +38,8 @@ $products_array = array();
 
         fclose($file);
 		unlink("./".$up->file_dst_name);
-	}
+}
 	
-}
-
-}
 echo "<script>
 alert('Correcto $ok, Error $error !!!');
 window.location = './alertas.php';
