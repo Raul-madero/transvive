@@ -35,6 +35,15 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $fecha_inicio = ($fecha->format('Y-m-d'));
     $fecha_fin = $fecha->modify('+6 days')->format('Y-m-d');
     
+    function dia15EntreFechas($fecha_inicio, $fecha_fin) {
+        // Convertimos las fechas a timestamps
+        $timestamp_inicio = strtotime($fecha_inicio);
+        $timestamp_fin = strtotime($fecha_fin);
+        $timestamp_dia15 = strtotime('15 ' . date('M Y')); // Dia 15 del mes actual
+    
+        // Verificamos si el timestamp del día 15 está entre los otros dos
+        return ($timestamp_dia15 >= $timestamp_inicio && $timestamp_dia15 <= $timestamp_fin);
+    }
     // Consultar empleados
     $sql_empleados = "
     SELECT
@@ -200,7 +209,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
             $efectivo = $sueldo_bruto - $pago_fiscal;
             $deposito = $pago_fiscal - $deduccion_fiscal;
-            $apoyo_mes = $row_empleados['apoyo_mes'] ?? 0;
+            $apoyo_mes = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['apoyo_mes']) : 0;
             $prima_vacacional = $row_empleados['prima_vacacional'] === 'SI' ? (($row_empleados['salario_diario'] * 10) * 1.25) : 0;
             $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? (intval($row_empleados['fecha_inicial']) + 1) ?? (intval($row_empleados['fecha_final']) + 1) : 0;
             $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
