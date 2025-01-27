@@ -18,8 +18,6 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
 		fgetcsv($handle, 409, ",");
 		mysqli_set_charset($conection, "utf8mb4");
 		$data = fgetcsv( $handle, 4096);
-		var_dump($data);
-		exit;
 		while($data){
 			if(count($data)>=6){
 				$ok++;
