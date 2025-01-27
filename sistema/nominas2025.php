@@ -265,7 +265,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{ data: "imss", "class": "text-center"},
 					{ data: "sueldo_base", "class": "text-center", render: renderMoneda },
 					{ data: "total_vueltas", "class": "text-center" },
-					{ data: "sueldo_bruto", render: renderMoneda },
+					{ 
+						data: "sueldo_bruto", 
+						render: renderMoneda,
+						createdCell: function(td, cellData, rowData, row, col) {
+							$(td).addClass('editable-sueldo_bruto').attr('data-id', rowData.id).text(renderMoneda(cellData));
+						}
+					},
 					{ data: "nomina_fiscal", render: renderMoneda },
 					{ data: "bono_semanal", render: renderMoneda },
 					{ data: "bono_categoria", render: renderMoneda },
@@ -355,7 +361,43 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				}
 			});
 		});
+		
+		$('#example1').on('click', '.editable-sueldo_bruto', function() {
+			const td = $(this);
+			const id = td.data('id');
+			const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, '')) || 0;
+			
+			td.html(`<input type="text" class="form-control input-sm" value="${currentValue}">`);
+			const input = td.find('input');
 
+			input.focus().on('blur', function() {
+				const newValue = parseFloat(input.val()) || 0;
+				if (newValue !== currentValue) {
+					// Actualiza en la base de datos
+					$.ajax({
+						url: 'data/updateSueldo.php',
+						type: 'POST',
+						data: { id, sueldo: newValue },
+						dataType: 'json',
+						success: function(response) {
+							console.log(response.success)
+							if(response.success) {
+								alert(response.message)
+							}
+							td.text(formatoMoneda(newValue));
+						},
+						error: function(xhr, status, error) {
+							alert('Error al actualizar el sueldo.');
+							console.error('Error:', error);
+    						console.error('Detalles:', xhr.responseText);
+							td.text(formatoMoneda(currentValue)); // Revertir el valor original
+						}
+					});
+				} else {
+					td.text(formatoMoneda(currentValue));
+				}
+			});
+		});
 		// Validación de la semana y año
 		const validarDatos = (semana, anio) => {
 			if (semana <= 0 || semana > 52) {
@@ -377,7 +419,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				load_data(semana, anio);
 			}
 		});
-
 		load_data();  // Cargar datos por defecto
 		});
 	</script>
@@ -416,6 +457,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				}
 			});
 		});
+
 	</script>
   	<script>
     	document.addEventListener("DOMContentLoaded", function() {
