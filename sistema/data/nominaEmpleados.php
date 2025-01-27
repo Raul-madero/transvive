@@ -26,39 +26,15 @@ function insertar_nomina($conection, $data) {
     }
 }
 
-// Truncar la tabla nomina_temp_2025
-$sql = "TRUNCATE nomina_temp_2025";
-if (!mysqli_query($conection, $sql)) {
-    die(json_encode(['error' => 'Error al truncar la tabla: ' . mysqli_error($conection)])); 
-}
-// Obtener semana y año
-// $semana = "";
-// $nombre_semana = "";
-// $anio = "";
-
 if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) && !empty($_POST['anio'])) {
     $semana = $_POST['semana'];
     $anio = $_POST['anio'];
     $nombre_semana = 'Semana ' . $semana;
-    // if(intval($semana) < 10) {
-    //     $nombre_semana = "Semana 0" . $semana;
-    // }
-} else {
-    $semana = date('W');
-    $anio = date('Y');
-    $nombre_semana = 'Semana ' . $semana;
-    // if($semana < 10) {
-    //     $nombre_semana = "Semana 0" . $semana;
-    // }
-}
-
-
-// Calcular fechas para la semana
     $fecha = new DateTime();
     $fecha->setISODate($anio, $semana);
     $fecha_inicio = ($fecha->format('Y-m-d'));
     $fecha_fin = $fecha->modify('+6 days')->format('Y-m-d');
-    // echo $nombre_semana;
+    
     // Consultar empleados
     $sql_empleados = "
     SELECT
@@ -141,7 +117,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             FROM adeudos a 
             WHERE a.noempleado = e.noempleado
         ) AS deducciones";
-
+    
         $sql_fiscal = "SELECT COUNT(*) FROM importes_fiscales";
         $result_fiscal = mysqli_query($conection, $sql_fiscal);
         if(!$result_fiscal){
@@ -152,7 +128,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $sql_empleados .= ", fi.pago_fiscal,
                                 fi.deduccion_fiscal";
         }
-
+    
         $sql_empleados .= "
             FROM 
                 empleados e
@@ -166,19 +142,19 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                                 AND rv.valor_vuelta > 0
             LEFT JOIN
                 adeudos a ON a.noempleado = e.noempleado";
-
+    
         if($row_fiscal[0] > 0){
             $sql_empleados .= "
             LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT(e.apellido_paterno, ' ', e.apellido_materno, ' ', e.nombres) COLLATE utf8mb4_unicode_ci";
         }
-
+    
         $sql_empleados .= "
             WHERE 
                 e.estatus = 1 AND e.tipo_nomina = 'Semanal' 
             GROUP BY 
                 e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, e.bono_categoria, e.bono_supervisor, 
                 e.bono_semanal, e.caja_ahorro, e.supervisor, e.apoyo_mes, deducciones";
-
+    
         if($row_fiscal[0] > 0){
             $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal";
         }
@@ -188,140 +164,130 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     if (!$result_empleados) {
         die(json_encode(['error' => 'Error en la consulta de empleados: ' . mysqli_error($conection)]));
     }
-
-// Insertar datos en nomina_temp_2025
-while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
-    // var_dump($row_empleados);
-    $alertas = intval($row_empleados['noalertas']);
-    $bono_semanal = ($alertas < 5) ? floatval($row_empleados['bono_semanal']) : 0;
-    $noempleado = intval($row_empleados['noempleado']);
-    $nombre = $row_empleados['operador'];
-    $no_unidad = $row_empleados['num_unidad'];
-    $tipo_unidad = $row_empleados['unidad'];
-    $total_vueltas = $row_empleados['total_vueltas'];
-    $cargo = $row_empleados['cargo'];
-    $imss = intval($row_empleados['imss']);
-    $sueldo_bruto = ($row_empleados['cargo'] === 'OPERADOR') ? floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])) : ((floatval($row_empleados['sueldo_base'] * 7) - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])));
-    $bono_semanal = $row_empleados['bono_semanal'] ?? 0;
-    $bono_supervisor = $row_empleados['bono_supervisor'] ?? 0;
-    $bono_categoria = $row_empleados['bono_categoria'] ?? 0;
-    $deducciones = floatval($row_empleados['deducciones']);
-    $caja_ahorro = floatval($row_empleados['caja_ahorro']);
-    $supervisor = $row_empleados['supervisor'];
-    $sueldo_base = $row_empleados['sueldo_base'];
-    $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
-    $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
-    $efectivo = $sueldo_bruto - $pago_fiscal;
-    $deposito = $pago_fiscal - $deduccion_fiscal;
-    $apoyo_mes = $row_empleados['apoyo_mes'] ?? 0;
-    $prima_vacacional =  $row_empleados['prima_vacacional'] === 'SI' ? (($row_empleados['salario_diario'] * 10) * 1.25) : 0;
-    $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? intval($row_empleados['fecha_inicial']) ?? intval($row_empleados['fecha_final']) : 0;
-    $fecha_inicial = $row_empleados['fecha_inicial'] ?? 0;
-    $fecha_final = $row_empleados['fecha_final'] ?? 0;
-    $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
-
-    // Preparar los datos para la inserción
-    $data = [
-        'semana' => $semana,
-        'anio' => $anio,
-        'noempleado' => $noempleado,
-        'nombre' => $nombre,
-        'no_unidad' => $no_unidad,
-        'tipo_unidad' => $tipo_unidad,
-        'bono_categoria' => $bono_categoria,
-        'bono_supervisor' => $bono_supervisor,
-        'bono_semanal' => $bono_semanal,
-        'cargo' => $cargo,
-        'imss' => $imss,
-        'sueldo_base' => $sueldo_base,
-        'total_vueltas' => $total_vueltas,
-        'sueldo_bruto' => $sueldo_bruto,
-        'deducciones' => $deducciones,
-        'caja_ahorro' => $caja_ahorro,
-        'supervisor' => $supervisor,
-        'pago_fiscal' => $pago_fiscal,
-        'efectivo' => $efectivo,
-        'deduccion_fiscal' => $deduccion_fiscal,
-        'deposito' => $deposito,
-        'apoyo_mes' => $apoyo_mes,
-        'prima_vacacional' => $prima_vacacional,
-        'dias_vacaciones' => $dias_vacaciones,
-        'pago_vacaciones' => $pago_vacaciones
-    ];
-
-    insertar_nomina($conection, $data);
+    
+    $sql_check = "SELECT COUNT(*) as total FROM nomina_temp_2025 WHERE semana = ? AND anio = ?";
+    $stmt_check = mysqli_prepare($conection, $sql_check);
+    mysqli_stmt_bind_param($stmt_check, "ii", $semana, $anio);
+    mysqli_stmt_execute($stmt_check);
+    $result_check = mysqli_stmt_get_result($stmt_check);
+    $row_check = mysqli_fetch_assoc($result_check);
+    
+    if ($row_check['total'] == 0) {
+        // Eliminar los datos que no coincidan con la semana o el año proporcionados
+        $sql_delete = "DELETE FROM nomina_temp_2025 WHERE semana != ? OR anio != ?";
+        $stmt_delete = mysqli_prepare($conection, $sql_delete);
+        mysqli_stmt_bind_param($stmt_delete, "ii", $semana, $anio);
+        if (!mysqli_stmt_execute($stmt_delete)) {
+            die(json_encode(['error' => 'Error al eliminar los datos antiguos: ' . mysqli_error($conection)]));
+        }
+        // Solo insertar registros si no existen datos para la semana y el año
+        while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
+            $alertas = intval($row_empleados['noalertas']);
+            $bono_semanal = ($alertas < 5) ? floatval($row_empleados['bono_semanal']) : 0;
+            $noempleado = intval($row_empleados['noempleado']);
+            $nombre = $row_empleados['operador'];
+            $no_unidad = $row_empleados['num_unidad'];
+            $tipo_unidad = $row_empleados['unidad'];
+            $total_vueltas = $row_empleados['total_vueltas'];
+            $cargo = $row_empleados['cargo'];
+            $imss = intval($row_empleados['imss']);
+            $sueldo_bruto = ($row_empleados['cargo'] === 'OPERADOR') ? floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])) : ((floatval($row_empleados['sueldo_base'] * 7) - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])));
+            $deducciones = floatval($row_empleados['deducciones']);
+            $caja_ahorro = floatval($row_empleados['caja_ahorro']);
+            $supervisor = $row_empleados['supervisor'];
+            $sueldo_base = $row_empleados['sueldo_base'];
+            $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
+            $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
+            $efectivo = $sueldo_bruto - $pago_fiscal;
+            $deposito = $pago_fiscal - $deduccion_fiscal;
+            $apoyo_mes = $row_empleados['apoyo_mes'] ?? 0;
+            $prima_vacacional = $row_empleados['prima_vacacional'] === 'SI' ? (($row_empleados['salario_diario'] * 10) * 1.25) : 0;
+            $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? intval($row_empleados['fecha_inicial']) ?? intval($row_empleados['fecha_final']) : 0;
+            $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
+    
+            // Preparar los datos para la inserción
+            $data = [
+                'semana' => $semana,
+                'anio' => $anio,
+                'noempleado' => $noempleado,
+                'nombre' => $nombre,
+                'no_unidad' => $no_unidad,
+                'tipo_unidad' => $tipo_unidad,
+                'bono_categoria' => $row_empleados['bono_categoria'],
+                'bono_supervisor' => $row_empleados['bono_supervisor'],
+                'bono_semanal' => $bono_semanal,
+                'cargo' => $cargo,
+                'imss' => $imss,
+                'sueldo_base' => $sueldo_base,
+                'total_vueltas' => $total_vueltas,
+                'sueldo_bruto' => $sueldo_bruto,
+                'deducciones' => $deducciones,
+                'caja_ahorro' => $caja_ahorro,
+                'supervisor' => $supervisor,
+                'pago_fiscal' => $pago_fiscal,
+                'efectivo' => $efectivo,
+                'deduccion_fiscal' => $deduccion_fiscal,
+                'deposito' => $deposito,
+                'apoyo_mes' => $apoyo_mes,
+                'prima_vacacional' => $prima_vacacional,
+                'dias_vacaciones' => $dias_vacaciones,
+                'pago_vacaciones' => $pago_vacaciones
+            ];
+    
+            insertar_nomina($conection, $data);
+        }
+    }
+    // Obtener datos para la paginación
+    $start = $_POST['start'] ?? 0;
+    $length = $_POST['length'] ?? 10;
+    $searchValue = $_POST['search']['value'] ?? '';
+    $orderColumn = $_POST['order'][0]['column'];
+    $orderDir = $_POST['order'][0]['dir'];
+    
+    $whereClause = "";
+    if (!empty($searchValue)) {
+        $whereClause .= " WHERE (noempleado LIKE '%$searchValue%' OR nombre LIKE '%$searchValue%')";
+    }
+    
+    $columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bono_semanal', 'bono_categoria', 'bono_supervisor', 'apoyo_mes', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
+    
+    // Recuperar datos finales
+    $sql_nomina = "SELECT id, semana, anio, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, apoyo_mes, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal, prima_vacacional, dias_vacaciones, pago_vacaciones
+                    FROM nomina_temp_2025 $whereClause 
+                    GROUP BY  id, noempleado, anio, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, apoyo_mes, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal, prima_vacacional, dias_vacaciones, pago_vacaciones
+                    ORDER BY $columns[$orderColumn] $orderDir LIMIT $start, $length"; 
+    
+    $result_nomina = mysqli_query($conection, $sql_nomina);
+    if (!$result_nomina) {
+        die(json_encode(['error' => 'Error al obtener los datos de la nómina: ' . mysqli_error($conection)]));
+    }
+    // Obtener el total de registros (sin LIMIT)
+    $sql_count_nomina = "SELECT COUNT(*) FROM nomina_temp_2025";
+    $result_count_total = mysqli_query($conection, $sql_count_nomina);
+    $totalRecords = mysqli_fetch_row($result_count_total)[0];
+    
+    //Obtrener el total filtrado
+    $sql_total_filtered = "SELECT COUNT(*) FROM nomina_temp_2025 $whereClause";
+    $result_count_filtered = mysqli_query($conection, $sql_total_filtered);
+    $totalFiltered = mysqli_fetch_row($result_count_filtered)[0];
+    
+    $sql_total_pagar = "SELECT SUM(sueldo_bruto + bono_semanal + bono_categoria + bono_supervisor - deducciones - deduccion_fiscal - caja_ahorro + prima_vacacional + pago_vacaciones + apoyo_mes) AS total_nomina FROM nomina_temp_2025";
+    $result_total_pagar = mysqli_query($conection, $sql_total_pagar);
+    $total_nomina = mysqli_fetch_row($result_total_pagar)[0];
+    $data_output = [];
+    while ($row = mysqli_fetch_assoc($result_nomina)) {
+        $data_output[] = $row;
+    }
+    $draw = $_POST['draw'] ?? 1;
+    echo json_encode([
+        'draw' => $draw,
+        'totalNomina' => $total_nomina,
+        'recordsTotal' => $totalRecords,
+        'recordsFiltered' => $totalFiltered,
+        'data' => $data_output
+        // 'data_totales' => $data_totales
+    ]);
+} else {
+    json_encode([]);
 }
-// Obtener datos para la paginación
-$start = $_POST['start'] ?? 0;
-$length = $_POST['length'] ?? 10;
-$searchValue = $_POST['search']['value'] ?? '';
-$orderColumn = $_POST['order'][0]['column'];
-$orderDir = $_POST['order'][0]['dir'];
-
-$whereClause = "";
-if (!empty($searchValue)) {
-    $whereClause .= " WHERE (noempleado LIKE '%$searchValue%' OR nombre LIKE '%$searchValue%')";
-}
-
-$columns = array('semana', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bono_semanal', 'bono_categoria', 'bono_supervisor', 'apoyo_mes', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
-
-// Recuperar datos finales
-$sql_nomina = "SELECT semana, anio, noempleado, nombre, no_unidad, tipo_unidad, cargo, IF(imss = 1, 'SI', 'NO') AS imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, apoyo_mes, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal, prima_vacacional, dias_vacaciones, pago_vacaciones
-                FROM nomina_temp_2025 $whereClause 
-                GROUP BY  noempleado, anio, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, apoyo_mes, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal, prima_vacacional, dias_vacaciones, pago_vacaciones
-                ORDER BY $columns[$orderColumn] $orderDir LIMIT $start, $length"; 
-
-$result_nomina = mysqli_query($conection, $sql_nomina);
-if (!$result_nomina) {
-    die(json_encode(['error' => 'Error al obtener los datos de la nómina: ' . mysqli_error($conection)]));
-}
-// Obtener el total de registros (sin LIMIT)
-$sql_count_nomina = "SELECT COUNT(*) FROM nomina_temp_2025";
-$result_count_total = mysqli_query($conection, $sql_count_nomina);
-$totalRecords = mysqli_fetch_row($result_count_total)[0];
-
-//Obtrener el total filtrado
-$sql_total_filtered = "SELECT COUNT(*) FROM nomina_temp_2025 $whereClause";
-$result_count_filtered = mysqli_query($conection, $sql_total_filtered);
-$totalFiltered = mysqli_fetch_row($result_count_filtered)[0];
-
-$sql_total_pagar = "SELECT SUM(sueldo_bruto + bono_semanal + bono_categoria + bono_supervisor - deducciones - deduccion_fiscal - caja_ahorro + prima_vacacional + pago_vacaciones + apoyo_mes) AS total_nomina FROM nomina_temp_2025";
-$result_total_pagar = mysqli_query($conection, $sql_total_pagar);
-$total_nomina = mysqli_fetch_row($result_total_pagar)[0];
-
-// $sql_totales_columnas = "SELECT SUM(sueldo_bruto) AS sueldo_bruto, SUM(bono_semanal) AS bono_semanal, SUM(bono_categoria) AS bono_categoria, SUM(bono_supervisor) AS bono_supervisor, SUM(deducciones) AS deducciones, SUM(nomina_fiscal) AS nomina_fiscal, SUM(deduccion_fiscal) AS deduccion_fiscal, SUM(total_vueltas) AS total_vueltas";
-// $query_total_columnas = mysqli_query($conection, $sql_totales_columnas);
-// $result_total_columnas = mysqli_fetch_row($query_total_columnas);
-// $data_totales = [];
-// while($row_total_columnas = mysqli_fetch_assoc($result_total_columnas)) {
-//     $data_totales[] = $row_total_columnas;
-// }
-// Devuelve los resultados de la paginación
-$data_output = [];
-while ($row = mysqli_fetch_assoc($result_nomina)) {
-    $data_output[] = $row;
-}
-$draw = $_POST['draw'] ?? 1;
-echo json_encode([
-    'draw' => $draw,
-    'totalNomina' => $total_nomina,
-    'recordsTotal' => $totalRecords,
-    'recordsFiltered' => $totalFiltered,
-    'data' => $data_output
-    // 'data_totales' => $data_totales
-]);
-
-
-// (  
-//     SELECT
-//         e.apoyo_mes
-//     FROM 
-//         empleados e
-//     WHERE
-//         ($fecha_inicio - fecha_contrato) > 30
-//         AND
-//         DAYOFWEEK($fecha_inicio) = 2  -- 2 representa el lunes
-//         AND
-//         DAY($fecha_inicio) BETWEEN 15 AND 22
-// ) AS apoyo_mes,
 ?>

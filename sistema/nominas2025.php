@@ -222,8 +222,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		};
 		const renderMoneda = (data) => formatoMoneda(parseFloat(data) || 0); // Función reutilizable para formato moneda
 
-		const load_data = (semana = 1, anio = 2024) => {
+		const load_data = (semana, anio) => {
 			const ajaxUrl = 'data/nominaEmpleados.php';
+			 // Si no hay valores de semana y año, destruye la tabla y muestra vacía
+			if (!semana || !anio) {
+				const table = $('#example1').DataTable();
+				table.clear().draw(); // Vaciar la tabla
+				$('#total').text("Total de la Nómina: $0.00"); // Reiniciar total
+				return;
+			}
 			const table = $('#example1').DataTable()
 			table.destroy()
 			table = $('#example1').DataTable({
@@ -276,7 +283,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						data: null,
 						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deposito_fiscal) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
 					},
-					{ data:"deducciones", render: formatoMoneda },
+					{
+						data: "deducciones",
+						render: renderMoneda,
+						createdCell: function(td, cellData, rowData, row, col) {
+							$(td).addClass('editable-deducciones').attr('data-id', rowData.id).text(renderMoneda(cellData));
+						}
+					},
 					{ data: "deduccion_fiscal", render: formatoMoneda },
 					{ data: "caja_ahorro", render: formatoMoneda },
 					{ data: "supervisor" },
@@ -304,6 +317,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				}
 			});
 		};
+
+		//Editar deducciones
+		$('#example1').on('click', '.editable-deducciones', function() {
+			const td = $(this);
+			const id = td.data('id');
+			const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, '')) || 0;
+			
+			td.html(`<input type="text" class="form-control input-sm" value="${currentValue}">`);
+			const input = td.find('input');
+
+			input.focus().on('blur', function() {
+				const newValue = parseFloat(input.val()) || 0;
+				if (newValue !== currentValue) {
+					// Actualiza en la base de datos
+					$.ajax({
+						url: 'data/updateDeducciones.php',
+						type: 'POST',
+						data: { id, deducciones: newValue },
+						dataType: 'json',
+						success: function(response) {
+							console.log(response.success)
+							if(response.success) {
+								alert(response.message)
+							}
+							td.text(formatoMoneda(newValue));
+						},
+						error: function(xhr, status, error) {
+							alert('Error al actualizar la deducción.');
+							console.error('Error:', error);
+    						console.error('Detalles:', xhr.responseText);
+							td.text(formatoMoneda(currentValue)); // Revertir el valor original
+						}
+					});
+				} else {
+					td.text(formatoMoneda(currentValue));
+				}
+			});
+		});
 
 		// Validación de la semana y año
 		const validarDatos = (semana, anio) => {
