@@ -6,15 +6,15 @@ $ok = 0;
 $error = 0;
 $usuario = $_SESSION['idUser'];
 
-var_dump($_FILES);
-exit;
 
 if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
 	$file_name = $_FILES["name"]['name'];
 	$file_tmp = $_FILES['name']['tmp_name'];
-
+	
 	if ( $handle = fopen( $file_tmp, "r" ) !== FALSE ) {
 
+		var_dump($handle);
+		exit;
 		$ok = 0;
 		$error = 0;
 		fgetcsv($handle, 409, ",");
