@@ -22,8 +22,6 @@ $products_array = array();
     		if(count($data)>=6){
     			$ok++;
     			$sql = "insert into alertas (semana,unidad,operador,noalertas,velocidad,limite,user_id) value (\"$data[5]\",\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$usuario\")";
-				echo $sql;
-				exit;
     			$conection->query($sql);
     		}else{
     			$error++;
