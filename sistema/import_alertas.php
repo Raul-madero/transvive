@@ -3,61 +3,45 @@ include "../conexion.php";
 include "class.upload.php";
 session_start();
 
-$usuario     = $_SESSION['idUser'];
+$usuario = $_SESSION['idUser'];
 
-/*$datos = $conection->query("select * from folio_entrada where serie = 'EPT' ");
-$d= $datos->fetch_object();
-$folioe = $d->folio + 1;*/
-//$tipo_viaje = 'Normal';
-//$valor_vuelta = "Completa";
-//$fcha = date("Y-m-d");
+if (isset($_FILES["name"])) {
+    $up = new Upload($_FILES["name"]);
+    if ($up->uploaded) {
+        $up->Process("./");
+        if ($up->processed) {
 
+            $ok = 0;
+            $error = 0;
 
-if(isset($_FILES["name"])){
-	$up = new Upload($_FILES["name"]);
-	if($up->uploaded){
-		$up->Process("./");
-		if($up->processed){
-if ( $file = fopen( "./" . $up->file_dst_name , "r" ) ) {
+            if ($file = fopen("./" . $up->file_dst_name, "r")) {
+                while ($x = fgets($file, 4096)) {
+                    $data = explode(",", $x);
+                    if (count($data) >= 6) {
+                        $ok++;
+                        $semana = trim(str_replace(array("\r", "\n", "\t"), '', $data[5])); // Limpiar la columna 'semana'
+                        $sql = "INSERT INTO alertas (semana, unidad, operador, noalertas, velocidad, limite, user_id) 
+                                VALUES ('$semana', '$data[0]', '$data[1]', '$data[2]', '$data[3]', '$data[4]', '$usuario')";
+                        if ($conection->query($sql)) {
+                            // Si la inserción fue exitosa, puedes mostrar un mensaje de éxito o realizar otras acciones
+                        } else {
+                            // Si la inserción falló, registra el error o muestra un mensaje de error
+                            $error++;
+                        }
+                    } else {
+                        $error++;
+                    }
+                }
+            }
 
-$ok = 0;
-$error = 0;
-$products_array = array();
-
-    while($x=fgets($file,4096)){
-    	
-    	
-
-    		$data = explode(",", $x);
-    		if(count($data)>=6){
-    			$ok++;
-    			//$fcha = $data[8];
-    			//$fecha = str_replace('/', '-', $fcha);
-                //$fecha_mysql = date('Y-m-d', strtotime($fecha));
-    			$sql = "insert into alertas (semana,unidad,operador,noalertas,velocidad,limite,user_id) value (\"$data[5]\",\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$usuario\")";
-				echo $sql;
-    			$conection->query($sql);
-    		}else{
-    			$error++;
-    		}
+            fclose($file);
+            unlink("./" . $up->file_dst_name);
+        }
     }
 }
 
-    $sql3 = "UPDATE alertas SET semana = REPLACE(REPLACE(REPLACE(semana,CHAR(9),''),CHAR(10),''),CHAR(13),'')";
-         
-    $conection->query($sql3);
-
-
-        fclose($file);
-		unlink("./".$up->file_dst_name);
-	}
-	
-}
-
-}
 echo "<script>
 alert('Correcto $ok, Error $error !!!');
 window.location = './alertas.php';
-</script>
-";
+</script>";
 ?>
