@@ -74,8 +74,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 										<option value="0">--Selecciona la Semana--</option>
 										<?php 
 										for($i = 0; $i < 52; $i++) {
-											$nosemana = $i + 1;
-										echo '<option value="' . $nosemana . '">' ."Semana " . $nosemana . '</option>';
+											$semana = $i + 1;
+										echo '<option value="' . $semana . '">' ."Semana " . $semana . '</option>';
 										}
 										?>
 									</select>
@@ -105,10 +105,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			<!-- /.card-header -->
 				<div class="card-body mw-100">
 					<div id="total" class="text-left border-bottom mb-3 font-weight-bold font-size-lg"></div>
-						<table id="example1" class="table table-striped table-bordered table-condensed mw-100" style="width:100%; overflow-x:auto;" >
+						<table id="example1" class="table table-striped table-bordered table-condensed mw-100" style="width:100%; overflow-x:hidden;" >
 							<thead>
 								<tr>
-									<th>Semana/Año</th>
+									<th>Semana</th>
+									<th>Año</th>
 										<th>No.</th>
 									<th>Nombre</th>
 									<!-- <th>Tipo unidad</th> -->
@@ -122,10 +123,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<th>Bono Categoria</th>
 									<th>Bono Supervisor</th>
 									<th>Apoyo Mensual</th>
+									<th>Sueldo Total</th>
 									<th>Dias Vacaciones</th>
 									<th>Pago Vacaciones</th>
 									<th>Prima Vacacional</th>
-									<th>Sueldo Total</th>
 									<th>Deposito</th>
 									<th>Efectivo</th>
 									<th>Deducciones</th>
@@ -137,6 +138,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							</thead>
 							<tbody>
 							</tbody>
+						<!--	<tfoot>
+								<tr>
+									<th>Semana/Año</th>
+										<th>No.</th>
+									<th>Nombre</th>
+									<th>Tipo unidad</th> 
+									<th>Cargo</th>
+									<th>Imss</th>
+									<th>Sueldo Base</th>
+									<th>Total de Vueltas</th>
+									<th>Sueldo Total</th>
+									<th>Sueldo Bruto</th>
+									<th>Nomina Fiscal</th>
+									<th>Bono Semanal</th>
+									<th>Bono Categoria</th>
+									<th>Bono Supervisor</th>
+									<th>Apoyo Mensual</th>
+									<th>Dias Vacaciones</th>
+									<th>Pago Vacaciones</th>
+									<th>Prima Vacacional</th>
+									<th>Deposito</th>
+									<th>Efectivo</th>
+									<th>Deducciones</th>
+									<th>Deduccion Fiscal</th>
+									<th>Caja de Ahorro</th>
+									<th>Supervisor</th>
+									<th>Neto</th>
+								</tr>
+							</tfoot> -->
 						</table>
 					</div>
 					<!-- /.card-body -->
@@ -197,7 +227,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			const table = $('#example1').DataTable()
 			table.destroy()
 			table = $('#example1').DataTable({
-				order: [[1, "asc"]],
+				order: [[2, "asc"]],
 				dom: 'Bfrtip',
 				lengthMenu: [
 					[10, 25, 50, 100, -1],
@@ -208,7 +238,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				stateSave: true,
 				responsive: false,
 				scrollX: true,
-				autoWidth: true,
+				
 				ajax: {
 					url: ajaxUrl,
 					type: "POST",
@@ -220,26 +250,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					}
 				},
 				columns: [
-					{ data: null, render: (data) => data.semana },
-					{ data: "noempleado" },
-					{ data: "nombre" },
-					{ data: "cargo" },
-					{ data: "imss"},
-					{ data: "sueldo_base", render: renderMoneda },
-					{ data: "total_vueltas" },
+					{ data: "semana", "class": "text-center" },
+					{ data: "anio", "class": "text-center"},
+					{ data: "noempleado", "class": "text-center" },
+					{ data: "nombre", "class": "text-center"},
+					{ data: "cargo", "class": "text-center" },
+					{ data: "imss", "class": "text-center"},
+					{ data: "sueldo_base", "class": "text-center", render: renderMoneda },
+					{ data: "total_vueltas", "class": "text-center" },
 					{ data: "sueldo_bruto", render: renderMoneda },
 					{ data: "nomina_fiscal", render: renderMoneda },
 					{ data: "bono_semanal", render: renderMoneda },
 					{ data: "bono_categoria", render: renderMoneda },
 					{ data: "bono_supervisor", render: renderMoneda },
 					{ data: "apoyo_mes", render: renderMoneda },
-					{ data: "dias_vacaciones" },
-					{ data: "pago_vacaciones", render: renderMoneda },
-					{ data: "prima_vacacional", render: renderMoneda },
 					{ 
 						data: null, 
 						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes)) 
 					},
+					{ data: "dias_vacaciones" },
+					{ data: "pago_vacaciones", render: renderMoneda },
+					{ data: "prima_vacacional", render: renderMoneda },
 					{ data: "deposito_fiscal", render: renderMoneda },
 					{
 						data: null,
