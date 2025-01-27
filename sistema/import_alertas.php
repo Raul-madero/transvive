@@ -18,12 +18,15 @@ if (isset($_FILES["name"])) {
                 while ($x = fgets($file, 4096)) {
                     $data = explode(",", $x);
                     if (count($data) >= 6) {
-                        $ok++;
+                        
                         $semana = trim(str_replace(array("\r", "\n", "\t"), '', $data[5])); // Limpiar la columna 'semana'
                         $sql = "INSERT INTO alertas (semana, unidad, operador, noalertas, velocidad, limite, user_id) 
                                 VALUES ('$semana', '$data[0]', '$data[1]', '$data[2]', '$data[3]', '$data[4]', '$usuario')";
+								echo $sql;
+								exit;
                         if ($conection->query($sql)) {
-                            // Si la inserción fue exitosa, puedes mostrar un mensaje de éxito o realizar otras acciones
+							$ok++;
+                            
                         } else {
                             // Si la inserción falló, registra el error o muestra un mensaje de error
                             $error++;
