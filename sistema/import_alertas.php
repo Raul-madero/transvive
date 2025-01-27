@@ -13,14 +13,14 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
 	
 	if ( $handle = fopen( $file_tmp, "r" ) !== FALSE ) {
 
-		var_dump($handle);
-		exit;
 		$ok = 0;
 		$error = 0;
 		fgetcsv($handle, 409, ",");
 		mysqli_set_charset($conection, "utf8mb4");
-
+		
 		while($data = fgets( $handle, 4096)){
+			var_dump($data);
+			exit;
 			if(count($data)>=6){
 				$ok++;
 				$sql = "insert into alertas (semana,unidad,operador,noalertas,velocidad,limite,user_id) value (\"$data[5]\",\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$usuario\")";
