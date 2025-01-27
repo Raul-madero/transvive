@@ -31,6 +31,7 @@ $products_array = array();
     		$data = explode(",", $x);
     		if(count($data)>=6){
     			$ok++;
+				var_dump($data);
     			//$fcha = $data[8];
     			//$fecha = str_replace('/', '-', $fcha);
                 //$fecha_mysql = date('Y-m-d', strtotime($fecha));
