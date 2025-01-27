@@ -202,7 +202,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $deposito = $pago_fiscal - $deduccion_fiscal;
             $apoyo_mes = $row_empleados['apoyo_mes'] ?? 0;
             $prima_vacacional = $row_empleados['prima_vacacional'] === 'SI' ? (($row_empleados['salario_diario'] * 10) * 1.25) : 0;
-            $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? intval($row_empleados['fecha_inicial']) ?? intval($row_empleados['fecha_final']) : 0;
+            $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? (intval($row_empleados['fecha_inicial']) + 1) ?? (intval($row_empleados['fecha_final']) + 1) : 0;
             $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
     
             // Preparar los datos para la inserción
