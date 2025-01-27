@@ -11,13 +11,13 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
 	$file_name = $_FILES["name"]['name'];
 	$file_tmp = $_FILES['name']['tmp_name'];
 	
-	if ( $handle = fopen( $file_tmp, "r" ) !== FALSE ) {
+	if ( ($handle = fopen( $file_tmp, "r" )) !== FALSE ) {
 
 		$ok = 0;
 		$error = 0;
 		fgetcsv($handle, 409, ",");
 		mysqli_set_charset($conection, "utf8mb4");
-		$data = fgets( $handle, 4096);
+		$data = fgetcsv( $handle, 4096);
 		var_dump($data);
 		exit;
 		while($data){
