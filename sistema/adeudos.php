@@ -2,6 +2,10 @@
 include "../conexion.php";
 session_start();
 $User = $_SESSION['user'];
+if(!isset($_SESSION['user'])) {
+	header('Location: /');
+	exit;
+}
 $rol = $_SESSION['rol'];
 $sql = "select * from rol where idrol =$rol ";
 $query = mysqli_query($conection, $sql);
@@ -49,27 +53,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <?php
-        switch ($_SESSION['rol']) {
-            case 4:
-                include 'includes/navbarsup.php';
-                break;
-            case 5:
-                include 'includes/navbarrhuman.php';
-                break;
-            case 6:
-                include 'includes/navbaroperac.php';
-                break;
-            case 8:
-                include 'includes/navbarjefeoper.php';
-                break;
-            case 9:
-                include 'includes/navbargrcia.php';
-                break;
-            default:
-                include 'includes/navbar.php';
-                break;
-        }
+        <?php include('includes/generalnavbar.php')
        ?>
         <?php include 'includes/nav.php';  ?>
       </div>
@@ -87,10 +71,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="new_adeudo.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;', 2); ?>Nuevo</a></li>
-                <li class="breadcrumb-item"><a href="factura/adeudos_excel.php"><i class="fas fa-file-excel"></i> Excel</a></li>
+                <!-- <li class="breadcrumb-item"><a href="factura/adeudos_excel.php"><i class="fas fa-file-excel"></i> Excel</a></li>
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                 <li class="breadcrumb-item"><a href="#">Layout</a></li>
-                <li class="breadcrumb-item active">Navegacion</li>
+                <li class="breadcrumb-item active">Navegacion</li> -->
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -116,6 +100,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Total de semanasl</th>
                 <th>Semanas restantes</th>
                 <th>Comentarios</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -165,7 +150,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="../dist/js/adminlte.min.js"></script>
   <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
-
 <script>
     $(document).ready(function() {
         var table = $('#example1').dataTable({
@@ -233,19 +217,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     }
                 },
                 {
-                  mData: null,
+                  mData: 'abono_total',
                   "sWidth": "120px",
-                  "render": function(data, type, full, meta) {
-                    let fechaInicial = new Date(full.fecha_inicial);
-                    let fechaActual = new Date();
-                    
-                    // Calcular semanas transcurridas desde la fecha inicial
-                    let semanasTranscurridas = Math.floor((fechaActual - fechaInicial) / (7 * 24 * 60 * 60 * 1000));
-                    
-                    // Calcular abono total (descuento * semanas transcurridas)
-                    let abonoTotal = semanasTranscurridas * full.descuento;
-                    
-                    return `<p>${abonoTotal}</p>`;
+                  "render": function(data) {
+                    return '<p>' + data + '</p>';
                   }
                 },
                 {
@@ -261,7 +236,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   "render": function(data, type, full, meta) {
                     let fechaActual = new Date();
                     let fechaFinal = new Date(full.fecha_final);
-                    
                     // Calcular semanas restantes hasta la fecha final
                     let semanasRestantes = Math.ceil((fechaFinal - fechaActual) / (7 * 24 * 60 * 60 * 1000));
                     
@@ -519,7 +493,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
     });
   </script>
-  <!-- <script>
+  <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Invocamos cada 5 segundos ;)
       const milisegundos = 5 * 1000;
@@ -527,7 +501,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         // No esperamos la respuesta de la petición porque no nos importa
         fetch("./refrescar.php");
       }, milisegundos);
-    }); -->
+    });
   </script>
 </body>
 

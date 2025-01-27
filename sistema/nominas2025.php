@@ -388,25 +388,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			$.ajax({
 				url: 'data/pagarNomina.php',
 				type: 'POST',
-				async: true,
 				success: function(response) {
-					console.log(response)
-					if(response != 'error') {
+					console.log('Respuesta del servidor:', response);
+					
+					// Parseamos la respuesta JSON
+					var res = JSON.parse(response);
+					
+					// Verificamos el 'status' de la respuesta
+					if (res.status === 'success') {
 						Swal.fire({
 							title: "Nomina guardada correctamente!",
-							text: "",
+							text: res.message,
 							icon: "success"
+						}).then(function() {
+							location.reload(); // Recargar la página
 						});
 					} else {
 						Swal.fire({
 							title: "Error al guardar la nomina",
-							text: "",
+							text: res.message,
 							icon: "error"
 						});
 					}
+				},
+				error: function(xhr, status, error) {
+					console.error('Error en la solicitud AJAX:', status, error);
 				}
-			})
-		})
+			});
+		});
 	</script>
   	<script>
     	document.addEventListener("DOMContentLoaded", function() {
