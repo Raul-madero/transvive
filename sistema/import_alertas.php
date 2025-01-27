@@ -31,11 +31,11 @@ $products_array = array();
     		$data = explode(",", $x);
     		if(count($data)>=6){
     			$ok++;
-				var_dump($data);
     			//$fcha = $data[8];
     			//$fecha = str_replace('/', '-', $fcha);
                 //$fecha_mysql = date('Y-m-d', strtotime($fecha));
     			$sql = "insert into alertas (semana,unidad,operador,noalertas,velocidad,limite,user_id) value (\"$data[5]\",\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$usuario\")";
+				echo $sql;
     			$conection->query($sql);
     		}else{
     			$error++;
