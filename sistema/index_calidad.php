@@ -3,6 +3,9 @@ include "../conexion.php";
 session_start();
   $User=$_SESSION['user'];
   $rol=$_SESSION['rol'];
+  if($rol == 17) {
+    header('Location: index_ventas.php');
+  }
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 

@@ -229,6 +229,7 @@ $('#btn_salir').click(function(e){
                     {
                       var info = JSON.parse(response);
                       console.log(response);
+
                       location.href = 'index_calidad.php';
                        //*location.reload();
 
