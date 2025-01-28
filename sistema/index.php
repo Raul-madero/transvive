@@ -5,7 +5,30 @@ session_start();
 // Obtener información del usuario y rol
 $User = $_SESSION['user'];
 $rol = $_SESSION['rol'];
+// if($rol != 1) {
+// 	$rolRedirects = [
+		
+// 		"Conductor" => "sistema/index_conductor.php",
+// 		"Supervisor" => "sistema/index_supervisor.php",
+// 		"Recursos Humanos" => "sistema/index_rhumanos.php",
+// 		"Operaciones" => "sistema/index_operaciones.php",
+// 		"Operador" => "sistema/index_operador.php",
+// 		"Mantenimiento" => "sistema/index_mantto.php",
+// 		"Jefe Operaciones" => "sistema/index_jefeoperaciones.php",
+// 		"Gerencia" => "sistema/index_gerencia.php",
+// 		"Almacen" => "sistema/index_almacen.php",
+// 		"Calidad" => "sistema/index_calidad.php",
+// 		"Monitorista" => "sistema/index_monitorista.php",
+// 		"Compras" => "sistema/index_compras.php",
+// 		"Ventas" => "sistema/index_ventas.php"
+// 	];
 
+// 	if (isset($rolRedirects[$_SESSION['rol_name']])) {
+// 		header('location: ' . $rolRedirects[$_SESSION['rol_name']]);
+// 	} else {
+// 		header('location: sistema/');
+// 	}
+// }
 $sql = "SELECT * FROM rol WHERE idrol = $rol";
 $query = mysqli_query($conection, $sql);
 $filas = mysqli_fetch_assoc($query);
