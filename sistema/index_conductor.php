@@ -4,6 +4,30 @@ session_start();
   $User=$_SESSION['user'];
   $idemp = $_SESSION['idUser'];
   $rol=$_SESSION['rol'];
+  if($rol != 13) {
+      $rolRedirects = [
+        "Administrador" => "index.php",
+        "Conductor" => "index_conductor.php",
+        "Supervisor" => "index_supervisor.php",
+        "Recursos Humanos" => "index_rhumanos.php",
+        "Operaciones" => "index_operaciones.php",
+        "Operador" => "index_operador.php",
+        "Mantenimiento" => "index_mantto.php",
+        "Jefe Operaciones" => "index_jefeoperaciones.php",
+        "Gerencia" => "index_gerencia.php",
+        "Almacen" => "index_almacen.php",
+        "Calidad" => "index_calidad.php",
+        "Monitorista" => "index_monitorista.php",
+        "Compras" => "index_compras.php",
+        "Ventas" => "index_ventas.php"
+      ];
+    
+      if (isset($rolRedirects[$_SESSION['rol_name']])) {
+        header('location: ' . $rolRedirects[$_SESSION['rol_name']]);
+      } else {
+        header('location: sistema/');
+      }
+    }
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 
