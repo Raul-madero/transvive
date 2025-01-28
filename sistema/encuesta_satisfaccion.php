@@ -60,7 +60,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-       <?php include('includes/generalnavbar.php'); ?>
+       <?php include('includes/generalnavbar.php') ?>
       <?php include('includes/nav.php') ?>
       
 

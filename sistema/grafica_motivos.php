@@ -509,23 +509,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <?php
-      
-              if ($_SESSION['rol'] == 14) {
-                include('includes/navbarcalidad.php');
-                include('includes/navc.php');
-              }else {
-                if ($_SESSION['rol'] == 9) {
-                   include('includes/navbargrcia.php');
-                   include('includes/nav.php');
-                }else {
-                   include('includes/navbar.php');
-                   include('includes/nav.php'); 
-                }   
-              }  
-           
-    
-     ?>
+      <?php include('includes/generalnavbar.php') ?>
 
     </div>
   </nav>

@@ -165,18 +165,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-       <?php
-      
-              if ($_SESSION['rol'] == 14) {
-                include('includes/navbarcalidad.php');
-                include('includes/navc.php');
-              }else {
-                include('includes/navbar.php');
-                include('includes/nav.php'); 
-              }  
-           
-    
-     ?>
+       <?php include('includes/generalnavbar.php') ?>
     
 
     </div>
