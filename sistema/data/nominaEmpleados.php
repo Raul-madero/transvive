@@ -141,8 +141,9 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         $sql_empleados .= "
             FROM 
                 empleados e
-            LEFT JOIN 
-                alertas al ON al.operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) AND (DATEDIFF('$fecha_fin', al.fecha) <= 7)
+                LEFT JOIN 
+                alertas al ON al.operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) 
+                            AND al.fecha = DATE_ADD('2025-01-20', INTERVAL (7 - WEEKDAY('2025-01-20')) DAY)
             LEFT JOIN 
                 incidencias inc ON inc.empleado = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) AND inc.nodesemana = '$nombre_semana'
             LEFT JOIN 
