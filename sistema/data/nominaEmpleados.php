@@ -191,8 +191,10 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         }
         // Solo insertar registros si no existen datos para la semana y el año
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
+            var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
-            $bono_semanal = floatval($row_empleados['bono_semanal']);
+            $gana_bono = $alertas < 5 ? true : false;
+            $bono_semanal = $gana_bono ? floatval($row_empleados['bono_semanal']) : 0;
             $noempleado = intval($row_empleados['noempleado']);
             $nombre = $row_empleados['operador'];
             $no_unidad = $row_empleados['num_unidad'];
