@@ -6,45 +6,36 @@ $ok = 0;
 $error = 0;
 $usuario = $_SESSION['idUser'];
 
-if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
-	$file_name = $_FILES["name"]['name'];
-	$file_tmp = $_FILES['name']['tmp_name'];
+if (isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
+    $file_name = $_FILES["name"]['name'];
+    $file_tmp = $_FILES['name']['tmp_name'];
 
-	if ( ($handle = fopen( $file_tmp, "r" )) !== FALSE ) {
+    if (($handle = fopen($file_tmp, "r")) !== FALSE) {
+        mysqli_set_charset($conection, "utf8mb4"); 
+        fgetcsv($handle, 409, ","); // Saltar la primera línea (encabezados)
 
-		$ok = 0;
-		$error = 0;
-		fgetcsv($handle, 409, ",");
-		mysqli_set_charset($conection, "utf8mb4");
-		$data = fgetcsv( $handle, 4096);
-		while($data){
-			if(count($data)>=6){
-				$ok++;
-				$sql = "insert into alertas (semana,unidad,operador,noalertas,velocidad,limite,user_id) value (\"$data[5]\",\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$usuario\")";
-				// echo $sql;
-				// exit;
-				$conection->query($sql);
-			}else{
-				echo "<script>
-					alert('Error en la linea $x')
-					</script>";
-				$error++;
-			}
-		}
-	}
+        $sql = "INSERT INTO alertas (semana, unidad, operador, noalertas, velocidad, limite, user_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conection->prepare($sql);
 
-    $sql3 = "UPDATE alertas SET semana = REPLACE(REPLACE(REPLACE(semana,CHAR(9),''),CHAR(10),''),CHAR(13),'')";
-         
-    $conection->query($sql3);
+        while (($data = fgetcsv($handle, 4096)) !== FALSE) {
+            if (count($data) >= 6) {
+                $ok++;
+                $semana = trim(str_replace(array("\r", "\n", "\t"), '', $data[5])); 
+                $stmt->bind_param("sssssii", $semana, $data[0], $data[1], $data[2], $data[3], $data[4], $usuario);
+                $stmt->execute();
+            } else {
+                $error++;
+            }
+        }
 
+        $stmt->close();
+        fclose($handle);
+    }
 
-        fclose($file);
-		unlink("./".$up->file_dst_name);
+    echo "<script>
+        alert('Correcto $ok, Error $error !!!');
+        window.location = './alertas.php';
+    </script>";
 }
-	
-echo "<script>
-alert('Correcto $ok, Error $error !!!');
-window.location = './alertas.php';
-</script>
-";
 ?>
