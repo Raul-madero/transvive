@@ -8,19 +8,19 @@ $rol = $_SESSION['rol'];
 if($rol != 1) {
 	$rolRedirects = [
 		
-		"Conductor" => "sistema/index_conductor.php",
-		"Supervisor" => "sistema/index_supervisor.php",
-		"Recursos Humanos" => "sistema/index_rhumanos.php",
-		"Operaciones" => "sistema/index_operaciones.php",
-		"Operador" => "sistema/index_operador.php",
-		"Mantenimiento" => "sistema/index_mantto.php",
-		"Jefe Operaciones" => "sistema/index_jefeoperaciones.php",
-		"Gerencia" => "sistema/index_gerencia.php",
-		"Almacen" => "sistema/index_almacen.php",
-		"Calidad" => "sistema/index_calidad.php",
-		"Monitorista" => "sistema/index_monitorista.php",
-		"Compras" => "sistema/index_compras.php",
-		"Ventas" => "sistema/index_ventas.php"
+		"Conductor" => "index_conductor.php",
+		"Supervisor" => "index_supervisor.php",
+		"Recursos Humanos" => "index_rhumanos.php",
+		"Operaciones" => "index_operaciones.php",
+		"Operador" => "index_operador.php",
+		"Mantenimiento" => "index_mantto.php",
+		"Jefe Operaciones" => "index_jefeoperaciones.php",
+		"Gerencia" => "index_gerencia.php",
+		"Almacen" => "index_almacen.php",
+		"Calidad" => "index_calidad.php",
+		"Monitorista" => "index_monitorista.php",
+		"Compras" => "index_compras.php",
+		"Ventas" => "index_ventas.php"
 	];
 
 	if (isset($rolRedirects[$_SESSION['rol_name']])) {
