@@ -169,7 +169,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal";
         }
         // AND (e.cargo = 'OPERADOR' OR e.cargo = 'SUPERVISOR')
-        echo $sql_empleados;
+        // echo $sql_empleados;
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
         die(json_encode(['error' => 'Error en la consulta de empleados: ' . mysqli_error($conection)]));
@@ -192,7 +192,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         }
         // Solo insertar registros si no existen datos para la semana y el año
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
-            var_dump($row_empleados);
+            // var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
             $gana_bono = $alertas < 5 ? true : false;
             $bono_semanal = $gana_bono ? floatval($row_empleados['bono_semanal']) : 0;
