@@ -62,7 +62,7 @@
         <li class="dropdown-submenu dropdown-hover">
           <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Ventas</a>
           <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
-
+            <li><a href="prospectos.php" class="dropdown-item">Prospectos</a></li>
             <li><a href="cotizaciones_venta.php" class="dropdown-item">Cotizacion al Cliente</a></li>
             <li><a href="ordenes_servicio.php" class="dropdown-item">Orden de Servicio por Contrato</a></li>
             <li><a href="solicitud_credito.php" class="dropdown-item">Solicitud de Credito</a></li>
