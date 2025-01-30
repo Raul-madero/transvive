@@ -392,7 +392,7 @@ $('.btn_salir').click(function(e){
                     success: function(response)
                     {
 						console.log(response);
-                       if(response != 'error')
+                       if(response.success)
                         {
                             Swal
                          .fire({
