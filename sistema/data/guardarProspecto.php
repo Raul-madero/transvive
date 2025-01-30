@@ -12,8 +12,18 @@ $nombre = mysqli_real_escape_string($conection, $_POST['namecte']);
 $telefono = mysqli_real_escape_string($conection, $_POST['phone']);
 $encargado = mysqli_real_escape_string($conection, $_POST['contactorh']);
 $correo = mysqli_real_escape_string($conection, $_POST['correorh']);
-$fecha_contacto = mysqli_real_escape_string($conection, $_POST['datecontact']);
-$fecha_seguimiento = mysqli_real_escape_string($conection, $_POST['dateSeguimiento']);
+$fecha_contacto = $_POST['datecontact'];
+$fecha_obj = DateTime::createFromFormat('d/m/Y', $fecha_input); // Cambia el formato según lo recibido
+
+if ($fecha_obj) {
+    $fecha_mysql = $fecha_obj->format('Y-m-d');
+}
+$fecha_seguimiento = $_POST['dateSeguimiento'];
+$fecha_obj_seguimiento = DateTime::createFromFormat('d/m/Y', $fecha_input); // Cambia el formato según lo recibido
+
+if ($fecha_obj_seguimiento) {
+    $fecha_mysql_seguimiento = $fecha_obj_seguimiento->format('Y-m-d');
+}
 $comentarios = mysqli_real_escape_string($conection, $_POST['comentarios']);
 $domicilio = mysqli_real_escape_string($conection, $_POST['domicilio']);
 $colonia = mysqli_real_escape_string($conection, $_POST['colonia']);
@@ -37,7 +47,7 @@ if (!$stmt) {
     die(json_encode(['error' => 'Error en preparación: ' . mysqli_error($conection)]));
 }
 
-mysqli_stmt_bind_param($stmt, 'sssssssssiissssiiiisi', $nombre, $razon_social, $correo, $telefono, $encargado, $domicilio, $comentarios, $fecha_contacto, $fecha_seguimiento, $estatus, $origen, $cp, $municipio, $estado, $giro, $empleados, $transporte, $turnos, $unidad, $telefono_empresa, $semaforo);
+mysqli_stmt_bind_param($stmt, 'sssssssssiissssiiiisi', $nombre, $razon_social, $correo, $telefono, $encargado, $domicilio, $comentarios, $fecha_mysql, $fecha_mysql_seguimiento, $estatus, $origen, $cp, $municipio, $estado, $giro, $empleados, $transporte, $turnos, $unidad, $telefono_empresa, $semaforo);
 $result = mysqli_stmt_execute($stmt);
 if (!$result) {
     die(json_encode(['error' => 'Error en ejecución: ' . mysqli_stmt_error($stmt)]));

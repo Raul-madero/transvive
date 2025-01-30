@@ -342,6 +342,27 @@ $('.btn_salir').click(function(e){
     });
     </script>
 
+	<script>
+		 $(document).ready(function() {
+        $(".datepicker").datepicker({
+            dateFormat: "dd-mm-yy", // Mostrar en formato DD-MM-YYYY
+            changeMonth: true,
+            changeYear: true
+        });
+
+        // Convertir la fecha antes de enviar el formulario
+        $("form").on("submit", function() {
+            $(".datepicker").each(function() {
+                var date = $(this).val();
+                if (date) {
+                    var parts = date.split("-");
+                    $(this).val(parts[2] + "-" + parts[1] + "-" + parts[0]); // Convertir a YYYY-MM-DD para MySQL
+                }
+            });
+        });
+    });
+	</script>
+
 <script>
 		document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("btnGenerales").addEventListener("click", function () {
