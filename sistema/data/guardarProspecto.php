@@ -38,9 +38,9 @@ if (!$stmt) {
 }
 
 mysqli_stmt_bind_param($stmt, 'sssssssssiissssiiiisi', $nombre, $razon_social, $correo, $telefono, $encargado, $domicilio, $comentarios, $fecha_contacto, $fecha_seguimiento, $estatus, $origen, $cp, $municipio, $estado, $giro, $empleados, $transporte, $turnos, $unidad, $telefono_empresa, $semaforo);
-
+echo $stmt;
 $result = mysqli_stmt_execute($stmt);
-
+var_dump($result);
 if (!$result) {
     die(json_encode(['error' => 'Error en ejecución: ' . mysqli_stmt_error($stmt)]));
 }
