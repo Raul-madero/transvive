@@ -391,7 +391,6 @@ $('.btn_salir').click(function(e){
 
                     success: function(response)
                     {
-						console.log(response);
                        if(response.success)
                         {
                             Swal
