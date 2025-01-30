@@ -390,8 +390,8 @@ $('.btn_salir').click(function(e){
                     data: {nocte:nocte, namecte:nombreComercial, razonSocial:razonSocial, phone:phone, contactorh:contactorh, correorh:correorh, datecontact:datecontac, dateSeguimiento:dateSeguimiento, comentarios:comentarios, domicilio:domicilio, colonia:colonia, telefono_empresa:telefono_empresa, cp:cp, estado:estado, municipio:municipio, giro:giro, empleados:empleados, transporte:transporte, turnos:turnos, unidad:unidad, origen:origen}, 
 
                     success: function(response)
-					console.log(response);
                     {
+						console.log(response);
                        if(response != 'error')
                         {
                             Swal
