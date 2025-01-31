@@ -269,7 +269,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						data: "sueldo_bruto", 
 						render: renderMoneda,
 						createdCell: function(td, cellData, rowData, row, col) {
-							$(td).addClass('editable-sueldo_bruto').attr('data-id', rowData.id).text(renderMoneda(cellData));
+							$(td).addClass('editable-sueldo_bruto').attr('data-id', rowData.id, 'data-nomina_fiscal', rowData.nomina_fiscal).text(renderMoneda(cellData));
 						}
 					},
 					{ data: "nomina_fiscal", render: renderMoneda },
@@ -343,7 +343,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						data: { id, deducciones: newValue },
 						dataType: 'json',
 						success: function(response) {
-							load_data(semana, anio)
 							if(response.success) {
 								alert(response.message)
 								location.reload()
