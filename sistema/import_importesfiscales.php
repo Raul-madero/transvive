@@ -26,7 +26,7 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])){
 				var_dump($data);
 				$ok++;
 				$noempleado = intval($data[0]) ?? 0;
-				$empleado = str_replace(",", "", $data[1]);
+				$empleado = str_replace(",", "", $data[1]) ?? "";
 				$pago_fiscal = str_replace(',', '', $data[2]) ?? 0;
 				$deduccion_fiscal = str_replace(',', '', $data[3]) ?? 0;
 				$neto = str_replace(',', '',$data[4]) ?? 0;
