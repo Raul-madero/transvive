@@ -23,7 +23,7 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])){
 		
 		while(($data = fgetcsv($handle, 4096))){
 			if(count($data)>=6){
-				var_dump($data);
+				// var_dump($data);
 				$ok++;
 				$noempleado = intval($data[0]) ?? 0;
 				$empleado = str_replace(",", "", $data[1]) ?? "";
