@@ -210,6 +210,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $sueldo_base = $row_empleados['sueldo_base'];
             $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
             $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
+            echo $deduccion_fiscal;
             $efectivo = $sueldo_bruto - $pago_fiscal;
             $deposito = $pago_fiscal - $deduccion_fiscal;
             $apoyo_mes = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['apoyo_mes']) : 0;
