@@ -226,7 +226,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                 'nombre' => $nombre,
                 'no_unidad' => $no_unidad,
                 'tipo_unidad' => $tipo_unidad,
-                'bono_categoria' => $row_empleados['bono_categoria'],
+                'bono_categoria' => $bono_categoria,
                 'bono_supervisor' => $row_empleados['bono_supervisor'],
                 'bono_semanal' => $bono_semanal,
                 'cargo' => $cargo,
