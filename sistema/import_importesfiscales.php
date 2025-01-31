@@ -23,6 +23,7 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])){
 		
 		while(($data = fgetcsv($handle, 4096))){
 			if(count($data)>=6){
+				var_dump($data);
 				$ok++;
 				$noempleado = intval($data[0]) ?? 0;
 				$empleado = str_replace(",", "", $data[1]);
@@ -34,6 +35,12 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])){
 				$sql = "INSERT INTO importes_fiscales (empleado, noempleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) VALUES ('" . $empleado . "', " . $noempleado . ", " . $pago_fiscal . ", " . $deduccion_fiscal . ", " . $neto . ", '" . $finiquito . "', '" . $estatus . "', " . $usuario . ");";
 
 				$conection->query($sql);
+				if($conection->error()){
+					echo "<script>
+					alert('Error en la linea $x')
+					</script>";
+					$error++;
+				}
 
 			}else{
 				echo "<script>
