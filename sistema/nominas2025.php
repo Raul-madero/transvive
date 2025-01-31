@@ -346,6 +346,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							load_data(semana, anio)
 							if(response.success) {
 								alert(response.message)
+								location.reload()
 							}
 							td.text(formatoMoneda(newValue));
 						},
@@ -380,10 +381,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						data: { id, sueldo: newValue, deposito_fiscal },
 						dataType: 'json',
 						success: function(response) {
-							load_data(semana, anio)
-							console.log(response.success)
 							if(response.success) {
 								alert(response.message)
+								location.reload()
 							}
 							td.text(formatoMoneda(newValue));
 						},
