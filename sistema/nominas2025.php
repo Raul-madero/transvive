@@ -287,7 +287,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{ data: "deposito_fiscal", render: renderMoneda },
 					{
 						data: null,
-						render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.nomina_fiscal) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
+						render: (data) => formatoMoneda(parseFloat(data.efectivo) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
 					},
 					{
 						data: "deducciones",
