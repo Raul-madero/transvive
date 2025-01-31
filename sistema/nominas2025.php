@@ -343,7 +343,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						data: { id, deducciones: newValue },
 						dataType: 'json',
 						success: function(response) {
-							console.log(response.success)
+							load_data(semana, anio)
 							if(response.success) {
 								alert(response.message)
 							}
@@ -377,9 +377,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					$.ajax({
 						url: 'data/updateSueldo.php',
 						type: 'POST',
-						data: { id, sueldo: newValue },
+						data: { id, sueldo: newValue, deposito_fiscal },
 						dataType: 'json',
 						success: function(response) {
+							load_data(semana, anio)
 							console.log(response.success)
 							if(response.success) {
 								alert(response.message)

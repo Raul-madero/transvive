@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener los datos enviados
     $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
     $sueldo = isset($_POST['sueldo']) ? floatval($_POST['sueldo']) : 0;
-
+    $nomina_fiscal = isset($_POST['nomina_fiscal']) ? floatval($_POST['nomina_fiscal']) : 0;
+    $efectivo = $sueldo - $nomina_fiscal;
     // Validar que el ID sea válido
     if ($id <= 0) {
         header('Content-Type: application/json; charset: UTF-8');
@@ -21,14 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stmt = mysqli_prepare($conection, "UPDATE nomina_temp_2025 SET sueldo_bruto = ? WHERE id = ?");
+    $stmt = mysqli_prepare($conection, "UPDATE nomina_temp_2025 SET sueldo_bruto = ?, efectivo = ? WHERE id = ?");
     if(!$stmt) {
         header('Content-Type: application/json; charset: UTF-8');
         echo json_encode(['success' => false, 'message' => 'Error al preparar la consulta: ' . $conn->error], JSON_UNESCAPED_UNICODE);
         $conection->close();
         exit;
     }
-    mysqli_stmt_bind_param($stmt, 'di', $sueldo, $id );
+    mysqli_stmt_bind_param($stmt, 'ddi', $sueldo, $efectivo, $id );
     // var_dump ($stmt);
     // Ejecutar la consulta
     if ($stmt->execute()) {
