@@ -65,11 +65,10 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         COUNT(inc.valor) AS faltas,
         MAX(CASE WHEN rv.operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) THEN rv.unidad END) AS unidad,
         MAX(CASE WHEN rv.operador = CONCAT(e.nombres, ' ', e.apellido_paterno, ' ', e.apellido_materno) THEN rv.num_unidad END) AS num_unidad,
-        CASE WHEN MONTH(e.fecha_contrato) = MONTH($fecha_inicio) AND DAY(e.fecha_contrato) - DAY($fecha_inicio) <= 7 THEN
-            'SI'
-        ELSE
+        IF (MONTH(e.fecha_contrato) = MONTH($fecha_inicio) AND DAY(e.fecha_contrato) - DAY($fecha_inicio) <= 7,
+            'SI',
             'NO'
-        END AS prima_vacacional,
+        ) AS prima_vacacional,
         COALESCE(SUM(
             CASE WHEN e.cargo = 'OPERADOR' THEN
                 CASE WHEN e.sueldo_base > rv.sueldo_vuelta THEN
@@ -213,7 +212,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $efectivo = $sueldo_bruto - $pago_fiscal;
             $deposito = $pago_fiscal - $deduccion_fiscal;
             $apoyo_mes = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['apoyo_mes']) : 0;
-            $prima_vacacional = $row_empleados['prima_vacacional'] === 'SI' ? (($row_empleados['salario_diario'] * 10) * 1.25) : 0;
+            $prima_vacacional = $row_empleados['prima_vacacional'] == 'SI' ? (($row_empleados['salario_diario'] * 10) * 1.25) : 0;
             $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? (intval($row_empleados['fecha_inicial']) + 1) ?? (intval($row_empleados['fecha_final']) + 1) : 0;
             $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
             $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['bono_categoria']) : 0;
