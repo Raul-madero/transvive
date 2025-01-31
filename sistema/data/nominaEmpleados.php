@@ -117,9 +117,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             SELECT 
                 COALESCE(
                     SUM(
-                        IF(a.cantidad - (TIMESTAMPDIFF(WEEK, a.fecha_inicial, CURDATE()) * a.descuento) < a.descuento,
-                        a.cantidad - (TIMESTAMPDIFF(WEEK, a.fecha_inicial, CURDATE()) * a.descuento),
-                        a.descuento)
+                        a.descuento
                     ),
                 0) 
             FROM adeudos a 
