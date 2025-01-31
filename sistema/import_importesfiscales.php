@@ -31,18 +31,13 @@ if(isset($_FILES["name"]) && !empty($_FILES['name']['name'])){
 				$deduccion_fiscal = str_replace(',', '', $data[3]) ?? 0;
 				$neto = str_replace(',', '',$data[4]) ?? 0;
 				$finiquito = $data[5] ?? "";
-				$estatus = $data[6] ?? "";
+				$estatus = mb_convert_encoding($data[6], "UTF-8", "ISO-8859-1") ?? "";
 				$sql = "INSERT INTO importes_fiscales (empleado, noempleado, pago_fiscal, deduccion_fiscal, neto, finiquito, estatus, usuario_id) VALUES ('" . $empleado . "', " . $noempleado . ", " . $pago_fiscal . ", " . $deduccion_fiscal . ", " . $neto . ", '" . $finiquito . "', '" . $estatus . "', " . $usuario . ");";
 
 				$conection->query($sql);
-				if($conection->error()){
-					echo "<script>
-					alert('Error en la linea $x')
-					</script>";
-					$error++;
-				}
+				
 
-			}else{
+			}else if($conection->error()){
 				echo "<script>
 				alert('Error en la linea $x')
 				</script>";
