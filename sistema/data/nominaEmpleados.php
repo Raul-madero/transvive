@@ -121,7 +121,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                     ),
                 0) 
             FROM adeudos a 
-            WHERE a.noempleado = e.noempleado
+            WHERE a.noempleado = e.noempleado AND estatus = 1
         ) AS deducciones";
     
         $sql_fiscal = "SELECT COUNT(*) FROM importes_fiscales";
