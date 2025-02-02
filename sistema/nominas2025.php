@@ -215,6 +215,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	<script>
 		$(document).ready(function() {
 		const formatoMoneda = (valor) => {
+			if (valor === undefined || valor === null) {
+				return '';
+			}
 			return valor.toLocaleString('es-MX', {
 				style: 'currency',
 				currency: 'MXN'
@@ -287,7 +290,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{ data: "deposito_fiscal", render: renderMoneda },
 					{
 						data: null,
-						render: (data) => formatoMoneda(parseFloat(data.efectivo) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
+						render: (data) => formatoMoneda(( parseFloat(data.sueldo_bruto) > 0 ? (parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal)) : parseFloat(data.nomina_fiscal) ) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
 					},
 					{
 						data: "deducciones",
@@ -300,8 +303,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{ data: "caja_ahorro", render: formatoMoneda },
 					{ data: "supervisor" },
 					{
-						data: 'neto', render: formatoMoneda
-						// render: (data) => formatoMoneda(parseFloat(data.deposito_fiscal) - parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
+						data: null,
+						 render: (data) => formatoMoneda(parseFloat(data.sueldo_bruto) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
 					}
 				],
 				language: {
@@ -329,75 +332,99 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			const td = $(this);
 			const id = td.data('id');
 			const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, '')) || 0;
-			
+
 			td.html(`<input type="text" class="form-control input-sm" value="${currentValue}">`);
 			const input = td.find('input');
 
-			input.focus().on('blur', function() {
+			// Función para guardar el nuevo valor
+			const guardarCambios = () => {
 				const newValue = parseFloat(input.val()) || 0;
 				if (newValue !== currentValue) {
-					// Actualiza en la base de datos
 					$.ajax({
 						url: 'data/updateDeducciones.php',
 						type: 'POST',
 						data: { id, deducciones: newValue },
 						dataType: 'json',
 						success: function(response) {
-							if(response.success) {
-								alert(response.message)
-								location.reload()
+							if (response.success) {
+								alert(response.message);
+								$('#example1').DataTable().ajax.reload(null, false); // Recargar tabla sin perder la paginación actual
 							}
-							td.text(formatoMoneda(newValue));
 						},
 						error: function(xhr, status, error) {
 							alert('Error al actualizar la deducción.');
 							console.error('Error:', error);
-    						console.error('Detalles:', xhr.responseText);
-							td.text(formatoMoneda(currentValue)); // Revertir el valor original
+							console.error('Detalles:', xhr.responseText);
+						},
+						complete: function() {
+							td.text(formatoMoneda(newValue)); // Mostrar el nuevo valor formateado
 						}
 					});
 				} else {
-					td.text(formatoMoneda(currentValue));
+					td.text(formatoMoneda(currentValue)); // Revertir el valor original si no hay cambios
+				}
+			};
+
+			// Guardar al perder el enfoque
+			input.focus().on('blur', guardarCambios);
+
+			// Guardar al presionar Enter
+			input.on('keydown', function(e) {
+				if (e.key === 'Enter') {
+					guardarCambios();
 				}
 			});
 		});
+
 		
 		$('#example1').on('click', '.editable-sueldo_bruto', function() {
 			const td = $(this);
 			const id = td.data('id');
 			const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, '')) || 0;
-			
+
 			td.html(`<input type="text" class="form-control input-sm" value="${currentValue}">`);
 			const input = td.find('input');
 
-			input.focus().on('blur', function() {
+			// Función para guardar el nuevo sueldo
+			const guardarCambios = () => {
 				const newValue = parseFloat(input.val()) || 0;
 				if (newValue !== currentValue) {
-					// Actualiza en la base de datos
 					$.ajax({
 						url: 'data/updateSueldo.php',
 						type: 'POST',
-						data: { id, sueldo: newValue, deposito_fiscal },
+						data: { id, sueldo: newValue },
 						dataType: 'json',
 						success: function(response) {
-							if(response.success) {
-								alert(response.message)
-								location.reload()
+							if (response.success) {
+								alert(response.message);
+								$('#example1').DataTable().ajax.reload(null, false); // Recargar tabla sin perder la paginación actual
 							}
-							td.text(formatoMoneda(newValue));
 						},
 						error: function(xhr, status, error) {
 							alert('Error al actualizar el sueldo.');
 							console.error('Error:', error);
-    						console.error('Detalles:', xhr.responseText);
-							td.text(formatoMoneda(currentValue)); // Revertir el valor original
+							console.error('Detalles:', xhr.responseText);
+						},
+						complete: function() {
+							td.text(formatoMoneda(newValue)); // Mostrar el nuevo valor formateado
 						}
 					});
 				} else {
-					td.text(formatoMoneda(currentValue));
+					td.text(formatoMoneda(currentValue)); // Revertir el valor original si no hay cambios
+				}
+			};
+
+			// Guardar al perder el enfoque
+			input.focus().on('blur', guardarCambios);
+
+			// Guardar al presionar Enter
+			input.on('keydown', function(e) {
+				if (e.key === 'Enter') {
+					guardarCambios();
 				}
 			});
 		});
+
 		// Validación de la semana y año
 		const validarDatos = (semana, anio) => {
 			if (semana <= 0 || semana > 52) {
