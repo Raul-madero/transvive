@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sueldo = isset($_POST['sueldo']) ? floatval($_POST['sueldo']) : 0;
     $nomina_fiscal = isset($_POST['nomina_fiscal']) ? floatval($_POST['nomina_fiscal']) : 0;
     $efectivo = $sueldo - $nomina_fiscal;
-    var_dump($_POST);
+    // var_dump($_POST);
     // Validar que el ID sea válido
     if ($id <= 0) {
         header('Content-Type: application/json; charset: UTF-8');
