@@ -2997,30 +2997,27 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
 
 
  // Cancela Vuelta Especial
-    if($_POST['action'] == 'AddCancelaVuelta')
-    {
-      if(!empty($_POST['idcc']) )
-      {
-        $idc      = $_POST['idcc'];
-        $motivoc  = $_POST['motivoc'];
-        
-        $token    = md5($_SESSION['idUser']);
-        $usuario  = $_SESSION['idUser'];
+ if ($_POST['action'] == 'AddCancelaVuelta') {
+    if (!empty($_POST['idcc'])) {
+        $idc = $_POST['idcc'];
+        $motivoc = $_POST['motivoc'];
 
-        $query_procesar = mysqli_query($conection,"CALL cancela_vueltasp($idc, '$motivoc', $usuario)");
+        $usuario = $_SESSION['idUser'];
+
+        $query_procesar = mysqli_query($conection, "CALL cancela_vueltasp($idc, '$motivoc', $usuario)");
         $result_detalle = mysqli_num_rows($query_procesar);
 
-        
-        if($result_detalle > 0){
-            echo "success";
-        }else{
-            echo "error";
+        mysqli_close($conection); // Mover esto antes de salir del script
+
+        if ($result_detalle > 0) {
+            echo json_encode(['status' => 'success', 'message' => 'Cancelación registrada correctamente']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al cancelar el viaje']);
         }
-       
-     }else{
-        echo 'error';
-     }
-    } 
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Faltan datos']);
+    }
+}
 
 // Generar Vuelta
     if($_POST['action'] == 'AddPeridoContrato')
