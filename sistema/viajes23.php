@@ -205,30 +205,7 @@ mysqli_close($conection);
 			<button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<?php
-			switch ($_SESSION['rol']) {
-				case 4:
-					include('includes/navbarsup.php');
-					break;
-				case 6:
-					include('includes/navbaroperac.php');
-					break;
-				case 8:
-					include('includes/navbarjefeoper.php');
-					break;
-				case 9:
-					include('includes/navbargrcia.php');
-					break;
-				case 15:
-					include('includes/navbarmonitorista.php');
-					break;
-				case 5:
-					include('includes/navbarrhuman.php');
-					break;
-				default:
-					include('includes/navbar.php');
-					break;
-			};
+			<?php include('includes/generalnavbar.php');
 			?>
 			
 			<?php include('includes/nav.php') ?> 
@@ -455,20 +432,20 @@ mysqli_close($conection);
 				<table id="fetch_generated_willss" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
 				<thead>
 				<tr>
-					<th>ID</th>
-					<th>Fecha</th>
-					<th>Hora Inicio</th>
-					<th>Hora Llegada</th>
-					<th>Semana</th>
-					<th>Cliente</th>
-					<th>Ruta</th>
-					<th>Operador</th>
-					<th>Tipo Unidad</th>
-					<th>No. Eco.</th>
-					<th>Supervisor</th>
-					<th>Jefe Operaciones</th>
-					<th>Estatus</th>
-					<th>Accion</th>
+					<th style="text-align: center; font-size: 12px;">ID</th>
+					<th style="text-align: center; font-size: 12px;">Fecha</th>
+					<th style="text-align: center; font-size: 12px;">Hora Inicio</th>
+					<th style="text-align: center; font-size: 12px;">Hora Llegada</th>
+					<th style="text-align: center; font-size: 12px;">Semana</th>
+					<th style="text-align: center; font-size: 12px;">Cliente</th>
+					<th style="text-align: center; font-size: 12px;">Ruta</th>
+					<th style="text-align: center; font-size: 12px;">Operador</th>
+					<th style="text-align: center; font-size: 12px;">Tipo Unidad</th>
+					<th style="text-align: center; font-size: 12px;">No. Eco.</th>
+					<th style="text-align: center; font-size: 12px;">Supervisor</th>
+					<th style="text-align: center; font-size: 12px;">Jefe Operaciones</th>
+					<th style="text-align: center; font-size: 12px;">Estatus</th>
+					<th style="text-align: center; font-size: 12px;">Accion</th>
 				</tr>
 				</thead>
 			</table>
@@ -552,140 +529,138 @@ mysqli_close($conection);
       if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 14 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 5){
     ?>
 <script>
-$(document).ready(function () {
-    // Inicializa la tabla
-    const table = initializeDataTable();
-    // Listener para el botón de filtro
-    $("#filter").on("click", function () {
-		let initial_date = $("#initial_date").val();
-		let final_date = $("#final_date").val();
-		let gender = $("#gender").val();
+	$(document).ready(function () {
+    	// Inicializa la tabla
+    	const table = initializeDataTable();
+    	// Listener para el botón de filtro
+    	$("#filter").on("click", function () {
+			let initial_date = $("#initial_date").val();
+			let final_date = $("#final_date").val();
+			let gender = $("#gender").val();
 
-		if (validateFilter(initial_date, final_date)) {
-			// Actualiza el URL del DataTable con nuevos parámetros
-			table.ajax.url("data/datadetorders2.php").load(null, false); // Omitimos parámetros aquí
+			if (validateFilter(initial_date, final_date)) {
+				// Actualiza el URL del DataTable con nuevos parámetros
+				table.ajax.url("data/datadetorders2.php").load(null, false); // Omitimos parámetros aquí
 			
 
-			// Actualiza la configuración Ajax del DataTable
-			table.settings()[0].ajax.data = {
-				action: "fetch_users",
-				initial_date: initial_date,
-				final_date: final_date,
-				gender: gender
-			};
+				// Actualiza la configuración Ajax del DataTable
+				table.settings()[0].ajax.data = {
+					action: "fetch_users",
+					initial_date: initial_date,
+					final_date: final_date,
+					gender: gender
+				};
 
-			// Recarga la tabla
-			table.state.clear(); //Limpia el estado de almacenado
-			table.ajax.reload(null, false); // No reinicia la paginación
-    	}
+				// Recarga la tabla
+				table.state.clear(); //Limpia el estado de almacenado
+				table.ajax.reload(null, false); // No reinicia la paginación
+    		}
+		});
+
+
+    	// Configura el DatePicker
+    	$(".datepicker").datepicker({
+        	language: 'es',
+        	dateFormat: "yy-mm-dd",
+        	changeYear: true
+    	});
 	});
+	// Función para inicializar el DataTable
+	function initializeDataTable() {
+    	return $('#fetch_generated_wills').DataTable({
+        	order: [[1, "desc"]],
+        	dom: 'Bfrtip',
+        	processing: true,
+        	serverSide: true,
+        	stateSave: true,
+        	responsive: true,
+        	lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        	deferRender: true,
+        	ajax: {
+            	url: "data/datadetorders2.php",
 
+            	type: "POST",
+            	dataType: "json",
+            	data: function (d) {
+                	// Datos enviados por el cliente
+                	d.action = "fetch_users";
+                	d.initial_date = $("#initial_date").val() || "";
+                	d.final_date = $("#final_date").val() || "";
+                	d.gender = $("#gender").val() || "";
+					console.log(d); //DEpuracion
+            	},
+            	dataSrc: function (json) {
+                	// Validar que el JSON sea correcto
+                	if (!json || !json.records) {
+                    	console.error("Invalid JSON:", json);
+                    	return [];
+                	}
+                	return json.records;
+            	},
+           	 	error: function (xhr, error, code) {
+                	console.error("Error en AJAX:", xhr.responseText);
+                	alert("Ocurrió un error al procesar la solicitud.");
+            	}
+        	},
+        	columns: [
+            	{ data: "pedidono", width: "10px", className: "text-right" },
+            	{ data: "fecha", width: "60px" },
+            	{ data: "horainicio", width: "50px", className: "text-center"},
+            	{ data: "horafin", width: "50px", className: "text-center"},
+            	{ data: "nosemana", width: "80px"},
+            	{ data: "razonsocial", width: "100px" },
+            	{ data: "rutacte", width: "40px" },
+            	{ data: "conductor", width: "100px" },
+            	{ data: "tipounidad", width: "80px"},
+            	{ data: "nounidad", width: "30px" },
+            	{ data: "supervisor", width: "50px" },
+            	{ data: "jefeopera", width: "50px" },
+            	{ data: "estatusped", width: "30px" },
+            	{
+                	render: function (data, type, full) {
+                    	return `<center>
+                        	<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
+                            	<i class="fa fa-edit" style="color:white; font-size: 1.2em"></i>
+                        	</a> | 
+                        	<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
+                            	<i class="fas fa-times-circle"></i>
+                        	</a>
+                    	</center>`;
+                	}
+            	}
+        	],
+        	buttons: [
+            	'copyHtml5',
+            	'excelHtml5',
+            	'csvHtml5',
+            	{
+                	extend: 'colvis',
+                	postfixButtons: ['colvisRestore'],
+                	columns: '0,1,2,3,4,5,6,7,8,9,10,11,12,13'
+            	}
+        	]
+    	});
+	}
+	// Función para validar el filtro
+	function validateFilter(initial_date, final_date) {
+    	if (initial_date === '' && final_date === '') {
+        	$("#error_log").html("Warning: You must select both (start and end) date.");
+        		return false;
+    	}
 
-    // Configura el DatePicker
-    $(".datepicker").datepicker({
-        language: 'es',
-        dateFormat: "yy-mm-dd",
-        changeYear: true
-    });
-});
+    	if (initial_date !== '' && final_date !== '') {
+        	let date1 = new Date(initial_date);
+        	let date2 = new Date(final_date);
 
-// Función para inicializar el DataTable
-function initializeDataTable() {
-    return $('#fetch_generated_wills').DataTable({
-        order: [[1, "desc"]],
-        dom: 'Bfrtip',
-        processing: true,
-        serverSide: true,
-        stateSave: true,
-        responsive: true,
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-        deferRender: true,
-        ajax: {
-            url: "data/datadetorders2.php",
+        	if (date1 > date2) {
+            	$("#error_log").html("Warning: End date should be greater than start date.");
+            	return false;
+        	}
+    	}
 
-            type: "POST",
-            dataType: "json",
-            data: function (d) {
-                // Datos enviados por el cliente
-                d.action = "fetch_users";
-                d.initial_date = $("#initial_date").val() || "";
-                d.final_date = $("#final_date").val() || "";
-                d.gender = $("#gender").val() || "";
-				console.log(d); //DEpuracion
-            },
-            dataSrc: function (json) {
-                // Validar que el JSON sea correcto
-                if (!json || !json.records) {
-                    console.error("Invalid JSON:", json);
-                    return [];
-                }
-                return json.records;
-            },
-            error: function (xhr, error, code) {
-                console.error("Error en AJAX:", xhr.responseText);
-                alert("Ocurrió un error al procesar la solicitud.");
-            }
-        },
-        columns: [
-            { data: "pedidono", width: "10px", className: "text-right" },
-            { data: "fecha", width: "60px" },
-            { data: "horainicio", width: "50px", className: "text-center", orderable: true },
-            { data: "horafin", width: "50px", className: "text-center", orderable: true },
-            { data: "nosemana", width: "80px", orderable: true },
-            { data: "razonsocial", width: "100px", orderable: true },
-            { data: "rutacte", width: "40px", orderable: true },
-            { data: "conductor", width: "100px", orderable: true },
-            { data: "tipounidad", width: "80px", orderable: true },
-            { data: "nounidad", width: "30px", orderable: true },
-            { data: "supervisor", width: "50px", orderable: true },
-            { data: "jefeopera", width: "50px", orderable: true },
-            { data: "estatusped", width: "30px", orderable: true },
-            {
-                render: function (data, type, full) {
-                    return `<center>
-                        <a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
-                            <i class="fa fa-edit" style="color:white; font-size: 1.2em"></i>
-                        </a> | 
-                        <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
-                            <i class="fas fa-times-circle"></i>
-                        </a>
-                    </center>`;
-                }
-            }
-        ],
-        buttons: [
-            'copyHtml5',
-            'excelHtml5',
-            'csvHtml5',
-            {
-                extend: 'colvis',
-                postfixButtons: ['colvisRestore'],
-                columns: '0,1,2,3,4,5,6'
-            }
-        ]
-    });
-}
-
-// Función para validar el filtro
-function validateFilter(initial_date, final_date) {
-    if (initial_date === '' && final_date === '') {
-        $("#error_log").html("Warning: You must select both (start and end) date.");
-        return false;
-    }
-
-    if (initial_date !== '' && final_date !== '') {
-        let date1 = new Date(initial_date);
-        let date2 = new Date(final_date);
-
-        if (date1 > date2) {
-            $("#error_log").html("Warning: End date should be greater than start date.");
-            return false;
-        }
-    }
-
-    $("#error_log").html("");
-    return true;
-}
+    	$("#error_log").html("");
+    	return true;
+	}
 
 
 </script>
