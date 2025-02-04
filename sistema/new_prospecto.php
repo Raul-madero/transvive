@@ -258,6 +258,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 												<div class="col-md-7">
 													<select name="inputUnidad" id="inputUnidad" class="form-control select2bs4">
 														<option value="">--Seleccione--</option>
+														<?php 
+														include('../conexion.php');
+															$stmt = $conection->prepare("SELECT * FROM tipo_unidad");
+															$stmt->execute();
+															$result = $stmt->get_result();
+															while($row = $result->fetch_assoc()) {
+																$id = htmlspecialchars($row['id']);
+																$unidad = htmlspecialchars($row['unidad']);
+																echo "<option value='$id'>$unidad</option>";
+															}
+														?>
 													</select>
 												</div>
 											</div><!-- form-group row -->
@@ -267,6 +278,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 													<div class="col-md-9">
 														<select name="inputOrigen" id="inputOrigen" class="form-control select2bs4">
 															<option value="">--Seleccione--</option>
+															<?php 
+															include('../conexion.php');
+																$stmt = $conection->prepare("SELECT * FROM origen_prospecto");
+																$stmt->execute();
+																$result = $stmt->get_result();
+																while($row = $result->fetch_assoc()) {
+																	$id = htmlspecialchars($row['id']);
+																	$origen = htmlspecialchars($row['origen']);
+																	echo "<option value='$id'>$origen</option>";
+																}
+															?>
 														</select>
 													</div> <!-- col -->
 											</div> <!-- form-group row -->
