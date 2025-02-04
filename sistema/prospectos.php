@@ -175,8 +175,10 @@ session_start();
 
 			$('#tableProspectos tbody').on('click', 'tr', function (e) {
 				const lastColumnIndex = table.columns().count() - 1;
+				const firstColumnIndex = 0;
+				const clickedColumnIndex = $(e.target).closest('td').index();
 
-				if ($(e.target).closest('td').index() !== lastColumnIndex) {
+				if (clickedColumnIndex !== lastColumnIndex && clickedColumnIndex !== firstColumnIndex) {
 					const rowData = table.row(this).data();
 					mostrarModal(rowData);
 				}
