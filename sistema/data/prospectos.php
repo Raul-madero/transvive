@@ -15,7 +15,7 @@ while($row = mysqli_fetch_assoc($query)) {
     $semaforo = isset($row['semaforo']) ? $row['semaforo'] : 1;
 
 
-    $sql_tipo_unidad = "SELECT unidad FROM tipo_unidad WHERE id = " . $unidad;
+    $sql_tipo_unidad = "SELECT unidad FROM prospectos WHERE id = " . $unidad;
     $query_tipo_unidad = mysqli_query($conection, $sql_tipo_unidad);
     if ($query_tipo_unidad && mysqli_num_rows($query_tipo_unidad) > 0) {
         $row['tipo_unidad'] = mysqli_fetch_assoc($query_tipo_unidad);
@@ -26,7 +26,7 @@ while($row = mysqli_fetch_assoc($query)) {
         }
     }
 
-    $sql_origen = "SELECT origen FROM origen_prospecto WHERE id = " . intval($origen);
+    $sql_origen = "SELECT origen FROM prospectos WHERE id = " . intval($origen);
     $query_origen = mysqli_query($conection, $sql_origen);
     if ($query_origin && mysqli_num_rows($query_origin) > 0) {
         $row['origen'] = mysqli_fetch_assoc($query_origen);
@@ -37,7 +37,7 @@ while($row = mysqli_fetch_assoc($query)) {
         }
     }
     
-    $sql_semaforo = "SELECT semaforo FROM semaforo WHERE id = " . intval($semaforo);
+    $sql_semaforo = "SELECT semaforo FROM prospectos WHERE id = " . intval($semaforo);
     $query_semaforo = mysqli_query($conection, $sql_semaforo);
 
     if ($query_semaforo && mysqli_num_rows($query_semaforo) > 0) {
@@ -48,7 +48,7 @@ while($row = mysqli_fetch_assoc($query)) {
             echo 'Error en la consulta SQL: ' . mysqli_error($conection);
         }
     }
-    
+
     $data[] = $row;
 }
 // var_dump($data);
