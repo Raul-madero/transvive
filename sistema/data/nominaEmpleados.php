@@ -208,7 +208,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             e.supervisor,
             e.apoyo_mes,
             e.salario_diario,
-            COALESCE(COUNT(DISTINCT al.id), 0) AS noalertas,
+            al.noalertas,
             COUNT(DISTINCT inc.id) AS faltas,
             MAX(rv.unidad) AS unidad,
             MAX(rv.num_unidad) AS num_unidad,
