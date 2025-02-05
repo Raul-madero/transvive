@@ -272,7 +272,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                 SELECT *
                 FROM (
                     SELECT al.*, 
-                           ROW_NUMBER() OVER (PARTITION BY operador ORDER BY fecha_alerta DESC) AS rn
+                           ROW_NUMBER() OVER (PARTITION BY operador ORDER BY fecha DESC) AS rn
                     FROM alertas al
                 ) sub
                 WHERE rn = 1
