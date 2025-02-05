@@ -189,7 +189,6 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $fecha_fin = $fecha->modify('+6 days')->format('Y-m-d'); // Fecha de fin de la semana (domingo)
 
     $fecha_limite_alertas = date('Y-m-d', strtotime('next wednesday', strtotime($fecha_fin)));
-    echo $fecha_limite_alertas;
     // Consultar empleados
     $sql_empleados = "
         SELECT
@@ -315,9 +314,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         }
         // Solo insertar registros si no existen datos para la semana y el año
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
-            echo $row_empleados['nombre'];
-            echo $row_empleados['noalertas'];
-            echo $row_empleados['fecha'];
+            var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
             $gana_bono = $alertas < 5 ? true : false;
             $bono_semanal = $gana_bono ? floatval($row_empleados['bono_semanal']) : 0;
