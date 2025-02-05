@@ -10,13 +10,12 @@ $sql = "SELECT * FROM prospectos WHERE DATE(fecha_seguimiento) BETWEEN CURDATE()
 $query = mysqli_query($conection, $sql);
 $data = array();
 while($row = mysqli_fetch_assoc($query)) {
-    // var_dump($row);
     $unidad = isset($row['unidad']) ? $row['unidad'] : 1;
     $origen = isset($row['origen']) ? $row['origen'] : 1;
     $semaforo = isset($row['semaforo']) ? $row['semaforo'] : 1;
 
 
-    $sql_tipo_unidad = "SELECT unidad FROM prospectos WHERE id = " . $unidad;
+    $sql_tipo_unidad = "SELECT unidad FROM unidades WHERE id = " . $unidad;
     $query_tipo_unidad = mysqli_query($conection, $sql_tipo_unidad);
     if ($query_tipo_unidad && mysqli_num_rows($query_tipo_unidad) > 0) {
         $row['tipo_unidad'] = mysqli_fetch_assoc($query_tipo_unidad);
@@ -27,7 +26,7 @@ while($row = mysqli_fetch_assoc($query)) {
         }
     }
 
-    $sql_origen = "SELECT origen FROM prospectos WHERE id = " . intval($origen);
+    $sql_origen = "SELECT origen FROM origen_prospecto WHERE id = " . intval($origen);
     $query_origen = mysqli_query($conection, $sql_origen);
     if ($query_origin && mysqli_num_rows($query_origin) > 0) {
         $row['origen'] = mysqli_fetch_assoc($query_origen);
