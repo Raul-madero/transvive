@@ -281,7 +281,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
     $sql_empleados .= "
         WHERE 
-            e.estatus = 1 
+            e.estatus = 1 OR fecha_baja > '$fecha_fin' 
             AND e.tipo_nomina = 'Semanal' 
         GROUP BY 
             e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, e.bono_categoria, e.bono_supervisor, 
