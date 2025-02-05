@@ -189,7 +189,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $fecha_fin = $fecha->modify('+6 days')->format('Y-m-d'); // Fecha de fin de la semana (domingo)
 
     $fecha_limite_alertas = date('Y-m-d', strtotime('next wednesday', strtotime($fecha_fin)));
-
+    echo $fecha_limite_alertas;
     // Consultar empleados
     $sql_empleados = "
         SELECT
