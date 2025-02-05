@@ -209,6 +209,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             e.apoyo_mes,
             e.salario_diario,
             COALESCE(COUNT(DISTINCT al.id), 0) AS noalertas,
+            al.fecha,
             COUNT(DISTINCT inc.id) AS faltas,
             MAX(rv.unidad) AS unidad,
             MAX(rv.num_unidad) AS num_unidad,
@@ -295,8 +296,6 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
     }
 
-        // AND (e.cargo = 'OPERADOR' OR e.cargo = 'SUPERVISOR')
-        // echo $sql_empleados;
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
         die(json_encode(['error' => 'Error en la consulta de empleados: ' . mysqli_error($conection)]));
@@ -321,6 +320,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
             echo $row_empleados['nombre'];
             echo $row_empleados['noalertas'];
+            echo $row_empleados['fecha'];
             $alertas = intval($row_empleados['noalertas']);
             $gana_bono = $alertas < 5 ? true : false;
             $bono_semanal = $gana_bono ? floatval($row_empleados['bono_semanal']) : 0;
