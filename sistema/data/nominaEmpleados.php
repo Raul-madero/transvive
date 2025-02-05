@@ -269,7 +269,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         FROM 
             empleados e
         LEFT JOIN 
-            alertas al ON al.operador = 'CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)' COLLATE utf8mb4_unicode_ci 
+            alertas al ON al.operador = 'CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)' 
             AND al.fecha BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas' 
         LEFT JOIN 
             incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) AND inc.nodesemana = '$nombre_semana'
@@ -280,7 +280,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= "
-        LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT_WS(' ', e.apellido_paterno, e.apellido_materno, e.nombres) COLLATE utf8mb4_unicode_ci";
+        LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT_WS(' ', e.apellido_paterno, e.apellido_materno, e.nombres)";
     }
 
     $sql_empleados .= "
