@@ -47,7 +47,7 @@ while($row = mysqli_fetch_assoc($query)) {
         if (!$query_semaforo) {
             echo 'Error en la consulta SQL: ' . mysqli_error($conection);
         }
-}
+    }
 
 
     $data[] = $row;
