@@ -208,12 +208,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             e.supervisor,
             e.apoyo_mes,
             e.salario_diario,
-            COALESCE(SUM(DISTINCT CASE 
-        WHEN al.fecha BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas' 
-             AND al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-        THEN al.noalertas 
-        ELSE 0 
-        END), 0) AS noalertas,
+            COALESCE(COUNT(DISTINCT al.id), 0) AS noalertas,
             COUNT(DISTINCT inc.id) AS faltas,
             MAX(rv.unidad) AS unidad,
             MAX(rv.num_unidad) AS num_unidad,
@@ -274,8 +269,8 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         FROM 
             empleados e
         LEFT JOIN 
-        alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-        AND al.fecha BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas' 
+            alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+            AND al.fecha BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas' 
         LEFT JOIN 
             incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) AND inc.nodesemana = '$nombre_semana'
         LEFT JOIN 
