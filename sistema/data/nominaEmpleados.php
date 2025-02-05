@@ -262,14 +262,14 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     }
     $row_fiscal = mysqli_fetch_row($result_fiscal);
     if ($row_fiscal[0] > 0) {
-        $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal";
+        $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
     }
 
     $sql_empleados .= "
         FROM 
             empleados e
         LEFT JOIN 
-            alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+            alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_unicode_ci 
             AND al.fecha BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas' 
         LEFT JOIN 
             incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) AND inc.nodesemana = '$nombre_semana'
@@ -292,7 +292,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         e.bono_semanal, e.caja_ahorro, e.supervisor, e.apoyo_mes";
 
     if ($row_fiscal[0] > 0) {
-        $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones";
+        $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
     }
 
         // AND (e.cargo = 'OPERADOR' OR e.cargo = 'SUPERVISOR')
@@ -380,6 +380,17 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     
             insertar_nomina($conection, $data);
         }
+    }else {
+        while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
+            $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
+            $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
+            $neto = $row_empleados['neto'] ?? 0;
+            $actualizar_nomina = "UPDATE nomina_temp_2025 SET nomina_fiscal = " . $pago_fiscal . ", deduccion_fiscal = " . $pago_fiscal . ", deposito_fiscal = " . $neto . " WHERE nombre = '" . $row_empleados['operador'] . "'";
+            $result_actualizar_nomina = mysqli_query($conection, $actualizar_nomina);
+            if (!$result_actualizar_nomina) {
+                die(json_encode(['error' => 'Error al actualizar los datos de la nómina: ' . mysqli_error($conection)]));
+            }
+        }
     }
     // Obtener datos para la paginación
     $start = $_POST['start'] ?? 0;
@@ -392,7 +403,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     if (!empty($searchValue)) {
         $whereClause .= " WHERE (noempleado LIKE '%$searchValue%' OR nombre LIKE '%$searchValue%')";
     }
-    
+
     $columns = array('semana', 'anio', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bono_semanal', 'bono_categoria', 'bono_supervisor', 'apoyo_mes', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
     
     // Recuperar datos finales
