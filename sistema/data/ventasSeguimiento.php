@@ -15,7 +15,7 @@ while($row = mysqli_fetch_assoc($query)) {
     $semaforo = isset($row['semaforo']) ? $row['semaforo'] : 1;
 
 
-    $sql_tipo_unidad = "SELECT unidad FROM unidades WHERE id = " . $unidad;
+    $sql_tipo_unidad = "SELECT unidad FROM tipo_unidad WHERE id = " . $unidad;
     $query_tipo_unidad = mysqli_query($conection, $sql_tipo_unidad);
     if ($query_tipo_unidad && mysqli_num_rows($query_tipo_unidad) > 0) {
         $row['tipo_unidad'] = mysqli_fetch_assoc($query_tipo_unidad);
