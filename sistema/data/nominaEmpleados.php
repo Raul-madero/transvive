@@ -246,11 +246,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             MAX(DATEDIFF(inc.fecha_final, '$fecha_inicio')) AS dias_final,
             (
                 SELECT 
-                    COALESCE(
-                        SUM(
-                            a.descuento
-                        ),
-                    0) 
+                    COALESCE(SUM(a.descuento), 0) 
                 FROM adeudos a 
                 WHERE a.noempleado = e.noempleado AND a.estado = 1
             ) AS deducciones";
@@ -269,14 +265,15 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         FROM 
             empleados e
         LEFT JOIN 
-            alertas al ON al.operador = 'CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)' 
-            AND al.fecha BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas' 
+            alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+            AND DATE(al.fecha) BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas'
         LEFT JOIN 
-            incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) AND inc.nodesemana = '$nombre_semana'
+            incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) 
+            AND inc.nodesemana = '$nombre_semana'
         LEFT JOIN 
             registro_viajes rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) 
-                            AND rv.fecha BETWEEN '$fecha_inicio' AND '$fecha_fin'
-                            AND rv.valor_vuelta > 0";
+            AND DATE(rv.fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin'
+            AND rv.valor_vuelta > 0";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= "
@@ -288,12 +285,13 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             e.estatus = 1 
             AND e.tipo_nomina = 'Semanal' 
         GROUP BY 
-        e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, e.bono_categoria, e.bono_supervisor, 
-        e.bono_semanal, e.caja_ahorro, e.supervisor, e.apoyo_mes";
+            e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, e.bono_categoria, e.bono_supervisor, 
+            e.bono_semanal, e.caja_ahorro, e.supervisor, e.apoyo_mes";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
     }
+
 
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
