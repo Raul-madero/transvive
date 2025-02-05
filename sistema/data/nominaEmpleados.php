@@ -380,7 +380,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
             $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
             $neto = $row_empleados['neto'] ?? 0;
-            $actualizar_nomina = "UPDATE nomina_temp_2025 SET nomina_fiscal = " . $pago_fiscal . ", deduccion_fiscal = " . $pago_fiscal . ", deposito_fiscal = " . $neto . " WHERE nombre = '" . $row_empleados['operador'] . "'";
+            $actualizar_nomina = "UPDATE nomina_temp_2025 SET nomina_fiscal = " . $pago_fiscal . ", deduccion_fiscal = " . $deduccion_fiscal . ", deposito_fiscal = " . $neto . " WHERE nombre = '" . $row_empleados['operador'] . "'";
             $result_actualizar_nomina = mysqli_query($conection, $actualizar_nomina);
             if (!$result_actualizar_nomina) {
                 die(json_encode(['error' => 'Error al actualizar los datos de la nómina: ' . mysqli_error($conection)]));
