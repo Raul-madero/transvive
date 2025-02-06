@@ -307,7 +307,7 @@ buttons: [
             { "data" : "estatusped", "width": "10%" },
               
             <?php 
-            if ($_SESSION['rol'] == 1) {
+            if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 17) {
             ?>  
             {
                     "render": function ( data, type, full, meta ) {
