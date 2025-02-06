@@ -104,11 +104,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
        <?php
                     
           include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT MAX(no_orden) + 1 AS siguiente_folio FROM mantenimiento_preventivo");
+          $query_folio = mysqli_query($conection,"SELECT MAX(folio) + 1 AS siguiente_folio FROM ordenes_servicio");
           $result_folio = mysqli_num_rows($query_folio);
 
           $folioe = mysqli_fetch_array($query_folio);
-          $nuevofolio=$folioe["folio"]+1; 
+          $nuevofolio=$folioe["siguiente_folio"];
 
           $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'OS'");
           
