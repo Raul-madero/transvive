@@ -104,7 +104,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
        <?php
                     
           include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT * FROM folios where serie = 'OS'");
+          $query_folio = mysqli_query($conection,"SELECT MAX(no_orden) + 1 AS siguiente_folio FROM mantenimiento_preventivo");
           $result_folio = mysqli_num_rows($query_folio);
 
           $folioe = mysqli_fetch_array($query_folio);
