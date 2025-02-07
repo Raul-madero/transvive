@@ -3019,6 +3019,52 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
     }
 }
 
+//Almacenar nuevo adeudo
+if ($_POST['action'] == 'EditarAdeudo') {
+    if (
+        isset($_POST['noempleado']) && is_numeric($_POST['noempleado']) &&
+        isset($_POST['cantidad']) && is_numeric($_POST['cantidad']) &&
+        !empty($_POST['motivo_adeudo'])
+    ) {
+        // Sanitización de datos
+        $cantidad = floatval($_POST['cantidad']);
+        $noempleado = intval($_POST['noempleado']);
+        $motivo_adeudo = mysqli_real_escape_string($conection, $_POST['motivo_adeudo']);
+        $estado = isset($_POST['estado']) ? intval($_POST['estado']) : 0;
+        $fecha_inicial = mysqli_real_escape_string($conection, $_POST['fecha_inicial']);
+        $descuento = isset($_POST['descuento']) ? floatval($_POST['descuento']) : 0.0;
+        $comentarios = mysqli_real_escape_string($conection, $_POST['comentarios']);
+        $semanas_totales = intval($_POST['semanas_totales']);
+        $fecha_final = mysqli_real_escape_string($conection, $_POST['fecha_final']);
+
+        // Ejecutar la consulta
+        $query_insertar = mysqli_query(
+            $conection,
+            "UPDATE adeudos SET cantidad = '$cantidad', comentarios = '$comentarios', descuento = '$descuento', estado = '$estado' WHERE noempleado = $noempleado"
+        );
+
+        // Verificar si la consulta fue exitosa
+        if ($query_insertar) {
+            // Comprobar si se insertaron filas
+            if (mysqli_affected_rows($conection) > 0) {
+                // Si se insertó correctamente, retornamos un mensaje de éxito
+                echo json_encode(["mensaje" => "Adeudo almacenado correctamente."], JSON_UNESCAPED_UNICODE);
+            } else {
+                // Si no se insertaron filas, algo salió mal
+                echo json_encode(["mensaje" => "No se pudo almacenar el adeudo. Intente nuevamente."], JSON_UNESCAPED_UNICODE);
+            }
+        } else {
+            // En caso de error en la consulta
+            echo json_encode(["mensaje" => "Error al ejecutar la consulta: " . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
+        }
+
+        mysqli_close($conection);
+    } else {
+        echo json_encode(["mensaje" => "Datos inválidos o incompletos recibidos."], JSON_UNESCAPED_UNICODE);
+    }
+    exit;
+}
+
 // Generar Vuelta
     if($_POST['action'] == 'AddPeridoContrato')
     {

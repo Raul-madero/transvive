@@ -1,6 +1,6 @@
 <?php
-include "../conexion.php";
 session_start();
+include "../conexion.php";
 $User = $_SESSION['user'];
 $rol = $_SESSION['rol'];
 $sql = "select * from rol where idrol =$rol ";
