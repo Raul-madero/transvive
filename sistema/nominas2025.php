@@ -240,7 +240,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			table.destroy()
 			table = $('#example1').DataTable({
 				order: [[2, "asc"]],
-				dom: 'Bfrtip',
 				lengthMenu: [
 					[10, 25, 50, 100, -1],
 					[10, 25, 50, 100, "All"]
@@ -248,7 +247,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				processing: true,
 				serverSide: true,
 				stateSave: true,
-				responsive: false,
+				responsive: true,
 				scrollX: true,
 				
 				ajax: {
