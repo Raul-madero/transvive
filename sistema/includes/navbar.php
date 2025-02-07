@@ -43,7 +43,7 @@
       <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Movimientos</a>
       <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
         <li><a href="viajes23.php" class="dropdown-item">Registro de Viaje </a></li>
-
+        <li><a href="viajesOperador.php" class="dropdown-item">Viajes por Operador </a></li>
         <li><a href="alertas.php" class="dropdown-item">Registro de Alertas </a></li>
         <li><a href="orden_trabajo23.php" class="dropdown-item">Orden de Trabajo de Mantenimiento</a></li>
         <li><a href="mantenimiento_preventivo.php" class="dropdown-item">O. de Trabajo de Mantenimiento Preventivo</a></li>
