@@ -16,7 +16,7 @@ session_start();
 
   $noempleado = $_REQUEST['id'];
 
-  $sqlemp = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name, noempleado, id from empleados WHERE estatus = 1 ORDER BY noempleado";
+  $sqlemp = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name, noempleado, id from empleados ORDER BY noempleado";
   $queryemp = mysqli_query($conection, $sqlemp);
   $filasemp = mysqli_fetch_all($queryemp, MYSQLI_ASSOC); 
 
