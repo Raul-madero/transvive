@@ -249,6 +249,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         return '<p>' + data + '</p>';
                     }
                 },
+                {
+                  "render": function(data, type, full, meta) {
+                    return '<a class="link_edit" style="color:#007bff;" href= \'edit_adeudo.php?id=' + full.noempleado + '\'><i class="far fa-edit"></i> Edit</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.noempleado + '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a> | <!-- <a data-toggle="modal" data-target="#modalAltacliente"  data-id=\'' + full.noempleado + '\' data-name=\'' + full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno + '\' href="javascript:void(0)" class="link_delete" style="color:green" ><i class="fas fa-angle-double-up"></i> Reingreso</a> | <a class="link_edit" style="color:#007bff;" href= \'new_empleado23.php?id=' + full.noempleado + '\'><i class="fas fa-portrait"></i></a> | <a class="link_edit" style="color:gray;" href= \'factura/alta_empleado.php?id=' + full.noempleado + '\' target="_blank"><i class="fas fa-print"></i></a> -->';
+                  }
+                }
             ],
             "oLanguage": {
                 "sEmptyTable": "No hay registros disponibles",
