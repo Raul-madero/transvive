@@ -20,26 +20,27 @@ session_start();
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TRANSVIVE | ERP</title>
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
-  <!-- DataTables -->
-  <!--<link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">-->
-  <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-  <!-- DataTables -->
-  <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="../dist/css/adminlte.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TRANSVIVE | ERP</title>
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon"/>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.bootstrap4.min.css">
+
+    <!-- AdminLTE Theme -->
+    <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+
+    <!-- SweetAlert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </head>
 
 <body class="hold-transition layout-top-nav">
@@ -69,7 +70,7 @@ session_start();
 									<label for="semana" class="text-center">Numero de Semana</label>
 								</div>
 								<div class="col-4">
-									<select class="form-control select2bs4" style="text-align: left; margin-bottom: 12px" name="semana" id="semana" id="nosemana">
+									<select class="form-control select2bs4" style="text-align: left; margin-bottom: 12px" name="semana" id="semanaSelec" id="nosemana">
 										<option value="0">--Selecciona la Semana--</option>
 										<?php 
 										for($i = 0; $i < 52; $i++) {
@@ -206,17 +207,41 @@ session_start();
                 //Funcion para mostrar el modal de viajes
                 function mostrarModal(datos) {
                     console.log(datos);
+
+                    // Vaciar el contenido del modal sin afectar los encabezados
                     $('#miModalLabel').text('Asignación Semanal de Viajes');
+                    $('#miModalOperador').text('');
+                    $('#unidad').text('');
+                    // $('#modalSupervisor').text('');
+                    $('#semana').text('');
+                    $('#fecha').text('');
+                    $('.modal-body .contenido-modal').empty(); // Limpiar solo el contenido dinámico
+
+                    if (!datos.viajes || datos.viajes.length === 0) return;
+
                     $('#miModalOperador').text(`Operador: ${datos.viajes[0].operador}`);
                     $('#unidad').text(`No. Unidad: ${datos.viajes[0].num_unidad}`);
                     $('#modalSupervisor').text(`Supervisor: ${datos.supervisor}`);
                     $('#semana').text(`${datos.viajes[0].semana}`);
-                    $('#fecha').text(`DEL ${datos.viajes[0].fecha} AL ${datos.viajes[0].fecha}`);
 
-                    // $('.modal-content .row.text-center.p-2').remove();
-                    let tablaHTML = '';
+                    let diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+                    // Obtener la primera fecha y calcular el lunes de esa semana
+                    let primeraFecha = new Date(datos.viajes[0].fecha);
+                    let diaSemana = primeraFecha.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+                    let lunes = new Date(primeraFecha);
+                    lunes.setDate(lunes.getDate() - ((diaSemana === 0 ? 7 : diaSemana) - 1)); // Ajusta al lunes
+
+                    let domingo = new Date(lunes);
+                    domingo.setDate(lunes.getDate() + 6); // Sumar 6 días para obtener el domingo
+
+                    let fechaInicio = `${lunes.getDate().toString().padStart(2, '0')}/${(lunes.getMonth() + 1).toString().padStart(2, '0')}/${lunes.getFullYear()}`;
+                    let fechaFin = `${domingo.getDate().toString().padStart(2, '0')}/${(domingo.getMonth() + 1).toString().padStart(2, '0')}/${domingo.getFullYear()}`;
+
+                    $('#fecha').text(`DEL ${fechaInicio} AL ${fechaFin}`);
+
+                    // Agrupar viajes por cliente, ruta y horario
                     let viajesAgrupados = {};
-                    let diasSemana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
 
                     datos.viajes.forEach(viaje => {
                         let key = `${viaje.cliente}_${viaje.hora_inicio}_${viaje.hora_fin}`;
@@ -226,25 +251,35 @@ session_start();
                                 ruta: viaje.ruta,
                                 hora_inicio: viaje.hora_inicio,
                                 hora_fin: viaje.hora_fin,
-                                dias: { Lunes: 'red', Martes: 'red', Miercoles: 'red', Jueves: 'red', Viernes: 'red', Sabado: 'red', Domingo: 'red' }
+                                dias: {
+                                    Lunes: 'red', Martes: 'red', Miércoles: 'red', Jueves: 'red',
+                                    Viernes: 'red', Sábado: 'red', Domingo: 'red'
+                                }
                             };
                         }
                         let fechaViaje = new Date(viaje.fecha);
-                        let dia = diasSemana[fechaViaje.getDay() - 1]; // Obtiene el día correspondiente
+                        let dia = diasSemana[fechaViaje.getDay() - 1]; // Obtener el nombre del día
                         if (dia) viajesAgrupados[key].dias[dia] = 'green';
-                    })
+                    });
 
-                    Object.values(viajesAgrupados).forEach(viaje => {
+                    // Convertir el objeto en un array y ordenar por `hora_fin`
+                    let viajesOrdenados = Object.values(viajesAgrupados).sort((a, b) => {
+                        return a.hora_fin.localeCompare(b.hora_fin); // Ordenar por hora_fin
+                    });
+
+                    // Construir la tabla de horarios con colores
+                    let tablaHTML = '';
+                    viajesOrdenados.forEach(viaje => {
                         tablaHTML += `<div class='row text-center p-2'>
                             <div class='col-1 border'>${viaje.cliente}</div>
                             <div class='col-1 border'>${viaje.ruta}</div>
                             <div class='col-1 border'>${viaje.hora_inicio}</div>
                             <div class='col-1 border'>${viaje.hora_fin}</div>
-                            
                             ${diasSemana.map(dia => `<div class='col-1 border' style='background-color: ${viaje.dias[dia]};'></div>`).join('')}
                         </div>`;
                     });
-                    $('.modal-content').append(tablaHTML);
+
+                    $('.modal-body .contenido-modal').append(tablaHTML);
                     $('#miModal').modal('show');
                 }
             }
@@ -252,7 +287,7 @@ session_start();
             
             $('#seleccionaSemana').on('click', function() {
                 console.log('Click');
-                const semana = $('#semana').val();
+                const semana = $('#semanaSelec').val();
                 const anio = $('#anio').val();
                 if(validarDatos(semana, anio)) {
                     load_data(semana, anio)
@@ -261,9 +296,10 @@ session_start();
 
             $('#miModal').on('hidden.bs.modal', function () {
                 console.log('Modal cerrado, reseteando selección.');
-                $('#semana').val('0'); // Restablece la selección
+                $('#semanaSelec').val('0'); // Restablece la selección
                 $('#anio').val('2025'); // Restablece el año por defecto
             });
+
             const validarDatos = (semana, anio) => {
                 if(semana <= 0 || semana > 52) {
                     alert('Seleccione una semana valida');
@@ -277,43 +313,48 @@ session_start();
             }
             
         })
-            </script>
-            
-            <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-xl" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title text-center d-block" id="miModalLabel"></h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="row text-center">
-					<div class="col-8 text-left pl-4" id="miModalOperador"></div>
-					<div class="col-4" id="unidad"></div>
-				</div>
-				<div class="row text-center">
-					<div class="col-5 text-left pl-4" id="modalSupervisor"></div>
-					<div class="col-3" id="semana"></div>
-					<div class="col-3" id="fecha"></div>
-				</div>
-				<div class="row text-center p-2">
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Cliente</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Ruta</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Horario de inicio de ruta</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Horario compromiso</div>
-					<!-- <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Hora inicio ruta</div> -->
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Lunes</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Martes</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Miercoles</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Jueves</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Viernes</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Sabado</div>
-					<div class="col-1 border bg-body-tertiary fw-bold fs-lg">Domingo</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    </script>
+
+    <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center d-block" id="miModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="row text-center">
+                    <div class="col-8 text-left pl-4" id="miModalOperador"></div>
+                    <div class="col-4" id="unidad"></div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-5 text-left pl-4" id="modalSupervisor"></div>
+                    <div class="col-3" id="semana"></div>
+                    <div class="col-3" id="fecha"></div>
+                </div>
+                <!-- Encabezado de la tabla -->
+                <div class="row text-center p-2">
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Cliente</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Ruta</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Horario de inicio de ruta</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Horario compromiso</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Lunes</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Martes</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Miércoles</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Jueves</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Viernes</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Sábado</div>
+                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Domingo</div>
+                </div>
+                <!-- Contenido dinámico de la tabla -->
+                <div class="modal-body">
+                    <div class="contenido-modal"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 	<script>
 		$(document).ready(function () {
 			$('#btnGenerales').on('click', function () {
@@ -334,5 +375,3 @@ session_start();
 
 	</body>
 </html>				
-		
-			
