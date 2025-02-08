@@ -221,7 +221,7 @@ session_start();
 
                     $('#miModalOperador').text(`Operador: ${datos.viajes[0].operador}`);
                     $('#unidad').text(`No. Unidad: ${datos.viajes[0].num_unidad}`);
-                    $('#modalSupervisor').text(`Supervisor: ${datos.supervisor}`);
+                    // $('#modalSupervisor').text(`Supervisor: ${datos.supervisor}`);
                     $('#semana').text(`${datos.viajes[0].semana}`);
 
                     let diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -264,7 +264,7 @@ session_start();
 
                     // Convertir el objeto en un array y ordenar por `hora_fin`
                     let viajesOrdenados = Object.values(viajesAgrupados).sort((a, b) => {
-                        return a.hora_fin.localeCompare(b.hora_fin); // Ordenar por hora_fin
+                        return a.hora_inicio.localeCompare(b.hora_inicio); // Ordenar por hora_fin
                     });
 
                     // Construir la tabla de horarios con colores
