@@ -245,7 +245,7 @@ session_start();
 
                     console.log("Lunes:", formatoFecha(lunes));
                     console.log("Domingo:", formatoFecha(domingo));
-                    $('#fecha').text(`DEL ${fechaInicio} AL ${fechaFin}`);
+                    $('#fecha').text(`DEL ${lunes} AL ${domingo}`);
 
                     // Agrupar viajes por cliente, ruta y horario
                     let viajesAgrupados = {};
