@@ -809,32 +809,43 @@ $('#btn_salir').click(function(e){
                     async : true,
                     data: {action:action, noqueja:noqueja, fecha:fecha, mes:mes, cliente:cliente, formato:formato, descripcion:descripcion, motivo:motivo, responsable:responsable, supervisor:supervisor, operador:operador, unidad:unidad, ruta:ruta, parada:parada, dateincident:dateincident, turno:turno, procede:procede, porkprocede:porkprocede, analisis:analisis, accion:accion, dateaccion:dateaccion, respaccion:respaccion, notas:notas, tipoinc:tipoinc, estatus:estatus, causa:causa, afectacte:afectacte, arearespons:arearespons, datecierre:datecierre},
                     success: function(response) {
-                    console.log("Respuesta recibida:", response); // Debugging
+                        console.log("Respuesta recibida:", response); // Muestra la respuesta exacta en la consola
 
-                    if (!response || (typeof response === "string" && response.trim() === "error")) {
-                        Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                        });
-                        return;
-                    }
+                        // Si response ya es un objeto, no intentar parsearlo
+                        if (typeof response === "object") {
+                            console.log("La respuesta ya es un objeto:", response);
+                            procesarRespuesta(response);
+                            return;
+                        }
 
-                    try {
-                        var info = JSON.parse(response);
-                        console.log("Objeto parseado:", info);
+                        try {
+                            var info = JSON.parse(response);
+                            console.log("Objeto parseado:", info);
+                            procesarRespuesta(info);
+                        } catch (error) {
+                            console.error("Error al parsear JSON:", error, "Respuesta:", response);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'La respuesta del servidor no es válida.',
+                            });
+                        }
+                    },
 
-                        if (info.mensaje) {
+                    function procesarRespuesta(info) {
+                        if (info.error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: info.error,
+                            });
+                        } else if (info.mensaje) {
                             Swal.fire({
                                 title: "Éxito!",
                                 text: info.mensaje,
                                 icon: 'success',
-                            }).then((resultado) => {
-                                if (resultado.value) {
-                                    location.href = 'no_conformidades.php';
-                                } else {
-                                    location.reload();
-                                }
+                            }).then(() => {
+                                location.href = 'no_conformidades.php';
                             });
                         } else {
                             Swal.fire({
@@ -843,15 +854,7 @@ $('#btn_salir').click(function(e){
                                 text: 'No se recibió un mensaje válido del servidor.',
                             });
                         }
-                    } catch (error) {
-                        console.error("Error al parsear JSON:", error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Hubo un problema al procesar la respuesta del servidor.',
-                        });
-                    }
-                },
+                    },
 
                 error: function(xhr, status, error) {
                   console.log("Error AJAX:", xhr.responseText);
