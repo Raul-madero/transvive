@@ -262,12 +262,15 @@ session_start();
 
                     // Si quieres convertirlo en número entero:
                     let semanaEntero = parseInt(numeroSemana, 10);
+                    let semanaCalculo = semanaEntero - 1;
+                    console.log(semanaCalculo); // 6
 
                     let fecha = new Date(datos.viajes[0].fecha); // Ejemplo de fecha
                     let anioSemana = fecha.getFullYear();
+                    console.log(anioSemana);
 
 
-                    let dias = obtenerRangoSemana(anioSemana, semanaEntero)
+                    let dias = obtenerRangoSemana(anioSemana, semanaCalculo)
 
                     $('#fecha').text(`DEL ${dias.lunes} AL ${dias.domingo}`);
 
