@@ -808,7 +808,6 @@ $('#btn_salir').click(function(e){
                     type: "POST",
                     async : true,
                     data: {action:action, noqueja:noqueja, fecha:fecha, mes:mes, cliente:cliente, formato:formato, descripcion:descripcion, motivo:motivo, responsable:responsable, supervisor:supervisor, operador:operador, unidad:unidad, ruta:ruta, parada:parada, dateincident:dateincident, turno:turno, procede:procede, porkprocede:porkprocede, analisis:analisis, accion:accion, dateaccion:dateaccion, respaccion:respaccion, notas:notas, tipoinc:tipoinc, estatus:estatus, causa:causa, afectacte:afectacte, arearespons:arearespons, datecierre:datecierre},
-
                     success: function(response) {
                     console.log("Respuesta recibida:", response); // Debugging
 
@@ -854,10 +853,17 @@ $('#btn_salir').click(function(e){
                     }
                 },
 
-                 error: function(error) {
-                 }
+                error: function(xhr, status, error) {
+                  console.log("Error AJAX:", xhr.responseText);
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error',
+                      text: 'Hubo un problema con la solicitud.',
+                  });
+              }
 
-               });
+
+            });
 
     });
 
