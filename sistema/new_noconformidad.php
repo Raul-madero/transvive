@@ -809,63 +809,51 @@ $('#btn_salir').click(function(e){
                     async : true,
                     data: {action:action, noqueja:noqueja, fecha:fecha, mes:mes, cliente:cliente, formato:formato, descripcion:descripcion, motivo:motivo, responsable:responsable, supervisor:supervisor, operador:operador, unidad:unidad, ruta:ruta, parada:parada, dateincident:dateincident, turno:turno, procede:procede, porkprocede:porkprocede, analisis:analisis, accion:accion, dateaccion:dateaccion, respaccion:respaccion, notas:notas, tipoinc:tipoinc, estatus:estatus, causa:causa, afectacte:afectacte, arearespons:arearespons, datecierre:datecierre},
 
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "NO CONFORMIDAD ALMACENADA CORRECTAMENTE",
-                          icon: 'success',
+                    success: function(response) {
+                    console.log("Respuesta recibida:", response); // Debugging
 
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'no_conformidades.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'no_conformidades.php';
-                        }
-                        });
-
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
+                    if (!response || response.trim() === 'error') {
+                        Swal.fire({
                             icon: 'info',
                             title: '',
                             text: 'Capture los datos requeridos',
-                            })
-        
+                        });
+                        return;
+                    }
+
+                    try {
+                        var info = JSON.parse(response);
+                        console.log("Objeto parseado:", info);
+
+                        if (info.mensaje) {
+                            Swal.fire({
+                                title: "Éxito!",
+                                text: info.mensaje,
+                                icon: 'success',
+                            }).then((resultado) => {
+                                if (resultado.value) {
+                                    location.href = 'no_conformidades.php';
+                                } else {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'No se recibió un mensaje válido del servidor.',
+                            });
                         }
-                        //viewProcesar();
-                 },
+                    } catch (error) {
+                        console.error("Error al parsear JSON:", error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Hubo un problema al procesar la respuesta del servidor.',
+                        });
+                    }
+                },
+
                  error: function(error) {
                  }
 
