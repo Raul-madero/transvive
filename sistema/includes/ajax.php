@@ -11991,7 +11991,7 @@ if($_POST['action'] == 'AlmacenaNc')
         $causa_nc    = $_POST['causa'] ?? "";
         $afecta_cte  = $_POST['afectacte'] ?? "";
         $area_resp   = $_POST['arearespons'] ?? "";
-        $date_cierre = $_POST['datecierre'] ??NULL;
+        $date_cierre = $_POST['datecierre'] ?? NULL;
 
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
