@@ -198,7 +198,8 @@ session_start();
                     }
                 });
 
-                $('#tableOperador tbody').on('click', 'tr', function (e) {
+                $(document).on('click', '#tableOperador tbody tr', function (e) {
+                    const table = $('#tableOperador').DataTable();
                     const clickedColumnIndex = $(e.target).closest('td').index();
                     const rowData = table.row(this).data();
                     mostrarModal(rowData);
