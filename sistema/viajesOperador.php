@@ -226,19 +226,50 @@ session_start();
 
                     let diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-                    // Obtener la primera fecha y calcular el lunes de esa semana
-                    let primeraFecha = new Date(datos.viajes[0].fecha);
-                    let diaSemana = primeraFecha.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
-                    let lunes = new Date(primeraFecha);
-                    lunes.setDate(lunes.getDate() - ((diaSemana === 0 ? 7 : diaSemana) - 1)); // Ajusta al lunes
+                    function obtenerRangoSemana(año, semana) {
+                        // Obtener el primer día del año
+                        let primerDiaAño = new Date(año, 0, 1); // 1 de enero
 
-                    let domingo = new Date(lunes);
-                    domingo.setDate(lunes.getDate() + 6); // Sumar 6 días para obtener el domingo
+                        // Obtener el primer lunes del año
+                        let primerLunes = new Date(primerDiaAño);
+                        let diaSemana = primerDiaAño.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
 
-                    let fechaInicio = `${lunes.getDate().toString().padStart(2, '0')}/${(lunes.getMonth() + 1).toString().padStart(2, '0')}/${lunes.getFullYear()}`;
-                    let fechaFin = `${domingo.getDate().toString().padStart(2, '0')}/${(domingo.getMonth() + 1).toString().padStart(2, '0')}/${domingo.getFullYear()}`;
+                        if (diaSemana !== 1) { // Si no es lunes, ajustar al primer lunes
+                            let ajuste = diaSemana === 0 ? 1 : 8 - diaSemana;
+                            primerLunes.setDate(primerDiaAño.getDate() + ajuste);
+                        }
 
-                    $('#fecha').text(`DEL ${fechaInicio} AL ${fechaFin}`);
+                        // Calcular el lunes de la semana deseada
+                        let lunesSemana = new Date(primerLunes);
+                        lunesSemana.setDate(primerLunes.getDate() + (semana - 1) * 7);
+
+                        // Calcular el domingo de la misma semana (sumando 6 días)
+                        let domingoSemana = new Date(lunesSemana);
+                        domingoSemana.setDate(lunesSemana.getDate() + 6);
+
+                        // Formatear fechas (YYYY-MM-DD)
+                        let formatoFecha = (fecha) => fecha.toISOString().split('T')[0];
+
+                        return {
+                            lunes: formatoFecha(lunesSemana),
+                            domingo: formatoFecha(domingoSemana)
+                        };
+                    }
+
+                    let textoSemana = datos.viajes[0].semana;
+                    let numeroSemana = textoSemana.match(/\d+/)[0]; // Extrae solo el número
+                    console.log(numeroSemana); // "07"
+
+                    // Si quieres convertirlo en número entero:
+                    let semanaEntero = parseInt(numeroSemana, 10);
+
+                    let fecha = new Date(datos.viajes[0].fecha); // Ejemplo de fecha
+                    let anioSemana = fecha.getFullYear();
+
+
+                    let dias = obtenerRangoSemana(anioSemana, semanaEntero)
+
+                    $('#fecha').text(`DEL ${dias.lunes} AL ${dias.domingo}`);
 
                     // Agrupar viajes por cliente, ruta y horario
                     let viajesAgrupados = {};
