@@ -11986,7 +11986,7 @@ if ($_POST['action'] == 'AlmacenaNc') {
         $tipo_incid  = $_POST['tipoinc'] ?? "";
         $estatus_nc  = $_POST['estatus'] ?? "";
         $causa_nc    = $_POST['causa'] ?? "";
-        $afecta_cte  = $_POST['afectacte'] ?? "";
+        $afecta_cte = isset($_POST['afectacte']) ? substr($_POST['afectacte'], 0, 2) : "";
         $area_resp   = $_POST['arearespons'] ?? "";
         $date_cierre = !empty($_POST['datecierre']) ? "'".$_POST['datecierre']."'" : "NULL";
 
