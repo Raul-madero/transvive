@@ -11968,6 +11968,7 @@ if ($_POST['action'] == 'AlmacenaNc') {
         $formato     = $_POST['formato'] ?? "";
         $desc_nc     = $_POST['descripcion'] ?? "";
         $motivo_nc   = $_POST['motivo'] ?? "";
+        $resp_nc     = $_POST['responsable'] ?? "";
         $superv_nc   = $_POST['supervisor'] ?? "";
         $operador_nc = $_POST['operador'] ?? "";
         $unidad_nc   = $_POST['unidad'] ?? "";
@@ -11992,7 +11993,7 @@ if ($_POST['action'] == 'AlmacenaNc') {
         $usuario     = $_SESSION['idUser'] ?? 0;
 
         $sql_noconform = "CALL procesar_noconformidad($no_queja, $date_nc, '$mes_nc', '$cliente_nc', '$formato', '$desc_nc', 
-            '$motivo_nc', '$superv_nc', '$operador_nc', '$unidad_nc', '$ruta_nc', '$parada_nc', $date_incid, 
+            '$motivo_nc', '$resp_nc', '$superv_nc', '$operador_nc', '$unidad_nc', '$ruta_nc', '$parada_nc', $date_incid, 
             '$turno_nc', '$procede_nc', '$porkprocede', '$analisis_nc', '$accion_nc', $date_accion, '$resp_accion', 
             '$observa_nc', '$tipo_incid', '$estatus_nc', '$causa_nc', '$afecta_cte', '$area_resp', $date_cierre, $usuario)";
 
