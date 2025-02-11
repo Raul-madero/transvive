@@ -12001,8 +12001,12 @@ if($_POST['action'] == 'AlmacenaNc')
         }else {
             $responsableacc = "";
         }
+
+        $sql_noconform = "CALL procesar_noconformidad($no_queja, '$date_nc', '$mes_nc', '$cliente_nc', '$formato', '$desc_nc', '$motivo_nc', '$resp_nc', '$superv_nc', '$operador_nc', '$unidad_nc', '$ruta_nc', '$parada_nc', '$date_incid', '$turno_nc', '$procede_nc', '$porkprocede', '$analisis_nc', '$accion_nc', '$date_accion', '$responsableacc', '$observa_nc', '$tipo_incid', '$estatus_nc', '$causa_nc', '$afecta_cte', '$area_resp', '$date_cierre', $usuario)"
+
+        echo "<pre>$sql_noconform</pre>";
     
-        $query_procesar = mysqli_query($conection,"CALL procesar_noconformidad($no_queja, '$date_nc', '$mes_nc', '$cliente_nc', '$formato', '$desc_nc', '$motivo_nc', '$resp_nc', '$superv_nc', '$operador_nc', '$unidad_nc', '$ruta_nc', '$parada_nc', '$date_incid', '$turno_nc', '$procede_nc', '$porkprocede', '$analisis_nc', '$accion_nc', '$date_accion', '$responsableacc', '$observa_nc', '$tipo_incid', '$estatus_nc', '$causa_nc', '$afecta_cte', '$area_resp', '$date_cierre', $usuario)");
+        $query_procesar = mysqli_query($conection, $sql_noconform);
         if($query_procesar) {
             echo "Registro procesado correctamente";
             $data = mysqli_fetch_assoc($query_procesar);
