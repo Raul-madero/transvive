@@ -11965,7 +11965,7 @@ if($_POST['action'] == 'AlmacenaNc')
     }else {
         
         $no_queja    = $_POST['noqueja'] ?? "";
-        $date_nc     = $_POST['fecha'] ?? "";
+        $date_nc     = $_POST['fecha'] ?? NULL;
         $mes_nc      = $_POST['mes'] ?? "";
         $cliente_nc  = $_POST['cliente'] ?? "";
         $formato     = $_POST['formato'] ?? "";
@@ -11977,13 +11977,13 @@ if($_POST['action'] == 'AlmacenaNc')
         $unidad_nc   = $_POST['unidad'] ?? "";
         $ruta_nc     = $_POST['ruta'] ?? "";
         $parada_nc   = $_POST['parada'] ?? "";
-        $date_incid  = $_POST['dateincident'] ?? "";
+        $date_incid  = $_POST['dateincident'] ?? NULL;
         $turno_nc    = $_POST['turno'] ?? "";
         $procede_nc  = $_POST['procede'] ?? "";
         $porkprocede = $_POST['porkprocede'] ?? "";
         $analisis_nc = $_POST['analisis'] ?? "";
         $accion_nc   = $_POST['accion'] ?? "";
-        $date_accion = $_POST['dateaccion'] ?? "";
+        $date_accion = $_POST['dateaccion'] ?? NULL;
         $resp_accion = isset($_POST['respaccion']) ? implode(', ', $_POST['respaccion']) :  "";
         $observa_nc  = $_POST['notas'] ?? "";
         $tipo_incid  = $_POST['tipoinc'] ?? "";
@@ -11991,7 +11991,7 @@ if($_POST['action'] == 'AlmacenaNc')
         $causa_nc    = $_POST['causa'] ?? "";
         $afecta_cte  = $_POST['afectacte'] ?? "";
         $area_resp   = $_POST['arearespons'] ?? "";
-        $date_cierre = $_POST['datecierre'] ?? "";
+        $date_cierre = $_POST['datecierre'] ??NULL;
 
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
