@@ -11997,16 +11997,22 @@ if ($_POST['action'] == 'AlmacenaNc') {
             '$turno_nc', '$procede_nc', '$porkprocede', '$analisis_nc', '$accion_nc', $date_accion, '$resp_accion', 
             '$observa_nc', '$tipo_incid', '$estatus_nc', '$causa_nc', '$afecta_cte', '$area_resp', $date_cierre, $usuario)";
 
-            header('Content-Type: application/json'); // Indicar que es JSON
+            header('Content-Type: application/json'); // Asegura que la respuesta sea JSON
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Forzar MySQL a mostrar errores detallados
 
-            if ($query_procesar) {
-                echo json_encode(["mensaje" => "Registro insertado correctamente"], JSON_UNESCAPED_UNICODE);
-            } else {
-                echo json_encode(["error" => "Error en la consulta: " . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
+            try {
+                $query_procesar = mysqli_query($conection, $sql_noconform);
+
+                if ($query_procesar) {
+                    echo json_encode(["mensaje" => "Registro insertado correctamente"], JSON_UNESCAPED_UNICODE);
+                } else {
+                    throw new Exception("Error en la consulta SQL: " . mysqli_error($conection));
+                }
+            } catch (Exception $e) {
+                echo json_encode(["error" => $e->getMessage()], JSON_UNESCAPED_UNICODE);
             }
-            exit();
-            
-        
+
+            exit();  
     }
 }
 
