@@ -11971,7 +11971,7 @@ if($_POST['action'] == 'AlmacenaNc')
         $formato     = $_POST['formato'] ?? "";
         $desc_nc     = $_POST['descripcion'] ?? "";
         $motivo_nc   = $_POST['motivo'] ?? "";
-        $resp_nc     = $_POST['responsable'] ?? "";
+        $resp_accion = isset($_POST['respaccion']) ? (is_array($_POST['respaccion']) ? implode(',', $_POST['respaccion']) : $_POST['respaccion']) : "";
         $superv_nc   = $_POST['supervisor'] ?? "";
         $operador_nc = $_POST['operador'] ?? "";
         $unidad_nc   = $_POST['unidad'] ?? "";
