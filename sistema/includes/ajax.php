@@ -11999,14 +11999,13 @@ if ($_POST['action'] == 'AlmacenaNc') {
 
         echo "<pre>$sql_noconform</pre>";
 
-        $query_procesar = mysqli_query($conection, $sql_noconform);
         if ($query_procesar) {
-            echo "Registro procesado correctamente";
-            $data = mysqli_fetch_assoc($query_procesar);
+            $data = ["mensaje" => "Registro insertado correctamente"];
             echo json_encode($data, JSON_UNESCAPED_UNICODE);
         } else {
-            die("Error en la consulta: " . mysqli_error($conection));
+            echo json_encode(["error" => "Error en la consulta: " . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
         }
+        
     }
 }
 
