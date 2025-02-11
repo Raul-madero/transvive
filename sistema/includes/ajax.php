@@ -11957,33 +11957,29 @@ if($_POST['action'] == 'AlmacenaEditPuesto')
 
 //Almacena No conformidad
     
-if($_POST['action'] == 'AlmacenaNc')
-{
-    if(empty($_POST['noqueja'])  || empty($_POST['fecha']) || empty($_POST['mes']) )
-    {
-        echo "error"; 
-    }else {
-        
+if ($_POST['action'] == 'AlmacenaNc') {
+    if (empty($_POST['noqueja']) || empty($_POST['fecha']) || empty($_POST['mes'])) {
+        echo "error";
+    } else {
         $no_queja    = $_POST['noqueja'] ?? "";
-        $date_nc     = !empty($_POST['fecha']) ? $_POST['fecha'] : NULL;
+        $date_nc     = !empty($_POST['fecha']) ? "'".$_POST['fecha']."'" : "NULL";
         $mes_nc      = $_POST['mes'] ?? "";
         $cliente_nc  = $_POST['cliente'] ?? "";
         $formato     = $_POST['formato'] ?? "";
         $desc_nc     = $_POST['descripcion'] ?? "";
         $motivo_nc   = $_POST['motivo'] ?? "";
-        $resp_accion = isset($_POST['respaccion']) ? (is_array($_POST['respaccion']) ? implode(',', $_POST['respaccion']) : $_POST['respaccion']) : "";
         $superv_nc   = $_POST['supervisor'] ?? "";
         $operador_nc = $_POST['operador'] ?? "";
         $unidad_nc   = $_POST['unidad'] ?? "";
         $ruta_nc     = $_POST['ruta'] ?? "";
         $parada_nc   = $_POST['parada'] ?? "";
-        $date_incid  = !empty($_POST['dateincident']) ? $_POST['dateincident'] : NULL;
+        $date_incid  = !empty($_POST['dateincident']) ? "'".$_POST['dateincident']."'" : "NULL";
         $turno_nc    = $_POST['turno'] ?? "";
         $procede_nc  = $_POST['procede'] ?? "";
         $porkprocede = $_POST['porkprocede'] ?? "";
         $analisis_nc = $_POST['analisis'] ?? "";
         $accion_nc   = $_POST['accion'] ?? "";
-        $date_accion = !empty($_POST['dateaccion']) ? $_POST['dateccion'] : NULL;
+        $date_accion = !empty($_POST['dateaccion']) ? "'".$_POST['dateaccion']."'" : "NULL";
         $resp_accion = isset($_POST['respaccion']) ? implode(', ', $_POST['respaccion']) :  "";
         $observa_nc  = $_POST['notas'] ?? "";
         $tipo_incid  = $_POST['tipoinc'] ?? "";
@@ -11991,37 +11987,25 @@ if($_POST['action'] == 'AlmacenaNc')
         $causa_nc    = $_POST['causa'] ?? "";
         $afecta_cte  = $_POST['afectacte'] ?? "";
         $area_resp   = $_POST['arearespons'] ?? "";
-        $date_cierre = !empty($_POST['datecierre']) ? $_POST['datecierre'] : NULL;
+        $date_cierre = !empty($_POST['datecierre']) ? "'".$_POST['datecierre']."'" : "NULL";
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+        $usuario     = $_SESSION['idUser'] ?? 0;
 
-        if (isset($resp_accion)) {
-            $responsableacc = $resp_accion;
-        }else {
-            $responsableacc = "";
-        }
-
-        $sql_noconform = "CALL procesar_noconformidad($no_queja, '$date_nc', '$mes_nc', '$cliente_nc', '$formato', '$desc_nc', '$motivo_nc', '$resp_nc', '$superv_nc', '$operador_nc', '$unidad_nc', '$ruta_nc', '$parada_nc', '$date_incid', '$turno_nc', '$procede_nc', '$porkprocede', '$analisis_nc', '$accion_nc', '$date_accion', '$responsableacc', '$observa_nc', '$tipo_incid', '$estatus_nc', '$causa_nc', '$afecta_cte', '$area_resp', '$date_cierre', $usuario)";
+        $sql_noconform = "CALL procesar_noconformidad($no_queja, $date_nc, '$mes_nc', '$cliente_nc', '$formato', '$desc_nc', 
+            '$motivo_nc', '$superv_nc', '$operador_nc', '$unidad_nc', '$ruta_nc', '$parada_nc', $date_incid, 
+            '$turno_nc', '$procede_nc', '$porkprocede', '$analisis_nc', '$accion_nc', $date_accion, '$resp_accion', 
+            '$observa_nc', '$tipo_incid', '$estatus_nc', '$causa_nc', '$afecta_cte', '$area_resp', $date_cierre, $usuario)";
 
         echo "<pre>$sql_noconform</pre>";
-    
+
         $query_procesar = mysqli_query($conection, $sql_noconform);
-        if($query_procesar) {
+        if ($query_procesar) {
             echo "Registro procesado correctamente";
             $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-             mysqli_close($conection);
-        }else {
+            echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        } else {
             die("Error en la consulta: " . mysqli_error($conection));
         }
-        // $result_detalle = mysqli_num_rows($query_procesar);
-        
-        // if($result_detalle > 0){
-        //     $data = mysqli_fetch_assoc($query_procesar);
-        //     echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        //      mysqli_close($conection);
-        // } 
     }
 }
 
