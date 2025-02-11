@@ -12001,7 +12001,8 @@ if ($_POST['action'] == 'AlmacenaNc') {
         if ($query_procesar) {
             echo json_encode(["mensaje" => "Registro insertado correctamente"], JSON_UNESCAPED_UNICODE);
         } else {
-            echo json_encode(["error" => "Error en la consulta: " . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
+            $errorSQL = mysqli_error($conection);
+            echo json_encode(["error" => "Error en la consulta: " . $errorSQL], JSON_UNESCAPED_UNICODE);
         }
         
     }

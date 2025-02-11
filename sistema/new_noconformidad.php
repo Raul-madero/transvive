@@ -811,7 +811,7 @@ $('#btn_salir').click(function(e){
                     success: function(response) {
                     console.log("Respuesta recibida:", response); // Debugging
 
-                    if (!response || response.trim() === 'error') {
+                    if (!response || (typeof response === "string" && response.trim() === "error")) {
                         Swal.fire({
                             icon: 'info',
                             title: '',
