@@ -226,26 +226,19 @@ session_start();
 
                     let diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-                   // Obtener la primera fecha y convertirla en un objeto Date
+                    // Obtener la primera fecha y calcular el lunes de esa semana
                     let primeraFecha = new Date(datos.viajes[0].fecha);
-
-                    // Obtener el día de la semana (0 = Domingo, 1 = Lunes, ..., 6 = Sábado)
-                    let diaSemana = primeraFecha.getDay(); 
-
-                    // Ajustar para obtener el lunes de la semana actual (si es domingo, retrocedemos 6 días)
+                    let diaSemana = primeraFecha.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
                     let lunes = new Date(primeraFecha);
-                    lunes.setDate(primeraFecha.getDate() - (diaSemana === 0 ? 6 : diaSemana - 1));
+                    lunes.setDate(lunes.getDate() - ((diaSemana === 0 ? 7 : diaSemana) - 1)); // Ajusta al lunes
 
-                    // Calcular el domingo de la misma semana sumando 6 días al lunes
                     let domingo = new Date(lunes);
-                    domingo.setDate(lunes.getDate() + 6);
+                    domingo.setDate(lunes.getDate() + 6); // Sumar 6 días para obtener el domingo
 
-                    // Formatear las fechas (YYYY-MM-DD)
-                    let formatoFecha = (fecha) => fecha.toISOString().split('T')[0];
+                    let fechaInicio = `${lunes.getDate().toString().padStart(2, '0')}/${(lunes.getMonth() + 1).toString().padStart(2, '0')}/${lunes.getFullYear()}`;
+                    let fechaFin = `${domingo.getDate().toString().padStart(2, '0')}/${(domingo.getMonth() + 1).toString().padStart(2, '0')}/${domingo.getFullYear()}`;
 
-                    console.log("Lunes:", formatoFecha(lunes));
-                    console.log("Domingo:", formatoFecha(domingo));
-                    $('#fecha').text(`DEL ${lunes} AL ${domingo}`);
+                    $('#fecha').text(`DEL ${fechaInicio} AL ${fechaFin}`);
 
                     // Agrupar viajes por cliente, ruta y horario
                     let viajesAgrupados = {};
