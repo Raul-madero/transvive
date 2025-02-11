@@ -810,43 +810,49 @@ $('#btn_salir').click(function(e){
                     data: {action:action, noqueja:noqueja, fecha:fecha, mes:mes, cliente:cliente, formato:formato, descripcion:descripcion, motivo:motivo, responsable:responsable, supervisor:supervisor, operador:operador, unidad:unidad, ruta:ruta, parada:parada, dateincident:dateincident, turno:turno, procede:procede, porkprocede:porkprocede, analisis:analisis, accion:accion, dateaccion:dateaccion, respaccion:respaccion, notas:notas, tipoinc:tipoinc, estatus:estatus, causa:causa, afectacte:afectacte, arearespons:arearespons, datecierre:datecierre},
 
                     success: function(response) {
-                        console.log("Respuesta recibida:", response); // Verificar la respuesta antes de parsear
+                    console.log("Respuesta recibida:", response); // Debugging
 
-                        try {
-                            var info = JSON.parse(response); // Intenta convertir la respuesta en JSON
-                            console.log("Objeto parseado:", info);
-
-                            if (info.error) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: info.error,
-                                });
-                            } else if (info.mensaje) {
-                                Swal.fire({
-                                    title: "Éxito!",
-                                    text: info.mensaje,
-                                    icon: 'success',
-                                }).then(() => {
-                                    location.href = 'no_conformidades.php';
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'No se recibió un mensaje válido del servidor.',
-                                });
-                            }
-                        } catch (error) {
-                            console.error("Error al parsear JSON:", error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'La respuesta del servidor no es válida.',
-                            });
-                        }
+                    if (!response || response.trim() === 'error') {
+                        Swal.fire({
+                            icon: 'info',
+                            title: '',
+                            text: 'Capture los datos requeridos',
+                        });
+                        return;
                     }
 
+                    try {
+                        var info = JSON.parse(response);
+                        console.log("Objeto parseado:", info);
+
+                        if (info.mensaje) {
+                            Swal.fire({
+                                title: "Éxito!",
+                                text: info.mensaje,
+                                icon: 'success',
+                            }).then((resultado) => {
+                                if (resultado.value) {
+                                    location.href = 'no_conformidades.php';
+                                } else {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'No se recibió un mensaje válido del servidor.',
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Error al parsear JSON:", error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Hubo un problema al procesar la respuesta del servidor.',
+                        });
+                    }
+                },
 
                  error: function(error) {
                  }
