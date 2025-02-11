@@ -771,6 +771,29 @@ $('#btn_salir').click(function(e){
 <script>
    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
+        function procesarRespuesta(info) {
+            if (info.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: info.error,
+                });
+            } else if (info.mensaje) {
+                Swal.fire({
+                    title: "Éxito!",
+                    text: info.mensaje,
+                    icon: 'success',
+                }).then(() => {
+                    location.href = 'no_conformidades.php';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No se recibió un mensaje válido del servidor.',
+                });
+            }
+        }
 
        var noqueja      = $('#inputNoqueja').val();
        var fecha        = $('#inputFecha').val();
@@ -828,30 +851,6 @@ $('#btn_salir').click(function(e){
                                 icon: 'error',
                                 title: 'Error',
                                 text: 'La respuesta del servidor no es válida.',
-                            });
-                        }
-                    },
-
-                    function procesarRespuesta(info) {
-                        if (info.error) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: info.error,
-                            });
-                        } else if (info.mensaje) {
-                            Swal.fire({
-                                title: "Éxito!",
-                                text: info.mensaje,
-                                icon: 'success',
-                            }).then(() => {
-                                location.href = 'no_conformidades.php';
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'No se recibió un mensaje válido del servidor.',
                             });
                         }
                     },
