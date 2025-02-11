@@ -11984,7 +11984,7 @@ if($_POST['action'] == 'AlmacenaNc')
         $analisis_nc = $_POST['analisis'] ?? "";
         $accion_nc   = $_POST['accion'] ?? "";
         $date_accion = $_POST['dateaccion'] ?? "";
-        $resp_accion = implode(', ', $_POST['respaccion'] ?? "");
+        $resp_accion = isset($_POST['respaccion']) ? implode(', ', $_POST['respaccion']) :  "";
         $observa_nc  = $_POST['notas'] ?? "";
         $tipo_incid  = $_POST['tipoinc'] ?? "";
         $estatus_nc  = $_POST['estatus'] ?? "";
