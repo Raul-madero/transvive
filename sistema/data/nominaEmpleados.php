@@ -215,20 +215,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                 'SI',
                 'NO'
             ) AS prima_vacacional,
-            COALESCE(SUM(
-                CASE 
-                    WHEN e.cargo = 'OPERADOR' THEN
-                        CASE 
-                            WHEN e.sueldo_base > rv.sueldo_vuelta THEN e.sueldo_base * rv.valor_vuelta
-                            WHEN rv.unidad_ejecuta <> e.tipo_unidad THEN rv.valor_vuelta * rv.sueldo_vuelta
-                            WHEN (rv.sueldo_vuelta - e.sueldo_base) <= 1 THEN e.sueldo_base * rv.valor_vuelta
-                            ELSE rv.valor_vuelta * rv.sueldo_vuelta
-                        END
-                    WHEN rv.tipo_viaje LIKE '%ESPECIAL%' THEN rv.sueldo_vuelta * rv.valor_vuelta
-                    WHEN rv.tipo_viaje = 'Especial' THEN rv.sueldo_vuelta * rv.valor_vuelta
-                    ELSE 0
-                END
-            ), 0) AS sueldo_bruto,
+            COALESCE(SUM(rv.sueldo_bruto), 0) AS sueldo_bruto,
             COALESCE(rv.total_vueltas, 0) AS total_vueltas,
             MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
             MAX(DATEDIFF(inc.fecha_final, '$fecha_inicio')) AS dias_final,
@@ -258,14 +245,18 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             SELECT 
                 operador, 
                 SUM(valor_vuelta) AS total_vueltas,
-                tipo_viaje,
-                sueldo_vuelta,
-                valor_vuelta,
-                unidad_ejecuta
+                SUM(
+                    CASE 
+                        WHEN cargo = 'OPERADOR' THEN sueldo_base * valor_vuelta
+                        WHEN tipo_viaje LIKE '%ESPECIAL%' THEN sueldo_vuelta * valor_vuelta
+                        WHEN tipo_viaje = 'Especial' THEN sueldo_vuelta * valor_vuelta
+                        ELSE 0
+                    END
+                ) AS sueldo_bruto
             FROM registro_viajes 
             WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
                 AND valor_vuelta > 0
-            GROUP BY operador, tipo_viaje, sueldo_vuelta, valor_vuelta, unidad_ejecuta
+            GROUP BY operador
         ) rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)";
 
     if ($row_fiscal[0] > 0) {
@@ -280,12 +271,11 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         GROUP BY 
             e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
             e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-            e.supervisor, e.apoyo_mes, rv.tipo_viaje, rv.sueldo_vuelta, rv.valor_vuelta, rv.unidad_ejecuta";
+            e.supervisor, e.apoyo_mes";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
     }
-
 
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
