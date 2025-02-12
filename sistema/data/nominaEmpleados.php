@@ -244,7 +244,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $sql_empleados .= "
         FROM empleados e
         LEFT JOIN alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-            AND DATE(al.fecha) BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas'
+            AND DATE(al.fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
         LEFT JOIN incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) 
             AND inc.nodesemana = '$nombre_semana'
         LEFT JOIN (
