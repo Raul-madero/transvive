@@ -209,8 +209,6 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             e.salario_diario,
             al.noalertas,
             COUNT(DISTINCT inc.id) AS faltas,
-            MAX(rv.unidad) AS unidad,
-            MAX(rv.num_unidad) AS num_unidad,
             IF (
                 STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(e.fecha_contrato), '-', DAY(e.fecha_contrato)), '%Y-%m-%d') 
                 BETWEEN '$fecha_inicio' AND '$fecha_fin',
