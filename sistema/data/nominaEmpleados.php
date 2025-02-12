@@ -217,10 +217,8 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             ) AS prima_vacacional,
             COALESCE(rv.total_vueltas, 0) AS total_vueltas,
             COALESCE(
-                CASE 
-                    WHEN rv.sueldo_vuelta - e.sueldo_base > 1 THEN rv.sueldo_vuelta * rv.total_vueltas
-                    ELSE e.sueldo_base * rv.total_vueltas
-                END, 
+                (rv.vueltas_sueldo_base * e.sueldo_base) +
+                (rv.vueltas_sueldo_vuelta * rv.sueldo_vuelta), 
                 0
             ) AS sueldo_bruto,
             MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
@@ -244,14 +242,26 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $sql_empleados .= "
         FROM empleados e
         LEFT JOIN alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-            AND DATE(al.fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
+            AND DATE(al.fecha) BETWEEN '$fecha_inicio' AND '$fecha_limite_alertas'
         LEFT JOIN incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) 
             AND inc.nodesemana = '$nombre_semana'
         LEFT JOIN (
             SELECT 
                 operador, 
                 SUM(valor_vuelta) AS total_vueltas,
-                MAX(sueldo_vuelta) AS sueldo_vuelta
+                MAX(sueldo_vuelta) AS sueldo_vuelta,
+                SUM(
+                    CASE 
+                        WHEN sueldo_vuelta - sueldo_base > 1 THEN valor_vuelta
+                        ELSE 0
+                    END
+                ) AS vueltas_sueldo_vuelta,
+                SUM(
+                    CASE 
+                        WHEN sueldo_vuelta - sueldo_base <= 1 THEN valor_vuelta
+                        ELSE 0
+                    END
+                ) AS vueltas_sueldo_base
             FROM registro_viajes 
             WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
                 AND valor_vuelta > 0
@@ -270,7 +280,8 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         GROUP BY 
             e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
             e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-            e.supervisor, e.apoyo_mes, rv.total_vueltas, rv.sueldo_vuelta";
+            e.supervisor, e.apoyo_mes, rv.total_vueltas, rv.sueldo_vuelta, 
+            rv.vueltas_sueldo_vuelta, rv.vueltas_sueldo_base";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
