@@ -216,7 +216,13 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                 'NO'
             ) AS prima_vacacional,
             COALESCE(rv.total_vueltas, 0) AS total_vueltas,
-            COALESCE(rv.sueldo_bruto, 0) AS sueldo_bruto,
+            COALESCE(
+                CASE 
+                    WHEN rv.sueldo_vuelta - e.sueldo_base > 1 THEN rv.sueldo_vuelta * rv.total_vueltas
+                    ELSE e.sueldo_base * rv.total_vueltas
+                END, 
+                0
+            ) AS sueldo_bruto,
             MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
             MAX(DATEDIFF(inc.fecha_final, '$fecha_inicio')) AS dias_final,
             (
@@ -245,7 +251,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             SELECT 
                 operador, 
                 SUM(valor_vuelta) AS total_vueltas,
-                SUM(sueldo_vuelta * valor_vuelta) AS sueldo_bruto
+                MAX(sueldo_vuelta) AS sueldo_vuelta
             FROM registro_viajes 
             WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
                 AND valor_vuelta > 0
@@ -264,7 +270,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         GROUP BY 
             e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
             e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-            e.supervisor, e.apoyo_mes, rv.total_vueltas, rv.sueldo_bruto";
+            e.supervisor, e.apoyo_mes, rv.total_vueltas, rv.sueldo_vuelta";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
