@@ -250,8 +250,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         LEFT JOIN (
             SELECT 
                 operador, 
-                SUM(valor_vuelta) AS total_vueltas,
-                sueldo_vuelta
+                SUM(valor_vuelta) AS total_vueltas
             FROM registro_viajes 
             WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
                 AND valor_vuelta > 0
