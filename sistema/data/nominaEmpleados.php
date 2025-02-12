@@ -245,7 +245,12 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             SELECT 
                 operador, 
                 SUM(valor_vuelta) AS total_vueltas,
-                SUM(sueldo_vuelta * valor_vuelta) AS sueldo_bruto
+                SUM(
+                    CASE 
+                        WHEN sueldo_vuelta - sueldo_base > 1 THEN sueldo_vuelta * valor_vuelta
+                        ELSE sueldo_base * valor_vuelta
+                    END
+                ) AS sueldo_bruto
             FROM registro_viajes 
             WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
                 AND valor_vuelta > 0
