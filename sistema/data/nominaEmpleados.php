@@ -216,14 +216,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                 'NO'
             ) AS prima_vacacional,
             COALESCE(rv.total_vueltas, 0) AS total_vueltas,
-            COALESCE(SUM(
-                CASE 
-                    WHEN e.cargo = 'OPERADOR' THEN e.sueldo_base * COALESCE(rv.total_vueltas, 0)
-                    WHEN rv.tipo_viaje LIKE '%ESPECIAL%' THEN rv.sueldo_vuelta * COALESCE(rv.total_vueltas, 0)
-                    WHEN rv.tipo_viaje = 'Especial' THEN rv.sueldo_vuelta * COALESCE(rv.total_vueltas, 0)
-                    ELSE 0
-                END
-            ), 0) AS sueldo_bruto,
+            COALESCE(rv.sueldo_bruto, 0) AS sueldo_bruto,
             MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
             MAX(DATEDIFF(inc.fecha_final, '$fecha_inicio')) AS dias_final,
             (
@@ -252,8 +245,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             SELECT 
                 operador, 
                 SUM(valor_vuelta) AS total_vueltas,
-                MAX(sueldo_vuelta) AS sueldo_vuelta,
-                MAX(tipo_viaje) AS tipo_viaje
+                SUM(sueldo_vuelta * valor_vuelta) AS sueldo_bruto
             FROM registro_viajes 
             WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
                 AND valor_vuelta > 0
@@ -272,12 +264,11 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         GROUP BY 
             e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
             e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-            e.supervisor, e.apoyo_mes, rv.total_vueltas, rv.sueldo_vuelta, rv.tipo_viaje";
+            e.supervisor, e.apoyo_mes, rv.total_vueltas, rv.sueldo_bruto";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
     }
-
 
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
