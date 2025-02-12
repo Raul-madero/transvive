@@ -1,105 +1,99 @@
 <?php
 include "../conexion.php";
 
-$nounidad     = $_POST['inputNounidad'];
-$socio        = $_POST['inputSocio'];
-$descripcion  = $_POST['inputDescribe'];
-$nplacas      = $_POST['inputPlacas'];
-$nserie       = $_POST['inputNserie'];
-$year         = $_POST['inputYear'];
-$tipogas      = $_POST['inputTipogas'];
-$nopoliza     = $_POST['inputNopoliza'];
-$aseguradora  = $_POST['inputAseguradora'];
-$iniciapol    = $_POST['inputIniciopol'];
-$terminapol   = $_POST['inputFinpol'];
-$notarjeta    = $_POST['inputTarjetac'];
-$vencetarjeta = $_POST['inputVencetar'];
-$entregadoc   = $_POST['inputEntregadoc'];
-$parametro    = $_POST['inputParametro'];
-$notas        = $_POST['inputNotas'];
+// Función para subir archivos
+function subirArchivo($file, $directorio = 'archivos_polizas/')
+{
+    if (!empty($file['name'])) {
+        $nombre_base = basename($file['name']);
+        $nombre_final = date('Y-m-d_H-i-s') . '_' . $nombre_base;
+        $ruta = $directorio . $nombre_final;
 
+        if (move_uploaded_file($file['tmp_name'], $ruta)) {
+            return $ruta;
+        }
+    }
+    return null;
+}
 
+// Escapar entradas para evitar inyección SQL
+$nounidad     = mysqli_real_escape_string($conection, $_POST['inputNounidad'] ?? "");
+$socio        = mysqli_real_escape_string($conection, $_POST['inputSocio'] ?? "");
+$descripcion  = mysqli_real_escape_string($conection, $_POST['inputDescribe'] ?? "");
+$nplacas      = mysqli_real_escape_string($conection, $_POST['inputPlacas'] ?? "");
+$nserie       = mysqli_real_escape_string($conection, $_POST['inputNserie'] ?? "");
+$year         = !empty($_POST['inputYear']) ? intval($_POST['inputYear']) : NULL;
+$tipogas      = mysqli_real_escape_string($conection, $_POST['inputTipogas'] ?? "");
+$nopoliza     = mysqli_real_escape_string($conection, $_POST['inputNopoliza'] ?? "");
+$aseguradora  = mysqli_real_escape_string($conection, $_POST['inputAseguradora'] ?? "");
+$iniciapol    = !empty($_POST['inputIniciopol']) ? $_POST['inputIniciopol'] : NULL;
+$terminapol   = !empty($_POST['inputFinpol']) ? $_POST['inputFinpol'] : NULL;
+$notarjeta    = mysqli_real_escape_string($conection, $_POST['inputTarjetac'] ?? "");
+$vencetarjeta = !empty($_POST['inputVencetar']) ? $_POST['inputVencetar'] : NULL;
+$entregadoc   = !empty($_POST['inputEntregadoc']) ? $_POST['inputEntregadoc'] : NULL;
+$parametro    = !empty($_POST['inputParametro']) ? intval($_POST['inputParametro']) : 0;
+$notas        = mysqli_real_escape_string($conection, $_POST['inputNotas'] ?? "");
 
-$sqlact= mysqli_query($conection,"SELECT no_unidad from unidades where no_unidad = '$nounidad'");
- 
-  $result_sqlact = mysqli_num_rows($sqlact);
+$iniciapol = $iniciapol ?: NULL;
+$terminapol = $terminapol ?: NULL;
+$vencetarjeta = $vencetarjeta ?: NULL;
+$entregadoc = $entregadoc ?: NULL;
 
-  if($result_sqlact > 0){
+// Validar si la unidad ya existe
+$stmt = $conection->prepare("SELECT no_unidad FROM unidades WHERE no_unidad = ?");
+$stmt->bind_param("s", $nounidad);
+$stmt->execute();
+$stmt->store_result();
 
-     echo "<script>alert('La Unidad ya Existe'); location.href = './new_unidades.php'</script>"; 
-  }else {   
+if ($stmt->num_rows > 0) {
+    echo "<script>alert('La Unidad ya Existe'); location.href = './new_unidades.php';</script>";
+    exit();
+}
+$stmt->close();
 
-    if ($parametro == NULL) {
-      $newparametro = 0;
-    }else {
-      $newparametro = $parametro;
+// Subir archivos
+$ruta_poliza = subirArchivo($_FILES['archivo']);
+$ruta_tarjeta = subirArchivo($_FILES['archivo_tarjetac']);
+$ruta_permisos = subirArchivo($_FILES['archivo_permisos']);
+
+// Insertar datos en la base de datos
+$sql = "INSERT INTO unidades (
+            no_unidad, socio, descripcion, placas, no_serie, year, tipo_combustible, 
+            no_poliza, aseguradora, inicio_poliza, fin_poliza, tarjeta_circulacion, 
+            vence_tcirculacion, fecha_entregadoc, rendimiendo_estandar, notas
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+$stmt = $conection->prepare($sql);
+$stmt->bind_param(
+    "ssssisssssssssis",
+    $nounidad, $socio, $descripcion, $nplacas, $nserie, $year, $tipogas, 
+    $nopoliza, $aseguradora, $iniciapol, $terminapol, $notarjeta, 
+    $vencetarjeta, $entregadoc, $parametro, $notas
+);
+
+if ($stmt->execute()) {
+    // Actualizar archivos si se subieron
+    if ($ruta_poliza) {
+        $stmt = $conection->prepare("UPDATE unidades SET archivo = ? WHERE no_unidad = ?");
+        $stmt->bind_param("ss", $ruta_poliza, $nounidad);
+        $stmt->execute();
+    }
+    if ($ruta_tarjeta) {
+        $stmt = $conection->prepare("UPDATE unidades SET archivo_tarjetac = ? WHERE no_unidad = ?");
+        $stmt->bind_param("ss", $ruta_tarjeta, $nounidad);
+        $stmt->execute();
+    }
+    if ($ruta_permisos) {
+        $stmt = $conection->prepare("UPDATE unidades SET archivo_permiso = ? WHERE no_unidad = ?");
+        $stmt->bind_param("ss", $ruta_permisos, $nounidad);
+        $stmt->execute();
     }
 
-
-if ($_FILES['archivo']['name'] != null) {
-   $nombre_base  = basename($_FILES['archivo']['name']);
-   $nombre_final = date('m-d-y'). '-'. date('H-i-s'). '-'. $nombre_base;
-   $ruta = 'archivos_polizas/' . $nombre_final;
-   $subirarchivo = move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta);
-}else {
-  $ruta = "";
+    echo "<script>alert('La Unidad se Almaceno Correctamente'); location.href = './unidades.php';</script>";
+} else {
+    printf("Error: %s\n", $conection->error);
 }
 
-if ($_FILES['archivo_tarjetac']['name'] != null) {
-   $nombre_base2  = basename($_FILES['archivo_tarjetac']['name']);
-   $nombre_final2 = date('m-d-y'). '-'. date('H-i-s'). '-'. $nombre_base2;
-   $ruta2 = 'archivos_polizas/' . $nombre_final2;
-   $subirarchivo2 = move_uploaded_file($_FILES['archivo_tarjetac']['tmp_name'], $ruta2);
-}else {
-  $ruta2 = "";
-}
-
-if ($_FILES['archivo_permisos']['name'] != null) {
-   $nombre_base3  = basename($_FILES['archivo_permisos']['name']);
-   $nombre_final3 = date('m-d-y'). '-'. date('H-i-s'). '-'. $nombre_base3;
-   $ruta3 = 'archivos_polizas/' . $nombre_final3;
-   $subirarchivo3 = move_uploaded_file($_FILES['archivo_permisos']['tmp_name'], $ruta3);
-}else {
-  $ruta3 = "";
-}
-
-  /* if ($subirarchivo) {*/
-        $insertarSQL = "INSERT INTO unidades(no_unidad, socio, descripcion, placas, no_serie, year, tipo_combustible, no_poliza, aseguradora, inicio_poliza, fin_poliza, tarjeta_circulacion, vence_tcirculacion, fecha_entregadoc, rendimiendo_estandar, notas) VALUES ('$nounidad', '$socio', '$descripcion', '$nplacas', '$nserie', $year, '$tipogas', '$nopoliza', '$aseguradora', '$iniciapol', '$terminapol', '$notarjeta', '$vencetarjeta', '$entregadoc', $newparametro, '$notas')";
-        $resultado = mysqli_query($conection, $insertarSQL);
-        if($resultado){
-         
-         echo "<script>alert('La Unidad se Almaceno Correctamente'); location.href = './unidades.php'</script>";
-        }else{
-         printf('Errormessage: %s\n', mysqli_error($conection));
-        }
-  /* }*/
-/*}else{
-   
-        $insertarSQL = "INSERT INTO unidades(no_unidad, socio, descripcion, placas, no_serie, year, tipo_combustible, no_poliza, aseguradora, inicio_poliza, fin_poliza, tarjeta_circulacion, vence_tcirculacion, fecha_entregadoc, rendimiendo_estandar, notas) VALUES ('$nounidad', '$socio', '$descripcion', '$nplacas', '$nserie', $year, '$tipogas', '$nopoliza', '$aseguradora', '$iniciapol', '$terminapol', '$notarjeta', '$vencetarjeta', '$entregadoc', $newparametro, '$notas')";
-        $resultado = mysqli_query($conection, $insertarSQL);
-        if($resultado){
-
-         echo "<script>alert('La Unidad se Almaceno Correctamente'); location.href = './unidades.php'</script>";
-        }else{
-         printf('Errormessage: %s\n', mysqli_error($conection));
-        }
-   
-}*/
-
- if ($subirarchivo) {
-    $updateSQLr1 = "UPDATE unidades SET archivo = '$ruta' WHERE no_unidad = '$nounidad'";
-    $resultado2 = mysqli_query($conection, $updateSQLr1);
-  }
-
-  if ($subirarchivo2) {
-    $updateSQLr2 = "UPDATE unidades SET archivo_tarjetac = '$ruta2' WHERE no_unidad = '$nounidad'";
-    $resultado3 = mysqli_query($conection, $updateSQLr2);
-  }
-
-  if ($subirarchivo3) {
-    $updateSQLr3 = "UPDATE unidades SET archivo_permiso = '$ruta3' WHERE no_unidad = '$nounidad'";
-    $resultado4 = mysqli_query($conection, $updateSQLr3);
-  }
-mysqli_close($conection);
-}
+$stmt->close();
+$conection->close();
 ?>

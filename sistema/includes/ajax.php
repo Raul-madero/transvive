@@ -2088,25 +2088,25 @@ if($_POST['action'] == 'BajaEmpleado')
    
        $query_insert = mysqli_query($conection,"SELECT count(*) as numreg FROM empleados where  noempleado = $idc and estatus = 0");
        while ($data = mysqli_fetch_assoc($query_insert)){
-        $noreg = $data['numreg'];
-       } 
+            $noreg = $data['numreg'];
+        } 
 
        if ($noreg == 0) {
             $query_procesar = mysqli_query($conection,"CALL baja_empleado($idc, '$empleado', '$date_baja', '$mot_baja', '$recontrata', '$mot_recontra', $usuario)");
             $result_detalle = mysqli_num_rows($query_procesar);
         
-           if($result_detalle > 0){
-              $data = mysqli_fetch_assoc($query_procesar);
-              echo json_encode($data,JSON_UNESCAPED_UNICODE);
-           }else{
+            if($result_detalle > 0){
+                $data = mysqli_fetch_assoc($query_procesar);
+                echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            }else{
+                echo "error";
+            }
+        }else {
             echo "error";
-           }
-       }else {
-         echo "error";
-         exit;
-       }
-    exit;
-} 
+            exit;
+        }
+        exit;
+    } 
 }
 
 if($_POST['action'] == 'ReingresoEmpleado')
