@@ -215,28 +215,20 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                 'SI',
                 'NO'
             ) AS prima_vacacional,
-            COALESCE(rv.total_vueltas, 0) AS total_vueltas,
-            COALESCE(
-                CASE 
-                    WHEN rv.sueldo_vuelta - e.sueldo_base > 1 THEN rv.sueldo_vuelta * rv.total_vueltas
-                    ELSE e.sueldo_base * rv.total_vueltas
-                END, 
-                0
-            ) AS sueldo_bruto,
+            -- Calcular el sueldo bruto sumando por cada vuelta el mayor entre sueldo_base y sueldo_vuelta:
+            COALESCE(SUM(
+                IF(rv.sueldo_vuelta > e.sueldo_base, rv.sueldo_vuelta, e.sueldo_base)
+            ), 0) AS sueldo_bruto,
             MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
             MAX(DATEDIFF(inc.fecha_final, '$fecha_inicio')) AS dias_final,
             (
                 SELECT COALESCE(SUM(a.descuento), 0) 
                 FROM adeudos a 
                 WHERE a.noempleado = e.noempleado AND a.estado = 1
-            ) AS deducciones";
+            ) AS deducciones
+            -- Si existen importes fiscales se añaden los campos correspondientes
+    ";
 
-    $sql_fiscal = "SELECT COUNT(*) FROM importes_fiscales";
-    $result_fiscal = mysqli_query($conection, $sql_fiscal);
-    if (!$result_fiscal) {
-        die(json_encode(['error' => 'Error al obtener los datos de la nómina: ' . mysqli_error($conection)]));
-    }
-    $row_fiscal = mysqli_fetch_row($result_fiscal);
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
     }
@@ -247,20 +239,15 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             AND DATE(al.fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
         LEFT JOIN incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) 
             AND inc.nodesemana = '$nombre_semana'
-        LEFT JOIN (
-            SELECT 
-                operador, 
-                SUM(valor_vuelta) AS total_vueltas,
-                MAX(sueldo_vuelta) AS sueldo_vuelta
-            FROM registro_viajes 
-            WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
-                AND valor_vuelta > 0
-            GROUP BY operador
-        ) rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)";
+        LEFT JOIN registro_viajes rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+            AND DATE(rv.fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin'
+            AND rv.valor_vuelta > 0
+    ";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= "
-        LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT_WS(' ', e.apellido_paterno, e.apellido_materno, e.nombres)";
+        LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT_WS(' ', e.apellido_paterno, e.apellido_materno, e.nombres)
+        ";
     }
 
     $sql_empleados .= "
@@ -270,11 +257,13 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         GROUP BY 
             e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
             e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-            e.supervisor, e.apoyo_mes, rv.total_vueltas, rv.sueldo_vuelta";
+            e.supervisor, e.apoyo_mes
+    ";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
     }
+
 
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
