@@ -71,8 +71,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
  
     <!-- /.content-header -->
 
-     <?php
-                    
+     <?php         
           include "../conexion.php";
           $query_folio = mysqli_query($conection,"SELECT no_prov FROM proveedores ORDER by id DESC LIMIT 1");
           $result_folio = mysqli_num_rows($query_folio);

@@ -22,110 +22,35 @@ function calcularAniosTrabajados($fecha_contrato) {
     return $diferencia->y;
 }
 
-function calcularDiasVacaciones($anios) {
-    $dias_correspondientes = 0;
-    switch ($anios) {
-        case 0:
-            $dias_correspondientes = 0;
-            break;
-        case 1:
-            $dias_correspondientes = 12;
-            break;
-        case 2:
-            $dias_correspondientes = 14;
-            break;
-        case 3:
-            $dias_correspondientes = 16;
-            break;
-        case 4:
-            $dias_correspondientes = 18;
-            break;
-        case 5:
-            $dias_correspondientes = 20;
-            break;
-        case 6:
-            $dias_correspondientes = 22;
-            break;
-        case 7:
-            $dias_correspondientes = 22;
-            break;
-        case 8:
-            $dias_correspondientes = 22;
-            break;
-        case 9:
-            $dias_correspondientes = 22;
-            break;
-        case 10:
-            $dias_correspondientes = 22;
-            break;
-        case 11:
-            $dias_correspondientes = 24;
-            break;
-        case 12:
-            $dias_correspondientes = 24;
-            break;
-        case 13:
-            $dias_correspondientes = 24;
-            break;
-        case 14:
-            $dias_correspondientes = 24;
-            break;
-        case 15:
-            $dias_correspondientes = 24;
-            break;
-        case 16:
-            $dias_correspondientes = 26;
-            break;
-        case 17:
-            $dias_correspondientes = 26;
-            break;
-        case 18:
-            $dias_correspondientes = 26;
-            break;
-        case 19:
-            $dias_correspondientes = 26;
-            break;
-        case 20:
-            $dias_correspondientes = 26;
-            break;
-        case 21:
-            $dias_correspondientes = 28;
-            break;
-        case 22:
-            $dias_correspondientes = 28;
-            break;
-        case 23:
-            $dias_correspondientes = 28;
-            break;
-        case 24:
-            $dias_correspondientes = 28;
-            break;
-        case 25:
-            $dias_correspondientes = 28;
-            break;
-        case 26:
-            $dias_correspondientes = 30;
-            break;
-        case 27:
-            $dias_correspondientes = 30;
-            break;
-        case 28:
-            $dias_correspondientes = 30;
-            break;
-        case 29:
-            $dias_correspondientes = 30;
-            break;
-        case 30:
-            $dias_correspondientes = 30;
-            break;
-        case 31:
-            $dias_correspondientes = 32;
-            break;
-        default:
-            $dias_correspondientes = 32;
-            break;
+function calcularBonoSemanalContrato($fecha_contrato) {
+    $fecha_contrato = '2024-02-05'; // Fecha de contrato en formato 'Y-m-d'
+    $fecha_actual = new DateTime(); // Fecha actual
+    $fecha_contrato_dt = new DateTime($fecha_contrato);
+
+    // Calcular la diferencia
+    $diferencia = $fecha_contrato_dt->diff($fecha_actual);
+
+    if($diferencia->days > 7) {
+        return TRUE;
+    }else{
+        return FALSE;
     }
-    return $dias_correspondientes;
+}
+
+function calcularDiasVacaciones($anios) {
+    if ($anios <= 0) return 0;
+    if ($anios == 1) return 12;
+    if ($anios == 2) return 14;
+    if ($anios == 3) return 16;
+    if ($anios == 4) return 18;
+    if ($anios == 5) return 20;
+    if ($anios >= 6 && $anios <= 10) return 22;
+    if ($anios >= 11 && $anios <= 15) return 24;
+    if ($anios >= 16 && $anios <= 20) return 26;
+    if ($anios >= 21 && $anios <= 25) return 28;
+    if ($anios >= 26 && $anios <= 30) return 30;
+    
+    return 32; // Para 31 años o más
 }
 
 
@@ -215,11 +140,13 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             'SI',
             'NO'
         ) AS prima_vacacional,
-        COALESCE(COUNT(rv.id), 0) AS total_vueltas,
+        COALESCE(COUNT(rv.valor_vuelta), 0) AS total_vueltas,
         COALESCE(
-            SUM(
-                IF(rv.sueldo_vuelta > e.sueldo_base, rv.sueldo_vuelta, e.sueldo_base)
-            ),
+            IF(e.cargo = 'OPERADOR',
+                SUM(
+                    IF(rv.sueldo_vuelta > e.sueldo_base, rv.sueldo_vuelta * rv.valor_vuelta, e.sueldo_base * rv.valor_vuelta)
+                ),
+                e.sueldo_base * 7),
             0
         ) AS sueldo_bruto,
         MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
@@ -242,7 +169,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
     $sql_empleados .= "
     FROM empleados e
-    LEFT JOIN alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+    LEFT JOIN alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
         AND DATE(al.fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
     LEFT JOIN incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
         AND inc.nodesemana = '$nombre_semana'
@@ -257,12 +184,12 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
     $sql_empleados .= "
     WHERE 
-        (e.estatus = 1 OR DATEDIFF(e.fecha_baja, '$fecha_inicio') >= 8)
+        (e.estatus = 1 OR DATEDIFF(e.fecha_baja, '$fecha_inicio') >= 6)
         AND e.tipo_nomina = 'Semanal'
     GROUP BY 
         e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
         e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-        e.supervisor, e.apoyo_mes";
+        e.supervisor, e.apoyo_mes, al.noalertas";
 
     if ($row_fiscal[0] > 0) {
     $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
@@ -292,11 +219,12 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
             // var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
-            $gana_bono = $alertas < 5 ? true : false;
+            $bono_semanal_contrato = calcularBonoSemanalContrato($row_empleados['fecha_contrato']);
+            $gana_bono = ($alertas < 5 && $bono_semanal_contrato) ? true : false;
             $noempleado = intval($row_empleados['noempleado']);
             $nombre = $row_empleados['operador'];
-            $no_unidad = $row_empleados['num_unidad'];
-            $tipo_unidad = $row_empleados['unidad'];
+            $no_unidad = $row_empleados['num_unidad'] ?? "";
+            $tipo_unidad = $row_empleados['unidad'] ?? "";
             $total_vueltas = $row_empleados['total_vueltas'];
             $cargo = $row_empleados['cargo'];
             $imss = intval($row_empleados['imss']);
@@ -316,8 +244,8 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? (intval($row_empleados['fecha_inicial']) + 1) ?? (intval($row_empleados['fecha_final']) + 1) : 0;
             $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
             $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['bono_categoria']) : 0;
-            $neto = ($cargo == 'OPERADOR') ? ($sueldo_bruto + $bono_categoria + $bono_semanal + $row_empleados['bono_supervisor'] + $pago_vacaciones + $prima_vacacional - $pago_fiscal - $deducciones - $caja_ahorro + $apoyo_mes) : ($bono_categoria + $bono_semanal + $row_empleados['bono_supervisor'] + $pago_vacaciones + $prima_vacacional + $pago_fiscal - $deducciones - $caja_ahorro + $apoyo_mes - $deduccion_fiscal);
             $bono_semanal = ($gana_bono && $dias_vacaciones === 0) ? floatval($row_empleados['bono_semanal']) : 0;
+            $neto = ($cargo == 'OPERADOR') ? ($sueldo_bruto + $bono_categoria + $bono_semanal + $row_empleados['bono_supervisor'] + $pago_vacaciones + $prima_vacacional - $pago_fiscal - $deducciones - $caja_ahorro + $apoyo_mes) : ($bono_categoria + $bono_semanal + $row_empleados['bono_supervisor'] + $pago_vacaciones + $prima_vacacional + $pago_fiscal - $deducciones - $caja_ahorro + $apoyo_mes - $deduccion_fiscal);
     
             // Preparar los datos para la inserción
             $data = [
