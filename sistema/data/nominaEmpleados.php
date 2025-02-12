@@ -251,7 +251,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             SELECT 
                 operador, 
                 SUM(valor_vuelta) AS total_vueltas,
-                MAX(sueldo_vuelta) AS sueldo_vuelta
+                sueldo_vuelta
             FROM registro_viajes 
             WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
                 AND valor_vuelta > 0
