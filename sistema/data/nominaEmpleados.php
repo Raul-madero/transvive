@@ -257,11 +257,15 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         LEFT JOIN (
             SELECT 
                 operador, 
-                SUM(valor_vuelta) AS total_vueltas
+                SUM(valor_vuelta) AS total_vueltas,
+                tipo_viaje,
+                sueldo_vuelta,
+                valor_vuelta,
+                unidad_ejecuta
             FROM registro_viajes 
             WHERE DATE(fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
                 AND valor_vuelta > 0
-            GROUP BY operador
+            GROUP BY operador, tipo_viaje, sueldo_vuelta, valor_vuelta, unidad_ejecuta
         ) rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)";
 
     if ($row_fiscal[0] > 0) {
@@ -276,11 +280,12 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         GROUP BY 
             e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
             e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-            e.supervisor, e.apoyo_mes";
+            e.supervisor, e.apoyo_mes, rv.tipo_viaje, rv.sueldo_vuelta, rv.valor_vuelta, rv.unidad_ejecuta";
 
     if ($row_fiscal[0] > 0) {
         $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, deducciones, fi.neto";
     }
+
 
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
