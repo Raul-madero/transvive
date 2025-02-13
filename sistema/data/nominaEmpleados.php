@@ -227,12 +227,15 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $cargo = $row_empleados['cargo'];
             $imss = intval($row_empleados['imss']);
             $sueldo_bruto = 0;
-            if($row_empleados['cargo'] === 'OPERADOR') {
+            if ($row_empleados['cargo'] === 'OPERADOR') {
+                // Si es operador, calcula el sueldo con las faltas
                 $sueldo_bruto = floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base']));
-            }else if ($row_empleados['cargo'] != 'OPERADOR') {
-                $sueldo_bruto = floatval($row_empleados['sueldo_base']) * 7;
-            }else if ($row_empleados['cargo'] != 'OPERADOR' && $row_empleados['imss'] == 1) {
+            } elseif ($row_empleados['cargo'] !== 'OPERADOR' && $row_empleados['imss'] == 1) {
+                // Si no es operador y está asegurado (IMSS == 1), sueldo bruto es 0
                 $sueldo_bruto = 0;
+            } else {
+                // Si no es operador pero no cumple la condición anterior, calcula el sueldo normal
+                $sueldo_bruto = floatval($row_empleados['sueldo_base']) * 7;
             }
             $deducciones = floatval($row_empleados['deducciones']);
             $caja_ahorro = floatval($row_empleados['caja_ahorro']);
