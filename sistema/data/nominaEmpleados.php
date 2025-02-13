@@ -132,7 +132,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         e.supervisor,
         e.apoyo_mes,
         e.salario_diario,
-        SUM(al.noalertas) AS noalertas,
+        MAX(al.noalertas) AS noalertas,
         COUNT(DISTINCT inc.id) AS faltas,
         IF (
             STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(e.fecha_contrato), '-', DAY(e.fecha_contrato)), '%Y-%m-%d')
