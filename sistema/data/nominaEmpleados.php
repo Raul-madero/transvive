@@ -23,19 +23,15 @@ function calcularAniosTrabajados($fecha_contrato) {
 }
 
 function calcularBonoSemanalContrato($fecha_contrato, $fecha_pago) {
-    $fecha_contrato = '2024-02-05'; // Fecha de contrato en formato 'Y-m-d'
-    $fecha_actual = new DateTime(); // Fecha actual
-    $fecha_contrato_dt = new DateTime($fecha_pago);
+    $fecha_contrato_dt = new DateTime($fecha_contrato);
+    $fecha_pago_dt = new DateTime($fecha_pago);
 
-    // Calcular la diferencia
-    $diferencia = $fecha_contrato_dt->diff($fecha_actual);
+    // Calcular la diferencia en días
+    $diferencia = $fecha_contrato_dt->diff($fecha_pago_dt);
 
-    if($diferencia->days > 7) {
-        return true;
-    }else{
-        return false;
-    }
+    return ($diferencia->days > 7);
 }
+
 
 function calcularDiasVacaciones($anios) {
     if ($anios <= 0) return 0;
@@ -222,7 +218,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             // var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
             $bono_semanal_contrato = calcularBonoSemanalContrato($row_empleados['fecha_contrato'], $fecha_fin);
-            $gana_bono = ($alertas < 5 && $bono_semanal_contrato) ? true : false;
+            $gana_bono = ($alertas < 5 && $bono_semanal_contrato);
             $noempleado = intval($row_empleados['noempleado']);
             $nombre = $row_empleados['operador'];
             $no_unidad = $row_empleados['num_unidad'] ?? "";
@@ -250,7 +246,15 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $anios_trabajados = calcularAniosTrabajados($row_empleados['fecha_contrato']);
             $dias_correspondientes_vacaciones = calcularDiasVacaciones($anios_trabajados);
             $prima_vacacional = $row_empleados['prima_vacacional'] == 'SI' ? (($row_empleados['salario_diario'] * $dias_correspondientes_vacaciones) * .25) : 0;
-            $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? (intval($row_empleados['fecha_inicial']) + 1) ?? (intval($row_empleados['fecha_final']) + 1) : 0;
+            $dias_vacaciones = 0;
+            if (isset($row_empleados['fecha_inicial']) && isset($row_empleados['fecha_final'])) {
+                $dias_vacaciones = (strtotime($row_empleados['fecha_final']) - strtotime($row_empleados['fecha_inicial'])) / 86400 + 1;
+            } elseif (isset($row_empleados['fecha_inicial'])) {
+                $dias_vacaciones = (strtotime($fecha_fin) - strtotime($row_empleados['fecha_inicial'])) / 86400 + 1;
+            } elseif (isset($row_empleados['fecha_final'])) {
+                $dias_vacaciones = (strtotime($row_empleados['fecha_final']) - strtotime($fecha_inicio)) / 86400 + 1;
+            }
+
             $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
             $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['bono_categoria']) : 0;
             $bono_semanal = (!$gana_bono || $dias_vacaciones > 0 || !$bono_semanal_contrato) ? 0 : floatval($row_empleados['bono_semanal']);
