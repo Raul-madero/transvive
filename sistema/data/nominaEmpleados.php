@@ -22,10 +22,10 @@ function calcularAniosTrabajados($fecha_contrato) {
     return $diferencia->y;
 }
 
-function calcularBonoSemanalContrato($fecha_contrato) {
+function calcularBonoSemanalContrato($fecha_contrato, $fecha_pago) {
     $fecha_contrato = '2024-02-05'; // Fecha de contrato en formato 'Y-m-d'
     $fecha_actual = new DateTime(); // Fecha actual
-    $fecha_contrato_dt = new DateTime($fecha_contrato);
+    $fecha_contrato_dt = new DateTime($fecha_pago);
 
     // Calcular la diferencia
     $diferencia = $fecha_contrato_dt->diff($fecha_actual);
@@ -221,7 +221,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
             // var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
-            $bono_semanal_contrato = calcularBonoSemanalContrato($row_empleados['fecha_contrato']);
+            $bono_semanal_contrato = calcularBonoSemanalContrato($row_empleados['fecha_contrato'], $fecha_fin);
             $gana_bono = ($alertas < 5 && $bono_semanal_contrato) ? true : false;
             $noempleado = intval($row_empleados['noempleado']);
             $nombre = $row_empleados['operador'];
