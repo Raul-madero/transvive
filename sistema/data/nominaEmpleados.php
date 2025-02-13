@@ -234,7 +234,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             if($row_empleados['cargo'] === 'OPERADOR') {
                 $sueldo_bruto = floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base']));
             }else if ($row_empleados['cargo'] != 'OPERADOR') {
-                $sueldo_bruto = floatval($row_empleados['sueldo_bruto']) * 7;
+                $sueldo_bruto = floatval($row_empleados['sueldo_base']) * 7;
             }else if ($row_empleados['cargo'] != 'OPERADOR' && $imss == 1) {
                 $sueldo_bruto = 0;
             }
