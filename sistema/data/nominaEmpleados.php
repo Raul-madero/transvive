@@ -132,7 +132,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         e.supervisor,
         e.apoyo_mes,
         e.salario_diario,
-        MAX(al.noalertas) AS noalertas,
+       -- MAX(al.noalertas) AS noalertas,
         COUNT(DISTINCT inc.id) AS faltas,
         IF (
             STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(e.fecha_contrato), '-', DAY(e.fecha_contrato)), '%Y-%m-%d')
@@ -169,8 +169,12 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
     $sql_empleados .= "
     FROM empleados e
-    LEFT JOIN alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
-        AND DATE(al.fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
+    LEFT JOIN (
+        SELECT operador, SUM(noalertas) AS noalertas
+        FROM alertas
+        WHERE DATE(fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
+        GROUP BY operador
+    ) al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
     LEFT JOIN incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
         AND inc.nodesemana = '$nombre_semana'
     LEFT JOIN registro_viajes rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
