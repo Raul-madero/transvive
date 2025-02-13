@@ -167,7 +167,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $sql_empleados .= "
     FROM empleados e
     LEFT JOIN (
-        SELECT operador, SUM(noalertas) AS noalertas
+        SELECT operador, COALESCE(SUM(noalertas), 0) AS noalertas
         FROM alertas
         WHERE DATE(fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
         GROUP BY operador
