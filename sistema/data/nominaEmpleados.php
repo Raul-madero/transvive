@@ -31,9 +31,9 @@ function calcularBonoSemanalContrato($fecha_contrato, $fecha_pago) {
     $diferencia = $fecha_contrato_dt->diff($fecha_actual);
 
     if($diferencia->days > 7) {
-        return TRUE;
+        return true;
     }else{
-        return FALSE;
+        return false;
     }
 }
 
