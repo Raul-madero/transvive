@@ -189,7 +189,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     GROUP BY 
         e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
         e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-        e.supervisor, e.apoyo_mes, al.noalertas";
+        e.supervisor, e.apoyo_mes, al.noalertas, al.operador";
 
     if ($row_fiscal[0] > 0) {
     $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
