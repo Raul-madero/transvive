@@ -229,9 +229,9 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $sueldo_bruto = 0;
             if($row_empleados['cargo'] === 'OPERADOR') {
                 $sueldo_bruto = floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base']));
-            }elseif ($row_empleados['cargo'] != 'OPERADOR') {
+            }else if ($row_empleados['cargo'] != 'OPERADOR') {
                 $sueldo_bruto = floatval($row_empleados['sueldo_base']) * 7;
-            }elseif ($row_empleados['cargo'] != 'OPERADOR' && $imss == 1 || $total_vueltas == 0) {
+            }else if ($row_empleados['cargo'] != 'OPERADOR' && $row_empleados['imss'] == 1) {
                 $sueldo_bruto = 0;
             }
             $deducciones = floatval($row_empleados['deducciones']);
