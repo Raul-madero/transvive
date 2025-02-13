@@ -184,7 +184,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     WHERE 
         (e.estatus = 1 OR DATEDIFF(e.fecha_baja, '$fecha_inicio') >= 6)
         AND e.tipo_nomina = 'Semanal'
-        AND (e.cargo = 'OPERADOR' AND total_vueltas > 0)
+        AND (e.cargo = 'OPERADOR' AND rv.total_vueltas > 0)
     GROUP BY 
         e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
         e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
