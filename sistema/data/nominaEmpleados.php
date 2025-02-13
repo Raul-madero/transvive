@@ -142,11 +142,9 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         ) AS prima_vacacional,
         COALESCE(COUNT(rv.valor_vuelta), 0) AS total_vueltas,
         COALESCE(
-            IF(e.cargo = 'OPERADOR',
-                SUM(
-                    IF(rv.sueldo_vuelta > e.sueldo_base, rv.sueldo_vuelta * rv.valor_vuelta, e.sueldo_base * rv.valor_vuelta)
-                ),
-                e.sueldo_base * 7),
+            SUM(
+                IF(rv.sueldo_vuelta > e.sueldo_base, rv.sueldo_vuelta * rv.valor_vuelta, e.sueldo_base * rv.valor_vuelta)
+            ),
             0
         ) AS sueldo_bruto,
         MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
@@ -232,7 +230,14 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $total_vueltas = $row_empleados['total_vueltas'];
             $cargo = $row_empleados['cargo'];
             $imss = intval($row_empleados['imss']);
-            $sueldo_bruto = ($row_empleados['cargo'] === 'OPERADOR') ? floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])) : 0;
+            $sueldo_bruto = 0;
+            if($row_empleados['cargo'] === 'OPERADOR') {
+                $sueldo_bruto = floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base']));
+            }else if ($row_empleados['cargo'] != 'OPERADOR') {
+                $sueldo_bruto = floatval($row_empleados['sueldo_bruto']) * 7;
+            }else if ($row_empleados['cargo'] != 'OPERADOR' && $imss == 1) {
+                $sueldo_bruto = 0;
+            }
             $deducciones = floatval($row_empleados['deducciones']);
             $caja_ahorro = floatval($row_empleados['caja_ahorro']);
             $supervisor = $row_empleados['supervisor'];
