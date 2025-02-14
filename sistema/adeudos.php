@@ -217,7 +217,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     }
                 },
                 {
-                  mData: 'abono_total',
+                  mData: 'total_abonado',
                   "sWidth": "120px",
                   "render": function(data) {
                     return '<p>' + data + '</p>';

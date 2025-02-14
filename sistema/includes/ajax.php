@@ -3036,11 +3036,12 @@ if ($_POST['action'] == 'EditarAdeudo') {
         $comentarios = mysqli_real_escape_string($conection, $_POST['comentarios']);
         $semanas_totales = intval($_POST['semanas_totales']);
         $fecha_final = mysqli_real_escape_string($conection, $_POST['fecha_final']);
+        $total_abonado = intval($_POST['total_abonado']);
 
         // Ejecutar la consulta
         $query_insertar = mysqli_query(
             $conection,
-            "UPDATE adeudos SET cantidad = '$cantidad', comentarios = '$comentarios', descuento = '$descuento', estado = '$estado' WHERE noempleado = $noempleado"
+            "UPDATE adeudos SET cantidad = '$cantidad', comentarios = '$comentarios', descuento = '$descuento', estado = '$estado', total_abonado = $total_abonado WHERE noempleado = $noempleado"
         );
 
         // Verificar si la consulta fue exitosa
