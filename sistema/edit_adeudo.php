@@ -182,6 +182,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <div class="col-sm-3">
                                         <input type="number" class="form-control" id="inputDescuento" name="inputDescuento" step="0.01" value="<?php echo $descuento; ?>">
                                     </div>
+                                    <label for="inputTotalAbonado" class="col-sm-3 col-form-label" style="text-align: left;">Total Abonado:</label>
+                                    <div class="col-sm-3">
+                                        <input type="number" class="form-control" id="inputTotalAbonado" name="inputTotalAbonado" step="0.01" value="<?php echo $total_abonado; ?>">
+                                    </div>
                                 </div>
 
                                 <div class="form-group row">
@@ -301,6 +305,7 @@ $('#btn_salir').click(function(e){
     let motivo_adeudo = $('#inputMotivo').val();
     let descuento = $('#inputDescuento').val();
     let comentarios = $('#inputComentarios').val();
+    let totalAbonado = $('#inputTotalAbonado').val();
     let estado = 1; // Valor por defecto del estado
 
     // Generar la fecha actual en formato YYYY-MM-DD
@@ -309,6 +314,7 @@ $('#btn_salir').click(function(e){
     let mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Mes con 2 dígitos
     let dia = String(fechaActual.getDate()).padStart(2, '0'); // Día con 2 dígitos
     let fecha_inicial = `${anio}-${mes}-${dia}`;
+    let semanasRestantes = Math.ceil((cantidad - totalAbonado) / descuento);
     let semanas_totales = Math.ceil(cantidad / descuento)
     let nuevaFecha = sumarSemanas(fecha_inicial, semanas_totales)
     let anioFinal = nuevaFecha.getFullYear();
@@ -343,7 +349,8 @@ $('#btn_salir').click(function(e){
             comentarios: comentarios,
             cantidad: cantidad,
             semanas_totales:semanas_totales,
-            fecha_final:fecha_final
+            fecha_final:fecha_final,
+            total_abonado: totalAbonado
         },
         success: function(response) {
             console.log(response);
