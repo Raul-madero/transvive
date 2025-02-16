@@ -32,6 +32,7 @@ if ($result_sqlact == 0) {
 
 $data = mysqli_fetch_assoc($sqlact); // Obtener los datos del empleado
 $id             = $data['id'];
+$noempleado = $data['noempleado'];
 $nombres        = $data['nombres'];
 $paterno        = $data['apellido_paterno'];
 $materno        = $data['apellido_materno'];
@@ -41,6 +42,11 @@ $salarioxdia    = $data['salarioxdia'];
 $sueldobase     = $data['sueldo_base'];
 $adeudo         = $data['adeudo'];
 $saldo_adeudo   = $data['saldo_adeudo'];
+$bonosemanal    = $data['bono_semanal'];
+$bono_supervisor        = $data['bono_supervisor'];
+$bono_cat = $data['bono_categoria'];
+$vales          =  $data['apoyo_mes'];
+$caja           = $data['caja_ahorro'];
 
 // Verificar conexión antes de realizar más consultas
 if (!$conection) {
@@ -48,29 +54,30 @@ if (!$conection) {
 }
 
 // Obtener los adeudos del empleado
-$sqladeudo = mysqli_query($conection, "SELECT id, cantidad, descuento, fecha_inicial FROM adeudos WHERE noempleado = $id");
+$sqladeudo = mysqli_query($conection, "SELECT * FROM adeudos WHERE noempleado = $noempleado");
 if (!$sqladeudo) {
     die("Error en la consulta de adeudos: " . mysqli_error($conection));
 }
 
 // Variables para almacenar resultados
-$sumaCantidad = 0; // Suma total de la columna 'cantidad'
-$totalDescuentoSemanas = 0; // Total de descuento * semanas transcurridas
+$cantidad = 0; // Suma total de la columna 'cantidad'
+$descuento = 0; // Total de descuento * semanas transcurridas
 $fechaConsulta = new DateTime(); // Fecha actual (fecha de consulta)
 
 // Procesar los resultados de adeudos
 while ($row = mysqli_fetch_assoc($sqladeudo)) {
-    // Sumar la columna 'cantidad'
-    $sumaCantidad += (float)$row['cantidad'];
+    $cantidad = (float)$row['cantidad'];
+    $total_abonado = $row['total_abonado'];
+    $saldo_adeudo = $cantidad - $total_abonado;
+    $fecha_inicial = $row['fecha_inicial'];
+    $comentarios = $row['comentarios'];
 
-    // Calcular semanas transcurridas desde la fecha inicial
-    $fechaInicial = new DateTime($row['fecha_inicial']);
-    $intervalo = $fechaInicial->diff($fechaConsulta);
-    $semanasTranscurridas = floor($intervalo->days / 7); // Semanas completas transcurridas
-
-    // Multiplicar descuento por semanas transcurridas
-    $totalDescuentoSemanas += (float)$row['descuento'] * $semanasTranscurridas;
-    $descuento += (float)$row['descuento'];
+    // Suponiendo que $fecha_inicial viene en formato DD/MM/YYYY o YYYY/MM/DD
+    if (!empty($fecha_inicial)) {
+        $fecha_inicial = date("Y-m-d", strtotime($fecha_inicial));
+    }
+    $descuento = (float)$row['descuento'];
+    $semanas_restantes = ceil($cantidad / $descuento);
 }
 
 // Cerrar conexión
@@ -114,30 +121,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <?php
-                        switch ($_SESSION['rol']) {
-                            case 4:
-                                include('includes/navbarsup.php');
-                                break;
-                            case 5:
-                                include('includes/navbarrhuman.php');
-                                break;
-                            case 6:
-                                include('includes/navbaroperac.php');
-                                break;
-                            case 8:
-                                include('includes/navbarjefeoper.php');
-                                break;
-                            case 9:
-                                include('includes/navbargrcia.php');
-                                $activo = "disabled";
-                                break;
-                            default:
-                                include('includes/navbar.php');
-                                $activo = '';
-                                break;
-                        }
-                    ?>
+                    <?php include('includes/generalnavbar.php'); ?>
                     <?php include('includes/nav.php') ?>
                 </div>
             </nav>
@@ -188,17 +172,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Salario Diario:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputSalariodia" name="inputSalariodia" step="0.01" value="<?php echo $salarioxdia; ?>" <?= $activo ?> readonly>
+                                <input type="number" class="form-control" id="inputSalariodia" name="inputSalariodia" step="0.01" value="<?php echo $salarioxdia; ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Salario Promedio:</label>
-                            <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputSalariodiario" name="inputSalariodiario" step="0.01" value="<?php echo $salariodiario; ?>" <?= $activo ?> readonly>
-                            </div>
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Sueldo Base:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputSueldobase" name="inputSueldobase" step="0.01" value="<?php echo $sueldobase; ?>" <?= $activo ?> readonly>
+                                <input type="number" class="form-control" id="inputSueldobase" name="inputSueldobase" step="0.01" value="<?php echo $sueldobase; ?>" readonly>
                             </div>
                         </div>
                     </form>
@@ -206,45 +186,52 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="tab-pane mx-auto w-75" id="settingss">
                     <form class="form-horizontal">
                         <div class="form-group row">
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Prestamo:</label>
-                            <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputDeuda" name="inputDeuda" step="0.01" value="<?php echo $deuda; ?>" onkeyup="PasarValor();" readonly>
-                            </div>
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Descuento:</label>
-                            <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputDescuento" name="inputDescuento" step="0.01" value="<?php if ($sumaCantidad < $descuento) {
-                                    echo $sumaCantidad;
-                                } else {
-                                    echo $descuento;
-                                } ?>" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Adeudo:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputAdeudo" name="inputAdeudo" step="0.01" value="<?php echo $sumaCantidad; ?>" onkeyup="PasarValor();" readonly>
+                                <input type="number" class="form-control" id="inputAdeudo" name="inputAdeudo" step="0.01" value="<?php echo $cantidad; ?>" readonly>
                             </div>
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Saldo Adeudo:</label>
+                            
+                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Descuento:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputSaldoAdeudo" name="inputSaldoAdeudo" step="0.01" value="<?php echo ($sumaCantidad - $totalDescuentoSemanas); ?>" readonly>
+                                <input type="number" class="form-control" id="inputDescuento" name="inputDescuento" step="0.01" value="<?php echo $descuento; ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Clasificación Categoria:</label>
+                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Saldo Adeudo:</label>
                             <div class="col-sm-3">
-                                <select class="form-control" id="inputClasifcat" name="inputClasifcat">
-                                    <option value="<?php echo $clasif_cat; ?>"><?php echo $clasif_cat; ?></option>
-                                </select>
+                                <input type="number" class="form-control" id="inputSaldoAdeudo" name="inputSaldoAdeudo" step="0.01" value="<?php echo $saldo_adeudo; ?>" readonly>
                             </div>
+                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Total Abonado:</label>
+                            <div class="col-sm-3">
+                                <input type="number" class="form-control" id="inputSaldoAdeudo" name="inputSaldoAdeudo" step="0.01" value="<?php echo $total_abonado; ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Fecha Inicial:</label>
+                            <div class="col-sm-3">
+                                <input type="date" class="form-control" id="inputfechaInicial" name="inputFechaInicial" value="<?php echo $fecha_inicial; ?>" readonly>
+                            </div>
+                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Semanas Restantes:</label>
+                            <div class="col-sm-3">
+                                <input type="number" class="form-control" id="inputSaldoAdeudo" name="inputSaldoAdeudo" step="0.01" value="<?php echo $semanas_restantes; ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Comentarios:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="inputComentarios" name="inputComentarios"  value="<?php echo $comentarios; ?>" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Categoria:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputBonosc2" name="inputBonosc2" step="0.01" value="<?php echo $bonosc2; ?>" readonly>
+                                <input type="number" class="form-control" id="inputBonosc2" name="inputBonosc2" step="0.01" value="<?php echo $bono_cat; ?>" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Supervisor:</label>
                             <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputBonos" name="inputBonos" step="0.01" value="<?php echo $bonos; ?>" readonly>
+                                <input type="number" class="form-control" id="inputBonos" name="inputBonos" step="0.01" value="<?php echo $bono_supervisor; ?>" readonly>
                             </div>
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Semanal:</label>
                             <div class="col-sm-3">
@@ -256,37 +243,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="col-sm-3">
                                 <input type="number" class="form-control" id="inputApoyomes" name="inputApoyomes" step="0.01" value="<?php echo $vales; ?>" readonly>
                             </div>
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Sueldo Adicional:</label>
-                            <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputSueldoadd" name="inputSueldoadd" step="0.01" value="<?php echo $apoyoadicional; ?>" <?= $activo ?> readonly>
-                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Caja de Ahorro:</label>
                             <div class="col-sm-3">
                                 <input type="number" class="form-control" id="inputCajaAhorro" name="inputCajaAhorro" step="0.01" value="<?php echo $caja; ?>" readonly>
-                            </div>
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Vacaciones Restantes:</label>
-                            <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputVacaciones" name="inputVacaciones" step="0.01" value="<?php echo $vacaciones; ?>" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Pago Fiscal:</label>
-                            <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputEfectivo" name="inputEfectivo" step="0.01" value="<?php echo $efectivo; ?>" readonly>
-                            </div>
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Descuento Fiscal:</label>
-                            <div class="col-sm-3">
-                                <input type="number" class="form-control" id="inputDesfiscal" name="inputDesfiscal" step="0.01" value="<?php echo $descfiscal; ?>" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Tipo Nomina:</label>
-                            <div class="col-sm-9" style="text-align:left;">
-                                <select class="form-control select2bs4" id="inputTiponomina" name="inputTiponomina">
-                                    <option value="<?php echo $tiponomina; ?>"><?php echo $tiponomina; ?></option>
-                                </select>
                             </div>
                         </div>
                         <a href="<?php echo ($estatus === '1') ? 'empleados.php?id=' . $noempl : 'empleadosBajas.php?id=' . $noempl; ?>" type="button" class="btn btn-secondary" id="btn_salir">Volver</a>
