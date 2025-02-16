@@ -77,7 +77,7 @@ while ($row = mysqli_fetch_assoc($sqladeudo)) {
         $fecha_inicial = date("Y-m-d", strtotime($fecha_inicial));
     }
     $descuento = (float)$row['descuento'];
-    $semanas_restantes = ceil($cantidad / $descuento);
+    $semanas_restantes = ceil(($cantidad - $total_abonado) / $descuento);
 }
 
 // Cerrar conexión
