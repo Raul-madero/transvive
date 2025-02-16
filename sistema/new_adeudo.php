@@ -68,37 +68,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-     <?php
-     switch ($_SESSION['rol']) {
-      case 1:
-        $activo = "";
-        break;
-      case 4:
-        include "includes/navbarsup.php";
-        $activo = "disabled";
-        break;
-      case 5:
-        include "includes/navbarrhuman.php";
-        $activo = "disabled";
-        break;
-      case 6:
-        include "includes/navbaroperac.php";
-        $activo = "disabled";
-        break;
-      case 8:
-        include "includes/navbarjefeoper.php";
-        $activo = "disabled";
-        break;
-      case 9:
-        include "includes/navbargrcia.php";
-        $activo = "disabled";
-        break;
-      default:
-        include "includes/navbar.php";
-        $activo = "disabled";
-        break;
-     };
-      ?>
+     <?php include('includes/generalnavbar.php'); ?>
       <?php include('includes/nav.php') ?>
 
     </div>

@@ -581,6 +581,7 @@ if ($_POST['action'] == 'AlmacenaAdeudo') {
         isset($_POST['cantidad']) && is_numeric($_POST['cantidad']) &&
         !empty($_POST['motivo_adeudo'])
     ) {
+
         // Sanitización de datos
         $cantidad = floatval($_POST['cantidad']);
         $noempleado = intval($_POST['noempleado']);
@@ -592,37 +593,60 @@ if ($_POST['action'] == 'AlmacenaAdeudo') {
         $semanas_totales = intval($_POST['semanas_totales']);
         $fecha_final = mysqli_real_escape_string($conection, $_POST['fecha_final']);
 
-        // Ejecutar la consulta
-        $query_insertar = mysqli_query(
-            $conection,
-            "INSERT INTO adeudos (cantidad, comentarios, descuento, estado, fecha_inicial, motivo_adeudo, noempleado, semanas_totales, fecha_final) VALUES ('$cantidad', '$comentarios', '$descuento', '$estado', '$fecha_inicial', '$motivo_adeudo', '$noempleado', '$semanas_totales', '$fecha_final')"
-        );
+        // Iniciar Transacción
+        mysqli_begin_transaction($conection);
 
-        // Verificar si la consulta fue exitosa
-        if ($query_insertar) {
-            // Comprobar si se insertaron filas
-            if (mysqli_affected_rows($conection) > 0) {
-                // Si se insertó correctamente, retornamos un mensaje de éxito
-                echo json_encode(["mensaje" => "Adeudo almacenado correctamente."], JSON_UNESCAPED_UNICODE);
+        try {
+            // Verificar si el empleado ya tiene un adeudo
+            $query_buscar_adeudo = "SELECT cantidad FROM adeudos WHERE noempleado = ?";
+            $stmt = mysqli_prepare($conection, $query_buscar_adeudo);
+            mysqli_stmt_bind_param($stmt, "i", $noempleado);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $row = mysqli_fetch_assoc($result);
+            mysqli_stmt_close($stmt);
+
+            if ($row) {
+                // Si ya existe un adeudo, actualizar cantidad
+                $query_actualizar_adeudo = "UPDATE adeudos SET cantidad = cantidad + ?, descuento = ? WHERE noempleado = ?";
+                $stmt = mysqli_prepare($conection, $query_actualizar_adeudo);
+                mysqli_stmt_bind_param($stmt, "dii", $cantidad, $descuento, $noempleado);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
             } else {
-                // Si no se insertaron filas, algo salió mal
-                echo json_encode(["mensaje" => "No se pudo almacenar el adeudo. Intente nuevamente."], JSON_UNESCAPED_UNICODE);
+                // Si no existe, insertar un nuevo adeudo
+                $query_insertar_adeudo = "INSERT INTO adeudos (cantidad, comentarios, descuento, estado, fecha_inicial, motivo_adeudo, noempleado, semanas_totales, fecha_final) 
+                                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $stmt = mysqli_prepare($conection, $query_insertar_adeudo);
+                mysqli_stmt_bind_param($stmt, "dssisssis", $cantidad, $comentarios, $descuento, $estado, $fecha_inicial, $motivo_adeudo, $noempleado, $semanas_totales, $fecha_final);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
             }
-        } else {
-            // En caso de error en la consulta
-            echo json_encode(["mensaje" => "Error al ejecutar la consulta: " . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
+
+            // Insertar el detalle del adeudo
+            $query_insertar_detalle = "INSERT INTO detalle_adeudos (cantidad, comentarios, descuento, estado, fecha_inicial, motivo_adeudo, noempleado, semanas_totales, fecha_final) 
+                                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conection, $query_insertar_detalle);
+            mysqli_stmt_bind_param($stmt, "dssisssis", $cantidad, $comentarios, $descuento, $estado, $fecha_inicial, $motivo_adeudo, $noempleado, $semanas_totales, $fecha_final);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+
+            // Si todo salió bien, confirmar la transacción
+            mysqli_commit($conection);
+            echo json_encode(["mensaje" => "Adeudo almacenado correctamente."], JSON_UNESCAPED_UNICODE);
+        } catch (Exception $e) {
+            // Si hubo un error, revertir los cambios
+            mysqli_rollback($conection);
+            echo json_encode(["mensaje" => "Error al almacenar el adeudo: " . $e->getMessage()], JSON_UNESCAPED_UNICODE);
         }
 
+        // Cerrar conexión
         mysqli_close($conection);
+        exit;
     } else {
         echo json_encode(["mensaje" => "Datos inválidos o incompletos recibidos."], JSON_UNESCAPED_UNICODE);
     }
-    exit;
 }
-
-
-
-
 
 //Agregar Productos a Entrada
 if ($_POST['action'] == 'AlmacenaEmpleado') {
