@@ -251,11 +251,11 @@ session_start();
 
                         // Formatear fechas (YYYY-MM-DD)
                         let formatoFecha = (fecha) => fecha.toISOString().split('T')[0];
+                        console.log(formatoFecha(lunesSemana))
 
                         return {
                             lunes: formatoFecha(lunesSemana),
                             domingo: formatoFecha(domingoSemana)
-                            console.log(lunes, domingo)
                         };
                     }
 
