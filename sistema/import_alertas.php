@@ -22,7 +22,7 @@ if (isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
             if (count($data) >= 6) {
                 $ok++;
                 $semana = trim(str_replace(array("\r", "\n", "\t"), '', $data[5])); 
-                $stmt->bind_param("sssssii", $semana, $data[0], $data[1], $data[2], $data[3], $data[4], $usuario);
+                $stmt->bind_param("sssssii", $data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $usuario);
                 $stmt->execute();
             } else {
                 $error++;
