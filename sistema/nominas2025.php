@@ -121,6 +121,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<th>Total de Vueltas</th>
 									<th>Sueldo Bruto</th>
 									<th>Nomina Fiscal</th>
+									<th>Descuento por Adeudo</th>
 									<th>Bono Semanal</th>
 									<th>Bono Categoria</th>
 									<th>Bono Supervisor</th>
@@ -131,7 +132,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 									<th>Prima Vacacional</th>
 									<th>Deposito</th>
 									<th>Efectivo</th>
-									<th>Deducciones</th>
 									<th>Deduccion Fiscal</th>
 									<th>Caja de Ahorro</th>
 									<th>Supervisor</th>
@@ -277,6 +277,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						}
 					},
 					{ data: "nomina_fiscal", render: renderMoneda },
+					{
+						data: "deducciones",
+						render: renderMoneda,
+						createdCell: function(td, cellData, rowData, row, col) {
+							$(td).addClass('editable-deducciones').attr('data-id', rowData.id).text(renderMoneda(cellData));
+						}
+					},
 					{ data: "bono_semanal", render: renderMoneda },
 					{ data: "bono_categoria", render: renderMoneda },
 					{ data: "bono_supervisor", render: renderMoneda },
@@ -292,13 +299,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{
 						data: null,
 						render: (data) => formatoMoneda(( parseFloat(data.sueldo_bruto) > 0 ? (parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal)) : 0 ) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro))
-					},
-					{
-						data: "deducciones",
-						render: renderMoneda,
-						createdCell: function(td, cellData, rowData, row, col) {
-							$(td).addClass('editable-deducciones').attr('data-id', rowData.id).text(renderMoneda(cellData));
-						}
 					},
 					{ data: "deduccion_fiscal", render: formatoMoneda },
 					{ data: "caja_ahorro", render: formatoMoneda },
