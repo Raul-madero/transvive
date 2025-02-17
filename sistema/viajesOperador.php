@@ -274,6 +274,7 @@ session_start();
 
 
                     let dias = obtenerRangoSemana(anioSemana, semanaCalculo)
+                    console.log(dias)
 
                     $('#fecha').text(`DEL ${dias.lunes} AL ${dias.domingo}`);
 
