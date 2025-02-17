@@ -296,7 +296,7 @@ session_start();
                             };
                         }
                         let fechaViaje = new Date(viaje.fecha);
-                        let dia = diasSemana[fechaViaje.getDay() - 1]; // Obtener el nombre del día
+                        let dia = diasSemana[fechaViaje.getDay()]; // Obtener el nombre del día
                         console.log(dia)
                         if (dia) viajesAgrupados[key].dias[dia] = 'green';
                     });
