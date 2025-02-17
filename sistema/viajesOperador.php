@@ -255,6 +255,7 @@ session_start();
                         return {
                             lunes: formatoFecha(lunesSemana),
                             domingo: formatoFecha(domingoSemana)
+                            console.log(lunes, domingo)
                         };
                     }
 
