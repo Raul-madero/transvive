@@ -234,7 +234,7 @@ session_start();
                         // Obtener el primer lunes del año
                         let primerLunes = new Date(primerDiaAño);
                         let diaSemana = primerDiaAño.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
-
+                        
                         if (diaSemana !== 1) { // Si no es lunes, ajustar al primer lunes
                             let ajuste = diaSemana === 0 ? 1 : 8 - diaSemana;
                             primerLunes.setDate(primerDiaAño.getDate() + ajuste);
@@ -243,6 +243,7 @@ session_start();
                         // Calcular el lunes de la semana deseada
                         let lunesSemana = new Date(primerLunes);
                         lunesSemana.setDate(primerLunes.getDate() + (semana - 1) * 7);
+                        console.log(lunesSemana);
 
                         // Calcular el domingo de la misma semana (sumando 6 días)
                         let domingoSemana = new Date(lunesSemana);
