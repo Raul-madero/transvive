@@ -4875,7 +4875,7 @@ if ($_POST['action'] == 'AlmacenaEditProveedor') {
             WHERE id = ?";
 
     if ($stmt = mysqli_prepare($conection, $sql)) {
-        mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssssii",
+        mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssdi",
             $noprov, $nameprov, $callenum, $colonia, $ciudad, $municipio, 
             $estado, $codpostal, $pais, $phone, $contacto, $email, $giro, 
             $phonecontac, $servicio, $sitioweb, $razonsoc, $rfccte, $cont_conta, 
