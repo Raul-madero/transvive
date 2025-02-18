@@ -4834,57 +4834,75 @@ if ($_POST['action'] == 'AlmacenaProveedor') {
 }
 
 //*Almacena Edicion Proveedor
-if($_POST['action'] == 'AlmacenaEditProveedor')
-{
-    if(empty($_POST['noprov']) || empty($_POST['nameprov']) || empty($_POST['razonsoc']) )
-    {
-         echo 'error';
-    }else {     
-
-        $idp          = $_POST['idprov'];
-        $noprov       = $_POST['noprov'];
-        $nameprov     = $_POST['nameprov'];
-        $callenum     = $_POST['callenum'];
-        $colonia      = $_POST['colonia'];
-        $ciudad       = $_POST['ciudad'];
-        $municipio    = $_POST['municipio'];
-        $estado       = $_POST['estado'];
-        $codpostal    = $_POST['codpostal'];
-        $pais         = $_POST['pais'];
-        $phone        = $_POST['phone'];
-        $contacto     = $_POST['contacto'];
-        $email        = $_POST['correo'];
-        $giro         = $_POST['giro'];
-        $phonecontac  = $_POST['phonecontac']; 
-        $servicio     = $_POST['servicio'];
-        $sitioweb     = $_POST['sitioweb'];
-        $razonsoc     = $_POST['razonsoc'];
-        $rfccte       = $_POST['rfccte'];
-        $cont_conta   = $_POST['contactocont'];
-        $email_conta  = $_POST['emailconta'];
-        $credito      = $_POST['credito'];
-        $condicionesc = $_POST['condicionesc'];
-        $limite       = $_POST['limitec'];
-
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-    
-
-        $query_procesar = mysqli_query($conection,"CALL procesar_editproveedor($idp, '$noprov', '$nameprov', '$callenum', '$colonia', '$ciudad', '$municipio', '$estado', '$codpostal', '$pais', '$phone', '$contacto', '$email', '$giro', '$phonecontac', '$servicio', '$sitioweb', '$razonsoc', '$rfccte', '$cont_conta', '$email_conta', '$credito', '$condicionesc', $limite, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
-        }
-    
-    mysqli_close($conection);
-
+if ($_POST['action'] == 'AlmacenaEditProveedor') {
+    if (empty($_POST['noprov']) || empty($_POST['nameprov']) || empty($_POST['razonsoc'])) {
+        echo json_encode(['status' => 'error', 'message' => 'Campos obligatorios faltantes']);
+        exit;
     }
+
+    require_once "conexion.php"; // Asegúrate de incluir el archivo de conexión
+
+    $idp          = (int)$_POST['idprov']; // Asegurar que es un número entero
+    $noprov       = $_POST['noprov'];
+    $nameprov     = $_POST['nameprov'];
+    $callenum     = $_POST['callenum'];
+    $colonia      = $_POST['colonia'];
+    $ciudad       = $_POST['ciudad'];
+    $municipio    = $_POST['municipio'];
+    $estado       = $_POST['estado'];
+    $codpostal    = $_POST['codpostal'];
+    $pais         = $_POST['pais'];
+    $phone        = $_POST['phone'];
+    $contacto     = $_POST['contacto'];
+    $email        = $_POST['correo'];
+    $giro         = $_POST['giro'];
+    $phonecontac  = $_POST['phonecontac']; 
+    $servicio     = $_POST['servicio'];
+    $sitioweb     = $_POST['sitioweb'];
+    $razonsoc     = $_POST['razonsoc'];
+    $rfccte       = $_POST['rfccte'];
+    $cont_conta   = $_POST['contactocont'];
+    $email_conta  = $_POST['emailconta'];
+    $credito      = $_POST['credito'];
+    $condicionesc = $_POST['condicionesc'];
+    $limite       = (int)$_POST['limitec'];
+    $usuario      = (int)$_SESSION['idUser'];
+
+    // Consulta preparada para mayor seguridad
+    $sql = "UPDATE proveedores 
+            SET no_prov = ?, nombre_corto = ?, calle = ?, colonia = ?, ciudad = ?, municipio = ?, 
+                estado = ?, cod_postal = ?, pais = ?, telefono = ?, contacto = ?, correo = ?, 
+                giro = ?, movil = ?, servicio = ?, sitio = ?, nombre = ?, rfc = ?, contacto_conta = ?, 
+                email_conta = ?, credito = ?, condiciones_credito = ?, limite_credito = ?, usuario_id = ? 
+            WHERE id = ?";
+
+    if ($stmt = mysqli_prepare($conection, $sql)) {
+        mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssssii",
+            $noprov, $nameprov, $callenum, $colonia, $ciudad, $municipio, 
+            $estado, $codpostal, $pais, $phone, $contacto, $email, $giro, 
+            $phonecontac, $servicio, $sitioweb, $razonsoc, $rfccte, $cont_conta, 
+            $email_conta, $credito, $condicionesc, $limite, $usuario, $idp
+        );
+
+        if (mysqli_stmt_execute($stmt)) {
+            if (mysqli_affected_rows($conection) > 0) {
+                echo json_encode(['status' => 'success', 'message' => 'Proveedor actualizado correctamente']);
+            } else {
+                echo json_encode(['status' => 'info', 'message' => 'No hubo cambios en la información']);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error al actualizar proveedor']);
+        }
+
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error en la preparación de la consulta']);
+    }
+
+    mysqli_close($conection);
     exit;
 }
+
 
 
 //****************************//
