@@ -154,19 +154,18 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             'NO'
         ) AS prima_vacacional,
         COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
-        CASE 
+        SUM(CASE 
             WHEN e.cargo = 'OPERADOR' THEN
                 CASE 
                     WHEN 
-                        rv.tipo_viaje IN ('Especial', 'Semidomiciliadas') 
-                    THEN SUM(
+                        rv.tipo_viaje NOT IN ('Normal') 
+                    THEN
                         rv.sueldo_vuelta * rv.valor_vuelta
-                    )
-                    WHEN rv.sueldo_vuelta > e.sueldo_base THEN SUM(rv.sueldo_vuelta * rv.valor_vuelta)
-                    ELSE SUM(e.sueldo_base * rv.valor_vuelta)
+                    WHEN rv.sueldo_vuelta > e.sueldo_base THEN rv.sueldo_vuelta * rv.valor_vuelta
+                    ELSE e.sueldo_base * rv.valor_vuelta
                 END
             ELSE e.sueldo_base * 7
-        END AS sueldo_bruto,
+        END) AS sueldo_bruto,
         MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
         MAX(DATEDIFF(inc.fecha_final, '$fecha_inicio')) AS dias_final,
         (
