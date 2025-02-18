@@ -157,7 +157,11 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         CASE 
             WHEN e.cargo = 'OPERADOR' THEN
                 CASE 
-                    WHEN rv.tipo_viaje IN ('Especial', 'Semidomiciliadas') THEN SUM(rv.sueldo_vuelta * rv.valor_vuelta)
+                    WHEN 
+                        rv.tipo_viaje IN ('Especial', 'Semidomiciliadas') 
+                    THEN SUM(
+                        rv.sueldo_vuelta * rv.valor_vuelta
+                    )
                     WHEN rv.sueldo_vuelta > e.sueldo_base THEN SUM(rv.sueldo_vuelta * rv.valor_vuelta)
                     ELSE SUM(e.sueldo_base * rv.valor_vuelta)
                 END

@@ -572,73 +572,82 @@ $('#btn_salir').click(function(e){
 
        var action       = 'AlmacenaProveedor';
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, noprov:noprov, nameprov:nameprov, callenum:callenum, colonia:colonia, ciudad:ciudad, municipio:municipio, estado:estado, codpostal:codpostal, pais:pais, phone:phone, contacto:contacto, correo:correo, giro:giro, phonecontac:phonecontac, servicio:servicio, sitioweb:sitioweb, razonsoc:razonsoc, rfccte:rfccte, contactocont:contactocont, emailconta:emailconta, credito:credito, condicionesc:condicionesc, limite:limite},
+       $.ajax({
+          url: 'includes/ajax.php',
+          type: "POST",
+          async: true,
+          data: {
+              action: action,
+              noprov: noprov,
+              nameprov: nameprov,
+              callenum: callenum,
+              colonia: colonia,
+              ciudad: ciudad,
+              municipio: municipio,
+              estado: estado,
+              codpostal: codpostal,
+              pais: pais,
+              phone: phone,
+              contacto: contacto,
+              correo: correo,
+              giro: giro,
+              phonecontac: phonecontac,
+              servicio: servicio,
+              sitioweb: sitioweb,
+              razonsoc: razonsoc,
+              rfccte: rfccte,
+              contactocont: contactocont,
+              emailconta: emailconta,
+              credito: credito,
+              condicionesc: condicionesc,
+              limite: limite
+          },
+          success: function(response) {
+              console.log("Respuesta del servidor:", response);
 
-                    success: function(response)
-                    {
-                       if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "PROVEEDOR ALMACENADO CORRECTAMENTE",
-                          icon: 'success',
+              try {
+                  var info = JSON.parse(response);
 
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'proveedores.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'proveedores.php';
-                        }
-                        });
+                  if (info.status === 'success') {
+                      Swal.fire({
+                          title: "¡Éxito!",
+                          text: info.message || "Proveedor almacenado correctamente",
+                          icon: 'success'
+                      }).then(resultado => {
+                          if (resultado.isConfirmed) {
+                              location.href = 'proveedores.php';
+                          } else {
+                              location.reload();
+                          }
+                      });
 
+                  } else {
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Error',
+                          text: info.message || "Hubo un problema al procesar la solicitud"
+                      });
+                  }
 
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
+              } catch (error) {
+                  console.error("Error al analizar JSON:", error);
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error en la respuesta',
+                      text: "La respuesta del servidor no es válida."
+                  });
+              }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              console.error("Error en AJAX:", textStatus, errorThrown);
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error de conexión',
+                  text: "No se pudo completar la solicitud."
+              });
+          }
+      });
 
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
 
     });
 
