@@ -154,13 +154,11 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             'NO'
         ) AS prima_vacacional,
         COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
-        COALESCE(
             IF(e.cargo = 'OPERADOR',
                 SUM(
                     IF(rv.sueldo_vuelta > e.sueldo_base, rv.sueldo_vuelta * rv.valor_vuelta, e.sueldo_base * rv.valor_vuelta)
                 ),
-                e.sueldo_base * 7),
-            0
+                e.sueldo_base * 7
         ) AS sueldo_bruto,
         MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
         MAX(DATEDIFF(inc.fecha_final, '$fecha_inicio')) AS dias_final,
