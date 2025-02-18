@@ -4810,7 +4810,7 @@ if($_POST['action'] == 'AlmacenaProveedor')
         $usuario     = $_SESSION['idUser'];
     
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_proveedor('$noprov', '$nameprov', '$callenum', '$colonia', '$ciudad', '$municipio', '$estado', '$codpostal', '$pais', '$phone', '$contacto', '$email', '$giro', '$phonecontac', '$servicio', '$sitioweb', '$razonsoc', '$rfccte', '$cont_conta', '$email_conta', '$credito', '$condicionesc', $limite, $usuario)");
+        $query_procesar = mysqli_query($conection,"INSERT INTO proveedores (no_prov, nombre_corto, calle, colonia, ciudad, municipio, estado, cod_postal, pais, telefono, contacto, correo, giro, movil, servicio, sitio, nombre, rfc, contacto_conta, email_conta, credito, condiciones_credito, limite_credito, usuario_id) VALUES ('$noprov', '$nameprov', '$callenum', '$colonia', '$ciudad', '$municipio', '$estado', '$codpostal', '$pais', '$phone', '$contacto', '$email', '$giro', '$phonecontac', '$servicio', '$sitioweb', '$razonsoc', '$rfccte', '$cont_conta', '$email_conta', '$credito', '$condicionesc', $limite, $usuario)");
         $result_detalle = mysqli_num_rows($query_procesar);
         
         if($result_detalle > 0){
