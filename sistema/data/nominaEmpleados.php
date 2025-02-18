@@ -154,11 +154,13 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             'NO'
         ) AS prima_vacacional,
         COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
+        COALESCE(
             IF(e.cargo = 'OPERADOR',
                 SUM(
                     IF(rv.sueldo_vuelta > e.sueldo_base, rv.sueldo_vuelta * rv.valor_vuelta, e.sueldo_base * rv.valor_vuelta)
                 ),
-                e.sueldo_base * 7
+                e.sueldo_base * 7),
+            0
         ) AS sueldo_bruto,
         MAX(DATEDIFF('$fecha_fin', inc.fecha_inicial)) AS dias_inicial,
         MAX(DATEDIFF(inc.fecha_final, '$fecha_inicio')) AS dias_final,
@@ -253,15 +255,15 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $total_vueltas = $row_empleados['total_vueltas'];
             $cargo = $row_empleados['cargo'];
             $imss = intval($row_empleados['imss']);
-            $sueldo_bruto = ($row_empleados['cargo'] === 'OPERADOR') ? floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])) : 0;
             $deducciones = (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado'])) > floatval($row_empleados['descuento']) 
-                ? floatval($row_empleados['descuento']) 
-                : (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) > 0 
-                    ? floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) 
-                    : 0);
+            ? floatval($row_empleados['descuento']) 
+            : (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) > 0 
+            ? floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) 
+            : 0);
             $caja_ahorro = floatval($row_empleados['caja_ahorro']);
             $supervisor = $row_empleados['supervisor'];
             $sueldo_base = $row_empleados['sueldo_base'];
+            $sueldo_bruto = ($row_empleados['cargo'] === 'OPERADOR') ? floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])) : $sueldo_base * 7;
             $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
             $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
             $efectivo = $sueldo_bruto - $pago_fiscal;
