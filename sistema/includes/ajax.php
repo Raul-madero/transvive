@@ -4840,8 +4840,6 @@ if ($_POST['action'] == 'AlmacenaEditProveedor') {
         exit;
     }
 
-    require_once "conexion.php"; // Asegúrate de incluir el archivo de conexión
-
     $idp          = (int)$_POST['idprov']; // Asegurar que es un número entero
     $noprov       = $_POST['noprov'];
     $nameprov     = $_POST['nameprov'];
