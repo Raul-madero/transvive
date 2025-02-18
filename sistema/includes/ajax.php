@@ -4781,8 +4781,6 @@ if ($_POST['action'] == 'AlmacenaProveedor') {
         exit;
     }
 
-    require_once "conexion.php"; // Asegúrate de incluir el archivo de conexión
-
     $noprov       = $_POST['noprov'];
     $nameprov     = $_POST['nameprov'] ?? "";
     $callenum     = $_POST['callenum'] ?? "";
