@@ -263,7 +263,13 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $caja_ahorro = floatval($row_empleados['caja_ahorro']);
             $supervisor = $row_empleados['supervisor'];
             $sueldo_base = $row_empleados['sueldo_base'];
-            $sueldo_bruto = ($row_empleados['cargo'] === 'OPERADOR') ? floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base'])) : $sueldo_base * 7;
+            if($row_empleados['cargo'] == 'OPERADOR') {
+                $sueldo_bruto = floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base']));
+            }elseif ($imss != 1) {
+                $sueldo_bruto = $sueldo_base * 7;
+            }else {
+                $sueldo_bruto = 0;
+            }
             $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
             $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
             $efectivo = $sueldo_bruto - $pago_fiscal;
