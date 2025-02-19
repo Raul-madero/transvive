@@ -102,13 +102,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
        <?php
                     
           include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT * FROM folios where serie = 'RQ'");
+          $query_folio = mysqli_query($conection,"SELECT MAX(no_requisicion) AS folio FROM folios");
           $result_folio = mysqli_num_rows($query_folio);
 
           $folioe = mysqli_fetch_array($query_folio);
           $nuevofolio=$folioe["folio"]+1; 
 
-          $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'RQ'");
+          // $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'RQ'");
           
 
           mysqli_close($conection);
