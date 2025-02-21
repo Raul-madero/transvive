@@ -12,23 +12,38 @@ $nombre_foto3 = $foto3['name'];
 
 //$imgProducto = 'user.png';
 
-$Id           = $_POST['inputId'];
-$nounidad     = $_POST['inputNounidad'];
-$socio        = $_POST['inputSocio'];
-$descripcion  = $_POST['inputDescribe'];
-$nplacas      = $_POST['inputPlacas'];
-$nserie       = $_POST['inputNserie'];
-$year         = $_POST['inputYear'];
-$tipogas      = $_POST['inputTipogas'];
-$nopoliza     = $_POST['inputNopoliza'];
-$aseguradora  = $_POST['inputAseguradora'];
-$iniciapol    = $_POST['inputIniciopol'];
-$terminapol   = $_POST['inputFinpol'];
-$notarjeta    = $_POST['inputTarjetac'];
-$vencetarjeta = $_POST['inputVencetar'];
-$entregadoc   =($_POST['inputEntregadoc']) ? $_POST['inputEntregadoc'] : date('Y-m-d');
-$parametro    = $_POST['inputRestandar'];
-$notas        = $_POST['inputNotas'];
+// Función para sanitizar cadenas
+function sanitizeString($conn, $input) {
+  return mysqli_real_escape_string($conn, trim($input));
+}
+
+// Función para validar fechas en formato 'Y-m-d'
+function validateDate($date) {
+  $d = DateTime::createFromFormat('Y-m-d', $date);
+  return $d && $d->format('Y-m-d') === $date;
+}
+
+// Sanitización y validación
+$Id           = filter_input(INPUT_POST, 'inputId', FILTER_VALIDATE_INT) ?: 0;
+$nounidad     = sanitizeString($mysqli, $_POST['inputNounidad'] ?? '');
+$socio        = sanitizeString($mysqli, $_POST['inputSocio'] ?? '');
+$descripcion  = sanitizeString($mysqli, $_POST['inputDescribe'] ?? '');
+$nplacas      = sanitizeString($mysqli, $_POST['inputPlacas'] ?? '');
+$nserie       = sanitizeString($mysqli, $_POST['inputNserie'] ?? '');
+$year         = filter_input(INPUT_POST, 'inputYear', FILTER_VALIDATE_INT) ?: 0;
+$tipogas      = sanitizeString($mysqli, $_POST['inputTipogas'] ?? '');
+$nopoliza     = sanitizeString($mysqli, $_POST['inputNopoliza'] ?? '');
+$aseguradora  = sanitizeString($mysqli, $_POST['inputAseguradora'] ?? '');
+
+// Validar fechas o asignar NULL si no son válidas
+$iniciapol    = validateDate($_POST['inputIniciopol'] ?? '') ? $_POST['inputIniciopol'] : NULL;
+$terminapol   = validateDate($_POST['inputFinpol'] ?? '') ? $_POST['inputFinpol'] : NULL;
+$vencetarjeta = validateDate($_POST['inputVencetar'] ?? '') ? $_POST['inputVencetar'] : NULL;
+$entregadoc   = validateDate($_POST['inputEntregadoc'] ?? '') ? $_POST['inputEntregadoc'] : date('Y-m-d');
+
+$notarjeta    = sanitizeString($mysqli, $_POST['inputTarjetac'] ?? '');
+$parametro    = sanitizeString($mysqli, $_POST['inputRestandar'] ?? '');
+$notas        = sanitizeString($mysqli, $_POST['inputNotas'] ?? '');
 
 $sqlact= mysqli_query($conection,"SELECT no_unidad from unidades where no_unidad = '$nounidad' and id != $Id");
  
