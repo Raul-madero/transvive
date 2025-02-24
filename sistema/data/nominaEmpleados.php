@@ -162,7 +162,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                     THEN
                         rv.sueldo_vuelta * rv.valor_vuelta
                     WHEN 
-                        rv.sueldo_vuelta > e.sueldo_base 
+                        rv.sueldo_vuelta <> e.sueldo_base 
                     THEN 
                         rv.sueldo_vuelta * rv.valor_vuelta
                     ELSE 
