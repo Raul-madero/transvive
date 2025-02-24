@@ -161,8 +161,12 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
                         rv.tipo_viaje NOT IN ('Normal') 
                     THEN
                         rv.sueldo_vuelta * rv.valor_vuelta
-                    WHEN rv.sueldo_vuelta > e.sueldo_base THEN rv.sueldo_vuelta * rv.valor_vuelta
-                    ELSE e.sueldo_base * rv.valor_vuelta
+                    WHEN 
+                        rv.sueldo_vuelta <> e.sueldo_base 
+                    THEN 
+                        rv.sueldo_vuelta * rv.valor_vuelta
+                    ELSE 
+                        e.sueldo_base * rv.valor_vuelta
                 END
             ELSE e.sueldo_base * 7
         END) AS sueldo_bruto,
@@ -250,7 +254,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             // var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
             $bono_semanal_contrato = calcularBonoSemanalContrato($row_empleados['fecha_contrato']);
-            $gana_bono = ($alertas < 5 && $bono_semanal_contrato);
+            $gana_bono = ($alertas <= 4 && $bono_semanal_contrato);
             $gana_apoyo_mes = calcularApoyoMesContrato($row_empleados['fecha_contrato']);
             $noempleado = intval($row_empleados['noempleado']);
             $nombre = $row_empleados['operador'];
@@ -260,17 +264,17 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $cargo = $row_empleados['cargo'];
             $imss = intval($row_empleados['imss']);
             $deducciones = (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado'])) > floatval($row_empleados['descuento']) 
-            ? floatval($row_empleados['descuento']) 
-            : (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) > 0 
-            ? floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) 
-            : 0);
+                ? floatval($row_empleados['descuento']) 
+                : (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) > 0 
+                ? floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) 
+                : 0);
             $caja_ahorro = floatval($row_empleados['caja_ahorro']);
             $supervisor = $row_empleados['supervisor'];
             $sueldo_base = $row_empleados['sueldo_base'];
             if($row_empleados['cargo'] == 'OPERADOR') {
                 $sueldo_bruto = floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base']));
             }elseif ($imss != 1) {
-                $sueldo_bruto = $sueldo_base * 7;
+                $sueldo_bruto = ($sueldo_base * 7) - ($row_empleados['faltas'] * $row_empleados['sueldo_base']);
             }else {
                 $sueldo_bruto = 0;
             }
