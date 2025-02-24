@@ -207,7 +207,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         AND DATE(al.fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
     LEFT JOIN incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
         AND inc.fecha_inicial BETWEEN '$fecha_inicio' AND '$fecha_fin'
-        OR inc.fecha_final BETWEEN '$fecha_inicio' AND '$fecha_fin'
+        AND inc.fecha_final BETWEEN '$fecha_inicio' AND '$fecha_fin'
     LEFT JOIN registro_viajes rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
         AND DATE(rv.fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin'
         AND rv.valor_vuelta > 0";
@@ -275,7 +275,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             if($row_empleados['cargo'] == 'OPERADOR') {
                 $sueldo_bruto = floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base']));
             }elseif ($imss != 1) {
-                $sueldo_bruto = ($sueldo_base * 7) - ($row_empleados['faltas'] * $row_empleados['sueldo_base']);
+                $sueldo_bruto = ($sueldo_base * 7) - ($row_empleados['sueldo_base'] * $row_empleados['faltas']);
             }else {
                 $sueldo_bruto = 0;
             }
