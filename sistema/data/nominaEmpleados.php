@@ -69,6 +69,7 @@ function calcularDiasVacaciones($anios) {
 
 // Función para insertar datos en la tabla nomina_temp_2025
 function insertar_nomina($conection, $data) {
+    var_dump($data);
     $stmt = mysqli_prepare($conection, "INSERT INTO nomina_temp_2025 (
             semana, anio, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto,
             bono_semanal, bono_categoria, bono_supervisor, deducciones, caja_ahorro, supervisor, nomina_fiscal, efectivo, deduccion_fiscal, deposito_fiscal, apoyo_mes, prima_vacacional, dias_vacaciones, pago_vacaciones, neto
@@ -252,7 +253,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         }
         // Solo insertar registros si no existen datos para la semana y el año
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
-            var_dump($row_empleados);
+            // var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
             $bono_semanal_contrato = calcularBonoSemanalContrato($row_empleados['fecha_contrato']);
             $gana_bono = ($alertas <= 4 && $bono_semanal_contrato);
