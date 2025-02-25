@@ -69,7 +69,7 @@ function calcularDiasVacaciones($anios) {
 
 // Función para insertar datos en la tabla nomina_temp_2025
 function insertar_nomina($conection, $data) {
-    var_dump($data);
+    // var_dump($data);
     $stmt = mysqli_prepare($conection, "INSERT INTO nomina_temp_2025 (
             semana, anio, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto,
             bono_semanal, bono_categoria, bono_supervisor, deducciones, caja_ahorro, supervisor, nomina_fiscal, efectivo, deduccion_fiscal, deposito_fiscal, apoyo_mes, prima_vacacional, dias_vacaciones, pago_vacaciones, neto
