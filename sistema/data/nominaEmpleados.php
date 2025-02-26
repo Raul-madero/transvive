@@ -295,7 +295,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $efectivo = (($sueldo_bruto > 0) ? ($sueldo_bruto - $pago_fiscal) : 0) + $bono_semanal + $bono_supervisor + $bono_categoria + $apoyo_mes + $pago_vacaciones + $prima_vacacional - $deducciones - $caja_ahorro;
             
             $neto = $deposito + $efectivo;
-            
+
             // Preparar los datos para la inserción
             $data = [
                 'semana' => $semana,
@@ -374,7 +374,10 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $result_count_filtered = mysqli_query($conection, $sql_total_filtered);
     $totalFiltered = mysqli_fetch_row($result_count_filtered)[0];
     
-    $sql_total_pagar = "SELECT SUM(sueldo_bruto + bono_semanal + bono_categoria + bono_supervisor - deducciones - nomina_fiscal - caja_ahorro + prima_vacacional + pago_vacaciones + apoyo_mes) AS total_nomina FROM nomina_temp_2025";
+    $sql_total_pagar = "SELECT SUM(
+    -- sueldo_bruto + bono_semanal + bono_categoria + bono_supervisor - deducciones - nomina_fiscal - caja_ahorro + prima_vacacional + pago_vacaciones + apoyo_mes
+    neto
+    ) AS total_nomina FROM nomina_temp_2025";
     $result_total_pagar = mysqli_query($conection, $sql_total_pagar);
     $total_nomina = mysqli_fetch_row($result_total_pagar)[0];
     $data_output = [];
