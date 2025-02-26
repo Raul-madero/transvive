@@ -335,7 +335,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				drawCallback: function(settings) {
 					let api = this.api();
 					let total = api
-						.column(20, { page: 'all' }) // Cambia el índice de columna según la que quieres sumar
+						.column(21, { page: 'all' }) // Cambia el índice de columna según la que quieres sumar
 						.data()
 						.reduce((a, b) => (parseFloat(a) || 0) + (parseFloat(b) || 0), 0);
 
