@@ -254,10 +254,16 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         // Solo insertar registros si no existen datos para la semana y el año
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
             // var_dump($row_empleados);
+            //Calculo de variables para nomina
             $alertas = intval($row_empleados['noalertas']);
             $bono_semanal_contrato = calcularBonoSemanalContrato($row_empleados['fecha_contrato']);
-            $gana_bono = ($alertas <= 4 && $bono_semanal_contrato);
+            $gana_bono = ($alertas < 5 && $bono_semanal_contrato);
+            $anios_trabajados = calcularAniosTrabajados($row_empleados['fecha_contrato']);
+            $dias_correspondientes_vacaciones = calcularDiasVacaciones($anios_trabajados);
             $gana_apoyo_mes = calcularApoyoMesContrato($row_empleados['fecha_contrato']);
+            $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? (intval($row_empleados['fecha_inicial']) + 1) ?? (intval($row_empleados['fecha_final']) + 1) : 0;
+
+            //Datos generales del empleado
             $noempleado = intval($row_empleados['noempleado']);
             $nombre = $row_empleados['operador'];
             $no_unidad = $row_empleados['num_unidad'] ?? "";
@@ -265,35 +271,39 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             $total_vueltas = $row_empleados['total_vueltas'];
             $cargo = $row_empleados['cargo'];
             $imss = intval($row_empleados['imss']);
-            $deducciones = (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado'])) > floatval($row_empleados['descuento']) 
-                ? floatval($row_empleados['descuento']) 
-                : (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) > 0 
-                ? floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) 
-                : 0);
-            $caja_ahorro = floatval($row_empleados['caja_ahorro']);
             $supervisor = $row_empleados['supervisor'];
+
+            //Datos de pago, deducciones
+            $deducciones = (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado'])) > floatval($row_empleados['descuento']) 
+            ? floatval($row_empleados['descuento']) 
+            : (floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) > 0 
+            ? floatval($row_empleados['cantidad']) - floatval($row_empleados['total_abonado']) 
+            : 0);
+            $caja_ahorro = floatval($row_empleados['caja_ahorro']);
+            $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
+
+            //Datos de pago percepciones
             $sueldo_base = $row_empleados['sueldo_base'];
             if($row_empleados['cargo'] == 'OPERADOR') {
                 $sueldo_bruto = floatval($row_empleados['sueldo_bruto'] - ($row_empleados['faltas'] * $row_empleados['sueldo_base']));
             }elseif ($imss != 1) {
-                $sueldo_bruto = ($sueldo_base * 7) - ($row_empleados['sueldo_base'] * $row_empleados['faltas']);
+                $sueldo_bruto = $sueldo_base * 7;
             }else {
                 $sueldo_bruto = 0;
             }
             $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
-            $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
-            $efectivo = $sueldo_bruto - $pago_fiscal;
             $deposito = $pago_fiscal - $deduccion_fiscal;
             $apoyo_mes = (dia15EntreFechas($fecha_inicio, $fecha_fin) && $gana_apoyo_mes) ? floatval($row_empleados['apoyo_mes']) : 0;
-            $anios_trabajados = calcularAniosTrabajados($row_empleados['fecha_contrato']);
-            $dias_correspondientes_vacaciones = calcularDiasVacaciones($anios_trabajados);
             $prima_vacacional = $row_empleados['prima_vacacional'] == 'SI' ? (($row_empleados['salario_diario'] * $dias_correspondientes_vacaciones) * .25) : 0;
-            $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? (intval($row_empleados['fecha_inicial']) + 1) ?? (intval($row_empleados['fecha_final']) + 1) : 0;
             $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
             $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['bono_categoria']) : 0;
-            $bono_semanal = ($gana_bono && $dias_vacaciones === 0 && $bono_semanal_contrato && $total_vueltas > 10) ? floatval($row_empleados['bono_semanal']) : 0;
-            $neto = ($cargo == 'OPERADOR') ? ($sueldo_bruto + $bono_categoria + $bono_semanal + $row_empleados['bono_supervisor'] + $pago_vacaciones + $prima_vacacional - $pago_fiscal - $deducciones - $caja_ahorro + $apoyo_mes) : ($bono_categoria + $bono_semanal + $row_empleados['bono_supervisor'] + $pago_vacaciones + $prima_vacacional + $pago_fiscal - $deducciones - $caja_ahorro + $apoyo_mes - $deduccion_fiscal);
-    
+            $bono_semanal = ($gana_bono && $dias_vacaciones === 0 && $total_vueltas > 0) ? floatval($row_empleados['bono_semanal']) : 0;
+            $bono_supervisor = $row_empleados['bono_supervisor'] ?? 0;
+
+            //Totales
+            $efectivo = ($sueldo_bruto > 0 ? $sueldo_bruto - $pago_fiscal : 0) + $bono_semanal + $bono_supervisor + $bono_categoria + $apoyo_mes + $pago_vacaciones + $prima_vacacional - $deducciones - $caja_ahorro;
+            $neto = $deposito + $efectivo;
+            
             // Preparar los datos para la inserción
             $data = [
                 'semana' => $semana,
