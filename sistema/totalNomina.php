@@ -38,7 +38,7 @@ $apoyoMensual = formatearMoneda($filas_totales['apoyo_mes'] ?? 0);
 $deposito = formatearMoneda($filas_totales['deposito_fiscal'] ?? 0);
 $efectivo = formatearMoneda($filas_totales['sueldo_bruto'] + $filas_totales['bono_semanal'] + $filas_totales['bono_categoria'] + $filas_totales['bono_supervisor'] + $filas_totales['apoyo_mes'] -$filas_totales['caja_ahorro'] - $filas_totales['deducciones']);
 $cajaAhorro = formatearMoneda($filas_totales['caja_ahorro'] ?? 0);
-$totalNomina = formatearMoneda($filas_totales['deposito_fiscal'] + $filas_totales['efectivo']);
+$totalNomina = formatearMoneda($filas_totales['deposito_fiscal'] + $filas_totales['sueldo_bruto'] + $filas_totales['bono_semanal'] + $filas_totales['bono_categoria'] + $filas_totales['bono_supervisor'] + $filas_totales['apoyo_mes'] -$filas_totales['caja_ahorro'] - $filas_totales['deducciones']);
 ?>
 <!DOCTYPE html>
 <!--
