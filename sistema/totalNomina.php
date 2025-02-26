@@ -28,7 +28,7 @@ function formatearMoneda($cantidad, $simbolo = '$', $decimales = 2, $separadorMi
 	return $simbolo . number_format($cantidad, $decimales, $separadorDecimales, $separadorMiles);
 }
 $calculaDeposito = $filas_totales['nomina_fiscal'] - $filas_totales['deduccion_fiscal'];
-$calculaEfectivo = $filas_totales['sueldo_bruto'] - $filas_totales['nomina_fiscal'] + $filas_totales['bono_semanal'] + $filas_totales['bono_categoria'] + $filas_totales['bono_supervisor'] + $filas_totales['apoyo_mensual'] - $filas_totales['caja_ahorro'] - $filas_totales['deducciones'] + $filas_totales['pago_vacaciones'] + $filas_totales['prima_vacacional'];
+$calculaEfectivo = $filas_totales['efectivo'] + $filas_totales['bono_semanal'] + $filas_totales['bono_categoria'] + $filas_totales['bono_supervisor'] + $filas_totales['apoyo_mensual'] - $filas_totales['caja_ahorro'] - $filas_totales['deducciones'] + $filas_totales['pago_vacaciones'] + $filas_totales['prima_vacacional'];
 
 $sueldoBruto = formatearMoneda($filas_totales['sueldo_bruto'] ?? 0);
 $nominaFiscal = formatearMoneda($filas_totales['nomina_fiscal'] ?? 0);
