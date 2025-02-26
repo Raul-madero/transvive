@@ -40,7 +40,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 	<style>
 		.dataTables_length select {
-			min-width: 150px;
+			min-width: 50px;
 			padding: 5px;
 		}
 	</style>
