@@ -282,7 +282,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             }
             $pago_fiscal = $row_empleados['pago_fiscal'] ?? 0;
             $deduccion_fiscal = $row_empleados['deduccion_fiscal'] ?? 0;
-            $efectivo = $sueldo_bruto - $pago_fiscal;
+            $efectivo = ($sueldo_bruto > 0 ? ($sueldo_bruto - $pago_fiscal) : 0) + $bono_semanal + $bono_supervisor + $bono_categoria + $apoyo_mes + $pago_vacaciones + $prima_vacacional - $deducciones - $caja_ahorro;
             $deposito = $pago_fiscal - $deduccion_fiscal;
             $apoyo_mes = (dia15EntreFechas($fecha_inicio, $fecha_fin) && $gana_apoyo_mes) ? floatval($row_empleados['apoyo_mes']) : 0;
             $anios_trabajados = calcularAniosTrabajados($row_empleados['fecha_contrato']);
