@@ -106,7 +106,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="col-4 text-center">
 							<button class="btn btn-outline-success btn-lg" id="pagarNomina">Pagar</button>
 						</div>
-						<div class="col-4"></div>	
+						<div class="col-4">
+							<button class="btn btn-outline-primary btn-lg" id="totales">Totales</button>
+						</div>	
 					</div>
 				</div><!-- /.container-fluid -->
 			</div>
