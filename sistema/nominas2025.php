@@ -338,10 +338,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 					// Recorre todas las filas y suma el valor de la columna deseada
 					api.rows({ page: 'all' }).data().each(function(data) {
-						total += formatoMoneda(( parseFloat(data.sueldo_bruto) > 0 ? (parseFloat(data.sueldo_bruto) - parseFloat(data.nomina_fiscal)) : 0 ) + parseFloat(data.bono_semanal) + parseFloat(data.bono_supervisor) + parseFloat(data.bono_categoria) + parseFloat(data.apoyo_mes) + parseFloat(data.pago_vacaciones) + parseFloat(data.prima_vacacional) - parseFloat(data.deducciones) - parseFloat(data.caja_ahorro) + parseFloat(data.deposito_fiscal)) || 0; // Cambia 'sueldo_bruto' por la columna que deseas sumar
+						total += 
+							(parseFloat)
+							( parseFloat(data.sueldo_bruto) > 0 ? 
+							(parseFloat(data.sueldo_bruto) - 
+							parseFloat(data.nomina_fiscal)) : 0 ) + 
+							(parseFloat(data.bono_semanal) || 0) + 
+							(parseFloat(data.bono_supervisor) || 0) + 
+							(parseFloat(data.bono_categoria) || 0) + 
+							(parseFloat(data.apoyo_mes) || 0) + 
+							(parseFloat(data.pago_vacaciones) || 0) + 
+							(parseFloat(data.prima_vacacional) || 0) - 
+							(parseFloat(data.deducciones) || 0) - 
+							(parseFloat(data.caja_ahorro) || 0) + 
+							(parseFloat(data.deposito_fiscal) || 0);
 					});
-
-					console.log(total);
 
 					// Mostrar el total formateado
 					$('#total').text("Total de la Nómina: " + formatoMoneda(total));
