@@ -334,11 +334,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				},
 				drawCallback: function(settings) {
 					let api = this.api();
-					const total = api
-						.column(24, {page: 'all'})
+					let total = api
+						.column(20, { page: 'all' }) // Cambia el índice de columna según la que quieres sumar
 						.data()
-						.reduce((a, b) => (parseFloat(a) || 0) + (parseFloat(b) || 0), 0)
-					$('#total').text("Total de la Nomina: " + formatoMoneda(total));
+						.reduce((a, b) => (parseFloat(a) || 0) + (parseFloat(b) || 0), 0);
+
+					$('#total').text("Total de la Nómina: " + formatoMoneda(total));
 				}
 			});
 		};
