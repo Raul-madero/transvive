@@ -69,7 +69,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			<div class="content-header">
 				<div class="container">
 					<div class="row mb-2">
-						<div class="col-5">
+						<div class="col-3">
 							<h4 class="m-0"> Nomina Empleados <small>Semanal</small></h4>
 						</div><!-- /.col -->
 						<div class="col-9">
