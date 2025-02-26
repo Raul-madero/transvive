@@ -27,6 +27,8 @@ if($filas > 0) {
 function formatearMoneda($cantidad, $simbolo = '$', $decimales = 2, $separadorMiles = ',', $separadorDecimales = '.') {
 	return $simbolo . number_format($cantidad, $decimales, $separadorDecimales, $separadorMiles);
 }
+$calculaDeposito = $$filas_totales['deposito_fiscal'] ?? 0;
+$calculaEfectivo = $filas_totales['sueldo_bruto'] - $filas_totales['nomina_fiscal'] + $filas_totales['bono_semanal'] + $filas_totales['bono_categoria'] + $filas_totales['bono_supervisor'] + $filas_totales['apoyo_mes'] -$filas_totales['caja_ahorro'] - $filas_totales['deducciones'];
 
 $sueldoBruto = formatearMoneda($filas_totales['sueldo_bruto'] ?? 0);
 $nominaFiscal = formatearMoneda($filas_totales['nomina_fiscal'] ?? 0);
@@ -35,10 +37,10 @@ $bonoSemanal = formatearMoneda($filas_totales['bono_semanal'] ?? 0);
 $bonoCategoria = formatearMoneda($filas_totales['bono_categoria'] ?? 0);
 $bonoSupervisor = formatearMoneda($filas_totales['bono_supervisor'] ?? 0);
 $apoyoMensual = formatearMoneda($filas_totales['apoyo_mes'] ?? 0);
-$deposito = formatearMoneda($filas_totales['deposito_fiscal'] ?? 0);
-$efectivo = formatearMoneda($filas_totales['efectivo'] + $filas_totales['bono_semanal'] + $filas_totales['bono_categoria'] + $filas_totales['bono_supervisor'] + $filas_totales['apoyo_mes'] -$filas_totales['caja_ahorro'] - $filas_totales['deducciones']);
+$deposito = formatearMoneda($calculaDeposito);
+$efectivo = formatearMoneda($calculaEfectivo);
 $cajaAhorro = formatearMoneda($filas_totales['caja_ahorro'] ?? 0);
-$totalNomina = formatearMoneda($filas_totales['deposito_fiscal'] + $filas_totales['efectivo'] + $filas_totales['bono_semanal'] + $filas_totales['bono_categoria'] + $filas_totales['bono_supervisor'] + $filas_totales['apoyo_mes'] -$filas_totales['caja_ahorro'] - $filas_totales['deducciones']);
+$totalNomina = formatearMoneda($calculaDeposito + $calculaEfectivo);
 ?>
 <!DOCTYPE html>
 <!--
