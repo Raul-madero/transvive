@@ -38,6 +38,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- SweetAlert -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+	<style>
+		.dataTables_length select {
+			min-width: 150px;
+			padding: 5px;
+		}
+	</style>
 </head>
 <body class="hold-transition layout-top-nav mw-100">
   	<div class="wrapper mw-100">
@@ -66,12 +72,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						<div class="col-5">
 							<h4 class="m-0"> Nomina Empleados <small>Semanal</small></h4>
 						</div><!-- /.col -->
-						<div class="col-7">
+						<div class="col-9">
 							<div class="row">
-								<div class="col-3 align-center">
+								<div class="col-2 align-center">
 									<label for="semana" class="text-center">Numero de Semana</label>
 								</div>
-								<div class="col-4">
+								<div class="col-3">
 									<select class="form-control select2bs4" style="text-align: left; margin-bottom: 12px" name="semana" id="semana" id="nosemana">
 										<option value="0">--Selecciona la Semana--</option>
 										<?php 
@@ -82,11 +88,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 										?>
 									</select>
 								</div>
-								<div class="col-3">
+								<div class="col-2">
 									<input type="number" name="anio" id="anio" value="2025" placeholder="Selecciona el anio" class="form-control" style="text-align: left; margin-bottom: 12px"/>
 								</div>
 								<div class="col-2">
-									<button id="seleccionaSemana" class="btn btn-success" style="height: 35px">Seleccionar</button>
+									<button id="seleccionaSemana" class="btn btn-primary" style="height: 35px">Seleccionar</button>
+								</div>
+								<div class="col-3">
+									<button id="ejecutaNomina" class="btn btn-success ml-2" style="height: 35px">Ejecutar</button>
 								</div>
 							</div>
 							<!-- /.row -->
@@ -439,11 +448,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			return true;
 		};
 
-		$("#seleccionaSemana").on('click', function() {
-			const semana = $("#semana").val();
-			const anio = $("#anio").val();
+		$('#seleccionaSemana').on('click', function() {
+			console.log('Click seleccionar');
+			const semana = $('#semana').val();
+			const anio = $('#anio').val();
+			let selecciona = true;
 
 			if (validarDatos(semana, anio)) {
+				load_data(semana, anio, selecciona);
+			}
+		})
+
+		$("#ejecutaNomina").on('click', function() {
+			const semana = $("#semana").val();
+			const anio = $("#anio").val();
+			let selecciona = false;
+
+			if (validarDatos(semana, anio, selecciona)) {
 				load_data(semana, anio);
 			}
 		});
@@ -485,6 +506,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				}
 			});
 		});
+	</script>
+	<script>
+		$('#totales').on('click', function() {
+			console.log('click');
+			let semana = $('#semana').val();
+			let anio = $('#anio').val();
+			window.location = `totalNomina.php?semana=${semana}&anio=${anio}`;
+			})
 	</script>
   	<script>
     	document.addEventListener("DOMContentLoaded", function() {
