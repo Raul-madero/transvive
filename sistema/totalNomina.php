@@ -38,7 +38,7 @@ $apoyoMensual = formatearMoneda($filas_totales['apoyo_mes'] ?? 0);
 $deposito = formatearMoneda($filas_totales['deposito_fiscal'] ?? 0);
 $efectivo = formatearMoneda($filas_totales['efectivo'] ?? 0);
 $cajaAhorro = formatearMoneda($filas_totales['caja_ahorro'] ?? 0);
-$totalNomina = formatearMoneda($filas_totales['neto'] ?? 0);
+$totalNomina = $deposito + $efectivo;
 ?>
 <!DOCTYPE html>
 <!--
