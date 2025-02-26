@@ -334,30 +334,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				},
 				drawCallback: function(settings) {
 					let api = this.api();
-					let total = 0;
+					let total = api
+						.column(24, { page: 'all' }) // Cambia el índice de columna según la que quieres sumar
+						.data()
+						.reduce((a, b) => (parseFloat(a) || 0) + (parseFloat(b) || 0), 0);
 
-					// Recorre todas las filas y suma el valor de la columna deseada
-					api.rows({ page: 'all' }).data().each(function(data) {
-						total += 
-							(parseFloat)
-							( parseFloat(data.sueldo_bruto) > 0 ? 
-							(parseFloat(data.sueldo_bruto) - 
-							parseFloat(data.nomina_fiscal)) : 0 ) + 
-							(parseFloat(data.bono_semanal) || 0) + 
-							(parseFloat(data.bono_supervisor) || 0) + 
-							(parseFloat(data.bono_categoria) || 0) + 
-							(parseFloat(data.apoyo_mes) || 0) + 
-							(parseFloat(data.pago_vacaciones) || 0) + 
-							(parseFloat(data.prima_vacacional) || 0) - 
-							(parseFloat(data.deducciones) || 0) - 
-							(parseFloat(data.caja_ahorro) || 0) + 
-							(parseFloat(data.deposito_fiscal) || 0);
-					});
-
-					// Mostrar el total formateado
 					$('#total').text("Total de la Nómina: " + formatoMoneda(total));
 				}
-
 			});
 		};
 
