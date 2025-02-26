@@ -333,8 +333,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					}
 				},
 				drawCallback: function(settings) {
-					const total = settings.json.totalNomina || 0;
-					$('#total').text("Total de la Nomina: " + formatoMoneda(parseFloat(total)));
+					let api = this.api();
+					const total = api
+						.column(23, {page: 'all'})
+						.data()
+						.reduce((a, b) => (parseFloat(a) || 0) + (parseFloat(b) || 0), 0)
+					$('#total').text("Total de la Nomina: " + formatoMoneda(total));
 				}
 			});
 		};
