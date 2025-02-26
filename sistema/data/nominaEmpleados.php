@@ -377,9 +377,9 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $sql_total_pagar = "SELECT SUM(
     -- sueldo_bruto + bono_semanal + bono_categoria + bono_supervisor - deducciones - nomina_fiscal - caja_ahorro + prima_vacacional + pago_vacaciones + apoyo_mes
     neto
-    ) AS total_nomina FROM nomina_temp_2025";
+    ) AS total_nomina, SUM(efectivo) AS total_efectivo, SUM(sueldo_bruto) AS total_sueldo, SUM(nomina_fiscal) AS total_fiscal, SUM(deducciones) AS total_deducciones, SUM(bono_semanal) AS total_bono, SUM(deposito_fiscal) AS total_deposito, SUM(caja_ahorro) AS total_caja FROM nomina_temp_2025";
     $result_total_pagar = mysqli_query($conection, $sql_total_pagar);
-    $total_nomina = mysqli_fetch_row($result_total_pagar)[0];
+    $total_nomina = mysqli_fetch_assoc($result_total_pagar);
     $data_output = [];
     while ($row = mysqli_fetch_assoc($result_nomina)) {
         $data_output[] = $row;
@@ -387,7 +387,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $draw = $_POST['draw'] ?? 1;
     echo json_encode([
         'draw' => $draw,
-        'totalNomina' => $total_nomina,
+        'totales' => $total_nomina,
         'recordsTotal' => $totalRecords,
         'recordsFiltered' => $totalFiltered,
         'data' => $data_output

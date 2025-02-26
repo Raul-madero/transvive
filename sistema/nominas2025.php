@@ -332,7 +332,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					}
 				},
 				drawCallback: function(settings) {
-					let total = settings.json.totalNomina || 0;
+					let total = settings.json.totales['total_nomina'] || 0;
 					$('#total').text("Total de la Nómina: " + formatoMoneda(parseFloat(total)));
 				}
 			});
