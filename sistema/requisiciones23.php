@@ -179,7 +179,7 @@ session_start();
               <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <!-- <th style="text-align: center; font-size: 12px;">Id</th> -->
+                <th style="text-align: center; font-size: 12px;">Id</th>
                 <th style="text-align: center; font-size: 12px;">No. Requisicion</th>
                 <th style="text-align: center; font-size: 12px;">Fecha</th>
                 <th style="text-align: center; font-size: 12px;">Fecha Requiere Material</th>
@@ -310,13 +310,13 @@ buttons: [
             "dataSrc": "records"
           },
           "columns": [
-            // { "data" : "pedidono", "width": "3%", className: "text-right" },
+            { "data" : "pedidono", "width": "3%", className: "text-right" },
             { 
-              "data": null, 
+              "data": "Folio", 
               "width": "3%", 
               "className": "text-right", 
               "render": function(data, type, full, meta) {
-                return 'req-' + full.Folio; // Sin etiquetas HTML
+                return 'req-' + data; // Sin etiquetas HTML
               }
             },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            
@@ -437,7 +437,14 @@ buttons: [
           },
           "columns": [
             { "data" : "pedidono", "width": "3%", className: "text-right" },
-            { "data" : "Folio", "width": "5%", className: "text-right" },
+            { 
+              "data": "Folio", 
+              "width": "3%", 
+              "className": "text-right", 
+              "render": function(data, type, full, meta) {
+                return 'req-' + data; // Sin etiquetas HTML
+              }
+            },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            
             { "data" : "fecha_req", "width": "10%", className:"text-center", "orderable": false},
             { "data" : "tipor", "width": "5%", "orderable":false },
