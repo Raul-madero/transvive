@@ -114,40 +114,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <?php
-       if ($_SESSION['rol'] == 4) {
-        include('includes/navbarsup.php');
-      }else {
-       if ($_SESSION['rol'] == 5) {
-          include('includes/navbarrhuman.php');
-         }else {
-            if ($_SESSION['rol'] == 6) {
-                include('includes/navbaroperac.php');
-              }else {
-                if ($_SESSION['rol'] == 7) {
-                    include('includes/navbarmantto.php');
-                  }else { 
-                     if ($_SESSION['rol'] == 8) {
-                        include('includes/navbarjefeoper.php');
-                      }else { 
-                        if ($_SESSION['rol'] == 9) {
-                          include('includes/navbargrcia.php');
-                        }else {
-                          if ($_SESSION['rol'] == 15) {
-                            include('includes/navbarmonitorista.php');
-                          }else {
-                            if ($_SESSION['rol'] == 16) {
-                              include('includes/navbarcompras.php');
-                            }else {
-                            include('includes/navbar.php');
-                            }
-                          }  
-                        }  
-                      }  
-                  }
-              }  
-      } 
-      } ?>
+      <?php include('includes/generalnavbar.php'); ?>
       <?php include('includes/nav.php') ?> 
 
     </div>
@@ -223,7 +190,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Folio</label>
                     <div class="col-sm-3">
-                      <input style="text-align:right;" type="text" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo $noreq;?>" readonly>
+                      <input style="text-align:right;" type="text" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo 'req-' . $noreq;?>" readonly>
                     </div>
                   </div>
 
