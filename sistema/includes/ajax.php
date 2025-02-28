@@ -1051,13 +1051,13 @@ if($_POST['action'] == 'enviarEncuesta'){
                 //*$mail->Host = 'smtp.office365.com';
                 //**$mail->Host = 'smtp.gmail.com';
                 //**$mail->Port = 587;
-                $mail->Host = 'transvivegdl.com.mx';
-                $mail->Port = 465;
+                $mail->Host = 'smtp.office365.com';
+                $mail->Port = 587;
                 $mail->SMTPAuth = true;
-                $mail->SMTPSecure = 'ssl';
-                $mail->Username = 'sgc@transvivegdl.com.mx';
+                $mail->SMTPSecure = 'STARTTLS';
+                $mail->Username = 'compras@transvivegdl.com.mx';
                 $mail->Password = 'Feb241981@';
-                $mail->setFrom('ventas@transvivegdl.com.mx', 'Software Transvive ERP');
+                $mail->setFrom('compras@transvivegdl.com.mx', 'Software Transvive ERP');
                 //$mail->SMTPAuth = true;
                 //$mail->Username = 'rog_diaz@hotmail.com';
                 //$mail->Password = 'CHE_ito73';
@@ -1065,7 +1065,7 @@ if($_POST['action'] == 'enviarEncuesta'){
                 //*$mail->Username = 'textilerp.software@gmail.com';
                 //*$mail->Password = 'yscxrwfshwcttrkd';
                 //*$mail->setFrom('textilerp.software@gmail.com', 'CRM Transvive ');
-                $mail->addReplyTo('calidad@transvivegdl.com.mx', 'Encuesta Enviada');
+                $mail->addReplyTo('rmadero@transvivegdl.com.mx', 'Encuesta Enviada');
                 $mail->addAddress('raul.madero.ramirez@gmail.com', utf8_decode($nombremail));
                 //$mail->addAddress('rogelio73diaz@gmail.com','Rogelio Diaz');
                 // $mail->addCC('calidad@transvivegdl.com.mx');
