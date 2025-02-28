@@ -283,14 +283,14 @@ session_start();
         $('#fetch_generated_wills').DataTable({
           "order": [[ 0, "desc" ]],
           dom: 'Bfrtip',
-lengthMenu: [
-[20, 25, 50, -1],
-['20 rows', '25 rows', '50 rows', 'Show all']
-],
-buttons: [
-'excelHtml5',
-'pageLength'
-],
+          lengthMenu: [
+          [20, 25, 50, -1],
+          ['20 rows', '25 rows', '50 rows', 'Show all']
+          ],
+          buttons: [
+          'excelHtml5',
+          'pageLength'
+          ],
           "processing": true,
           "serverSide": true,
           "stateSave": true,
@@ -310,9 +310,13 @@ buttons: [
             "dataSrc": "records"
           },
           "columns": [
-            { "data" : null, "width": "3%", className: "text-right", "render": function(data, type, full, meta){
-              return '<p> req-' + full.pedidono + '</p>';
-            }
+            { 
+              "data": "pedidono", 
+              "width": "3%", 
+              "className": "text-right", 
+              "render": function(data, type, full, meta){
+                return data ? '<p>req-' + data + '</p>' : '<p>Sin pedido</p>';
+              }
             },
             { "data" : "Folio", "width": "5%", className: "text-right" },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            
