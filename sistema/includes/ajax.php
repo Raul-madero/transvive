@@ -2488,11 +2488,11 @@ if ($_POST['action'] == 'AlmacenaRuta') {
         $ruta       = mysqli_real_escape_string($conection, trim($_POST['ruta']));
         $noeco      = mysqli_real_escape_string($conection, trim($_POST['noeconomico']));
         $operador   = mysqli_real_escape_string($conection, trim($_POST['operador']));
-        $horario1 = !empty($_POST['horario1']) ? "'".$_POST['horario1']."'" : "NULL";
-        $horario2 = !empty($_POST['horario2']) ? "'".$_POST['horario2']."'" : "NULL";
-        $horario3 = !empty($_POST['horario3']) ? "'".$_POST['horario3']."'" : "NULL";
-        $hmixto1  = !empty($_POST['hmixto1'])  ? "'".$_POST['hmixto1']."'"  : "NULL";
-        $hmixto2  = !empty($_POST['hmixto2'])  ? "'".$_POST['hmixto2']."'"  : "NULL";
+        $horario1   = mysqli_real_escape_string($conection, trim($_POST['horario1']));
+        $horario2   = mysqli_real_escape_string($conection, trim($_POST['horario2']));
+        $horario3   = mysqli_real_escape_string($conection, trim($_POST['horario3']));
+        $hmixto1    = mysqli_real_escape_string($conection, trim($_POST['hmixto1']));
+        $hmixto2    = mysqli_real_escape_string($conection, trim($_POST['hmixto2']));
         $diasviajes = mysqli_real_escape_string($conection, trim($_POST['diasviajes']));
         $sueldo_vta = !empty($_POST['sueldo_vta']) ? floatval($_POST['sueldo_vta']) : 'NULL';
         $sueldo_vtaneta = !empty($_POST['sueldo_vtaneta']) ? floatval($_POST['sueldo_vtaneta']) : 'NULL';
