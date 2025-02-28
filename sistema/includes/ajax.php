@@ -2482,7 +2482,7 @@ if($_POST['action'] == 'FindeViaje')
 
 //Almacena Ruta
 if ($_POST['action'] == 'AlmacenaRuta') {
-    if (!empty($_POST['cliente']) && !empty($_POST['ruta']) && !empty($_POST['operador'])) {
+    if (!empty($_POST['cliente']) && !empty($_POST['ruta'])) {
         
         $cliente    = mysqli_real_escape_string($conection, trim($_POST['cliente']));
         $ruta       = mysqli_real_escape_string($conection, trim($_POST['ruta']));
