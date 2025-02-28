@@ -2511,7 +2511,7 @@ if ($_POST['action'] == 'AlmacenaRuta') {
         if (mysqli_stmt_execute($stmt)) {
             echo json_encode(["status" => "success", "message" => "Ruta almacenada correctamente"], JSON_UNESCAPED_UNICODE);
         } else {
-            echo json_encode(["status" => "error", "message" => "Error al almacenar la ruta"], JSON_UNESCAPED_UNICODE);
+            echo json_encode(["status" => "error", "message" => "Error al almacenar la ruta" . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
         }
 
         mysqli_stmt_close($stmt);
