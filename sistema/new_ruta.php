@@ -329,12 +329,11 @@ $('#btn_salir').click(function(e){
     let ruta         = $('#fruta').val().trim();
     let noeconomico  = $('#fNoeco').val().trim();
     let operador     = $('#foperador').val().trim();
-    let horario1     = $('#fhorario1').val().trim();
-    let horario2     = $('#fhorario2').val().trim();
-    let horario3     = $('#fhorario3').val().trim();
-    let hmixto1      = $('#fhmixto1').val().trim();
-    let hmixto2      = $('#fhmixto2').val().trim();
-    let diasviajes   = $('#fdiasv').val().trim();
+    let horario1 = $('#fhorario1').val().trim() || '00:00:00';
+    let horario2 = $('#fhorario2').val().trim() || '00:00:00';
+    let horario3 = $('#fhorario3').val().trim() || '00:00:00';
+    let hmixto1  = $('#fhmixto1').val().trim() || '00:00:00';
+    let hmixto2  = $('#fhmixto2').val().trim() || '00:00:00';
     let sueldo_vta   = $('#fsueldovta').val().trim();
     let sueldo_vtaneta = $('#fsueldovtaneta').val().trim();
     let sueldo_semid = $('#fsueldosemid').val().trim();
