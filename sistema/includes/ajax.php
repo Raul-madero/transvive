@@ -1050,12 +1050,12 @@ if($_POST['action'] == 'AlmacenaViaje')
                 //*$mail->Host = 'smtp.office365.com';
                 //**$mail->Host = 'smtp.gmail.com';
                 //**$mail->Port = 587;
-                $mail->Host = 'smtp.hostinger.com';
+                $mail->Host = 'smtp.office365.com';
                 $mail->Port = 587;
                 $mail->SMTPAuth = true;
-                $mail->Username = 'informes@dasha-web.com';
-                $mail->Password = 'CHE_ito73';
-                $mail->setFrom('informes@dasha-web.com', 'Software Transvive ERP');
+                $mail->Username = 'ventas@transvivegdl.com.mx';
+                $mail->Password = 'Feb241981@';
+                $mail->setFrom('ventas@transvivegdl.com.mx', 'Software Transvive ERP');
                 //$mail->SMTPAuth = true;
                 //$mail->Username = 'rog_diaz@hotmail.com';
                 //$mail->Password = 'CHE_ito73';
@@ -1064,11 +1064,11 @@ if($_POST['action'] == 'AlmacenaViaje')
                 //*$mail->Password = 'yscxrwfshwcttrkd';
                 //*$mail->setFrom('textilerp.software@gmail.com', 'CRM Transvive ');
                 $mail->addReplyTo('calidad@transvivegdl.com.mx', 'Encuesta Enviada');
-                $mail->addAddress($enviomail,utf8_decode($nombremail));
+                $mail->addAddress('raul.madero.ramirez@gmail.com',utf8_decode($nombremail));
                 //$mail->addAddress('rogelio73diaz@gmail.com','Rogelio Diaz');
-                $mail->addCC('calidad@transvivegdl.com.mx');
-                $mail->addCC('ejecutivo@transvivegdl.com.mx');
-                $mail->addCC('rogelio73diaz@gmail.com');
+                // $mail->addCC('calidad@transvivegdl.com.mx');
+                // $mail->addCC('ejecutivo@transvivegdl.com.mx');
+                // $mail->addCC('rogelio73diaz@gmail.com');
 
                 $mail->Subject = $asunto;
                 $mail->Body = utf8_decode($msjdelbody);
