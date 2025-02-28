@@ -314,8 +314,8 @@ session_start();
               "data": "pedidono", 
               "width": "3%", 
               "className": "text-right", 
-              "render": function(data, type, full, meta){
-                return data ? '<p>req-' + data + '</p>' : '<p>Sin pedido</p>';
+              "render": function(data, type, full, meta) {
+                return '<p>req-' + String(data) + '</p>';
               }
             },
             { "data" : "Folio", "width": "5%", className: "text-right" },
