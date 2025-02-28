@@ -4653,69 +4653,84 @@ if($_POST['action'] == 'ActualizaParadarouter'){
             exit;
         }                
 
-//Almacena Refaccion
-if($_POST['action'] == 'AlmacenaRefaccion')
-{
-    if(!empty($_POST['codigo']) || !empty($_POST['descripcion']))
-    {
-        $codigo      = $_POST['codigo'];
-        $codigo_intr = $_POST['codigo_int'];
-        $descripcion = $_POST['descripcion'];
-        $unidadmedid = $_POST['unidadmed'];
-        $marca       = $_POST['marca'];
-        $rotacion    = $_POST['rotacion'];
-        $categoria   = $_POST['categoria'];
-        $modelo      = $_POST['modelo'];
-        $costo       = $_POST['costo'];
-        $impuesto    = $_POST['impuesto'];
-        $impisr      = $_POST['imp_isr'];
-        $impieps     = $_POST['imp_ieps'];
-        $stock_max   = $_POST['stockmax'];
-        $stock_min   = $_POST['stockmin'];
+if ($_POST['action'] == 'AlmacenaRefaccion') {
+    if (!empty($_POST['codigo']) && !empty($_POST['descripcion'])) {
+        require_once "conexion.php"; // Asegúrate de incluir la conexión
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-    
-        $query_procesar = mysqli_query($conection,"CALL procesar_refaccion('$codigo', '$codigo_intr', '$descripcion', '$unidadmedid', '$marca', '$rotacion', '$categoria', '$modelo', $costo, $impuesto, $impisr, $impieps, $stock_max, $stock_min, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+        // Sanitizar entradas
+        $codigo      = mysqli_real_escape_string($conection, $_POST['codigo']);
+        $codigo_intr = mysqli_real_escape_string($conection, $_POST['codigo_int']);
+        $descripcion = mysqli_real_escape_string($conection, $_POST['descripcion']);
+        $unidadmedid = mysqli_real_escape_string($conection, $_POST['unidadmed']);
+        $marca       = mysqli_real_escape_string($conection, $_POST['marca']);
+        $rotacion    = mysqli_real_escape_string($conection, $_POST['rotacion']);
+        $categoria   = mysqli_real_escape_string($conection, $_POST['categoria']);
+        $modelo      = mysqli_real_escape_string($conection, $_POST['modelo']);
+
+        // Convertir a números (para evitar errores de tipo)
+        $costo       = floatval($_POST['costo']);
+        $impuesto    = floatval($_POST['impuesto']);
+        $impisr      = floatval($_POST['imp_isr']);
+        $impieps     = floatval($_POST['imp_ieps']);
+        $stock_max   = intval($_POST['stockmax']);
+        $stock_min   = intval($_POST['stockmin']);
+
+        // Usuario
+        session_start();
+        $usuario = $_SESSION['idUser'];
+
+        // Preparar consulta segura con parámetros
+        $sql = "INSERT INTO refacciones 
+                (codigo, codigo_interno, descripcion, umedida, marca, rotacion, categoria, modelo, 
+                costo, impuesto, impuesto_isr, impuesto_ieps, stock_maximo, stock_minimo, usuario_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        $stmt = mysqli_prepare($conection, $sql);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "ssssssssdiiiii", 
+                $codigo, $codigo_intr, $descripcion, $unidadmedid, $marca, $rotacion, 
+                $categoria, $modelo, $costo, $impuesto, $impisr, $impieps, $stock_max, $stock_min, $usuario
+            );
+
+            if (mysqli_stmt_execute($stmt)) {
+                echo json_encode(["status" => "success", "message" => "Refacción almacenada correctamente"]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Error al insertar los datos"]);
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
         }
-    
-    mysqli_close($conection);
 
-    }else{
-        echo 'error';
+        mysqli_close($conection);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
     }
     exit;
 }
-
-
+        
 //Almacena Edicion Refaccion
 if($_POST['action'] == 'AlmacenaEditRefaccion')
 {
     if(!empty($_POST['codigo']) || !empty($_POST['descripcion']))
     {
-        $idr      = $_POST['idr'];
-        $codigo      = $_POST['codigo'];
-        $codinterno  = $_POST['codigointer'];
-        $descripcion = $_POST['descripcion'];
-        $unidadmedid = $_POST['unidadmedid'];
-        $marca       = $_POST['marca'];
-        $rotacion    = $_POST['rotacion'];
-        $categoria   = $_POST['categoria'];
-        $modelo      = $_POST['modelo'];
-        $costo       = $_POST['costo'];
-        $impuesto    = $_POST['impuesto'];
-        $impisr      = $_POST['imp_isr'];
-        $impieps     = $_POST['imp_ieps'];
-        $stock_max   = $_POST['stockmax'];
-        $stock_min   = $_POST['stockmin'];
-        $estatus     = $_POST['status'];
+        $idr      = $_POST['idr'] ?? "";
+        $codigo      = $_POST['codigo'] ?? "";
+        $codinterno  = $_POST['codigointer'] ?? "";
+        $descripcion = $_POST['descripcion'] ?? "";
+        $unidadmedid = $_POST['unidadmedid'] ?? "";
+        $marca       = $_POST['marca'] ?? "";
+        $rotacion    = $_POST['rotacion'] ?? "";
+        $categoria   = $_POST['categoria'] ?? "";
+        $modelo      = $_POST['modelo'] ?? "";
+        $costo       = $_POST['costo'] ?? "";
+        $impuesto    = $_POST['impuesto'] ?? "";
+        $impisr      = $_POST['imp_isr'] ?? "";
+        $impieps     = $_POST['imp_ieps'] ?? "";
+        $stock_max   = $_POST['stockmax'] ?? "";
+        $stock_min   = $_POST['stockmin'] ?? "";
+        $estatus     = $_POST['status'] ?? "";
 
 
         $token       = md5($_SESSION['idUser']);
