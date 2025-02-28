@@ -312,11 +312,11 @@ buttons: [
           "columns": [
             { "data" : "pedidono", "width": "3%", className: "text-right" },
             { 
-              "data": "Folio", 
+              "data": null, 
               "width": "3%", 
               "className": "text-right", 
               "render": function(data, type, full, meta) {
-                return 'req-' + data; // Sin etiquetas HTML
+                return 'req-' + full.Folio; // Sin etiquetas HTML
               }
             },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            
