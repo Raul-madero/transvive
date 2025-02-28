@@ -334,6 +334,7 @@ $('#btn_salir').click(function(e){
     let horario3 = $('#fhorario3').val().trim() || '00:00:00';
     let hmixto1  = $('#fhmixto1').val().trim() || '00:00:00';
     let hmixto2  = $('#fhmixto2').val().trim() || '00:00:00';
+    let diasviajes = $('#fdiasv').val().trim();
     let sueldo_vta   = $('#fsueldovta').val().trim();
     let sueldo_vtaneta = $('#fsueldovtaneta').val().trim();
     let sueldo_semid = $('#fsueldosemid').val().trim();
