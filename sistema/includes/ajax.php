@@ -12081,62 +12081,110 @@ if ($_POST['action'] == 'AlmacenaNc') {
 
 //Almacena Edicion No conformidad
     
-if($_POST['action'] == 'AlmacenaEditNc')
-{
-    if(empty($_POST['noqueja'])  || empty($_POST['fecha']) || empty($_POST['mes']) )
-    {
-        echo "error"; 
-    }else {
-        
-        $id_nc       = $_POST['idnq'];
-        $no_queja    = $_POST['noqueja'];
-        $date_nc     = $_POST['fecha'];
-        $mes_nc      = $_POST['mes'];
-        $cliente_nc  = $_POST['cliente'];
-        $formato     = $_POST['formato'];
-        $desc_nc     = $_POST['descripcion'];
-        $motivo_nc   = $_POST['motivo'];
-        $resp_nc     = $_POST['responsable'];
-        $superv_nc   = $_POST['supervisor'];
-        $operador_nc = $_POST['operador'];
-        $unidad_nc   = $_POST['unidad'];
-        $ruta_nc     = $_POST['ruta'];
-        $parada_nc   = $_POST['parada'];
-        $date_incid  = $_POST['dateincident'];
-        $turno_nc    = $_POST['turno'];
-        $procede_nc  = $_POST['procede'];
-        $porkprocede = $_POST['porkprocede'];
-        $analisis_nc = $_POST['analisis'];
-        $accion_nc   = $_POST['accion'];
-        $date_accion = $_POST['dateaccion'];
-        
-        $observa_nc  = $_POST['notas'];
-        $tipo_incid  = $_POST['tipoinc'];
-        $estatus_nc  = $_POST['estatus'];
-        $causa_nc    = $_POST['causa'];
-        $afecta_cte  = $_POST['afectacte'];
-        $area_resp   = $_POST['arearespons'];
-        $date_cierre = $_POST['datecierre'];
-
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-
-        if (!empty($_POST['respaccion']) && is_array($_POST['respaccion'])) {
-    $resp_accion = implode(', ', $_POST['respaccion']);
-} else {
-    $resp_accion = ''; // O manejar el caso donde esté vacío
-}
-    
-        $query_procesar = mysqli_query($conection,"CALL procesar_editnc($id_nc, $no_queja, '$date_nc', '$mes_nc', '$cliente_nc', '$formato', '$desc_nc', '$motivo_nc', '$resp_nc', '$superv_nc', '$operador_nc', '$unidad_nc', '$ruta_nc', '$parada_nc', '$date_incid', '$turno_nc', '$procede_nc', '$porkprocede', '$analisis_nc', '$accion_nc', '$date_accion', '$resp_accion', '$observa_nc', '$tipo_incid', '$estatus_nc', '$causa_nc', '$afecta_cte', '$area_resp', '$date_cierre', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-             mysqli_close($conection);
-        } 
+if ($_POST['action'] == 'AlmacenaEditNc') {
+    // Validar datos obligatorios
+    if (empty($_POST['noqueja']) || empty($_POST['fecha']) || empty($_POST['mes'])) {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
+        exit;
     }
+
+    // Sanitizar y validar datos
+    $id_nc       = intval($_POST['idnq']);
+    $no_queja    = intval($_POST['noqueja']);
+    $date_nc     = mysqli_real_escape_string($conection, $_POST['fecha']);
+    $mes_nc      = mysqli_real_escape_string($conection, $_POST['mes']);
+    $cliente_nc  = mysqli_real_escape_string($conection, $_POST['cliente']);
+    $formato     = mysqli_real_escape_string($conection, $_POST['formato']);
+    $desc_nc     = mysqli_real_escape_string($conection, $_POST['descripcion']);
+    $motivo_nc   = mysqli_real_escape_string($conection, $_POST['motivo']);
+    $resp_nc     = mysqli_real_escape_string($conection, $_POST['responsable']);
+    $superv_nc   = mysqli_real_escape_string($conection, $_POST['supervisor']);
+    $operador_nc = mysqli_real_escape_string($conection, $_POST['operador']);
+    $unidad_nc   = mysqli_real_escape_string($conection, $_POST['unidad']);
+    $ruta_nc     = mysqli_real_escape_string($conection, $_POST['ruta']);
+    $parada_nc   = mysqli_real_escape_string($conection, $_POST['parada']);
+    $date_incid  = mysqli_real_escape_string($conection, $_POST['dateincident']);
+    $turno_nc    = mysqli_real_escape_string($conection, $_POST['turno']);
+    $procede_nc  = mysqli_real_escape_string($conection, $_POST['procede']);
+    $porkprocede = mysqli_real_escape_string($conection, $_POST['porkprocede']);
+    $analisis_nc = mysqli_real_escape_string($conection, $_POST['analisis']);
+    $accion_nc   = mysqli_real_escape_string($conection, $_POST['accion']);
+    $date_accion = mysqli_real_escape_string($conection, $_POST['dateaccion']);
+    $observa_nc  = mysqli_real_escape_string($conection, $_POST['notas']);
+    $tipo_incid  = mysqli_real_escape_string($conection, $_POST['tipoinc']);
+    $estatus_nc  = mysqli_real_escape_string($conection, $_POST['estatus']);
+    $causa_nc    = mysqli_real_escape_string($conection, $_POST['causa']);
+    $afecta_cte  = mysqli_real_escape_string($conection, $_POST['afectacte']);
+    $area_resp   = mysqli_real_escape_string($conection, $_POST['arearespons']);
+    $date_cierre = mysqli_real_escape_string($conection, $_POST['datecierre']);
+    
+    // Convertir array a string (si existe)
+    $resp_accion = !empty($_POST['respaccion']) && is_array($_POST['respaccion']) 
+                    ? implode(', ', $_POST['respaccion']) 
+                    : '';
+
+    // Obtener usuario actual
+    session_start();
+    $usuario = intval($_SESSION['idUser']);
+
+    // Usar una consulta preparada para la actualización
+    $sql_editarnc = "UPDATE no_conformidades 
+                    SET no_queja = ?, fecha = ?, mes = ?, cliente = ?, f8d = ?, descripcion = ?, 
+                        motivo = ?, responsable = ?, supervisor = ?, operador = ?, unidad = ?, 
+                        ruta = ?, parada = ?, fecha_incidente = ?, turno = ?, procede_ac = ?, 
+                        porque_procede = ?, analisis_conclusionac = ?, accion = ?, fecha_accion = ?, 
+                        responsable_accion = ?, fecha_cierre = ?, observaciones = ?, tipo_incidente = ?, 
+                        estatus = ?, causa = ?, afecta = ?, area_responsable = ?, edit_id = ? 
+                    WHERE id = ?";
+
+    $stmt = mysqli_prepare($conection, $sql_editarnc);
+    
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "issssssssssssssssssssssssssssi", 
+            $no_queja, $date_nc, $mes_nc, $cliente_nc, $formato, $desc_nc, $motivo_nc, 
+            $resp_nc, $superv_nc, $operador_nc, $unidad_nc, $ruta_nc, $parada_nc, 
+            $date_incid, $turno_nc, $procede_nc, $porkprocede, $analisis_nc, $accion_nc, 
+            $date_accion, $resp_accion, $date_cierre, $observa_nc, $tipo_incid, $estatus_nc, 
+            $causa_nc, $afecta_cte, $area_resp, $usuario, $id_nc
+        );
+
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(["status" => "success", "message" => "Registro actualizado correctamente"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error al actualizar: " . mysqli_stmt_error($stmt)]);
+        }
+
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+    }
+
+    // Ejecutar el procedimiento almacenado (opcional)
+    $sql_call = "CALL procesar_editnc(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt_call = mysqli_prepare($conection, $sql_call);
+
+    if ($stmt_call) {
+        mysqli_stmt_bind_param($stmt_call, "iisssssssssssssssssssssssssssi",
+            $id_nc, $no_queja, $date_nc, $mes_nc, $cliente_nc, $formato, $desc_nc, $motivo_nc, 
+            $resp_nc, $superv_nc, $operador_nc, $unidad_nc, $ruta_nc, $parada_nc, $date_incid, 
+            $turno_nc, $procede_nc, $porkprocede, $analisis_nc, $accion_nc, $date_accion, 
+            $resp_accion, $observa_nc, $tipo_incid, $estatus_nc, $causa_nc, $afecta_cte, 
+            $area_resp, $date_cierre, $usuario
+        );
+
+        if (mysqli_stmt_execute($stmt_call)) {
+            echo json_encode(["status" => "success", "message" => "Procedimiento ejecutado correctamente"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error en el procedimiento: " . mysqli_stmt_error($stmt_call)]);
+        }
+
+        mysqli_stmt_close($stmt_call);
+    }
+
+    // Cerrar conexión
+    mysqli_close($conection);
 }
+
 
 // Agregar Detalle a la Orden de Compra
         if($_POST['action'] == 'AddDetalleEditOrdencompra'){
