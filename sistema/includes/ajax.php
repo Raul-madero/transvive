@@ -1041,7 +1041,7 @@ if($_POST['action'] == 'enviarEncuesta'){
                 $nombremail = $data['razon_social'];
                 $totalcorreos = $totalcorreos + 1;
 
-                $msjdelbody=utf8_decode($mensaje)."\r\n". 'De antemano, Gracias'."\r\n"."\r\n".'liga:'.' '.'https://dasha-web.com/transvive_crm/'."\r\n"."\r\n".'Transvive.'."\r\n".'Tel: (33) 3016220'."\r\n".'Hidalgo #30, C.P. 45640 Col. Los Gavilanes'."\r\n". 'Tlajomulco de Zuñiga, Jal.'."\r\n".'Departamento de ventas';
+                $msjdelbody=utf8_decode($mensaje)."\r\n". 'De antemano, Gracias'."\r\n"."\r\n".'liga:'.' '.'https://encuesta.transvivegdl.com.mx'."\r\n"."\r\n".'Transvive.'."\r\n".'Tel: (33) 3016220'."\r\n".'Hidalgo #30, C.P. 45640 Col. Los Gavilanes'."\r\n". 'Tlajomulco de Zuñiga, Jal.'."\r\n".'Departamento de ventas';
                 
 
                 $mail = new PHPMailer;
