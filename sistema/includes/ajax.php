@@ -1014,32 +1014,32 @@ if($_POST['action'] == 'AlmacenaViaje')
 // Envio Encueta
 
 //Envio encuesta Satisfaccion de Cliente
-        if($_POST['action'] == 'enviarEncuesta'){
+if($_POST['action'] == 'enviarEncuesta'){
 
-        if(empty($_POST['fecha']) )
-            {
-                echo 'error';
-            }else{
+    if(empty($_POST['fecha']) )
+    {
+        echo 'error';
+    }else{
 
-                $fecha    = $_POST['fecha'];
-                $asunto   = utf8_decode($_POST['asunto']);
-                $mensaje  = utf8_decode($_POST['mensaje']);
-                $token    = md5($_SESSION['idUser']);
+        $fecha    = $_POST['fecha'];
+        $asunto   = utf8_decode($_POST['asunto']);
+        $mensaje  = utf8_decode($_POST['mensaje']);
+        $token    = md5($_SESSION['idUser']);
 
-            
-                $query_envios = mysqli_query($conection,"SELECT id, codigo, razon_social, correo FROM clientes_encuestatemp where token = '$token'");
-                $result = mysqli_num_rows($query_envios);
+    
+        $query_envios = mysqli_query($conection,"SELECT id, codigo, razon_social, correo FROM clientes_encuestatemp where token = '$token'");
+        $result = mysqli_num_rows($query_envios);
 
-                if($result > 0) {               
-                $totalcorreos  = 0;
-                $arrayData  = array();
+        if($result > 0) {               
+            $totalcorreos  = 0;
+            $arrayData  = array();
 
-                require '../PHPMailer/PHPMailerAutoload.php';
+            require '../PHPMailer/PHPMailerAutoload.php';
 
-                while ($data = mysqli_fetch_assoc($query_envios)){ 
-                    $enviomail  = $data['correo'];
-                    $nombremail = $data['razon_social'];
-                    $totalcorreos = $totalcorreos + 1;
+            while ($data = mysqli_fetch_assoc($query_envios)){ 
+                $enviomail  = $data['correo'];
+                $nombremail = $data['razon_social'];
+                $totalcorreos = $totalcorreos + 1;
 
                 $msjdelbody=utf8_decode($mensaje)."\r\n". 'De antemano, Gracias'."\r\n"."\r\n".'liga:'.' '.'https://dasha-web.com/transvive_crm/'."\r\n"."\r\n".'Transvive.'."\r\n".'Tel: (33) 3016220'."\r\n".'Hidalgo #30, C.P. 45640 Col. Los Gavilanes'."\r\n". 'Tlajomulco de Zuñiga, Jal.'."\r\n".'Departamento de ventas';
                 
@@ -1055,7 +1055,7 @@ if($_POST['action'] == 'AlmacenaViaje')
                 $mail->Port = 465;
                 $mail->SMTPAuth = true;
                 $mail->SMTPSecure = 'ssl';
-                $mail->Username = 'ventas@transvivegdl.com.mx';
+                $mail->Username = 'sgc@transvivegdl.com.mx';
                 $mail->Password = 'Feb241981@';
                 $mail->setFrom('ventas@transvivegdl.com.mx', 'Software Transvive ERP');
                 //$mail->SMTPAuth = true;
@@ -1077,24 +1077,25 @@ if($_POST['action'] == 'AlmacenaViaje')
                 $mail->addAttachment('test.txt');
                 $mail->send();
 
-                }
-                $query_procesarencuesta = mysqli_query($conection,"CALL procesar_encuesta('$fecha', 'enviada', '$totalcorreos')");
-                $result_procesarencuesta = mysqli_num_rows($query_procesarencuesta);
-                
-                if($result_procesarencuesta > 0){
-                  $data = mysqli_fetch_assoc($query_procesarencuesta);
-                  echo json_encode($data,JSON_UNESCAPED_UNICODE);
-                }else {
-                  echo "error 1"; 
-                }  
-                
-                }else{
-                    echo "error 2";
-                }
-            
             }
 
+            $query_procesarencuesta = mysqli_query($conection,"CALL procesar_encuesta('$fecha', 'enviada', '$totalcorreos')");
+            $result_procesarencuesta = mysqli_num_rows($query_procesarencuesta);
+            
+            if($result_procesarencuesta > 0){
+                $data = mysqli_fetch_assoc($query_procesarencuesta);
+                echo json_encode($data,JSON_UNESCAPED_UNICODE);
+            }else {
+                echo "error 1"; 
+            }  
+        
+        }else{
+            echo "error 2";
         }
+    
+    }
+
+}
 
 //Envio encuesta de Calidad
         if($_POST['action'] == 'enviarEncuestaCalidad'){
