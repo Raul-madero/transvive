@@ -2481,44 +2481,48 @@ if($_POST['action'] == 'FindeViaje')
           
 
 //Almacena Ruta
-if($_POST['action'] == 'AlmacenaRuta')
-{
-    if(!empty($_POST['cliente']) || !empty($_POST['ruta']) || !empty($_POST['operador']))
-    {
-        $cliente    = $_POST['cliente'];
-        $ruta       = $_POST['ruta'];
-        $noeco      = $_POST['noeconomico'];
-        $operador   = $_POST['operador'];
-        $horario1   = $_POST['horario1'];
-        $horario2   = $_POST['horario2'];
-        $horario3   = $_POST['horario3'];
-        $hmixto1    = $_POST['hmixto1'];
-        $hmixto2    = $_POST['hmixto2'];
-        $diasviajes = $_POST['diasviajes'];
-        $sueldo_vta = $_POST['sueldo_vta'];
-        $sueldo_vtaneta = $_POST['sueldo_vtaneta'];
-        $sueldo_semid   = $_POST['sueldo_semid'];
-
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-
-        $query_procesar = mysqli_query($conection,"CALL procesar_ruta('$cliente', '$ruta', '$noeco', '$operador', '$horario1', '$horario2', '$horario3', '$hmixto1', '$hmixto2', '$diasviajes', $sueldo_vta, $sueldo_vtaneta, $sueldo_semid, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
+if ($_POST['action'] == 'AlmacenaRuta') {
+    if (!empty($_POST['cliente']) && !empty($_POST['ruta']) && !empty($_POST['operador'])) {
         
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
-        }
-    
-    mysqli_close($conection);
+        $cliente    = mysqli_real_escape_string($conection, trim($_POST['cliente']));
+        $ruta       = mysqli_real_escape_string($conection, trim($_POST['ruta']));
+        $noeco      = mysqli_real_escape_string($conection, trim($_POST['noeconomico']));
+        $operador   = mysqli_real_escape_string($conection, trim($_POST['operador']));
+        $horario1   = mysqli_real_escape_string($conection, trim($_POST['horario1']));
+        $horario2   = mysqli_real_escape_string($conection, trim($_POST['horario2']));
+        $horario3   = mysqli_real_escape_string($conection, trim($_POST['horario3']));
+        $hmixto1    = mysqli_real_escape_string($conection, trim($_POST['hmixto1']));
+        $hmixto2    = mysqli_real_escape_string($conection, trim($_POST['hmixto2']));
+        $diasviajes = mysqli_real_escape_string($conection, trim($_POST['diasviajes']));
+        $sueldo_vta = !empty($_POST['sueldo_vta']) ? floatval($_POST['sueldo_vta']) : 'NULL';
+        $sueldo_vtaneta = !empty($_POST['sueldo_vtaneta']) ? floatval($_POST['sueldo_vtaneta']) : 'NULL';
+        $sueldo_semid   = !empty($_POST['sueldo_semid']) ? floatval($_POST['sueldo_semid']) : 'NULL';
 
-    }else{
-        echo 'error';
+        $usuario = $_SESSION['idUser'];
+        
+        $sql = "INSERT INTO rutas (cliente, ruta, no_eco, operador, horario1, horario2, horario3, hmixto1, hmixto2, dias, sueldo_camion, sueldo_camioneta, sueldo_semid, usuario_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        $stmt = mysqli_prepare($conection, $sql);
+        mysqli_stmt_bind_param($stmt, "ssssssssssdddi", 
+            $cliente, $ruta, $noeco, $operador, $horario1, $horario2, $horario3, 
+            $hmixto1, $hmixto2, $diasviajes, $sueldo_vta, $sueldo_vtaneta, $sueldo_semid, $usuario);
+
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(["status" => "success", "message" => "Ruta almacenada correctamente"], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error al almacenar la ruta"], JSON_UNESCAPED_UNICODE);
+        }
+
+        mysqli_stmt_close($stmt);
+        mysqli_close($conection);
+
+    } else {
+        echo json_encode(["status" => "error", "message" => "Todos los campos son obligatorios"], JSON_UNESCAPED_UNICODE);
     }
     exit;
 }
+
 
 
 // Agregar Cliente al correo

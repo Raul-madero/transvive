@@ -322,94 +322,61 @@ $('#btn_salir').click(function(e){
     </script>
 
 <script>
-   $('#guardar_tipoactividad').click(function(e){
-        e.preventDefault();
+   $('#guardar_tipoactividad').click(function(e) {
+    e.preventDefault();
 
-       var cliente      = $('#fcliente').val();
-       var ruta         = $('#fruta').val();
-       var noeconomico  = $('#fNoeco').val();
-       var operador     = $('#foperador').val();
-       var horario1     = $('#fhorario1').val();
-       var horario2     = $('#fhorario2').val();
-       var horario3     = $('#fhorario3').val();
-       var hmixto1      = $('#fhmixto1').val();
-       var hmixto2      = $('#fhmixto2').val();
-       var diasviajes   = $('#fdiasv').val();
-       var sueldo_vta     = $('#fsueldovta').val();
-       var sueldo_vtaneta = $('#fsueldovtaneta').val();
-       var sueldo_semid   = $('#fsueldosemid').val();
+    let cliente      = $('#fcliente').val().trim();
+    let ruta         = $('#fruta').val().trim();
+    let noeconomico  = $('#fNoeco').val().trim();
+    let operador     = $('#foperador').val().trim();
+    let horario1     = $('#fhorario1').val().trim();
+    let horario2     = $('#fhorario2').val().trim();
+    let horario3     = $('#fhorario3').val().trim();
+    let hmixto1      = $('#fhmixto1').val().trim();
+    let hmixto2      = $('#fhmixto2').val().trim();
+    let diasviajes   = $('#fdiasv').val().trim();
+    let sueldo_vta   = $('#fsueldovta').val().trim();
+    let sueldo_vtaneta = $('#fsueldovtaneta').val().trim();
+    let sueldo_semid = $('#fsueldosemid').val().trim();
+    let action       = 'AlmacenaRuta';
 
-       var action       = 'AlmacenaRuta';
-
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, cliente:cliente, ruta:ruta, noeconomico:noeconomico, operador:operador, horario1:horario1, horario2:horario2, horario3:horario3, hmixto1:hmixto1, hmixto2:hmixto2, diasviajes:diasviajes, sueldo_vta:sueldo_vta, sueldo_vtaneta:sueldo_vtaneta, sueldo_semid:sueldo_semid},
-
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "RUTA ALMACENADA CORRECTAMENTE",
-                          icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'rutas.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'rutas.php';
-                        }
-                        });
-
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
+    $.ajax({
+        url: 'includes/ajax.php',
+        type: "POST",
+        dataType: "json",  // Asegura que la respuesta sea interpretada como JSON
+        data: {
+            action, cliente, ruta, noeconomico, operador, 
+            horario1, horario2, horario3, hmixto1, hmixto2, 
+            diasviajes, sueldo_vta, sueldo_vtaneta, sueldo_semid
+        },
+        success: function(response) {
+            if (response.status === "success") {
+                Swal.fire({
+                    title: "¡Éxito!",
+                    text: response.message || "Ruta almacenada correctamente",
+                    icon: 'success'
+                }).then(() => {
+                    window.location.href = 'rutas.php';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.message || "Ocurrió un error al procesar la solicitud."
+                });
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Error AJAX:", textStatus, errorThrown);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: "No se pudo procesar la solicitud. Intenta nuevamente."
+            });
+        }
     });
+});
+
 
     </script>  
 <script src="js/sweetalert2.all.min.js"></script>   
