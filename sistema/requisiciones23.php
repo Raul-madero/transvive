@@ -283,14 +283,14 @@ session_start();
         $('#fetch_generated_wills').DataTable({
           "order": [[ 0, "desc" ]],
           dom: 'Bfrtip',
-          lengthMenu: [
-          [20, 25, 50, -1],
-          ['20 rows', '25 rows', '50 rows', 'Show all']
-          ],
-          buttons: [
-          'excelHtml5',
-          'pageLength'
-          ],
+lengthMenu: [
+[20, 25, 50, -1],
+['20 rows', '25 rows', '50 rows', 'Show all']
+],
+buttons: [
+'excelHtml5',
+'pageLength'
+],
           "processing": true,
           "serverSide": true,
           "stateSave": true,
@@ -310,15 +310,15 @@ session_start();
             "dataSrc": "records"
           },
           "columns": [
+            { "data" : "pedidono", "width": "3%", className: "text-right" },
             { 
-              "data": "pedidono", 
+              "data": "Folio", 
               "width": "3%", 
               "className": "text-right", 
               "render": function(data, type, full, meta) {
-                return '<p>req-' + String(data) + '</p>';
+                return 'req-' + data; // Sin etiquetas HTML
               }
             },
-            { "data" : "Folio", "width": "5%", className: "text-right" },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            
             { "data" : "fecha_req", "width": "10%", "orderable": false},
             { "data" : "tipor", "width": "5%", "orderable":false },
