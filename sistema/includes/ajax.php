@@ -1046,7 +1046,8 @@ if($_POST['action'] == 'AlmacenaViaje')
 
                 $mail = new PHPMailer;
                 $mail->isSMTP();
-                $mail->SMTPDebug = 0;
+                $mail->SMTPDebug = 2;
+                $mail->Debugoutput = 'html';
                 //*$mail->Host = 'smtp.office365.com';
                 //**$mail->Host = 'smtp.gmail.com';
                 //**$mail->Port = 587;
@@ -1064,7 +1065,7 @@ if($_POST['action'] == 'AlmacenaViaje')
                 //*$mail->Password = 'yscxrwfshwcttrkd';
                 //*$mail->setFrom('textilerp.software@gmail.com', 'CRM Transvive ');
                 $mail->addReplyTo('calidad@transvivegdl.com.mx', 'Encuesta Enviada');
-                $mail->addAddress('raul.madero.ramirez@gmail.com',utf8_decode($nombremail));
+                $mail->addAddress('raul.madero.ramirez@gmail.com', utf8_decode($nombremail));
                 //$mail->addAddress('rogelio73diaz@gmail.com','Rogelio Diaz');
                 // $mail->addCC('calidad@transvivegdl.com.mx');
                 // $mail->addCC('ejecutivo@transvivegdl.com.mx');
