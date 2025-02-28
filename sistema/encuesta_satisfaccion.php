@@ -296,84 +296,66 @@ $('#btn_salir').click(function(e){
   ?>
  
 <script>
-   $('#btn_enviar_encuesta').click(function(e){
+   $(document).ready(function () {
+    $('#btn_enviar_encuesta').click(function (e) {
         e.preventDefault();
 
-            var action     = 'enviarEncuesta';
-            var fecha      = $('#inputFecha').val();
-            var asunto    = $('#inputAsunto').val();
-            var mensaje  = $('#inputMensaje').val();
-            
-                       
-            $.ajax({
-                url: 'includes/ajax.php',
-                type: "POST",
-                async : true,
-                data: {action:action, fecha:fecha, asunto:asunto, mensaje:mensaje},
+        let action  = 'enviarEncuesta';
+        let fecha   = $('#inputFecha').val().trim();
+        let asunto  = $('#inputAsunto').val().trim();
+        let mensaje = $('#inputMensaje').val().trim();
 
-                success: function(response)
-                {
-                    
-                    if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "ENCUESTA ENVIADA CORRECTAMENTE",
-                          icon: 'success',
+        if (!fecha || !asunto || !mensaje) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos obligatorios',
+                text: 'Por favor, complete todos los campos antes de enviar.',
+            });
+            return;
+        }
 
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'index.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'index.php';
-                        }
+        $.ajax({
+            url: 'includes/ajax.php',
+            type: "POST",
+            data: { action, fecha, asunto, mensaje },
+            dataType: 'json',
+            success: function (response) {
+                try {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Éxito',
+                            text: response.message,
+                        }).then(() => {
+                            location.href = 'index.php';
                         });
 
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
+                    } else {
+                        Swal.fire({
                             icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                },
-                error: function(error){                
+                            title: 'Error',
+                            text: response.message,
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error inesperado',
+                        text: 'Ocurrió un problema procesando la respuesta.',
+                    });
                 }
-            });
-        
-
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'No se pudo conectar al servidor. Intente nuevamente.',
+                });
+            }
+        });
     });
+});
+
     </script>
 
 <script src="js/sweetalert2.all.min.js"></script>   

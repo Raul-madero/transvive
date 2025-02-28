@@ -1014,87 +1014,74 @@ if($_POST['action'] == 'AlmacenaViaje')
 // Envio Encueta
 
 //Envio encuesta Satisfaccion de Cliente
-if($_POST['action'] == 'enviarEncuesta'){
 
-    if(empty($_POST['fecha']) )
-    {
-        echo 'error';
-    }else{
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'enviarEncuesta') {
+    require '../PHPMailer/PHPMailerAutoload.php';
 
-        $fecha    = $_POST['fecha'];
-        $asunto   = utf8_decode($_POST['asunto']);
-        $mensaje  = utf8_decode($_POST['mensaje']);
-        $token    = md5($_SESSION['idUser']);
+    // Validación de entrada
+    $fecha   = filter_input(INPUT_POST, 'fecha', FILTER_DEFAULT);
+    $asunto  = filter_input(INPUT_POST, 'asunto', FILTER_DEFAULT);
+    $mensaje = filter_input(INPUT_POST, 'mensaje', FILTER_DEFAULT);
+    $token   = md5($_SESSION['idUser']);
 
-    
-        $query_envios = mysqli_query($conection,"SELECT id, codigo, razon_social, correo FROM clientes_encuestatemp where token = '$token'");
-        $result = mysqli_num_rows($query_envios);
-
-        if($result > 0) {               
-            $totalcorreos  = 0;
-            $arrayData  = array();
-
-            require '../PHPMailer/PHPMailerAutoload.php';
-
-            while ($data = mysqli_fetch_assoc($query_envios)){ 
-                $enviomail  = $data['correo'];
-                $nombremail = $data['razon_social'];
-                $totalcorreos = $totalcorreos + 1;
-
-                $msjdelbody=utf8_decode($mensaje)."\r\n". 'De antemano, Gracias'."\r\n"."\r\n".'liga:'.' '.'https://encuesta.transvivegdl.com.mx'."\r\n"."\r\n".'Transvive.'."\r\n".'Tel: (33) 3016220'."\r\n".'Hidalgo #30, C.P. 45640 Col. Los Gavilanes'."\r\n". 'Tlajomulco de Zuñiga, Jal.'."\r\n".'Departamento de ventas';
-                
-
-                $mail = new PHPMailer;
-                $mail->isSMTP();
-                $mail->SMTPDebug = 2;
-                $mail->Debugoutput = 'html';
-                //*$mail->Host = 'smtp.office365.com';
-                //**$mail->Host = 'smtp.gmail.com';
-                //**$mail->Port = 587;
-                $mail->Host = 'smtp.office365.com';
-                $mail->Port = 587;
-                $mail->SMTPAuth = true;
-                $mail->SMTPSecure = 'STARTTLS';
-                $mail->Username = 'compras@transvivegdl.com.mx';
-                $mail->Password = 'Feb241981@';
-                $mail->setFrom('compras@transvivegdl.com.mx', 'Software Transvive ERP');
-                //$mail->SMTPAuth = true;
-                //$mail->Username = 'rog_diaz@hotmail.com';
-                //$mail->Password = 'CHE_ito73';
-                //*$mail->setFrom('sistemasqualy@hotmail.com', 'Software TEXTILERP QUALY ');
-                //*$mail->Username = 'textilerp.software@gmail.com';
-                //*$mail->Password = 'yscxrwfshwcttrkd';
-                //*$mail->setFrom('textilerp.software@gmail.com', 'CRM Transvive ');
-                $mail->addReplyTo('rmadero@transvivegdl.com.mx', 'Encuesta Enviada');
-                $mail->addAddress('raul.madero.ramirez@gmail.com', utf8_decode($nombremail));
-                //$mail->addAddress('rogelio73diaz@gmail.com','Rogelio Diaz');
-                // $mail->addCC('calidad@transvivegdl.com.mx');
-                // $mail->addCC('ejecutivo@transvivegdl.com.mx');
-                // $mail->addCC('rogelio73diaz@gmail.com');
-
-                $mail->Subject = $asunto;
-                $mail->Body = utf8_decode($msjdelbody);
-                $mail->addAttachment('test.txt');
-                $mail->send();
-
-            }
-
-            $query_procesarencuesta = mysqli_query($conection,"CALL procesar_encuesta('$fecha', 'enviada', '$totalcorreos')");
-            $result_procesarencuesta = mysqli_num_rows($query_procesarencuesta);
-            
-            if($result_procesarencuesta > 0){
-                $data = mysqli_fetch_assoc($query_procesarencuesta);
-                echo json_encode($data,JSON_UNESCAPED_UNICODE);
-            }else {
-                echo "error 1"; 
-            }  
-        
-        }else{
-            echo "error 2";
-        }
-    
+    if (empty($fecha) || empty($asunto) || empty($mensaje)) {
+        echo json_encode(['status' => 'error', 'message' => 'Datos incompletos']);
+        exit;
     }
 
+    // Obtener clientes para el envío de la encuesta
+    $query = "SELECT id, codigo, razon_social, correo FROM clientes_encuestatemp WHERE token = ?";
+    $stmt  = mysqli_prepare($conection, $query);
+    mysqli_stmt_bind_param($stmt, 's', $token);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (mysqli_num_rows($result) > 0) {
+        $totalCorreos = 0;
+
+        while ($data = mysqli_fetch_assoc($result)) {
+            $correo   = $data['correo'];
+            $nombre   = $data['razon_social'];
+            $totalCorreos++;
+
+            $msjBody = "$mensaje\r\nDe antemano, Gracias\r\n\r\nLiga: https://encuesta.transvivegdl.com.mx\r\n\r\nTransvive.\r\nTel: (33) 3016220\r\nHidalgo #30, C.P. 45640 Col. Los Gavilanes\r\nTlajomulco de Zuñiga, Jal.\r\nDepartamento de ventas";
+
+            // Configuración de PHPMailer
+            $mail = new PHPMailer;
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.office365.com';
+            $mail->Port       = 587;
+            $mail->SMTPAuth   = true;
+            $mail->SMTPSecure = 'STARTTLS';
+            $mail->Username   = 'compras@transvivegdl.com.mx';
+            $mail->Password   = 'Feb241981@';
+            $mail->setFrom('compras@transvivegdl.com.mx', 'Software Transvive ERP');
+            $mail->addReplyTo('rmadero@transvivegdl.com.mx', 'Encuesta Enviada');
+            $mail->addAddress('raul.madero.ramirez@gmail.com', $nombre);
+            $mail->Subject = $asunto;
+            $mail->Body    = $msjBody;
+
+            if (!$mail->send()) {
+                echo json_encode(['status' => 'error', 'message' => 'Error enviando correo: ' . $mail->ErrorInfo]);
+                exit;
+            }
+        }
+
+        // Insertar registro del envío en la BD
+        $insertQuery = "INSERT INTO envio_encuesta (fecha, estatus, no_correos) VALUES (?, 'enviada', ?)";
+        $stmt        = mysqli_prepare($conection, $insertQuery);
+        mysqli_stmt_bind_param($stmt, 'si', $fecha, $totalCorreos);
+        mysqli_stmt_execute($stmt);
+
+        if (mysqli_affected_rows($conection) > 0) {
+            echo json_encode(['status' => 'success', 'message' => 'ENCUESTA ENVIADA CORRECTAMENTE']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error guardando en la BD']);
+        }
+
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'No hay clientes para enviar la encuesta']);
+    }
 }
 
 //Envio encuesta de Calidad
