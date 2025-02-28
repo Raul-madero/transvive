@@ -179,7 +179,7 @@ session_start();
               <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <th style="text-align: center; font-size: 12px;">Id</th>
+                <!-- <th style="text-align: center; font-size: 12px;">Id</th> -->
                 <th style="text-align: center; font-size: 12px;">No. Requisicion</th>
                 <th style="text-align: center; font-size: 12px;">Fecha</th>
                 <th style="text-align: center; font-size: 12px;">Fecha Requiere Material</th>
@@ -310,7 +310,7 @@ buttons: [
             "dataSrc": "records"
           },
           "columns": [
-            { "data" : "pedidono", "width": "3%", className: "text-right" },
+            // { "data" : "pedidono", "width": "3%", className: "text-right" },
             { 
               "data": null, 
               "width": "3%", 
