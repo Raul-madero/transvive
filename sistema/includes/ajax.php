@@ -1051,9 +1051,10 @@ if($_POST['action'] == 'AlmacenaViaje')
                 //*$mail->Host = 'smtp.office365.com';
                 //**$mail->Host = 'smtp.gmail.com';
                 //**$mail->Port = 587;
-                $mail->Host = 'smtp.office365.com';
-                $mail->Port = 587;
+                $mail->Host = 'transvivegdl.com.mx';
+                $mail->Port = 465;
                 $mail->SMTPAuth = true;
+                $mail->SMTPSecure = 'ssl';
                 $mail->Username = 'ventas@transvivegdl.com.mx';
                 $mail->Password = 'Feb241981@';
                 $mail->setFrom('ventas@transvivegdl.com.mx', 'Software Transvive ERP');
