@@ -4649,7 +4649,6 @@ if($_POST['action'] == 'ActualizaParadarouter'){
 
 if ($_POST['action'] == 'AlmacenaRefaccion') {
     if (!empty($_POST['codigo']) && !empty($_POST['descripcion'])) {
-        require_once "conexion.php"; // Asegúrate de incluir la conexión
 
         // Sanitizar entradas
         $codigo      = mysqli_real_escape_string($conection, $_POST['codigo']);
