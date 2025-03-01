@@ -4680,7 +4680,7 @@ if ($_POST['action'] == 'AlmacenaRefaccion') {
 
         $stmt = mysqli_prepare($conection, $sql);
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "ssssssssdiiiii", 
+            mysqli_stmt_bind_param($stmt, "ssssssssddddiii", 
                 $codigo, $codigo_intr, $descripcion, $unidadmedid, $marca, $rotacion, 
                 $categoria, $modelo, $costo, $impuesto, $impisr, $impieps, $stock_max, $stock_min, $usuario
             );
