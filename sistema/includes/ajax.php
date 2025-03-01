@@ -4670,7 +4670,7 @@ if ($_POST['action'] == 'AlmacenaRefaccion') {
 
         // Usuario
         session_start();
-        $usuario = $_SESSION['idUser'];
+        $usuario = intval($_SESSION['idUser']);
 
         // Preparar consulta segura con parámetros
         $sql = "INSERT INTO refacciones 
