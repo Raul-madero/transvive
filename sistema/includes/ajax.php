@@ -4665,8 +4665,8 @@ if ($_POST['action'] == 'AlmacenaRefaccion') {
         $impuesto    = floatval($_POST['impuesto']);
         $impisr      = floatval($_POST['imp_isr']);
         $impieps     = floatval($_POST['imp_ieps']);
-        $stock_max   = intval($_POST['stockmax']);
-        $stock_min   = intval($_POST['stockmin']);
+        $stock_max   = floatval($_POST['stockmax']);
+        $stock_min   = floatval($_POST['stockmin']);
 
         // Usuario
         session_start();
