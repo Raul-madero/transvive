@@ -1060,7 +1060,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->addAddress($correo, $nombre);
             $mail->addCC('ejecutivo@transvivegdl.com.mx');
             $mail->addCC('ejecutivo@transvivegdl.com.mx');
-            $mail->addCC('raul.madero.ramirez@gmail.com.mx');
+            $mail->addBCC('rmadero@transvivegdl.com.mx');
             $mail->Subject = $asunto;
             $mail->Body    = $msjBody;
 
@@ -5255,35 +5255,21 @@ if($_POST['action'] == 'AlmacenaRequerimiento')
                 $nombremail = "Raúl Gutiérrez";
                 $asunto = "Hay una nueva Requisición"; 
                 
-
                 $mail = new PHPMailer;
                 $mail->isSMTP();
-                $mail->SMTPDebug = 0;
-                //*$mail->Host = 'smtp.office365.com';
-                //**$mail->Host = 'smtp.gmail.com';
-                //**$mail->Port = 587;
-                $mail->Host = 'smtp.hostinger.com';
-                $mail->Port = 587;
-                $mail->SMTPAuth = true;
-                $mail->Username = 'informes@dasha-web.com';
-                $mail->Password = 'CHE_ito73';
-                $mail->setFrom('informes@dasha-web.com', 'Software Transvive ERP');
-                //$mail->SMTPAuth = true;
-                //$mail->Username = 'rog_diaz@hotmail.com';
-                //$mail->Password = 'CHE_ito73';
-                //*$mail->setFrom('sistemasqualy@hotmail.com', 'Software TEXTILERP QUALY ');
-                //*$mail->Username = 'textilerp.software@gmail.com';
-                //*$mail->Password = 'yscxrwfshwcttrkd';
-                //*$mail->setFrom('textilerp.software@gmail.com', 'CRM Transvive ');
-                //$mail->addReplyTo('rogelio73diaz@gmail.com', 'prueba');
-                $mail->addAddress($enviomail,utf8_decode($nombremail));
-                //$mail->addAddress('rogelio73diaz@gmail.com','Rogelio Diaz');
-                //$mail->addCC('mesacontrol@cqualy.com');
-                //$mail->addCC('calidad.qualy@cqualy.com');
-                $mail->addCC('rogelio73diaz@gmail.com');
+                $mail->Host       = 'smtp.office365.com';
+                $mail->Port       = 587;
+                $mail->SMTPAuth   = true;
+                $mail->SMTPSecure = 'STARTTLS';
+                $mail->Username   = 'compras@transvivegdl.com.mx';
+                $mail->Password   = 'Feb241981@';
+                $mail->setFrom('compras@transvivegdl.com.mx', 'Compras');
+                $mail->addAddress($enviomail, $nombremail);
+                $mail->addCC('ejecutivo@transvivegdl.com.mx');
+                $mail->addBCC('rmadero@transvivegdl.com.mx');
 
-                $mail->Subject = utf8_decode($asunto);
-                $mail->Body = utf8_decode($msjdelbody);
+                $mail->Subject = $asunto;
+                $mail->Body = $msjdelbody;
                 $mail->addAttachment('');
                 $mail->send();
 
