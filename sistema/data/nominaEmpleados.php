@@ -154,25 +154,10 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         -- Calcular días de vacaciones dentro del periodo de pago
        COALESCE(SUM(CASE 
             WHEN inc.tipo_incidencia = 'Vacaciones' THEN 
-                CASE 
-                    -- Si las vacaciones están completamente dentro del periodo
-                    WHEN inc.fecha_inicial >= '$fecha_inicio' AND inc.fecha_final <= '$fecha_fin' THEN 
-                        DATEDIFF(inc.fecha_final, inc.fecha_inicial) + 1
-                        
-                    -- Si las vacaciones comienzan antes del periodo y terminan dentro
-                    WHEN inc.fecha_inicial < '$fecha_inicio' AND inc.fecha_final BETWEEN '$fecha_inicio' AND '$fecha_fin' THEN 
-                        DATEDIFF(inc.fecha_final, '$fecha_inicio') + 1
-                        
-                    -- Si las vacaciones comienzan dentro del periodo y terminan después
-                    WHEN inc.fecha_inicial BETWEEN '$fecha_inicio' AND '$fecha_fin' AND inc.fecha_final > '$fecha_fin' THEN 
-                        DATEDIFF('$fecha_fin', inc.fecha_inicial) + 1
-                        
-                    -- Si las vacaciones abarcan todo el periodo de pago
-                    WHEN inc.fecha_inicial < '$fecha_inicio' AND inc.fecha_final > '$fecha_fin' THEN 
-                        DATEDIFF('$fecha_fin', '$fecha_inicio') + 1
-
-                    ELSE 0
-                END
+                GREATEST(
+                    LEAST(DATEDIFF(LEAST(inc.fecha_final, '$fecha_fin'), GREATEST(inc.fecha_inicial, '$fecha_inicio')) + 1, DATEDIFF('$fecha_fin', '$fecha_inicio') + 1),
+                    0
+                )
             ELSE 0
         END), 0) AS dias_vacaciones_pagar,
 
