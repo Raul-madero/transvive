@@ -126,8 +126,6 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
     // Calcular la fecha de fin (sumando 6 días para llegar al domingo)
     $fecha_fin = $fecha->modify('+6 days')->format('Y-m-d'); // Fecha de fin de la semana (domingo)
-    echo $fecha_inicio;
-    echo $fecha_fin;
     $fecha_limite_alertas = date('Y-m-d', strtotime('next wednesday', strtotime($fecha_fin)));
     // Consultar empleados
     $sql_empleados = "
@@ -238,8 +236,6 @@ $sql_empleados .= "
 if ($row_fiscal[0] > 0) {
     $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
 }
-
-    echo $sql_empleados;
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
         die(json_encode(['error' => 'Error en la consulta de empleados: ' . mysqli_error($conection)]));
@@ -262,7 +258,7 @@ if ($row_fiscal[0] > 0) {
         }
         // Solo insertar registros si no existen datos para la semana y el año
         while ($row_empleados = mysqli_fetch_assoc($result_empleados)) {
-            var_dump($row_empleados);
+            // var_dump($row_empleados);
             $alertas = intval($row_empleados['noalertas']);
             $bono_semanal_contrato = calcularBonoSemanalContrato($row_empleados['fecha_contrato']);
             $gana_bono = ($alertas <= 4 && $bono_semanal_contrato);
@@ -296,7 +292,7 @@ if ($row_fiscal[0] > 0) {
             $anios_trabajados = calcularAniosTrabajados($row_empleados['fecha_contrato']);
             $dias_correspondientes_vacaciones = calcularDiasVacaciones($anios_trabajados);
             $prima_vacacional = $row_empleados['prima_vacacional'] == 'SI' ? (($row_empleados['salario_diario'] * $dias_correspondientes_vacaciones) * .25) : 0;
-            $dias_vacaciones = isset($row_empleados['fecha_final']) || isset($row_empleados['fecha_inicial']) ? (intval($row_empleados['fecha_inicial']) + 1) ?? (intval($row_empleados['fecha_final']) + 1) : 0;
+            $dias_vacaciones = intval($row_empleados['dias_vacaciones_pagar']);
             $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
             $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['bono_categoria']) : 0;
             $bono_semanal = ($gana_bono && $dias_vacaciones === 0 && $bono_semanal_contrato && $total_vueltas > 10) ? floatval($row_empleados['bono_semanal']) : 0;
