@@ -152,6 +152,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             -- Calcular días de vacaciones dentro del periodo de pago
             COALESCE(SUM(CASE 
                 WHEN inc.tipo_incidencia = 'Vacaciones' THEN 
+                    -- Calculamos el total de días dentro del rango de pago
                     DATEDIFF(LEAST(inc.fecha_final, '$fecha_fin'), GREATEST(inc.fecha_inicial, '$fecha_inicio')) + 1
                 ELSE 0
             END), 0) AS dias_vacaciones_pagar,
