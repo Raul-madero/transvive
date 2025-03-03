@@ -172,9 +172,14 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
             ELSE e.sueldo_base * 7
         END) AS sueldo_bruto,
         COALESCE(SUM(CASE 
-            WHEN inc.tipo_incidencia = 'Vacaciones' THEN 
-                LEAST(DATEDIFF(LEAST(inc.fecha_final, '$fecha_fin'), GREATEST(inc.fecha_inicial, '$fecha_inicio')) + 1, DATEDIFF('$fecha_fin', '$fecha_inicio') + 1)
-            ELSE 0 
+            WHEN inc.tipo_incidencia = 'Vacaciones' THEN
+                WHEN inc.fecha_inicial BETWEEN '$fecha_inicio' AND '$fecha_fin' THEN
+                    DATEDIFF($fecha_fin, inc.fecha_inicial) + 1
+                ELSE
+                    WHEN inc.fecha_final BETWEEN '$fecha_inicio' AND '$fecha_fin' THEN
+                        DATEDIFF(inc.fecha_final, '$fecha_inicio') + 1
+                ELSE
+                    0
         END), 0) AS dias_vacaciones_pagar,
         (
         SELECT
