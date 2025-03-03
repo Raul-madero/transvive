@@ -241,7 +241,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     if ($row_fiscal[0] > 0) {
     $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
     }
-
+    echo $sql_empleados;
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
         die(json_encode(['error' => 'Error en la consulta de empleados: ' . mysqli_error($conection)]));
