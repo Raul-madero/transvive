@@ -216,7 +216,6 @@ $sql_empleados .= "
         AND (
             (inc.fecha_inicial BETWEEN '$fecha_inicio' AND '$fecha_fin') 
             OR (inc.fecha_final BETWEEN '$fecha_inicio' AND '$fecha_fin') 
-            OR (inc.fecha_inicial < '$fecha_inicio' AND inc.fecha_final > '$fecha_fin')
         )
     LEFT JOIN registro_viajes rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
         AND DATE(rv.fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin'
