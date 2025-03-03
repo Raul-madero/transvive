@@ -130,113 +130,104 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
     $fecha_limite_alertas = date('Y-m-d', strtotime('next wednesday', strtotime($fecha_fin)));
     // Consultar empleados
     $sql_empleados = "
-    SELECT
-        e.id,
-        e.noempleado,
-        e.sueldo_base,
-        CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) AS operador,
-        e.cargo,
-        IF(e.imss = 'ASEGURADO', 1, 0) AS imss,
-        e.estatus,
-        e.bono_categoria,
-        e.bono_supervisor,
-        e.bono_semanal,
-        e.fecha_contrato,
-        e.caja_ahorro,
-        e.supervisor,
-        e.apoyo_mes,
-        e.salario_diario,
-        al.noalertas,
-        COUNT(DISTINCT inc.id) AS faltas,
-        IF (
-            STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(e.fecha_contrato), '-', DAY(e.fecha_contrato)), '%Y-%m-%d')
-            BETWEEN '$fecha_inicio' AND '$fecha_fin',
-            'SI',
-            'NO'
-        ) AS prima_vacacional,
-        COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
-        SUM(CASE 
-            WHEN e.cargo = 'OPERADOR' THEN
-                CASE 
-                    WHEN 
-                        rv.tipo_viaje NOT IN ('Normal') 
-                    THEN
-                        rv.sueldo_vuelta * rv.valor_vuelta
-                    WHEN 
-                        rv.sueldo_vuelta <> e.sueldo_base 
-                    THEN 
-                        rv.sueldo_vuelta * rv.valor_vuelta
-                    ELSE 
-                        e.sueldo_base * rv.valor_vuelta
-                END
-            ELSE e.sueldo_base * 7
-        END) AS sueldo_bruto,
+        SELECT
+            e.id,
+            e.noempleado,
+            e.sueldo_base,
+            CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) AS operador,
+            e.cargo,
+            IF(e.imss = 'ASEGURADO', 1, 0) AS imss,
+            e.estatus,
+            e.bono_categoria,
+            e.bono_supervisor,
+            e.bono_semanal,
+            e.fecha_contrato,
+            e.caja_ahorro,
+            e.supervisor,
+            e.apoyo_mes,
+            e.salario_diario,
+            al.noalertas,
+            COUNT(DISTINCT CASE WHEN inc.tipo_incidencia = 'Falta Injustificada' THEN inc.id END) AS faltas,
+
+            -- Calcular días de vacaciones dentro del periodo de pago
             COALESCE(SUM(CASE 
                 WHEN inc.tipo_incidencia = 'Vacaciones' THEN 
                     DATEDIFF(LEAST(inc.fecha_final, '$fecha_fin'), GREATEST(inc.fecha_inicial, '$fecha_inicio')) + 1
                 ELSE 0
             END), 0) AS dias_vacaciones_pagar,
-        (
-        SELECT
-            a.descuento
-            FROM adeudos a
-            WHERE a.noempleado = e.noempleado AND a.estado = 1
-        ) AS descuento,
-        (
-        SELECT
-            a.cantidad
-            FROM adeudos a
-            WHERE a.noempleado = e.noempleado AND a.estado = 1
-        ) AS cantidad,
-        (
-        SELECT
-            a.total_abonado
-            FROM adeudos a
-            WHERE a.noempleado = e.noempleado AND a.estado = 1
-        ) AS total_abonado";
+
+            IF (
+                STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(e.fecha_contrato), '-', DAY(e.fecha_contrato)), '%Y-%m-%d')
+                BETWEEN '$fecha_inicio' AND '$fecha_fin',
+                'SI',
+                'NO'
+            ) AS prima_vacacional,
+            COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
+
+            -- Cálculo de sueldo bruto
+            SUM(CASE 
+                WHEN e.cargo = 'OPERADOR' THEN
+                    CASE 
+                        WHEN rv.tipo_viaje NOT IN ('Normal') THEN rv.sueldo_vuelta * rv.valor_vuelta
+                        WHEN rv.sueldo_vuelta <> e.sueldo_base THEN rv.sueldo_vuelta * rv.valor_vuelta
+                        ELSE e.sueldo_base * rv.valor_vuelta
+                    END
+                ELSE e.sueldo_base * 7
+            END) AS sueldo_bruto,
+
+            -- Datos de adeudos
+            (
+                SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado AND a.estado = 1
+            ) AS descuento,
+            (
+                SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado AND a.estado = 1
+            ) AS cantidad,
+            (
+                SELECT a.total_abonado FROM adeudos a WHERE a.noempleado = e.noempleado AND a.estado = 1
+            ) AS total_abonado";
 
     $sql_fiscal = "SELECT COUNT(*) FROM importes_fiscales";
     $result_fiscal = mysqli_query($conection, $sql_fiscal);
     if (!$result_fiscal) {
-    die(json_encode(['error' => 'Error al obtener los datos de la nómina: ' . mysqli_error($conection)]));
+        die(json_encode(['error' => 'Error al obtener los datos de la nómina: ' . mysqli_error($conection)]));
     }
     $row_fiscal = mysqli_fetch_row($result_fiscal);
     if ($row_fiscal[0] > 0) {
-    $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
+        $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
     }
 
     $sql_empleados .= "
-    FROM empleados e
-    LEFT JOIN alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
-        AND DATE(al.fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
-    LEFT JOIN incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-    AND (
-        (inc.fecha_inicial BETWEEN '$fecha_inicio' AND '$fecha_fin') 
-        OR (inc.fecha_final BETWEEN '$fecha_inicio' AND '$fecha_fin')
-        OR (inc.fecha_inicial < '$fecha_inicio' AND inc.fecha_final > '$fecha_fin') 
-    )
-
-    LEFT JOIN registro_viajes rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-        AND DATE(rv.fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin'
-        AND rv.valor_vuelta > 0";
+        FROM empleados e
+        LEFT JOIN alertas al ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
+            AND DATE(al.fecha) BETWEEN '$fecha_fin' AND '$fecha_limite_alertas'
+        LEFT JOIN incidencias inc ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+            AND (
+                (inc.fecha_inicial BETWEEN '$fecha_inicio' AND '$fecha_fin') 
+                OR (inc.fecha_final BETWEEN '$fecha_inicio' AND '$fecha_fin') 
+                OR (inc.fecha_inicial < '$fecha_inicio' AND inc.fecha_final > '$fecha_fin')
+            )
+        LEFT JOIN registro_viajes rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+            AND DATE(rv.fecha) BETWEEN '$fecha_inicio' AND '$fecha_fin'
+            AND rv.valor_vuelta > 0";
 
     if ($row_fiscal[0] > 0) {
-    $sql_empleados .= "
-    LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT_WS(' ', e.apellido_paterno, e.apellido_materno, e.nombres)";
+        $sql_empleados .= "
+        LEFT JOIN importes_fiscales fi ON fi.empleado = CONCAT_WS(' ', e.apellido_paterno, e.apellido_materno, e.nombres)";
     }
 
     $sql_empleados .= "
-    WHERE 
-        (e.estatus = 1 OR DATEDIFF(e.fecha_baja, '$fecha_inicio') >= 6)
-        AND e.tipo_nomina = 'Semanal'
-    GROUP BY 
-        e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
-        e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-        e.supervisor, e.apoyo_mes, al.noalertas";
+        WHERE 
+            (e.estatus = 1 OR DATEDIFF(e.fecha_baja, '$fecha_inicio') >= 6)
+            AND e.tipo_nomina = 'Semanal'
+        GROUP BY 
+            e.noempleado, e.id, e.sueldo_base, operador, e.cargo, imss, e.estatus, 
+            e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
+            e.supervisor, e.apoyo_mes, al.noalertas";
 
     if ($row_fiscal[0] > 0) {
-    $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
+        $sql_empleados .= ", fi.pago_fiscal, fi.deduccion_fiscal, fi.neto";
     }
+
     echo $sql_empleados;
     $result_empleados = mysqli_query($conection, $sql_empleados);
     if (!$result_empleados) {
