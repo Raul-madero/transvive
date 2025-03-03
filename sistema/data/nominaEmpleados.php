@@ -156,7 +156,7 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
        COALESCE(SUM(CASE 
             WHEN inc.tipo_incidencia = 'Vacaciones' THEN 
                 GREATEST(
-                    LEAST(DATEDIFF(LEAST(inc.fecha_final, '$fecha_fin'), GREATEST(inc.fecha_inicial, '$fecha_inicio')) + 1, DATEDIFF('$fecha_fin', '$fecha_inicio') + 1),
+                    LEAST(DATEDIFF(LEAST(inc.fecha_final, '$fecha_fin'), GREATEST(inc.fecha_inicial, '$fecha_inicio')) + 1, DATEDIFF('$fecha_inicio', '$fecha_fin') + 1),
                     0
                 )
             ELSE 0
