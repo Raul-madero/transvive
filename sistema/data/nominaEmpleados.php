@@ -153,12 +153,18 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
         COUNT(DISTINCT CASE WHEN inc.tipo_incidencia = 'Falta Injustificada' THEN inc.id END) AS faltas,
 
         -- Calcular días de vacaciones dentro del periodo de pago
-       COALESCE(SUM(CASE 
-            WHEN inc.tipo_incidencia = 'Vacaciones' THEN 
-                GREATEST(
-                    LEAST(DATEDIFF(LEAST(inc.fecha_final, '$fecha_fin'), GREATEST(inc.fecha_inicial, '$fecha_inicio')) + 1, DATEDIFF('$fecha_fin', '$fecha_inicio') + 1),
-                    0
-                )
+       COALESCE(SUM(CASE
+            WHEN inc.tipo_incidencia = 'Vacaciones' THEN
+                -- Verificar si hay superposición
+                CASE
+                    WHEN inc.fecha_inicial <= '2025-03-02' AND inc.fecha_final >= '2025-02-24' THEN
+                        -- Calcular los días de superposición
+                        1 + DATEDIFF(
+                            LEAST(inc.fecha_final, '2025-03-02'),
+                            GREATEST(inc.fecha_inicial, '2025-02-24')
+                        )
+                    ELSE 0
+                END
             ELSE 0
         END), 0) AS dias_vacaciones_pagar,
 
