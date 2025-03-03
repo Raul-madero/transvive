@@ -1055,9 +1055,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->SMTPSecure = 'STARTTLS';
             $mail->Username   = 'compras@transvivegdl.com.mx';
             $mail->Password   = 'Feb241981@';
-            $mail->setFrom('compras@transvivegdl.com.mx', 'Software Transvive ERP');
-            $mail->addReplyTo('rmadero@transvivegdl.com.mx', 'Encuesta Enviada');
-            $mail->addAddress('raul.madero.ramirez@gmail.com', $nombre);
+            $mail->setFrom('compras@transvivegdl.com.mx', 'Ventas Transvive');
+            $mail->addReplyTo('calidad@transvivegdl.com.mx', 'Encuesta Enviada');
+            $mail->addAddress($correo, $nombre);
+            $mail->addCC('ejecutivo@transvivegdl.com.mx');
+            $mail->addCC('ejecutivo@transvivegdl.com.mx');
+            $mail->addCC('raul.madero.ramirez@gmail.com.mx');
             $mail->Subject = $asunto;
             $mail->Body    = $msjBody;
 
