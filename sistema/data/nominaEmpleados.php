@@ -126,7 +126,8 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
     // Calcular la fecha de fin (sumando 6 días para llegar al domingo)
     $fecha_fin = $fecha->modify('+6 days')->format('Y-m-d'); // Fecha de fin de la semana (domingo)
-
+    echo $fecha_inicio;
+    echo $fecha_fin;
     $fecha_limite_alertas = date('Y-m-d', strtotime('next wednesday', strtotime($fecha_fin)));
     // Consultar empleados
     $sql_empleados = "
