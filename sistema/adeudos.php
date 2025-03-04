@@ -131,8 +131,83 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <!-- AdminLTE -->
 <script src="../dist/js/adminlte.min.js"></script>
+
 <script>
     $(document).ready(function() {
+        if ($("#example1").length) {
+            if ($.fn.DataTable.isDataTable('#example1')) {
+                $('#example1').DataTable().destroy();
+            }
+            $('#example1').DataTable({
+                "bProcessing": true,
+                "sAjaxSource": "data/data_adeudos.php",
+                "bPaginate": true,
+                "sPaginationType": "full_numbers",
+                "iDisplayLength": 10,
+                "responsive": true,
+                "autoWidth": false,
+                "destroy": true,
+                "aoColumns": [
+                    { "mData": 'noempleado', "sWidth": "50px" },
+                    { 
+                        "mData": null,  
+                        "sWidth": "120px",
+                        "render": function(data, type, full) {
+                            return full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno;
+                        }
+                    },
+                    { "mData": 'cantidad', "sWidth": "100px" },
+                    { "mData": 'motivo_adeudo', "sWidth": "100px" },
+                    { 
+                        "mData": 'estado',
+                        "sWidth": "130px",
+                        "render": function(data) { return (data === 1 ? 'Pagado' : 'Activo'); }
+                    },
+                    { "mData": 'fecha_inicial', "sWidth": "50px" },
+                    { "mData": 'fecha_final', "sWidth": "50px" },
+                    { "mData": 'descuento', "sWidth": "50px" },
+                    { "mData": 'total_abonado', "sWidth": "120px" },
+                    { "mData": 'semanas_totales', "sWidth": "50px" },
+                    {
+                        "mData": null,
+                        "sWidth": "120px",
+                        "render": function(data, type, full) {
+                            let fechaActual = new Date();
+                            let fechaFinal = new Date(full.fecha_final);
+                            let semanasRestantes = Math.ceil((fechaFinal - fechaActual) / (7 * 24 * 60 * 60 * 1000));
+                            return semanasRestantes > 0 ? semanasRestantes : 0;
+                        }
+                    },
+                    { "mData": 'comentarios', "sWidth": "50px" },
+                    {
+                        "mData": null,
+                        "sWidth": "120px",
+                        "render": function(data, type, full) {
+                            return `<a class="link_edit" style="color:#007bff;" href='edit_adeudo.php?id=${full.noempleado}'><i class="far fa-edit"></i> Edit</a> | 
+                                    <a data-toggle="modal" data-target="#modalEditcliente" data-id="${full.noempleado}" data-name="${full.nombres} ${full.apellido_paterno} ${full.apellido_materno}" href="javascript:void(0)" class="link_delete" style="color:red"><i class="far fa-trash-alt"></i> Pagado </a>`;
+                        }
+                    }
+                ],
+                "oLanguage": {
+                    "sEmptyTable": "No hay registros disponibles",
+                    "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    "sLoadingRecords": "Cargando...",
+                    "sSearch": "Buscar:",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "oPaginate": {
+                        "sFirst": "Primera",
+                        "sPrevious": "Anterior",
+                        "sNext": "Siguiente",
+                        "sLast": "Última"
+                    }
+                }
+            });
+        } else {
+            console.error("Tabla #example1 no encontrada.");
+        }
+    });
+</script>
+
         var table = $('#example1').dataTable({
             "bProcessing": true,
             "sAjaxSource": "data/data_adeudos.php",
