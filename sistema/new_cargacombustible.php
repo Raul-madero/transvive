@@ -405,9 +405,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
 
+        function esFechaValida(fechaUsuario) {
+            // Convertir la fecha ingresada a un objeto Date
+            let fechaIngresada = new Date(fechaUsuario);
+            if (isNaN(fechaIngresada)) {
+                return { valid: false, message: "Fecha inválida" };
+            }
+
+            // Obtener la fecha actual
+            let fechaActual = new Date();
+            fechaActual.setHours(0, 0, 0, 0); // Eliminar la hora para comparar solo fechas
+
+            // Calcular la fecha límite (hace 2 días)
+            let fechaLimite = new Date();
+            fechaLimite.setDate(fechaActual.getDate() - 2); // Restar 2 días
+
+            // Comparar la fecha ingresada con la fecha límite
+            if (fechaIngresada >= fechaLimite && fechaIngresada <= fechaActual) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
        var folio       = $('#inputFolio').val();
        var estacion    = $('#inputEstacion').val();
-       var fecha       = $('#inputFecha').val();
+       var fecha       = esFechaValida($('#inputFecha').val());
        var nosemana    = $('#inputSemana').val();
        var nounidad    = $('#inputNounidad').val();
        var placas      = $('#inputPlacas').val();
@@ -424,13 +447,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
        var rendstandar = $('#inputRestandar').val();
        var supervisor  = $('#inputSupervisor').val();
 
+
+      //  if(fecha) {
+        let fecha_carga = $('#inputFecha').val();
        var action       = 'AlmacenaCargaComb';
 
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",
                     async : true,
-                    data: {action:action, folio:folio, estacion:estacion, fecha:fecha, nosemana:nosemana, nounidad:nounidad, placas:placas, operador:operador, kmanterior:kmanterior, kmactual:kmactual, kmrecorre:kmrecorre, combustible:combustible, colorgas:colorgas, litros:litros, precio:precio, importe:importe, rendimiento:rendimiento, rendstandar:rendstandar, supervisor:supervisor},
+                    data: {action:action, folio:folio, estacion:estacion, fecha:fecha_carga, nosemana:nosemana, nounidad:nounidad, placas:placas, operador:operador, kmanterior:kmanterior, kmactual:kmactual, kmrecorre:kmrecorre, combustible:combustible, colorgas:colorgas, litros:litros, precio:precio, importe:importe, rendimiento:rendimiento, rendstandar:rendstandar, supervisor:supervisor},
 
                     success: function(response)
                     {
@@ -493,7 +519,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                  }
 
                });
-
+              // }else{
+              //   Swal.fire({
+              //     icon: 'info',
+              //     title: '',
+              //     text: 'Fecha no valida',
+              //     })
+              // }
     });
 
     </script>  
