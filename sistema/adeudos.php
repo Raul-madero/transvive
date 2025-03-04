@@ -29,14 +29,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
   <!-- DataTables -->
-  <!--<link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">-->
-  <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-  <!-- DataTables -->
-  <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.bootstrap4.min.css">
+
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
@@ -122,32 +119,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </div>
   <!-- ./wrapper -->
   <!-- REQUIRED SCRIPTS -->
-  <!-- jQuery -->
-  <script src="../plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap 4 -->
-  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <!-- DataTables  & Plugins -->
-  <script src="../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-  <script src="../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-  <script src="../vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-  <script src="../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-  <script src="../vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-  <script src="../vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-  <script src="../vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-  <script src="../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-  <script src="../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-  <script src="../vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-  <script src="../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-  <script src="../vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+ <!-- jQuery y Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
 
-  <!-- DataTables JS library -->
-  <script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-  <!-- DataTables JBootstrap -->
-  <script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
-  <!-- AdminLTE App -->
-  <script src="../dist/js/adminlte.min.js"></script>
-  <!-- AdminLTE for demo purposes
-<script src="../dist/js/demo.js"></script> -->
+<!-- DataTables y Plugins -->
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+
+<!-- AdminLTE -->
+<script src="../dist/js/adminlte.min.js"></script>
 <script>
     $(document).ready(function() {
         var table = $('#example1').dataTable({
