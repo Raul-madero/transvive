@@ -9166,38 +9166,54 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmpreventivo')
             exit;
         }  
 
-//Almacena Requisicion de compra
-if($_POST['action'] == 'AlmacenaEditRequerimiento')
-{
-    if(empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) )
-    {
-       echo 'error';
-    }else{
-        
-        $folio        = $_POST['folio'];
-        $fecha        = $_POST['fecha'];
-        $fecha_req    = $_POST['fecha_req'];
-        $tipo         = $_POST['tipo'];
-        $areasolicita = $_POST['areasolicita'];
-        $monto_aut    = $_POST['montoaut'];
-        $notas        = $_POST['notas'];
-
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-
-        $query_procesar = mysqli_query($conection,"CALL procesar_editrequisicion($folio, '$fecha', '$fecha_req', '$tipo', '$areasolicita', $monto_aut, '$notas', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
-        }
+// Almacena Requisición de Compra
+if (isset($_POST['action']) && $_POST['action'] == 'AlmacenaEditRequerimiento') {
     
+    // Validar datos obligatorios
+    if (empty(trim($_POST['fecha'])) || empty(trim($_POST['tipo'])) || empty(trim($_POST['areasolicita']))) {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
+        exit;
+    }
+
+    require_once "conexion.php"; // Asegurar que la conexión se incluya correctamente
+
+    // Sanitizar y obtener valores del formulario
+    $folio        = intval($_POST['folio']);
+    $fecha        = mysqli_real_escape_string($conection, trim($_POST['fecha']));
+    $fecha_req    = mysqli_real_escape_string($conection, trim($_POST['fecha_req']));
+    $tipo         = mysqli_real_escape_string($conection, trim($_POST['tipo']));
+    $areasolicita = mysqli_real_escape_string($conection, trim($_POST['areasolicita']));
+    $monto_aut    = floatval($_POST['montoaut']);
+    $notas        = mysqli_real_escape_string($conection, trim($_POST['notas']));
+
+    $usuario = $_SESSION['idUser'];
+
+    // Preparar la consulta para evitar SQL Injection
+    $query = "UPDATE requisicion_compra 
+              SET fecha = ?, fecha_requiere = ?, tipo_requisicion = ?, area_solicitante = ?, 
+                  cant_autorizada = ?, observaciones = ?, edit_id = ?
+              WHERE no_requisicion = ?";
+
+    if ($stmt = mysqli_prepare($conection, $query)) {
+        mysqli_stmt_bind_param($stmt, "ssssdsii", $fecha, $fecha_req, $tipo, $areasolicita, $monto_aut, $notas, $usuario, $folio);
+        $execute = mysqli_stmt_execute($stmt);
+        
+        if ($execute) {
+            if (mysqli_stmt_affected_rows($stmt) > 0) {
+                echo json_encode(["status" => "success", "message" => "Requisición actualizada correctamente"]);
+            } else {
+                echo json_encode(["status" => "warning", "message" => "No se realizaron cambios"]);
+            }
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error en la actualización"]);
+        }
+        
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+    }
+
     mysqli_close($conection);
-  }
-   
     exit;
 }
 
