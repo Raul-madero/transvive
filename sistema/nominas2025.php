@@ -340,52 +340,55 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 		//Editar deducciones
 		$('#example1').on('click', '.editable-deducciones', function() {
-			const td = $(this);
-			const id = td.data('id');
-			const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, '')) || 0;
+    const td = $(this);
+    const id = td.data('id');
+    const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, ''));
 
-			td.html(`<input type="text" class="form-control input-sm" value="${currentValue}">`);
-			const input = td.find('input');
+    td.html(`<input type="text" class="form-control input-sm" value="${isNaN(currentValue) ? '' : currentValue}">`);
+    const input = td.find('input');
 
-			// Función para guardar el nuevo valor
-			const guardarCambios = () => {
-				const newValue = parseFloat(input.val()) || 0;
-				if (newValue !== currentValue) {
-					$.ajax({
-						url: 'data/updateDeducciones.php',
-						type: 'POST',
-						data: { id, deducciones: newValue },
-						dataType: 'json',
-						success: function(response) {
-							if (response.success) {
-								alert(response.message);
-								$('#example1').DataTable().ajax.reload(null, false); // Recargar tabla sin perder la paginación actual
-							}
-						},
-						error: function(xhr, status, error) {
-							alert('Error al actualizar la deducción.');
-							console.error('Error:', error);
-							console.error('Detalles:', xhr.responseText);
-						},
-						complete: function() {
-							td.text(formatoMoneda(newValue)); // Mostrar el nuevo valor formateado
-						}
-					});
-				} else {
-					td.text(formatoMoneda(currentValue)); // Revertir el valor original si no hay cambios
-				}
-			};
+    // Función para guardar el nuevo valor
+    const guardarCambios = () => {
+        const newValue = parseFloat(input.val());
 
-			// Guardar al perder el enfoque
-			input.focus().on('blur', guardarCambios);
+        // Verificar si es un número válido (incluyendo 0)
+        if (!isNaN(newValue) && newValue !== currentValue) {
+            $.ajax({
+                url: 'data/updateDeducciones.php',
+                type: 'POST',
+                data: { id, deducciones: newValue },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $('#example1').DataTable().ajax.reload(null, false); // Recargar tabla sin perder la paginación actual
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error al actualizar la deducción.');
+                    console.error('Error:', error);
+                    console.error('Detalles:', xhr.responseText);
+                },
+                complete: function() {
+                    td.text(formatoMoneda(newValue)); // Mostrar el nuevo valor formateado
+                }
+            });
+        } else {
+            td.text(formatoMoneda(currentValue)); // Revertir el valor original si no hay cambios o es inválido
+        }
+    };
 
-			// Guardar al presionar Enter
-			input.on('keydown', function(e) {
-				if (e.key === 'Enter') {
-					guardarCambios();
-				}
-			});
-		});
+    // Guardar al perder el enfoque
+    input.focus().on('blur', guardarCambios);
+
+    // Guardar al presionar Enter
+    input.on('keydown', function(e) {
+        if (e.key === 'Enter') {
+            guardarCambios();
+        }
+    });
+});
+
 
 		
 		$('#example1').on('click', '.editable-sueldo_bruto', function() {
