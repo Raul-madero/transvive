@@ -344,13 +344,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			const id = td.data('id');
 			const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, ''));
 
-			td.html(`<input type="text" class="form-control input-sm" value="${currentValue}">`);
+			td.html(`<input type="text" class="form-control input-sm" value="${isNaN(currentValue) ? '' : currentValue}">`);
 			const input = td.find('input');
 
 			// Función para guardar el nuevo valor
 			const guardarCambios = () => {
-				const newValue = input.val();
-				if (newValue !== currentValue) {
+				const newValue = parseFloat(input.val());
+
+				// Verificar si es un número válido (incluyendo 0)
+				if (!isNaN(newValue) && newValue !== currentValue) {
 					$.ajax({
 						url: 'data/updateDeducciones.php',
 						type: 'POST',
@@ -372,7 +374,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 						}
 					});
 				} else {
-					td.text(formatoMoneda(currentValue)); // Revertir el valor original si no hay cambios
+					td.text(formatoMoneda(currentValue)); // Revertir el valor original si no hay cambios o es inválido
 				}
 			};
 
@@ -386,6 +388,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				}
 			});
 		});
+
 
 		
 		$('#example1').on('click', '.editable-sueldo_bruto', function() {
