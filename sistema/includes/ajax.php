@@ -4691,7 +4691,7 @@ if ($_POST['action'] == 'AlmacenaRefaccion') {
             if (mysqli_stmt_execute($stmt)) {
                 echo json_encode(["status" => "success", "message" => "Refacción almacenada correctamente"]);
             } else {
-                echo json_encode(["status" => "error", "message" => "Error al insertar los datos"]);
+                echo json_encode(["status" => "error", "message" => "Error al insertar los datos" . mysqli_error($conection)]);
             }
 
             mysqli_stmt_close($stmt);
