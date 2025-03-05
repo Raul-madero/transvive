@@ -296,6 +296,7 @@ if ($row_fiscal[0] > 0) {
             $pago_vacaciones = ($dias_vacaciones * $row_empleados['salario_diario']) ?? 0;
             $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($row_empleados['bono_categoria']) : 0;
             $bono_semanal = ($gana_bono && $dias_vacaciones <= 2 && $bono_semanal_contrato && $total_vueltas > 0) ? floatval($row_empleados['bono_semanal']) : 0;
+            $bono_supervisor = $row_empleados['bono_supervisor'] ?? 0;
             
             $efectivo = (($sueldo_bruto > 0) ? ($sueldo_bruto - $pago_fiscal) : 0) + $bono_semanal + $bono_supervisor + $bono_categoria + $apoyo_mes + $pago_vacaciones + $prima_vacacional - $deducciones - $caja_ahorro;
             
@@ -310,7 +311,7 @@ if ($row_fiscal[0] > 0) {
                 'no_unidad' => $no_unidad,
                 'tipo_unidad' => $tipo_unidad,
                 'bono_categoria' => $bono_categoria,
-                'bono_supervisor' => $row_empleados['bono_supervisor'],
+                'bono_supervisor' => $bono_supervisor,
                 'bono_semanal' => $bono_semanal,
                 'cargo' => $cargo,
                 'imss' => $imss,
