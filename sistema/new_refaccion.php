@@ -294,65 +294,49 @@ $('#btn_salir').click(function(e){
                     async : true,
                     data: {action:action, codigo:codigo, codigo_int:codigo_int, descripcion:descripcion, unidadmed:unidadmed, marca:marca, rotacion:rotacion, categoria:categoria, modelo:modelo, costo:costo, impuesto:impuesto, imp_isr:imp_isr, imp_ieps:imp_ieps, stockmax:stockmax, stockmin:stockmin},
 
-                    success: function(response)
-                    {
-                      if(response.status != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "REFACCION/ARTICULO ALMACENADO CORRECTAMENTE",
-                          icon: 'success',
+                    success: function(response) {
+                        try {
+                            var info = JSON.parse(response);
+                            console.log(info);
 
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'refacciones.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'refacciones.php';
-                        }
-                        });
+                            if (info.status === "success") {
+                                Swal.fire({
+                                    title: "Éxito!",
+                                    text: info.message,
+                                    icon: 'success',
+                                }).then(resultado => {
+                                    if (resultado.value) {
+                                        location.href = 'refacciones.php';
+                                    } else {
+                                        location.reload();
+                                        location.href = 'refacciones.php';
+                                    }
+                                });
 
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: info.message || 'Ocurrió un error inesperado',
+                                });
+                            }
+                        } catch (e) {
                             Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Error al procesar la respuesta del servidor',
+                            });
+                            console.error("Error al parsear la respuesta del servidor:", e);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
                             icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
+                            title: 'Error',
+                            text: 'Ocurrió un error en la petición AJAX',
+                        });
+                        console.error("Error en la petición AJAX:", status, error);
+                    }
 
                });
 
