@@ -4710,8 +4710,6 @@ if ($_POST['action'] == 'AlmacenaRefaccion') {
 if ($_POST['action'] == 'AlmacenaEditRefaccion') {
     if (!empty($_POST['codigo']) && !empty($_POST['descripcion']) && !empty($_POST['idr'])) {
         
-        require_once "config.php"; // Asegura que la conexión esté disponible
-        
         $idr         = intval($_POST['idr']); // Convertir a entero para evitar inyección
         $codigo      = trim($_POST['codigo']);
         $codinterno  = trim($_POST['codigointer'] ?? "");
