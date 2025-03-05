@@ -287,7 +287,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							$(td).addClass('editable-sueldo_bruto').attr('data-id', rowData.id).text(renderMoneda(cellData));
 						}
 					},
-					{ data: "nomina_fiscal", render: renderMoneda },
+					{ data: "nomina_fiscal", 
+						render: renderMoneda, 
+						createdCell: function(td, cellData, rowData, row, col) {
+							$(td).attr('data-nomina_fiscal', cellData).text(renderMoneda(cellData));
+						} 
+					},
 					{
 						data: "deducciones",
 						render: renderMoneda,
