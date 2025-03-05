@@ -315,7 +315,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					{ data: "caja_ahorro", render: formatoMoneda },
 					{ data: "supervisor" },
 					{
-						data: "neto"
+						data: null,
+						render: (data) => formatoMoneda(parseFloat(data.deposito_fiscal) + parseFloat(data.efectivo))
 					}
 				],
 				language: {
