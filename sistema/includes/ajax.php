@@ -4707,49 +4707,70 @@ if ($_POST['action'] == 'AlmacenaRefaccion') {
 }
         
 //Almacena Edicion Refaccion
-if($_POST['action'] == 'AlmacenaEditRefaccion')
-{
-    if(!empty($_POST['codigo']) || !empty($_POST['descripcion']))
-    {
-        $idr      = $_POST['idr'] ?? "";
-        $codigo      = $_POST['codigo'] ?? "";
-        $codinterno  = $_POST['codigointer'] ?? "";
-        $descripcion = $_POST['descripcion'] ?? "";
-        $unidadmedid = $_POST['unidadmedid'] ?? "";
-        $marca       = $_POST['marca'] ?? "";
-        $rotacion    = $_POST['rotacion'] ?? "";
-        $categoria   = $_POST['categoria'] ?? "";
-        $modelo      = $_POST['modelo'] ?? "";
-        $costo       = $_POST['costo'] ?? "";
-        $impuesto    = $_POST['impuesto'] ?? "";
-        $impisr      = $_POST['imp_isr'] ?? "";
-        $impieps     = $_POST['imp_ieps'] ?? "";
-        $stock_max   = $_POST['stockmax'] ?? "";
-        $stock_min   = $_POST['stockmin'] ?? "";
-        $estatus     = $_POST['status'] ?? "";
-
-
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-    
-        $query_procesar = mysqli_query($conection,"CALL procesar_editrefaccion($idr, '$codigo', '$codinterno', '$descripcion', '$unidadmedid', '$marca', '$rotacion', '$categoria', '$modelo', $costo, $impuesto, $impisr, $impieps, $stock_max, $stock_min, $estatus, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
+if ($_POST['action'] == 'AlmacenaEditRefaccion') {
+    if (!empty($_POST['codigo']) && !empty($_POST['descripcion']) && !empty($_POST['idr'])) {
         
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+        require_once "config.php"; // Asegura que la conexión esté disponible
+        
+        $idr         = intval($_POST['idr']); // Convertir a entero para evitar inyección
+        $codigo      = trim($_POST['codigo']);
+        $codinterno  = trim($_POST['codigointer'] ?? "");
+        $descripcion = trim($_POST['descripcion']);
+        $unidadmedid = trim($_POST['unidadmedid'] ?? "");
+        $marca       = trim($_POST['marca'] ?? "");
+        $rotacion    = trim($_POST['rotacion'] ?? "");
+        $categoria   = trim($_POST['categoria'] ?? "");
+        $modelo      = trim($_POST['modelo'] ?? "");
+        $costo       = floatval($_POST['costo'] ?? 0);
+        $impuesto    = floatval($_POST['impuesto'] ?? 0);
+        $impisr      = floatval($_POST['imp_isr'] ?? 0);
+        $impieps     = floatval($_POST['imp_ieps'] ?? 0);
+        $stock_max   = intval($_POST['stockmax'] ?? 0);
+        $stock_min   = intval($_POST['stockmin'] ?? 0);
+        $estatus     = intval($_POST['status'] ?? 1); // Suponiendo que es un booleano (1 o 0)
+        
+        $usuario     = $_SESSION['idUser'] ?? 0;
+        
+        // Validación de ID y usuario
+        if ($idr <= 0 || $usuario <= 0) {
+            echo json_encode(["status" => "error", "message" => "ID de refacción o usuario no válido"]);
+            exit;
         }
-    
-    mysqli_close($conection);
 
-    }else{
-        echo 'error';
+        // Preparar la consulta para evitar SQL Injection
+        $stmt = mysqli_prepare($conection, "UPDATE refacciones 
+            SET codigo = ?, codigo_interno = ?, descripcion = ?, umedida = ?, marca = ?, rotacion = ?, 
+                categoria = ?, modelo = ?, costo = ?, impuesto = ?, impuesto_isr = ?, impuesto_ieps = ?, 
+                stock_maximo = ?, stock_minimo = ?, estatus = ?, edicion_id = ? 
+            WHERE id = ?");
+
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "ssssssssddddiiiii", 
+                $codigo, $codinterno, $descripcion, $unidadmedid, $marca, $rotacion, 
+                $categoria, $modelo, $costo, $impuesto, $impisr, $impieps, 
+                $stock_max, $stock_min, $estatus, $usuario, $idr);
+
+            if (mysqli_stmt_execute($stmt)) {
+                if (mysqli_stmt_affected_rows($stmt) > 0) {
+                    echo json_encode(["status" => "success", "message" => "Refacción actualizada correctamente"]);
+                } else {
+                    echo json_encode(["status" => "warning", "message" => "No se realizaron cambios en la refacción"]);
+                }
+            } else {
+                echo json_encode(["status" => "error", "message" => "Error al actualizar la refacción"]);
+            }
+            
+            mysqli_stmt_close($stmt);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+        }
+
+        mysqli_close($conection);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
     }
     exit;
 }
-
 
 //Baja Refaccion
 if($_POST['action'] == 'BajaRefaccion')

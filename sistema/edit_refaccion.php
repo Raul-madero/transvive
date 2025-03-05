@@ -366,99 +366,100 @@ $('#btn_salir').click(function(e){
     </script>
 
 <script>
-   $('#guardar_tipoactividad').click(function(e){
-        e.preventDefault();
+   $('#guardar_tipoactividad').click(function(e) {
+    e.preventDefault();
 
-       var idr         = $('#inputId').val();
-       var codigo      = $('#inputCodigo').val();
-       var codigointer = $('#inputCodigoInterno').val();
-       var descripcion = $('#inputDescripcion').val();
-       var unidadmedid = $('#inputUmedida').val();
-       var marca       = $('#inputMarca').val();
-       var rotacion    = $('#inputRotacion').val();
-       var categoria   = $('#inputCategoria').val();
-       var modelo      = $('#inputModelo').val();
-       var costo       = $('#inputCosto').val();
-       var impuesto    = $('#inputImpuesto').val();
-       var imp_isr     = $('#inputIsr').val();
-       var imp_ieps    = $('#inputIeps').val();
-       var stockmax    = $('#inputSmaximo').val();
-       var stockmin    = $('#inputSminimo').val();
-       var status      = $('#inputEstatus').val();
+    // Obtener los valores del formulario
+    var idr         = $('#inputId').val().trim();
+    var codigo      = $('#inputCodigo').val().trim();
+    var codigointer = $('#inputCodigoInterno').val().trim();
+    var descripcion = $('#inputDescripcion').val().trim();
+    var unidadmedid = $('#inputUmedida').val().trim();
+    var marca       = $('#inputMarca').val().trim();
+    var rotacion    = $('#inputRotacion').val().trim();
+    var categoria   = $('#inputCategoria').val().trim();
+    var modelo      = $('#inputModelo').val().trim();
+    var costo       = parseFloat($('#inputCosto').val()) || 0;
+    var impuesto    = parseFloat($('#inputImpuesto').val()) || 0;
+    var imp_isr     = parseFloat($('#inputIsr').val()) || 0;
+    var imp_ieps    = parseFloat($('#inputIeps').val()) || 0;
+    var stockmax    = parseInt($('#inputSmaximo').val()) || 0;
+    var stockmin    = parseInt($('#inputSminimo').val()) || 0;
+    var status      = $('#inputEstatus').val().trim();
 
-       var action       = 'AlmacenaEditRefaccion';
+    var action = 'AlmacenaEditRefaccion';
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, idr:idr, codigo:codigo, codigointer:codigointer, descripcion:descripcion, unidadmedid:unidadmedid, marca:marca, rotacion:rotacion, categoria:categoria, modelo:modelo, costo:costo, impuesto:impuesto, imp_isr:imp_isr, imp_ieps:imp_ieps, stockmax:stockmax, stockmin:stockmin, status:status},
+    // Validaciones antes de enviar los datos
+    if (idr === "" || codigo === "" || descripcion === "") {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Datos incompletos',
+            text: 'Por favor, completa los campos obligatorios (ID, Código y Descripción).'
+        });
+        return;
+    }
 
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "REFACCION/ARTICULO EDITADO CORRECTAMENTE",
-                          icon: 'success',
+    $.ajax({
+        url: 'includes/ajax.php',
+        type: "POST",
+        dataType: "json",  // Se espera recibir JSON directamente
+        data: {
+            action: action,
+            idr: idr,
+            codigo: codigo,
+            codigointer: codigointer,
+            descripcion: descripcion,
+            unidadmedid: unidadmedid,
+            marca: marca,
+            rotacion: rotacion,
+            categoria: categoria,
+            modelo: modelo,
+            costo: costo,
+            impuesto: impuesto,
+            imp_isr: imp_isr,
+            imp_ieps: imp_ieps,
+            stockmax: stockmax,
+            stockmin: stockmin,
+            status: status
+        },
+        success: function(response) {
+            console.log(response);
 
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'refacciones.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'refacciones.php';
-                        }
-                        });
+            if (response.status === "success") {
+                Swal.fire({
+                    title: "¡Éxito!",
+                    text: response.message,
+                    icon: 'success'
+                }).then(() => {
+                    location.href = 'refacciones.php';
+                });
 
+            } else if (response.status === "warning") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Atención',
+                    text: response.message
+                });
 
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.message || 'Ocurrió un error inesperado'
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la petición AJAX:", status, error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error en la petición al servidor.'
+            });
+        }
     });
-
-    </script>  
+});
+</script>  
 <script src="js/sweetalert2.all.min.js"></script>   
 <!-- Page specific script -->
 <script>
