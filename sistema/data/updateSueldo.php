@@ -10,7 +10,7 @@ if(!$conection) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // var_dump($_POST);
+    var_dump($_POST);
     // Obtener los datos enviados
     $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
     $sueldo = isset($_POST['sueldo']) ? floatval($_POST['sueldo']) : 0;
