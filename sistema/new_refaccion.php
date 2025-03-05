@@ -296,7 +296,7 @@ $('#btn_salir').click(function(e){
 
                     success: function(response)
                     {
-                      if(response != 'error')
+                      if(response.status != 'error')
                         {
                          console.log(response);
                         var info = JSON.parse(response);
