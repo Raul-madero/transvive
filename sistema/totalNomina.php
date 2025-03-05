@@ -14,7 +14,7 @@ $sql = "SELECT * FROM nomina_temp_2025 WHERE semana = $semana AND anio = $anio";
 $query = mysqli_query($conection, $sql);
 $filas = mysqli_num_rows($query);
 if($filas > 0) {
-	$sql_totales = "SELECT SUM(total_vueltas) AS total_vueltas, SUM(sueldo_bruto) AS sueldo_bruto, SUM(nomina_fiscal) AS nomina_fiscal, SUM(deposito_fiscal) AS deposito_fiscal, SUM(efectivo) AS efectivo, SUM(deducciones) AS deducciones, SUM(caja_ahorro) AS caja_ahorro, SUM(deduccion_fiscal) AS deduccion_fiscal, SUM(bono_semanal) AS bono_semanal, SUM(bono_categoria) AS bono_categoria, SUM(bono_supervisor) AS bono_supervisor, SUM(apoyo_mes) AS apoyo_mensual, SUM(pago_vacaciones) AS pago_vacaciones, SUM(prima_vacacional) AS prima_vacacional, SUM(neto) AS neto FROM nomina_temp_2025 WHERE semana = $semana AND anio = $anio";
+	$sql_totales = "SELECT SUM(total_vueltas) AS total_vueltas, SUM(sueldo_bruto) AS sueldo_bruto, SUM(nomina_fiscal) AS nomina_fiscal, SUM(deposito_fiscal) AS deposito_fiscal, SUM(efectivo) AS efectivo, SUM(deducciones) AS deducciones, SUM(caja_ahorro) AS caja_ahorro, SUM(deduccion_fiscal) AS deduccion_fiscal, SUM(bono_semanal) AS bono_semanal, SUM(bono_categoria) AS bono_categoria, SUM(bono_supervisor) AS bono_supervisor, SUM(apoyo_mes) AS apoyo_mensual, SUM(pago_vacaciones) AS pago_vacaciones, SUM(prima_vacacional) AS prima_vacacional, SUM(deposito_fiscal + efectivo) AS neto FROM nomina_temp_2025 WHERE semana = $semana AND anio = $anio";
 	$query_totales = mysqli_query($conection, $sql_totales);
 	$filas_totales = mysqli_fetch_assoc($query_totales);
 	
