@@ -287,12 +287,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							$(td).addClass('editable-sueldo_bruto').attr('data-id', rowData.id).text(renderMoneda(cellData));
 						}
 					},
-					{ data: "nomina_fiscal", 
-						render: renderMoneda, 
-						createdCell: function(td, cellData, rowData, row, col) {
-							$(td).attr('data-nomina_fiscal', cellData).text(renderMoneda(cellData));
-						} 
-					},
+					{ data: "nomina_fiscal", render: renderMoneda },
 					{
 						data: "deducciones",
 						render: renderMoneda,
@@ -400,7 +395,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		$('#example1').on('click', '.editable-sueldo_bruto', function() {
 			const td = $(this);
 			const id = td.data('id');
-			const nominaFiscal = td.data('nomina_fiscal');
+			
+			// Buscar la fila completa en DataTables
+			const table = $('#example1').DataTable();
+			const rowData = table.row(td.closest('tr')).data(); // Obtener datos de la fila completa
+
+			const nominaFiscal = parseFloat(rowData.nomina_fiscal) || 0; // Obtener el valor correcto
 			const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, '')) || 0;
 
 			td.html(`<input type="text" class="form-control input-sm" value="${currentValue}">`);
@@ -413,12 +413,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					$.ajax({
 						url: 'data/updateSueldo.php',
 						type: 'POST',
-						data: { id, sueldo: newValue, nomina_fiscal: nominaFiscal },
+						data: { id, sueldo: newValue, nomina_fiscal: nominaFiscal }, // Ahora nomina_fiscal se envía correctamente
 						dataType: 'json',
 						success: function(response) {
 							if (response.success) {
 								alert(response.message);
-								$('#example1').DataTable().ajax.reload(null, false); // Recargar tabla sin perder la paginación actual
+								$('#example1').DataTable().ajax.reload(null, false);
 							}
 						},
 						error: function(xhr, status, error) {
@@ -427,11 +427,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 							console.error('Detalles:', xhr.responseText);
 						},
 						complete: function() {
-							td.text(formatoMoneda(newValue)); // Mostrar el nuevo valor formateado
+							td.text(formatoMoneda(newValue));
 						}
 					});
 				} else {
-					td.text(formatoMoneda(currentValue)); // Revertir el valor original si no hay cambios
+					td.text(formatoMoneda(currentValue));
 				}
 			};
 
