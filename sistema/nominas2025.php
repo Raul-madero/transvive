@@ -395,6 +395,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		$('#example1').on('click', '.editable-sueldo_bruto', function() {
 			const td = $(this);
 			const id = td.data('id');
+			const nominaFiscal = td.data('nomina_fiscal');
 			const currentValue = parseFloat(td.text().replace(/[^0-9.-]+/g, '')) || 0;
 
 			td.html(`<input type="text" class="form-control input-sm" value="${currentValue}">`);
@@ -407,7 +408,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					$.ajax({
 						url: 'data/updateSueldo.php',
 						type: 'POST',
-						data: { id, sueldo: newValue },
+						data: { id, sueldo: newValue, nomina_fiscal: nominaFiscal },
 						dataType: 'json',
 						success: function(response) {
 							if (response.success) {
