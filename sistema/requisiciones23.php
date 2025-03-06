@@ -316,7 +316,7 @@ buttons: [
               "width": "3%", 
               "className": "text-right", 
               "render": function(data, type, full, meta) {
-                return 'req-' + data; // Sin etiquetas HTML
+                return 'REQ-' + data; // Sin etiquetas HTML
               }
             },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            

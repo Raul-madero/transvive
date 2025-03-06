@@ -171,7 +171,7 @@ $pdf->SetFont('Arial','',8);
 $pdf->SetTextcolor(0,0,0);
 $pdf->Cell(144,5,utf8_decode(''),0,0,'L');
 $pdf->Cell(20,5,'Folio:',1,0,'L', 'T');
-$pdf->Cell(25,5,$folio,1,1,'R');
+$pdf->Cell(25,5,'REQ-' . $folio,1,1,'R');
 $pdf->Cell(32,5,utf8_decode('Fecha de Solicitud:'),1,0,'L', 'T');
 $pdf->Cell(30,5,$newDate,1,0,'C');
 $pdf->Cell(52,5,utf8_decode('Fecha en que se requiere el material:'),1,0,'L', 'T');
