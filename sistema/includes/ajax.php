@@ -9193,7 +9193,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'AlmacenaEditRequerimiento') 
         exit;
     }
 
-    $folio        = intval($_POST['folio']);
+    // Extraer solo el número del folio, eliminando "REQ-" si está presente
+    $folio = preg_replace("/[^0-9]/", "", $_POST['folio']);
+    $folio = intval($folio); // Convertirlo en número entero
+    
     $fecha        = mysqli_real_escape_string($conection, trim($_POST['fecha']));
     $fecha_req    = mysqli_real_escape_string($conection, trim($_POST['fecha_req']));
     $tipo         = mysqli_real_escape_string($conection, trim($_POST['tipo']));
