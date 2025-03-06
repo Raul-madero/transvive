@@ -9187,13 +9187,14 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmpreventivo')
 
 // Almacena Requisición de Compra
 if (isset($_POST['action']) && $_POST['action'] == 'AlmacenaEditRequerimiento') {
+
+    require 'conexion.php'; // Asegúrate de que se está incluyendo la conexión a la base de datos
     
-    // Validar datos obligatorios
     if (empty(trim($_POST['fecha'])) || empty(trim($_POST['tipo'])) || empty(trim($_POST['areasolicita']))) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
         exit;
     }
-    // Sanitizar y obtener valores del formulario
+
     $folio        = intval($_POST['folio']);
     $fecha        = mysqli_real_escape_string($conection, trim($_POST['fecha']));
     $fecha_req    = mysqli_real_escape_string($conection, trim($_POST['fecha_req']));
@@ -9204,7 +9205,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'AlmacenaEditRequerimiento') 
 
     $usuario = $_SESSION['idUser'];
 
-    // Preparar la consulta para evitar SQL Injection
     $query = "UPDATE requisicion_compra 
               SET fecha = ?, fecha_requiere = ?, tipo_requisicion = ?, area_solicitante = ?, 
                   cant_autorizada = ?, observaciones = ?, edit_id = ?
@@ -9212,21 +9212,20 @@ if (isset($_POST['action']) && $_POST['action'] == 'AlmacenaEditRequerimiento') 
 
     if ($stmt = mysqli_prepare($conection, $query)) {
         mysqli_stmt_bind_param($stmt, "ssssdsii", $fecha, $fecha_req, $tipo, $areasolicita, $monto_aut, $notas, $usuario, $folio);
-        $execute = mysqli_stmt_execute($stmt);
         
-        if ($execute) {
+        if (mysqli_stmt_execute($stmt)) {
             if (mysqli_stmt_affected_rows($stmt) > 0) {
                 echo json_encode(["status" => "success", "message" => "Requisición actualizada correctamente"]);
             } else {
-                echo json_encode(["status" => "warning", "message" => "No se realizaron cambios" . mysqli_error($conection)]);
+                echo json_encode(["status" => "warning", "message" => "No se realizaron cambios en la base de datos"]);
             }
         } else {
-            echo json_encode(["status" => "error", "message" => "Error en la actualización"]);
+            echo json_encode(["status" => "error", "message" => "Error en la actualización: " . mysqli_error($conection)]);
         }
-        
+
         mysqli_stmt_close($stmt);
     } else {
-        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta: " . mysqli_error($conection)]);
     }
 
     mysqli_close($conection);

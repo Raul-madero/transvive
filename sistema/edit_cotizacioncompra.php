@@ -397,90 +397,68 @@ $('#btn_salir').click(function(e){
     </script>
 
 <script>
-   $('#guardar_tipoactividad').click(function(e){
-        e.preventDefault();
+   $('#guardar_tipoactividad').click(function(e) {
+    e.preventDefault();
 
-       var folio         = $('#inputFolio').val();
-       var fecha         = $('#inputFecha').val();
-       var fecha_req     = $('#inputFecharequiere').val();
-       var tipo          = $('#inputTipo').val();
-       var areasolicita  = $('#inputAsolicita').val();
-      
-       var montoaut      = $('#inputMontoaut').val();
-       var notas         = $('#inputNotas').val();
-   
-     
-       var action       = 'AlmacenaEditRequerimiento';
+    var folio         = $('#inputFolio').val();
+    var fecha         = $('#inputFecha').val();
+    var fecha_req     = $('#inputFecharequiere').val();
+    var tipo          = $('#inputTipo').val();
+    var areasolicita  = $('#inputAsolicita').val();
+    var montoaut      = $('#inputMontoaut').val();
+    var notas         = $('#inputNotas').val();
+    var action        = 'AlmacenaEditRequerimiento';
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, folio:folio, fecha:fecha, fecha_req:fecha_req, tipo:tipo, areasolicita:areasolicita, montoaut:montoaut, notas:notas},
-
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "REQUISICION ALMACENADA CORRECTAMENTE",
-                          icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //generarimpformulaPDF(info.folio);
+    $.ajax({
+        url: 'includes/ajax.php',
+        type: "POST",
+        dataType: "json", // Indica que esperas una respuesta JSON
+        data: {
+            action: action,
+            folio: folio,
+            fecha: fecha,
+            fecha_req: fecha_req,
+            tipo: tipo,
+            areasolicita: areasolicita,
+            montoaut: montoaut,
+            notas: notas
+        },
+        success: function(response) {
+            try {
+                if (response.status === "success") {
+                    Swal.fire({
+                        title: "Éxito!",
+                        text: response.message,
+                        icon: 'success',
+                    }).then(() => {
                         location.href = 'requisiciones23.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'requisiciones23.php';
-                        }
-                        });
-
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.message,
+                    });
+                }
+            } catch (e) {
+                console.error("Error al procesar la respuesta JSON", e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error inesperado',
+                    text: 'Ocurrió un problema al procesar la respuesta del servidor.',
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la petición AJAX", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No se pudo conectar con el servidor.',
+            });
+        }
     });
+});
 
     </script>  
 <script src="js/sweetalert2.all.min.js"></script>   
