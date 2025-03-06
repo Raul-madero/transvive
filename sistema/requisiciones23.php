@@ -667,69 +667,49 @@ function actualizarLaPagina(){
 </div>
 
 <script>
-   $('#actualizaclientes').click(function(e){
-        e.preventDefault();
+   $('#actualizaclientes').click(function(e) {
+    e.preventDefault();
 
-        var noreq     = $('#form_pass_noreq').val();
-        var datereq   = $('#form_pass_datereq').val();
-        var tiporeq   = $('#form_pass_tiporeq').val();
-        var firmareq  = $('#form_pass_firma').val(); 
+    var noreq = $('#form_pass_noreq').val();
+    var datereq = $('#form_pass_datereq').val();
+    var tiporeq = $('#form_pass_tiporeq').val();
+    var firmareq = $('#form_pass_firma').val();
+    var action = 'AddFirmaAreq';
 
+    $.ajax({
+        url: 'includes/ajax.php',
+        type: "POST",
+        async: true,
+        data: { action: action, noreq: noreq, datereq: datereq, tiporeq: tiporeq, firmareq: firmareq },
+        success: function(response) {
+            if (response != 'error') {
+                console.log(response);
+                var info = JSON.parse(response);
+                console.log(info);
 
-        var action       = 'AddFirmaAreq';
-
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, noreq:noreq, datereq:datereq, tiporeq:tiporeq, firmareq:firmareq},
-
-                    success: function(response)
-                    {
-                       if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-
-                            bootbox.alert({
-                                message: 'REQUISICION AUTORIZADA!',
-                                callback: function () {
-                                $('#modalEditcliente').modal('hide')
-                                $('#form_pass_firma').val('');
-                                location.reload(true);
-                                }
-                                });
-                           
-
-                         }else {  
-                           //$('#modalEditcliente').modal('hide')
-                          $('#form_pass_firma').val('');
-                            bootbox.alert('ERROR! ' + $mensaje);
-                            
-                            
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
+                if (info.mensaje === undefined) {
+                    // Cierra el modal, elimina la contraseña y recarga la página
+                    $('#modalEditcliente').modal('hide');
+                    $('#form_pass_firma').val('');
+                    location.reload(true);
+                } else {
+                    // Muestra mensaje de error si hay un problema
+                    bootbox.alert('ERROR! ' + info.mensaje);
+                }
+            } else {
+                Swal.fire({
+                    icon: 'info',
+                    title: '',
+                    text: 'Capture los datos requeridos',
+                });
+            }
+        },
+        error: function(error) {
+            console.error('Error en la solicitud AJAX', error);
+        }
     });
+});
+
 
     </script>  
 
