@@ -9218,7 +9218,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'AlmacenaEditRequerimiento') 
             if (mysqli_stmt_affected_rows($stmt) > 0) {
                 echo json_encode(["status" => "success", "message" => "Requisición actualizada correctamente"]);
             } else {
-                echo json_encode(["status" => "warning", "message" => "No se realizaron cambios"]);
+                echo json_encode(["status" => "warning", "message" => "No se realizaron cambios" . mysqli_error($conection)]);
             }
         } else {
             echo json_encode(["status" => "error", "message" => "Error en la actualización"]);
