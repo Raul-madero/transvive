@@ -9193,9 +9193,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'AlmacenaEditRequerimiento') 
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
         exit;
     }
-
-    require_once "conexion.php"; // Asegurar que la conexión se incluya correctamente
-
     // Sanitizar y obtener valores del formulario
     $folio        = intval($_POST['folio']);
     $fecha        = mysqli_real_escape_string($conection, trim($_POST['fecha']));
