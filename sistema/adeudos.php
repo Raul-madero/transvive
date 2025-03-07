@@ -191,7 +191,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                         // Llenar información del empleado
                         $('#noempleado').text(datos[0].noempleado);
-                        $('#nombres').text(datos[0].nombre);
+                        $('#nombres').text(datos[0].nombres);
 
                         // Limpiar la tabla antes de llenarla
                         $('#tablaAdeudos tbody').empty();
