@@ -235,7 +235,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle">Detalles del Adeudo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <p><strong>No. Empleado:</strong> <span id="noempleado"></span></p>
