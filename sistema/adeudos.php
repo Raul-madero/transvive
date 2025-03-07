@@ -207,7 +207,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                         // Agregar filas dinámicamente
                         datos.forEach(adeudo => {
-                          console.log(adeudo);
                             let fila = `
                                 <tr>
                                     <td class="text-center">$ ${formatoMoneda(adeudo.cantidad)}</td>
