@@ -127,53 +127,143 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../dist/js/adminlte.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        if ($("#example1").length) {
-            if ($.fn.DataTable.isDataTable('#example1')) {
-                $('#example1').DataTable().destroy();
-            }
-            $('#example1').DataTable({
-                "bProcessing": true,
-                "sAjaxSource": "data/data_adeudos.php",
-                "bPaginate": true,
-                "sPaginationType": "full_numbers",
-                "iDisplayLength": 10,
-                "responsive": true,
-                "autoWidth": false,
-                "destroy": true,
-                "aoColumns": [
-                    { "mData": 'noempleado', "sWidth": "50px" },
-                    { 
-                        "mData": null,  
-                        "sWidth": "120px",
-                        "render": function(data, type, full) {
-                            return full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno;
-                        }
-                    },
-                    { "mData": 'cantidad', "sWidth": "100px" },
-                    { "mData": 'descuento', "sWidth": "50px" },
-                    { "mData": 'total_abonado', "sWidth": "120px" }
-				],
-                "oLanguage": {
-                    "sEmptyTable": "No hay registros disponibles",
-                    "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                    "sLoadingRecords": "Cargando...",
-                    "sSearch": "Buscar:",
-                    "sLengthMenu": "Mostrar _MENU_ registros",
-                    "oPaginate": {
-                        "sFirst": "Primera",
-                        "sPrevious": "Anterior",
-                        "sNext": "Siguiente",
-                        "sLast": "Última"
+   $(document).ready(function() {
+    if ($("#example1").length) {
+        if ($.fn.DataTable.isDataTable('#example1')) {
+            $('#example1').DataTable().destroy();
+        }
+
+        let table = $('#example1').DataTable({
+            "bProcessing": true,
+            "sAjaxSource": "data/data_adeudos.php",
+            "bPaginate": true,
+            "sPaginationType": "full_numbers",
+            "iDisplayLength": 10,
+            "responsive": true,
+            "autoWidth": false,
+            "destroy": true,
+            "aoColumns": [
+                { "mData": 'noempleado', "sWidth": "50px" },
+                { 
+                    "mData": null,  
+                    "sWidth": "120px",
+                    "render": function(data, type, full) {
+                        return full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno;
                     }
+                },
+                { "mData": 'cantidad', "sWidth": "100px" },
+                { "mData": 'descuento', "sWidth": "50px" },
+                { "mData": 'total_abonado', "sWidth": "120px" }
+            ],
+            "oLanguage": {
+                "sEmptyTable": "No hay registros disponibles",
+                "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "sLoadingRecords": "Cargando...",
+                "sSearch": "Buscar:",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "oPaginate": {
+                    "sFirst": "Primera",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Última"
+                }
+            }
+        });
+
+        // Evento para mostrar el modal al hacer clic en una fila
+        $(document).on('click', '#example1 tbody tr', function () {
+            const table = $('#example1').DataTable();
+            const rowData = table.row(this).data();
+            if (rowData) {
+                obtenerAdeudo(rowData.noempleado);
+            }
+        });
+
+        const obtenerAdeudo = (noempleado) => {
+            $.ajax({
+                url: "data/obtener_detalle_adeudo.php",
+                type: "GET",
+                data: { noempleado: noempleado },
+                dataType: "json",
+                success: function(response) {
+                    if (response.success && response.data.length > 0) {
+                        const datos = response.data;
+
+                        // Llenar información del empleado
+                        $('#noempleado').text(datos[0].noempleado);
+                        $('#nombres').text(datos[0].nombre);
+
+                        // Limpiar la tabla antes de llenarla
+                        $('#tablaAdeudos tbody').empty();
+
+                        // Agregar filas dinámicamente
+                        datos.forEach(adeudo => {
+                            let fila = `
+                                <tr>
+                                    <td class="text-center">${adeudo.cantidad}</td>
+                                    <td class="text-center">${adeudo.descuento}</td>
+                                    <td class="text-center">${adeudo.fecha_inicial}</td>
+                                    <td class="text-center">${adeudo.motivo_adeudo}</td>
+                                    <td class="text-center">${adeudo.semanas_totales}</td>
+                                    <td class="text-center">${adeudo.fecha_final}</td>
+                                    <td class="text-center">${adeudo.comentarios ?? ""}</td>
+                                </tr>
+                            `;
+                            $("#tablaAdeudos tbody").append(fila);
+                        });
+
+                        // Mostrar el modal
+                        $('#modalAdeudo').modal('show');
+                    } else {
+                        alert("No se encontraron registros.");
+                    }
+                },
+                error: function() {
+                    alert("Error al obtener los datos.");
                 }
             });
-			
-        } else {
-            console.error("Tabla #example1 no encontrada.");
-        }
-    });
+        };
+    } else {
+        console.error("Tabla #example1 no encontrada.");
+    }
+});
 </script>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAdeudo" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Detalles del Adeudo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>No. Empleado:</strong> <span id="noempleado"></span></p>
+                <p><strong>Nombre:</strong> <span id="nombres"></span></p>
+
+                <!-- Tabla para mostrar los adeudos -->
+                <table class="table table-bordered" id="tablaAdeudos">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Descuento</th>
+                            <th>Fecha Inicial</th>
+                            <th>Motivo Adeudo</th>
+                            <th>Semanas Totales</th>
+                            <th>Fecha Final</th>
+                            <th>Comentarios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se llenarán los registros con AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- <script>
 	$(document).ready(function(e) {
