@@ -9,9 +9,11 @@ if (isset($_GET['noempleado'])) {
 
     $sql = "SELECT a.*, 
                    e.noempleado,
-                   CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) AS nombre
+                   CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) AS nombre,
+                   m.motivo_adeudo AS motivo_adeudo_nombre
             FROM detalle_adeudos a
             LEFT JOIN empleados e ON a.noempleado = e.noempleado
+            LEFT JOIN motivo_adeudo m ON a.motivo_adeudo = m.id
             WHERE a.noempleado = ?";
 
     // Preparar la consulta y verificar si es válida
@@ -31,7 +33,7 @@ if (isset($_GET['noempleado'])) {
                 'estado' => $row['estado'],
                 'fecha_inicial' => $row['fecha_inicial'],
                 'fecha_final' => $row['fecha_final'],
-                'motivo_adeudo' => $row['motivo_adeudo'],
+                'motivo_adeudo' => $row['motivo_adeudo_nombre'],
                 'semanas_totales' => $row['semanas_totales']
             ];
         }
