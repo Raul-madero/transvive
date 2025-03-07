@@ -34,7 +34,8 @@ if (isset($_GET['noempleado'])) {
                 'fecha_inicial' => $row['fecha_inicial'],
                 'fecha_final' => $row['fecha_final'],
                 'motivo_adeudo' => $row['motivo_adeudo_nombre'],
-                'semanas_totales' => $row['semanas_totales']
+                'semanas_totales' => $row['semanas_totales'],
+                'comentarios' => $row['comentarios']
             ];
         }
 
