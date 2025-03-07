@@ -173,8 +173,51 @@ scratch. This page gets rid of all links and provides the needed markup only.
               const table = $('#example1').DataTable();
               const clickedColumnIndex = $(e.target).closest('td').index();
               const rowData = table.row(this).data();
-              mostrarModal(rowData);
+			  if(rowData) {
+				  obtenerAdeudo(rowData.noempleado);
+			  }
             })
+
+			const obtenerAdeudo = (noempleado) => {
+				$.ajax({
+					url: "data/obtener_detalle_adeudo.php",
+					type: "GET",
+					data: { noempleado: noempleado},
+					dataType: "json",
+					success: function (response) {
+						if(response.success && response.data.length > 0) {
+							const datos = response.data;
+
+							$('#noempleado').text(datos[0].noempleado);
+							$('#nombres').text(datos[0].nombre);
+							$('#cantidad').text(datos[0].cantidad);
+							$('#descuento').text(datos[0].descuento);
+							$('#estado').text(datos[0].estado);
+							$('#fecha_inicial').text(datos[0].fecha_inicial);
+							$('#fecha_final').text(datos[0].fecha_final);
+							$('#motivo_adeudo').text(datos[0].motivo_adeudo);
+							$('#semanas_totales').text(datos[0].semanas_totales);
+							$('#comentarios').text(datos[0].comentarios);
+
+							$('#tablaAdeudos tbody').empty();
+
+							datos.forEach(adeudo => {
+								let fila = `
+									<tr>
+										<td>${adeudo.cantidad}</td>
+										<td>${adeudo.descuento}</td>
+										<td>${adeudo.fecha_inicial}</td>
+										<td>${adeudo.motivo_adeudo}</td>
+										<td>${adeudo.semanas_totales}</td>
+										<td>${fecha_final}</td>
+										<td>${adeudo.comentarios}</td>
+									</tr>
+								`
+							})
+						}
+					}
+				})
+			}
 
             const mostrarModal = (datos) => {
                 console.log(datos)
@@ -185,18 +228,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 </script>
 
-<div id="modalAdeudos" class="modal fade" tabindex="-1" role="dialog" aria-labeled="miModal" aria-hidden="true">
-	<div class="modal-dialog modal-md" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title text-center d-block" id="miModalLabel"></h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button></button>
-			</div>
-		</div>
-	</div>
+<!-- Modal -->
+<div class="modal fade" id="modalAdeudo" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Detalles del Adeudo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>No. Empleado:</strong> <span id="noempleado"></span></p>
+                <p><strong>Nombre:</strong> <span id="nombres"></span></p>
+
+                <!-- Tabla para mostrar los adeudos -->
+                <table class="table table-bordered" id="tablaAdeudos">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Descuento</th>
+                            <th>Total Abonado</th>
+                            <th>Fecha Inicial/th>
+                            <th>Motivo Adeudo</th>
+                            <th>Semanas Totales</th>
+                            <th>Fecha Final</th>
+                            <th>Comentarios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se llenarán los registros con AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 <!-- <script>
 	$(document).ready(function(e) {
 		$('#modalEditcliente').on('show.bs.modal', function(e) {
