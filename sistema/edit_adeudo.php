@@ -14,7 +14,7 @@ session_start();
     mysqli_close($conection);
   }
 
-  $noempleado = $_REQUEST['id'];
+  $id = $_REQUEST['id'];
 
   $sqlemp = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name, noempleado, id from empleados ORDER BY noempleado";
   $queryemp = mysqli_query($conection, $sqlemp);
@@ -24,7 +24,7 @@ session_start();
   $querymot = mysqli_query($conection, $sqlmot);
   $filasmot = mysqli_fetch_all($querymot, MYSQLI_ASSOC);
 
-  $sqladeudo = "SELECT * FROM adeudos WHERE noempleado = $noempleado";
+  $sqladeudo = "SELECT * FROM adeudos WHERE id = $id";
   $queryadeudo = mysqli_query($conection, $sqladeudo);
   $filadeudo = mysqli_num_rows($queryadeudo);
 

@@ -159,7 +159,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   "mData": null,
                   "sWidth": "50px",
                   "render": function (data, type, full) {
-                    return ' <a class="link_edit" style="color:#007bff;" href= \'edit_adeudo.php?id=' + full.id + '\'><i class="far fa-edit"></i> Edit</a>'
+                    return ' <a class="link_edit" style="color:#007bff;" href= \'edit_adeudo.php?id=' + full.id + '&empleado=' + full.noempleado + '\'><i class="far fa-edit"></i> Edit</a>'
                   }
                 }
             ],
