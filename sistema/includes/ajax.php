@@ -608,17 +608,17 @@ if ($_POST['action'] == 'AlmacenaAdeudo') {
 
             if ($row) {
                 // Si ya existe un adeudo, actualizar cantidad
-                $query_actualizar_adeudo = "UPDATE adeudos SET cantidad = cantidad + ?, descuento = ? WHERE noempleado = ?";
+                $query_actualizar_adeudo = "UPDATE adeudos SET cantidad = cantidad + ?, descuento = descuento + ? WHERE noempleado = ?";
                 $stmt = mysqli_prepare($conection, $query_actualizar_adeudo);
                 mysqli_stmt_bind_param($stmt, "dii", $cantidad, $descuento, $noempleado);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
             } else {
                 // Si no existe, insertar un nuevo adeudo
-                $query_insertar_adeudo = "INSERT INTO adeudos (cantidad, comentarios, descuento, estado, fecha_inicial, motivo_adeudo, noempleado, semanas_totales, fecha_final) 
-                                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $query_insertar_adeudo = "INSERT INTO adeudos (cantidad, descuento, noempleado, fecha_final) 
+                                          VALUES (?, ?, ?, ?)";
                 $stmt = mysqli_prepare($conection, $query_insertar_adeudo);
-                mysqli_stmt_bind_param($stmt, "dssisssis", $cantidad, $comentarios, $descuento, $estado, $fecha_inicial, $motivo_adeudo, $noempleado, $semanas_totales, $fecha_final);
+                mysqli_stmt_bind_param($stmt, "ddis", $cantidad, $descuento, $noempleado, $fecha_final);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
             }
