@@ -206,7 +206,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <td>${adeudo.motivo_adeudo}</td>
                                     <td>${adeudo.semanas_totales}</td>
                                     <td>${adeudo.fecha_final}</td>
-                                    <td>${adeudo.comentarios}</td>
+                                    <td>${adeudo.comentarios ?? ""}</td>
                                 </tr>
                             `;
                             $("#tablaAdeudos tbody").append(fila);
