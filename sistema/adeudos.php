@@ -209,8 +209,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         datos.forEach(adeudo => {
                             let fila = `
                                 <tr>
-                                    <td class="text-center">${formatoMoneda(adeudo.cantidad)}</td>
-                                    <td class="text-center">${formatoMoneda(adeudo.descuento)}</td>
+                                    <td class="text-center">$ ${formatoMoneda(adeudo.cantidad)}</td>
+                                    <td class="text-center">$ ${formatoMoneda(adeudo.descuento)}</td>
                                     <td class="text-center">${adeudo.fecha_inicial}</td>
                                     <td class="text-center">${adeudo.motivo_adeudo}</td>
                                     <td class="text-center">${adeudo.semanas_totales}</td>
