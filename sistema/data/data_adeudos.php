@@ -10,8 +10,7 @@ $sql = "SELECT a.*,
                 e.apellido_paterno,
                 e.apellido_materno,
         FROM adeudos a
-        LEFT JOIN empleados e ON a.noempleado = e.noempleado
-        LEFT JOIN motivo_adeudo m ON a.motivo_adeudo = m.id";
+        LEFT JOIN empleados e ON a.noempleado = e.noempleado";
 // Ejecutar la consulta
 $resultset = mysqli_query($conection, $sql) or die("database error:". mysqli_error($conection));
 
