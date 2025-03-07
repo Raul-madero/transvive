@@ -156,6 +156,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 { "mData": 'descuento', "sWidth": "50px" },
                 { "mData": 'total_abonado', "sWidth": "120px" },
                 {
+                  "mData": null,
                   "render": function (data, type, full) {
                     return ' <a class="link_edit" style="color:#007bff;" href= \'edit_prestamo.php?id=' + full.id + '\'><i class="far fa-edit"></i> Edit</a>'
                   }
