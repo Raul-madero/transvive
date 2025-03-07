@@ -159,7 +159,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
                     "sLoadingRecords": "Cargando...",
                     "sSearch": "Buscar:",
-                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    // "sLengthMenu": "Mostrar _MENU_ registros",
                     "oPaginate": {
                         "sFirst": "Primera",
                         "sPrevious": "Anterior",
