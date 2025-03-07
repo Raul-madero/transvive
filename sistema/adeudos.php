@@ -168,12 +168,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     }
                 }
             });
+
+            $(document).on('click', '#example1 tbody tr', function (e) {
+              const table = $('#example1').DataTable();
+              const clickedColumnIndex = $(e.target).closest('td').index();
+              const rowData = table.row(this).data();
+              mostrarModal(rowData);
+            })
+
+            const mostrarModal = (datos) => {
+                console.log(datos)
+            }
         } else {
             console.error("Tabla #example1 no encontrada.");
         }
     });
 </script>
 
+<div id="modalAdeudos" class="modal fade" tabindex="-1" role="dialog" aria-labeled="miModal" aria-hidden="true">
+	<div class="modal-dialog modal-md" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title text-center d-block" id="miModalLabel"></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button></button>
+			</div>
+		</div>
+	</div>
+</div>
 <!-- <script>
 	$(document).ready(function(e) {
 		$('#modalEditcliente').on('show.bs.modal', function(e) {
