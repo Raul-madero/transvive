@@ -8,7 +8,7 @@ $sql = "SELECT a.*,
                 e.noempleado, 
                 e.nombres, 
                 e.apellido_paterno,
-                e.apellido_materno,
+                e.apellido_materno
         FROM adeudos a
         LEFT JOIN empleados e ON a.noempleado = e.noempleado";
 // Ejecutar la consulta
