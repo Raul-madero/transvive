@@ -210,18 +210,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 </script>
 
-  <script>
-    $(document).ready(function(e) {
-      $('#modalEditcliente').on('show.bs.modal', function(e) {
-        var idi = $(e.relatedTarget).data().id;
-        var mesel = $(e.relatedTarget).data().name;
-        $(e.currentTarget).find('#form_pass_idc').val(idi);
-        $(e.currentTarget).find('#form_pass_nombree').val(mesel);
-      });
-    });
-  </script>
+<!-- <script>
+	$(document).ready(function(e) {
+		$('#modalEditcliente').on('show.bs.modal', function(e) {
+		var idi = $(e.relatedTarget).data().id;
+		var mesel = $(e.relatedTarget).data().name;
+		$(e.currentTarget).find('#form_pass_idc').val(idi);
+		$(e.currentTarget).find('#form_pass_nombree').val(mesel);
+		});
+	});
+</script> -->
 
-  <div class="modal fade" id="modalEditcliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <!-- <div class="modal fade" id="modalEditcliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -267,14 +267,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <div class="col-sm-8">
                 <textarea class="form-control" id="form_pass_motrecontra" name="form_pass_motrecontra" rows="2"></textarea>
               </div>
-            </div>
+            </div> -->
             <!--<div class="form-group row">
            <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">Imagen:</label>
            <div class="col-sm-10">
               <input type="file" class="form-control" id="image" name="image" multiple>
            </div>
         </div>-->
-            <div class="modal-footer">
+            <!-- <div class="modal-footer">
               <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
               <button type="button" class="btn btn-success pull-right" href="#" id="actualizaclientes"><i class="fa fa-save"></i>&nbsp;Guardar</button>
             </div>
@@ -282,9 +282,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <script>
+  <!-- <script>
     $('#actualizaclientes').click(function(e) {
       e.preventDefault();
       var idc = $('#form_pass_idc').val();
@@ -329,9 +329,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         error: function(error) {}
       });
     });
-  </script>
+  </script> -->
 
-  <script>
+  <!-- <script>
     $(document).ready(function(e) {
       $('#modalAltacliente').on('show.bs.modal', function(e) {
         var idi = $(e.relatedTarget).data().id;
@@ -340,9 +340,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $(e.currentTarget).find('#form_pass_nombrea').val(mesel);
       });
     });
-  </script>
+  </script> -->
 
-  <div class="modal fade" id="modalAltacliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <!-- <div class="modal fade" id="modalAltacliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -367,14 +367,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <div class="col-sm-10">
                 <input type="date" class="form-control" id="form_pass_datereing" name="form_pass_datereing">
               </div>
-            </div>
+            </div> -->
             <!--<div class="form-group row">
-           <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">Imagen:</label>
-           <div class="col-sm-10">
-              <input type="file" class="form-control" id="image" name="image" multiple>
-           </div>
-        </div>-->
-            <div class="modal-footer">
+				<label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">Imagen:</label>
+				<div class="col-sm-10">
+					<input type="file" class="form-control" id="image" name="image" multiple>
+				</div>
+			</div>-->
+            <!-- <div class="modal-footer">
               <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
               <button type="button" class="btn btn-success pull-right" href="#" id="actualizaaltaclientes"><i class="fa fa-save"></i>&nbsp;Guardar</button>
             </div>
@@ -382,9 +382,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <script>
+  <!-- <script>
     $('#actualizaaltaclientes').click(function(e) {
       e.preventDefault()
       var idc = $('#form_pass_idca').val();
@@ -423,8 +423,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         error: function(error) {}
       });
     });
-  </script>
-  <script>
+  </script> -->
+  <!-- <script>
     $(document).ready(function(e) {
       $('#modalDeleteContacto').on('show.bs.modal', function(e) {
         var idi = $(e.relatedTarget).data().id;
@@ -435,8 +435,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $(e.currentTarget).find('#form_pass_contactobc').val(indic1);
       });
     });
-  </script>
-  <!-- <script>
+  </script> -->
+  <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Invocamos cada 5 segundos ;)
       const milisegundos = 5 * 1000;
@@ -444,7 +444,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         // No esperamos la respuesta de la petición porque no nos importa
         fetch("./refrescar.php");
       }, milisegundos);
-    }); -->
+    });
   </script> 
 </body>
 
