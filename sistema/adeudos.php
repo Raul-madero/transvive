@@ -127,105 +127,106 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../dist/js/adminlte.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        if ($("#example1").length) {
-            if ($.fn.DataTable.isDataTable('#example1')) {
-                $('#example1').DataTable().destroy();
-            }
-            $('#example1').DataTable({
-                "bProcessing": true,
-                "sAjaxSource": "data/data_adeudos.php",
-                "bPaginate": true,
-                "sPaginationType": "full_numbers",
-                "iDisplayLength": 10,
-                "responsive": true,
-                "autoWidth": false,
-                "destroy": true,
-                "aoColumns": [
-                    { "mData": 'noempleado', "sWidth": "50px" },
-                    { 
-                        "mData": null,  
-                        "sWidth": "120px",
-                        "render": function(data, type, full) {
-                            return full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno;
-                        }
-                    },
-                    { "mData": 'cantidad', "sWidth": "100px" },
-                    { "mData": 'descuento', "sWidth": "50px" },
-                    { "mData": 'total_abonado', "sWidth": "120px" }
-				],
-                "oLanguage": {
-                    "sEmptyTable": "No hay registros disponibles",
-                    "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                    "sLoadingRecords": "Cargando...",
-                    "sSearch": "Buscar:",
-                    "sLengthMenu": "Mostrar _MENU_ registros",
-                    "oPaginate": {
-                        "sFirst": "Primera",
-                        "sPrevious": "Anterior",
-                        "sNext": "Siguiente",
-                        "sLast": "Última"
+   $(document).ready(function() {
+    if ($("#example1").length) {
+        if ($.fn.DataTable.isDataTable('#example1')) {
+            $('#example1').DataTable().destroy();
+        }
+
+        let table = $('#example1').DataTable({
+            "bProcessing": true,
+            "sAjaxSource": "data/data_adeudos.php",
+            "bPaginate": true,
+            "sPaginationType": "full_numbers",
+            "iDisplayLength": 10,
+            "responsive": true,
+            "autoWidth": false,
+            "destroy": true,
+            "aoColumns": [
+                { "mData": 'noempleado', "sWidth": "50px" },
+                { 
+                    "mData": null,  
+                    "sWidth": "120px",
+                    "render": function(data, type, full) {
+                        return full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno;
                     }
+                },
+                { "mData": 'cantidad', "sWidth": "100px" },
+                { "mData": 'descuento', "sWidth": "50px" },
+                { "mData": 'total_abonado', "sWidth": "120px" }
+            ],
+            "oLanguage": {
+                "sEmptyTable": "No hay registros disponibles",
+                "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "sLoadingRecords": "Cargando...",
+                "sSearch": "Buscar:",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "oPaginate": {
+                    "sFirst": "Primera",
+                    "sPrevious": "Anterior",
+                    "sNext": "Siguiente",
+                    "sLast": "Última"
+                }
+            }
+        });
+
+        // Evento para mostrar el modal al hacer clic en una fila
+        $(document).on('click', '#example1 tbody tr', function () {
+            const table = $('#example1').DataTable();
+            const rowData = table.row(this).data();
+            if (rowData) {
+                obtenerAdeudo(rowData.noempleado);
+            }
+        });
+
+        const obtenerAdeudo = (noempleado) => {
+            $.ajax({
+                url: "data/obtener_detalle_adeudo.php",
+                type: "GET",
+                data: { noempleado: noempleado },
+                dataType: "json",
+                success: function(response) {
+                    if (response.success && response.data.length > 0) {
+                        const datos = response.data;
+
+                        // Llenar información del empleado
+                        $('#noempleado').text(datos[0].noempleado);
+                        $('#nombres').text(datos[0].nombre);
+
+                        // Limpiar la tabla antes de llenarla
+                        $('#tablaAdeudos tbody').empty();
+
+                        // Agregar filas dinámicamente
+                        datos.forEach(adeudo => {
+                            let fila = `
+                                <tr>
+                                    <td>${adeudo.cantidad}</td>
+                                    <td>${adeudo.descuento}</td>
+                                    <td>${adeudo.fecha_inicial}</td>
+                                    <td>${adeudo.motivo_adeudo}</td>
+                                    <td>${adeudo.semanas_totales}</td>
+                                    <td>${adeudo.fecha_final}</td>
+                                    <td>${adeudo.comentarios}</td>
+                                </tr>
+                            `;
+                            $("#tablaAdeudos tbody").append(fila);
+                        });
+
+                        // Mostrar el modal
+                        $('#modalAdeudo').modal('show');
+                    } else {
+                        alert("No se encontraron registros.");
+                    }
+                },
+                error: function() {
+                    alert("Error al obtener los datos.");
                 }
             });
-
-            $(document).on('click', '#example1 tbody tr', function (e) {
-              const table = $('#example1').DataTable();
-              const clickedColumnIndex = $(e.target).closest('td').index();
-              const rowData = table.row(this).data();
-			  if(rowData) {
-				  obtenerAdeudo(rowData.noempleado);
-			  }
-            })
-
-			const obtenerAdeudo = (noempleado) => {
-				$.ajax({
-					url: "data/obtener_detalle_adeudo.php",
-					type: "GET",
-					data: { noempleado: noempleado},
-					dataType: "json",
-					success: function (response) {
-						if(response.success && response.data.length > 0) {
-							const datos = response.data;
-
-							$('#noempleado').text(datos[0].noempleado);
-							$('#nombres').text(datos[0].nombre);
-							$('#cantidad').text(datos[0].cantidad);
-							$('#descuento').text(datos[0].descuento);
-							$('#estado').text(datos[0].estado);
-							$('#fecha_inicial').text(datos[0].fecha_inicial);
-							$('#fecha_final').text(datos[0].fecha_final);
-							$('#motivo_adeudo').text(datos[0].motivo_adeudo);
-							$('#semanas_totales').text(datos[0].semanas_totales);
-							$('#comentarios').text(datos[0].comentarios);
-
-							$('#tablaAdeudos tbody').empty();
-
-							datos.forEach(adeudo => {
-								let fila = `
-									<tr>
-										<td>${adeudo.cantidad}</td>
-										<td>${adeudo.descuento}</td>
-										<td>${adeudo.fecha_inicial}</td>
-										<td>${adeudo.motivo_adeudo}</td>
-										<td>${adeudo.semanas_totales}</td>
-										<td>${fecha_final}</td>
-										<td>${adeudo.comentarios}</td>
-									</tr>
-								`
-							})
-						}
-					}
-				})
-			}
-
-            const mostrarModal = (datos) => {
-                console.log(datos)
-            }
-        } else {
-            console.error("Tabla #example1 no encontrada.");
-        }
-    });
+        };
+    } else {
+        console.error("Tabla #example1 no encontrada.");
+    }
+});
 </script>
 
 <!-- Modal -->
@@ -246,8 +247,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <tr>
                             <th>Cantidad</th>
                             <th>Descuento</th>
-                            <th>Total Abonado</th>
-                            <th>Fecha Inicial/th>
+                            <th>Fecha Inicial</th>
                             <th>Motivo Adeudo</th>
                             <th>Semanas Totales</th>
                             <th>Fecha Final</th>
@@ -262,6 +262,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
+
 
 
 <!-- <script>
