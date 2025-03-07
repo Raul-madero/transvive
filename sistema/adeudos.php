@@ -200,13 +200,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         datos.forEach(adeudo => {
                             let fila = `
                                 <tr>
-                                    <td>${adeudo.cantidad}</td>
-                                    <td>${adeudo.descuento}</td>
-                                    <td>${adeudo.fecha_inicial}</td>
-                                    <td>${adeudo.motivo_adeudo}</td>
-                                    <td>${adeudo.semanas_totales}</td>
-                                    <td>${adeudo.fecha_final}</td>
-                                    <td>${adeudo.comentarios ?? ""}</td>
+                                    <td class="text-center">${adeudo.cantidad}</td>
+                                    <td class="text-center">${adeudo.descuento}</td>
+                                    <td class="text-center">${adeudo.fecha_inicial}</td>
+                                    <td class="text-center">${adeudo.motivo_adeudo}</td>
+                                    <td class="text-center">${adeudo.semanas_totales}</td>
+                                    <td class="text-center">${adeudo.fecha_final}</td>
+                                    <td class="text-center">${adeudo.comentarios ?? ""}</td>
                                 </tr>
                             `;
                             $("#tablaAdeudos tbody").append(fila);
@@ -231,7 +231,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <!-- Modal -->
 <div class="modal fade" id="modalAdeudo" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle">Detalles del Adeudo</h5>
