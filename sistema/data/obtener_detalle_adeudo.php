@@ -14,7 +14,7 @@ if(isset($_GET['noempleado'])) {
                     WHERE a.noempleado = ?";
     
     $stmt = $conection->prepare($sql);
-    $stmt->bind_params(i, $noempleado);
+    $stmt->bind_param(i, $noempleado);
     $stmt->execute();
     $result = $stmt->get_result();
 
