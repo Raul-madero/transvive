@@ -95,6 +95,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Descuento</th>
                 <th>Total abonado</th>
                 <th>Total de semanas</th>
+                <th>Semanas restantes</th>
                 <th>Comentarios</th>
                 <th>Acciones</th>
               </tr>
