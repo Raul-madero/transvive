@@ -50,5 +50,12 @@ if (!$resultado_truncate) {
     die(json_encode(['status' => 'error', 'message' => 'Error al vaciar la tabla nomina_temp_2025: ' . mysqli_error($conection)]));
 }
 
+//Limpiar la tabla importes fiscales
+$sql_truncate_nomina_temp = "TRUNCATE TABLE importes_fiscales";
+$resultado_truncate = mysqli_query($conection, $sql_truncate_nomina_temp);
+if (!$resultado_truncate) {
+    die(json_encode(['status' => 'error', 'message' => 'Error al vaciar la tabla importes fiscales: ' . mysqli_error($conection)]));
+}
+
 echo json_encode(['status' => 'success', 'message' => 'Operación completada correctamente']);
 ?>
