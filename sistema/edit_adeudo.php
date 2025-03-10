@@ -187,13 +187,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         <input type="number" class="form-control" id="inputTotalAbonado" name="inputTotalAbonado" step="0.01" value="<?php echo $total_abonado; ?>">
                                     </div>
                                 </div>
-
-                                <div class="form-group row">
-                                    <label for="inputComentarios" class="col-sm-3 col-form-label" style="text-align: left;">Comentarios:</label>
-                                    <div class="col-sm-3">
-                                        <textarea class="form-control w-100" id="inputComentarios" name="inputComentarios"><?php echo $comentarios; ?></textarea>
-                                    </div>
-                                </div>
                                 
                                 <div class="form-group row" style="text-align:right;">
                                     <div class="offset-sm-2 col-sm-10">
@@ -304,7 +297,6 @@ $('#btn_salir').click(function(e){
     let noempleado = parseInt($('#inputEmpleado').val());
     let motivo_adeudo = $('#inputMotivo').val();
     let descuento = $('#inputDescuento').val();
-    let comentarios = $('#inputComentarios').val();
     let totalAbonado = $('#inputTotalAbonado').val();
     let estado = 1; // Valor por defecto del estado
 
@@ -346,7 +338,6 @@ $('#btn_salir').click(function(e){
             estado: estado,
             fecha_inicial: fecha_inicial,
             descuento: descuento,
-            comentarios: comentarios,
             cantidad: cantidad,
             semanas_totales:semanas_totales,
             fecha_final:fecha_final,
