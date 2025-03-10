@@ -3044,8 +3044,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
 if ($_POST['action'] == 'EditarAdeudo') {
     if (
         isset($_POST['noempleado']) && is_numeric($_POST['noempleado']) &&
-        isset($_POST['cantidad']) && is_numeric($_POST['cantidad']) &&
-        !empty($_POST['motivo_adeudo'])
+        isset($_POST['cantidad']) && is_numeric($_POST['cantidad'])
     ) {
         // Sanitización de datos
         $cantidad = floatval($_POST['cantidad']);
