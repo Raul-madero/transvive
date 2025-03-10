@@ -13,6 +13,7 @@ if(!in_array($rol, $allowed)) {
     header('Location: ../index.php');
     die();
 }
+?>
 
 <!DOCTYPE html>
 <html lang="es">
