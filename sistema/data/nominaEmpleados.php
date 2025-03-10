@@ -187,13 +187,13 @@ if(isset($_POST['semana']) && isset($_POST['anio']) && !empty($_POST['semana']) 
 
         -- Datos de adeudos
         (
-            SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado AND a.estado = 1
+            SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado
         ) AS descuento,
         (
-            SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado AND a.estado = 1
+            SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado
         ) AS cantidad,
         (
-            SELECT a.total_abonado FROM adeudos a WHERE a.noempleado = e.noempleado AND a.estado = 1
+            SELECT a.total_abonado FROM adeudos a WHERE a.noempleado = e.noempleado
         ) AS total_abonado";
 
 $sql_fiscal = "SELECT COUNT(*) FROM importes_fiscales";
