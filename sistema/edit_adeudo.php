@@ -317,7 +317,7 @@ $('#btn_salir').click(function(e){
     var action = 'EditarAdeudo';
 
     // Validar que los campos obligatorios no estén vacíos
-    if (!cantidad || !noempleado || !motivo_adeudo) {
+    if (!cantidad || !noempleado || !descuento) {
         Swal.fire({
             icon: 'info',
             title: 'Datos incompletos',
