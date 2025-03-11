@@ -305,14 +305,14 @@ session_start();
         $('#fetch_generated_wills').DataTable({
           "order": [[ 0, "desc" ]],
           dom: 'Bfrtip',
-lengthMenu: [
-[20, 25, 50, -1],
-['20 rows', '25 rows', '50 rows', 'Show all']
-],
-buttons: [
-'excelHtml5',
-'pageLength'
-],
+          lengthMenu: [
+              [20, 25, 50, -1],
+              ['20 rows', '25 rows', '50 rows', 'Show all']
+              ],
+              buttons: [
+              'excelHtml5',
+              'pageLength'
+          ],
           "processing": true,
           "serverSide": true,
           "stateSave": true,
@@ -327,7 +327,6 @@ buttons: [
               "initial_date" : initial_date, 
               "final_date" : final_date,
               "gender" : gender 
-              
             },
             "dataSrc": "records"
           },
