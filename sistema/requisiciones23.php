@@ -73,7 +73,7 @@ session_start();
     <style type="text/css">
       th { font-size: 12px; font-weight:bold; }
       td { font-size: 13px; }
-      .dt-folio { text-transform: uppercase; }
+      .dt-folio { text-transform: uppercase !important; }
   </style>
     <!-- Dashboard Core -->
 </head>
