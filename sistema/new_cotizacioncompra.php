@@ -143,7 +143,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Folio</label>
                     <div class="col-sm-3">
-                      <input style="text-align:right;" type="text" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo $nuevofolio;?>" readonly>
+                      <input style="text-align:right;" type="text" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo "REQ-" . $nuevofolio;?>" readonly>
                     </div>
                   </div>
 
