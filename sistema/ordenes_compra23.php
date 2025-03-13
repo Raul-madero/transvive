@@ -76,7 +76,7 @@ session_start();
     <style type="text/css">
       th { font-size: 12px; font-weight:bold; }
       td { font-size: 13px; }
-      .dt-folio-oc { text-transform: uppercase; }
+      .dt-folio-oc { text-transform: uppercase !important; }
   </style>
     <!-- Dashboard Core -->
 </head>
@@ -339,7 +339,7 @@ buttons: [
           "columns": [
             { "data" : "pedidono", "width": "3%", className: "text-right" },
             { "data" : "Folio", "width": "5%", className: "text-right dt-folio-oc", "render": function(data, type, full, meta) {
-              return "OC-".toUpperCase() + data;
+              return '<span style="text-transform: uppercase">' + data + '</span>';
             }  },
             { "data" : "fechaa", "width": "5%" },            
             { "data" : "nameproveedor", "width": "20%", "orderable": false},

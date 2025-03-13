@@ -73,7 +73,7 @@ session_start();
     <style type="text/css">
       th { font-size: 12px; font-weight:bold; }
       td { font-size: 13px; }
-      .dt-folio { text-transform: uppercase; }
+      .dt-folio { text-transform: uppercase !important; }
   </style>
     <!-- Dashboard Core -->
 </head>
@@ -317,7 +317,7 @@ buttons: [
               "width": "3%", 
               "className": "text-right dt-folio", 
               "render": function(data, type, full, meta) {
-                return 'REQ-'.toUpperCase() + data; // Sin etiquetas HTML
+                return '<span style="text-transform: uppercase;">' + data + '</span> // Sin etiquetas HTML
               }
             },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            
