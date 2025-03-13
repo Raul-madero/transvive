@@ -102,13 +102,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
        <?php
                     
           include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT * FROM folios where serie = 'CP'");
+          $query_folio = mysqli_query($conection,"SELECT MAX(no_orden) AS folio  FROM ordenes_compra");
           $result_folio = mysqli_num_rows($query_folio);
 
           $folioe = mysqli_fetch_array($query_folio);
           $nuevofolio=$folioe["folio"]+1; 
 
-          $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'CP'");
+          // $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'CP'");
           
 
           mysqli_close($conection);
@@ -153,7 +153,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <label  for="inputEmail3" class="col-sm-2 col-form-label">No. Orden</label>
                     <div class="col-sm-2">
-                      <input style="text-align: right; font-weight: bold; color: #F05B0E" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo $nuevofolio; ?>" readonly>
+                      <input style="text-align: right; font-weight: bold; color: #F05B0E" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo "OC-"  . $nuevofolio; ?>" readonly>
                     </div>
                   
                   </div>

@@ -76,6 +76,7 @@ session_start();
     <style type="text/css">
       th { font-size: 12px; font-weight:bold; }
       td { font-size: 13px; }
+      .dt-folio-oc { text-transform: uppercase; }
   </style>
     <!-- Dashboard Core -->
 </head>
@@ -337,7 +338,9 @@ buttons: [
           },
           "columns": [
             { "data" : "pedidono", "width": "3%", className: "text-right" },
-            { "data" : "Folio", "width": "5%", className: "text-right" },
+            { "data" : "Folio", "width": "5%", className: "text-right dt-folio-oc", "render": function(data, type, full, meta) {
+              return "OC-" + data;
+            }  },
             { "data" : "fechaa", "width": "5%" },            
             { "data" : "nameproveedor", "width": "20%", "orderable": false},
             { "data" : "contacto", "width": "15%", "orderable":false },
