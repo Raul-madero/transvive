@@ -73,6 +73,7 @@ session_start();
     <style type="text/css">
       th { font-size: 12px; font-weight:bold; }
       td { font-size: 13px; }
+      .dt-folio { text-transform: uppercase; }
   </style>
     <!-- Dashboard Core -->
 </head>
@@ -314,7 +315,7 @@ buttons: [
             { 
               "data": "Folio", 
               "width": "3%", 
-              "className": "text-right", 
+              "className": "text-right dt-folio", 
               "render": function(data, type, full, meta) {
                 return 'REQ-' + data; // Sin etiquetas HTML
               }
