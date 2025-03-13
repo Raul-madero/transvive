@@ -339,7 +339,7 @@ buttons: [
           "columns": [
             { "data" : "pedidono", "width": "3%", className: "text-right" },
             { "data" : "Folio", "width": "5%", className: "text-right dt-folio-oc", "render": function(data, type, full, meta) {
-              return '<span style="text-transform: uppercase">' + data + '</span>';
+              return '<span style="text-transform: uppercase">OC-' + data + '</span>';
             }  },
             { "data" : "fechaa", "width": "5%" },            
             { "data" : "nameproveedor", "width": "20%", "orderable": false},
