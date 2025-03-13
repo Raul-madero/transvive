@@ -102,7 +102,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
        <?php
                     
           include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT MAX(no_orden) AS folio  FROM ordenes_compra");
+          $query_folio = mysqli_query($conection,"SELECT MAX(no_orden) AS folio  FROM orden_compra");
           $result_folio = mysqli_num_rows($query_folio);
 
           $folioe = mysqli_fetch_array($query_folio);
