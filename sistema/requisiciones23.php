@@ -317,7 +317,7 @@ buttons: [
               "width": "3%", 
               "className": "text-right dt-folio", 
               "render": function(data, type, full, meta) {
-                return '<span style="text-transform: uppercase;">' + data + '</span> // Sin etiquetas HTML
+                return '<span style="text-transform: uppercase;">REQ-' + data + '</span>'
               }
             },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            
