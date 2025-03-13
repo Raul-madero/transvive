@@ -317,7 +317,7 @@ buttons: [
               "width": "3%", 
               "className": "text-right dt-folio", 
               "render": function(data, type, full, meta) {
-                return 'REQ-' + data; // Sin etiquetas HTML
+                return 'REQ-'.toUpperCase() + data; // Sin etiquetas HTML
               }
             },
             { "data" : "fechaa", "width": "8%", className: "text-center" },            
