@@ -12103,7 +12103,7 @@ if ($_POST['action'] == 'AlmacenaEditNc') {
     // Sanitizar y validar datos
     $id_nc       = intval($_POST['idnq']);
     $no_queja    = intval($_POST['noqueja']);
-    $date_nc     = mysqli_real_escape_string($conection, $_POST['fecha']);
+    $date_nc     = mysqli_real_escape_string($conection, $_POST['fecha']) ?? NULL;
     $mes_nc      = mysqli_real_escape_string($conection, $_POST['mes']);
     $cliente_nc  = mysqli_real_escape_string($conection, $_POST['cliente']);
     $formato     = mysqli_real_escape_string($conection, $_POST['formato']);
@@ -12115,20 +12115,20 @@ if ($_POST['action'] == 'AlmacenaEditNc') {
     $unidad_nc   = mysqli_real_escape_string($conection, $_POST['unidad']);
     $ruta_nc     = mysqli_real_escape_string($conection, $_POST['ruta']);
     $parada_nc   = mysqli_real_escape_string($conection, $_POST['parada']);
-    $date_incid  = mysqli_real_escape_string($conection, $_POST['dateincident']);
+    $date_incid  = mysqli_real_escape_string($conection, $_POST['dateincident']) ?? NULL;
     $turno_nc    = mysqli_real_escape_string($conection, $_POST['turno']);
     $procede_nc  = mysqli_real_escape_string($conection, $_POST['procede']);
     $porkprocede = mysqli_real_escape_string($conection, $_POST['porkprocede']);
     $analisis_nc = mysqli_real_escape_string($conection, $_POST['analisis']);
     $accion_nc   = mysqli_real_escape_string($conection, $_POST['accion']);
-    $date_accion = mysqli_real_escape_string($conection, $_POST['dateaccion']);
+    $date_accion = mysqli_real_escape_string($conection, $_POST['dateaccion']) ?? NULL;
     $observa_nc  = mysqli_real_escape_string($conection, $_POST['notas']);
     $tipo_incid  = mysqli_real_escape_string($conection, $_POST['tipoinc']);
     $estatus_nc  = mysqli_real_escape_string($conection, $_POST['estatus']);
     $causa_nc    = mysqli_real_escape_string($conection, $_POST['causa']);
     $afecta_cte  = mysqli_real_escape_string($conection, $_POST['afectacte']);
     $area_resp   = mysqli_real_escape_string($conection, $_POST['arearespons']);
-    $date_cierre = mysqli_real_escape_string($conection, $_POST['datecierre']);
+    $date_cierre = mysqli_real_escape_string($conection, $_POST['datecierre']) ?? NULL;
     
     // Convertir array a string (si existe)
     $resp_accion = !empty($_POST['respaccion']) && is_array($_POST['respaccion']) 
