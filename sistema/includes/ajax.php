@@ -5305,24 +5305,24 @@ if($_POST['action'] == 'AlmacenaRequerimiento')
 
 //****************************//
         //Cancelar orden de compra
-   if($_POST['action'] == 'procesarSalirOrdencompra'){
+//    if($_POST['action'] == 'procesarSalirOrdencompra'){
 
                           
-        $norecibo  = $_POST['norecibo'];
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+//         $norecibo  = $_POST['norecibo'];
+//         $token       = md5($_SESSION['idUser']);
+//         $usuario     = $_SESSION['idUser'];
 
-        $query_procesarcf = mysqli_query($conection,"CALL salir_ordencompra($norecibo, '$token')");
-        $result_procesarcf = mysqli_num_rows($query_procesarcf);
+//         $query_procesarcf = mysqli_query($conection,"CALL salir_ordencompra($norecibo, '$token')");
+//         $result_procesarcf = mysqli_num_rows($query_procesarcf);
                 
-        if($result_procesarcf > 0){
-            $data = mysqli_fetch_assoc($query_procesarcf);
-                    echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-                    echo "error";
-        }
+//         if($result_procesarcf > 0){
+//             $data = mysqli_fetch_assoc($query_procesarcf);
+//                     echo json_encode($data,JSON_UNESCAPED_UNICODE);
+//         }else{
+//                     echo "error";
+//         }
             
-    }  
+//     }  
 
 // Agregar Detalle a la Orden de Compra
         if($_POST['action'] == 'AddDetalleOrdencompra'){
