@@ -1060,7 +1060,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->addAddress($correo, $nombre);
             $mail->addCC('ejecutivo@transvivegdl.com.mx');
             $mail->addCC('ejecutivo@transvivegdl.com.mx');
-            $mail->addBCC('rmadero@transvivegdl.com.mx');
+            $mail->addBCC('raul.madero.ramirez@gmail.com');
             $mail->Subject = $asunto;
             $mail->Body    = $msjBody;
 
@@ -5283,7 +5283,7 @@ if($_POST['action'] == 'AlmacenaRequerimiento')
                 $mail->setFrom('compras@transvivegdl.com.mx', 'Compras');
                 $mail->addAddress($enviomail, $nombremail);
                 $mail->addCC('ejecutivo@transvivegdl.com.mx');
-                $mail->addBCC('rmadero@transvivegdl.com.mx');
+                $mail->addBCC('raul.madero.ramirez@gmail.com');
 
                 $mail->Subject = $asunto;
                 $mail->Body = $msjdelbody;
