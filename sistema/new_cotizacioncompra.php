@@ -287,67 +287,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
  
 
  <script>
-
-$('#btn_salir').click(function(e){
+    $('#btn_salir').click(function(e){
         e.preventDefault();
 
-            
-        Swal
-    .fire({
-        title: "DESEA SALIR!",
-        text: "",
-        icon: 'info',
+                
+        Swal.fire({
+            title: "DESEA SALIR!",
+            text: "",
+            icon: 'info',
 
-        showCancelButton: true,
-        confirmButtonText: "Regresar",
-        cancelButtonText: "Salir",
-       
-
-       
-    })
-     .then(resultado => {
-        if (resultado.value) {
-            // Hicieron click en "Sí"
-             //*location.href = 'lista_ncplantasa.php';
-             console.log("Alerta cerrada");
-        } else {
-            // Dijeron que no
-            //*location.reload();
-           var norecibo  = $('#inputFolio').val();
-            var action = 'procesarSalirCortizacioncp';
-                       
-            $.ajax({
-                url: 'includes/ajax.php',
-                type: "POST",
-                async : true,
-                data: {action:action, norecibo:norecibo},
-
-                success: function(response)
-                {
-                    
-                    if(response != 'error')
-                    {
-                      var info = JSON.parse(response);
-                      console.log(response); 
-                      location.href = 'requisiciones23.php';
-                       //*location.reload();
-
-               
-                        
-                    }else{
-                        console.log('no data');
-                    }
-                },
-                error: function(error){                
-                }
-            });
-        }
+            showCancelButton: true,
+            confirmButtonText: "Regresar",
+            cancelButtonText: "Salir",
+        })
+        .then(resultado => {
+            if (resultado.value) {
+                // Hicieron click en "Sí"
+                //*location.href = 'lista_ncplantasa.php';
+                console.log("Alerta cerrada");
+            } else {
+                // Dijeron que no
+                location.href = 'requisiciones23.php';
+            }
+        });
     });
-
-   
-
-    });
-    </script>
+</script>
 
 <script>
    $('#guardar_tipoactividad').click(function(e){
