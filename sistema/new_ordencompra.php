@@ -354,64 +354,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
  <script>
 
-$('#btn_salir').click(function(e){
-        e.preventDefault();
-         
-        Swal
-    .fire({
+$('#btn_salir').click(function(e) {
+    e.preventDefault();
+
+    Swal.fire({
         title: "DESEA SALIR!",
         text: "",
         icon: 'info',
-
         showCancelButton: true,
         confirmButtonText: "Regresar",
         cancelButtonText: "Salir",
-       
-
-       
-    })
-     .then(resultado => {
+    }).then(resultado => {
         if (resultado.value) {
-            // Hicieron click en "Sí"
-             //*location.href = 'lista_ncplantasa.php';
-             console.log("Alerta cerrada");
+            // Hicieron click en "Regresar"
+            console.log("Alerta cerrada");
         } else {
-            // Dijeron que no
-            //*location.reload();
-           var norecibo  = $('#inputFolio').val();
-            var action = 'procesarSalirOrdencompra';
-                       
-            $.ajax({
-                url: 'includes/ajax.php',
-                type: "POST",
-                async : true,
-                data: {action:action, norecibo:norecibo},
-
-                success: function(response)
-                {
-                    
-                    if(response != 'error')
-                    {
-                      var info = JSON.parse(response);
-                      console.log(response); 
-                      location.href = 'ordenes_compra23.php';
-                       //*location.reload();
-
-               
-                        
-                    }else{
-                        console.log('no data');
-                    }
-                },
-                error: function(error){                
-                }
-            });
+            // Hicieron click en "Salir", redirigir sin AJAX
+            location.href = 'ordenes_compra23.php';
         }
     });
+});
 
-   
-
-    });
     </script>
 
 <script>
