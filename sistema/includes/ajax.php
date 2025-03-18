@@ -5275,7 +5275,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                     FROM detalle_temp_cotizacioncompra WHERE folio = ?";
 
                 if ($stmt_detalle = mysqli_prepare($conection, $query_detalle)) {
-                    mysqli_stmt_bind_param($stmt_detalle, "ii", $folio, $folio);
+                    mysqli_stmt_bind_param($stmt_detalle, "i", $folio);
 
                     if (mysqli_stmt_execute($stmt_detalle)) {
                         if (mysqli_affected_rows($conection) > 0) {
