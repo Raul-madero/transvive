@@ -4933,24 +4933,24 @@ if ($_POST['action'] == 'AlmacenaEditProveedor') {
 
 //****************************//
         //Cancelar Requisicion
-   if($_POST['action'] == 'procesarSalirCortizacioncp'){
+//    if($_POST['action'] == 'procesarSalirCortizacioncp'){
 
                           
-        $norecibo  = $_POST['norecibo'];
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+//         $norecibo  = $_POST['norecibo'];
+//         $token       = md5($_SESSION['idUser']);
+//         $usuario     = $_SESSION['idUser'];
 
-        $query_procesarcf = mysqli_query($conection,"CALL salir_cotizacioncompra($norecibo, '$token')");
-        $result_procesarcf = mysqli_num_rows($query_procesarcf);
+//         $query_procesarcf = mysqli_query($conection,"CALL salir_cotizacioncompra($norecibo, '$token')");
+//         $result_procesarcf = mysqli_num_rows($query_procesarcf);
                 
-        if($result_procesarcf > 0){
-            $data = mysqli_fetch_assoc($query_procesarcf);
-                    echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-                    echo "error";
-        }
+//         if($result_procesarcf > 0){
+//             $data = mysqli_fetch_assoc($query_procesarcf);
+//                     echo json_encode($data,JSON_UNESCAPED_UNICODE);
+//         }else{
+//                     echo "error";
+//         }
             
-    }   
+//     }   
 
 // Buscar Cliente para Pedido
         if($_POST['action'] == 'searchRefaccionesmov')
