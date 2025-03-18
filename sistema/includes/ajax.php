@@ -5334,6 +5334,7 @@ if ($_POST['action'] == 'AddDetalleOrdencompra') {
 
     // Validación y saneamiento de entradas
     $nofolio     = intval($_POST['folio']);
+    $no_req     = intval($_POST['noreq']);
     $codigo      = trim($_POST['codigo']);
     $descripcion = trim($_POST['descripcion']);
     $umedida     = trim($_POST['umedida']);
@@ -5349,11 +5350,11 @@ if ($_POST['action'] == 'AddDetalleOrdencompra') {
 
     // Preparar la consulta SQL con prepared statements
     $query = "INSERT INTO detalle_temp_ordencompra 
-        (folio, codigo, descripcion, umedida, marca, cantidad, precio, impuesto, impuesto_isr, impuesto_ieps, importe, token) 
+        (folio, no_req, codigo, descripcion, umedida, marca, cantidad, precio, impuesto, impuesto_isr, impuesto_ieps, importe, token) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = mysqli_prepare($conection, $query)) {
-        mysqli_stmt_bind_param($stmt, "issssdddddds", $nofolio, $codigo, $descripcion, $umedida, $marca, $cantidad, $precio, $impuesto, $imp_isr, $imp_ieps, $importe, $token);
+        mysqli_stmt_bind_param($stmt, "iissssdddddds", $nofolio, $no_req, $codigo, $descripcion, $umedida, $marca, $cantidad, $precio, $impuesto, $imp_isr, $imp_ieps, $importe, $token);
 
         if (mysqli_stmt_execute($stmt)) {
             // Obtener los detalles después de la inserción
