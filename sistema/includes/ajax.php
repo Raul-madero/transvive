@@ -5271,7 +5271,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                 // Insertar los detalles de la requisición desde la tabla temporal
                 $query_detalle = "INSERT INTO detalle_requisicioncompra 
                     (folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe) 
-                    SELECT ?, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe 
+                    SELECT folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe 
                     FROM detalle_temp_cotizacioncompra WHERE folio = ?";
 
                 if ($stmt_detalle = mysqli_prepare($conection, $query_detalle)) {
