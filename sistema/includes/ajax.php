@@ -5272,7 +5272,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                 $query_detalle = "INSERT INTO detalle_requisicioncompra 
                     (folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_omp, importe) 
                     SELECT ?, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_omp, importe 
-                    FROM detalle_temp_requisicioncompra WHERE folio = ?";
+                    FROM detalle_temp_cotizacioncompra WHERE folio = ?";
 
                 if ($stmt_detalle = mysqli_prepare($conection, $query_detalle)) {
                     mysqli_stmt_bind_param($stmt_detalle, "ii", $folio, $folio);
