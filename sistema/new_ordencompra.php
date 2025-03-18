@@ -539,7 +539,7 @@ $('#btn_salir').click(function(e) {
          <div class="form-group row">
            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Cantidad:</label>
            <div class="col-sm-9">
-            <input type="number" step="any" class="form-control" id="inputCantidad" name="inputCantidad" value="0">
+            <input type="number" step="any" class="form-control" id="inputCantidad" name="inputCantidad" value="1">
            </div>
         </div>
 
@@ -591,6 +591,19 @@ $('#btn_salir').click(function(e) {
 </div> 
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Seleccionar el input de Precio e Importe
+    const inputPrecio = document.getElementById("inputPrecio");
+    const inputImporte = document.getElementById("inputImporte");
+
+    // Escuchar el evento de entrada en el campo Precio
+    inputPrecio.addEventListener("input", function() {
+        inputImporte.value = inputPrecio.value; // Copiar el valor del precio al importe
+    });
+});
+</script>
 
 <script>
    $('#actualizaclientes').click(function(e){

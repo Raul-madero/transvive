@@ -96,7 +96,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
 $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(12);
-$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(10);
 $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(25);
 $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(13);
 $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(30);
