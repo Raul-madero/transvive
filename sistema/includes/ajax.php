@@ -5295,8 +5295,8 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                             $mail->Password   = getenv('SMTP_PASS') ?: 'Feb241981@';
 
                             $mail->setFrom('compras@transvivegdl.com.mx', 'Compras');
-                            $mail->addAddress('direccion@transvivegdl.com.mx', 'Raúl Gutiérrez');
-                            $mail->addCC('ejecutivo@transvivegdl.com.mx');
+                            // $mail->addAddress('direccion@transvivegdl.com.mx', 'Raúl Gutiérrez');
+                            // $mail->addCC('ejecutivo@transvivegdl.com.mx');
                             $mail->addBCC('raul.madero.ramirez@gmail.com');
 
                             $mail->Subject = "Nueva Requisición Generada";
@@ -5308,7 +5308,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                                 echo json_encode(["status" => "warning", "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
                             }
                         } else {
-                            echo json_encode(["status" => "error", "message" => "No se insertaron detalles en la requisición"]);
+                            echo json_encode(["status" => "error", "message" => "No se insertaron detalles en la requisición" . mysqli_error($conection)]);
                         }
                     } else {
                         echo json_encode(["status" => "error", "message" => "Error al ejecutar la inserción de detalles: " . mysqli_error($conection)]);
@@ -5318,14 +5318,14 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                     echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta de detalles" . mysqli_error($conection)]);
                 }
             } else {
-                echo json_encode(["status" => "error", "message" => "No se pudo almacenar la requisición"]);
+                echo json_encode(["status" => "error", "message" => "No se pudo almacenar la requisición" . mysqli_error($conection)]);
             }
         } else {
             echo json_encode(["status" => "error", "message" => "Error en la ejecución de la consulta: " . mysqli_error($conection)]);
         }
         mysqli_stmt_close($stmt);
     } else {
-        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta" . mysqli_error($conection)]);
     }
 
     mysqli_close($conection);
