@@ -5850,7 +5850,6 @@ if($_POST['action'] == 'ActualizaMovordencompra'){
 
 //Almacena Orden de compra
 if ($_POST['action'] == 'AlmacenaOrdencompra') {
-    require_once "conexion.php"; // Asegúrate de incluir el archivo de conexión
 
     if (empty($_POST['fecha']) || empty($_POST['proveedor'])) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
