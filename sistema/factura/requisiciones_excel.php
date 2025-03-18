@@ -52,14 +52,14 @@ $objPHPExcel->getProperties()->setCreator("Transvive CRM")
                ->setCategory("Test result file");
 
 $objPHPExcel ->getActiveSheet()
-             ->getStyle('A3:L3')
+             ->getStyle('A3:M3')
              ->getFill()
              ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
              ->getStartColor()
              ->setRGB('8ACEC3'); //i.e,colorcode=D3D3D3 
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A3:L3')
+$objPHPExcel->getActiveSheet()->getStyle('A3:M3')
     ->getAlignment()->setWrapText(true);                      
 
 $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:L1');
@@ -180,7 +180,7 @@ $total = 0;
             ->setCellValue('G'.$fila, $row['tipo_requisicion'])
             ->setCellValue('H'.$fila, $row['area_solicitante'])
             ->setCellValue('I'.$fila, $row['cant_autorizada'])
-            ->setCellValue('J'.$fila, $row['cant_autorizada'])
+            ->setCellValue('J'.$fila, "")
             ->setCellValue('K'.$fila, $row['recibe'])
             ->setCellValue('L'.$fila, $row['Status'])
             ->setCellValue('M'.$fila, $row['observaciones']);
