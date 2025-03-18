@@ -5351,7 +5351,7 @@ if ($_POST['action'] == 'AddDetalleOrdencompra') {
     // Preparar la consulta SQL con prepared statements
     $query = "INSERT INTO detalle_temp_ordencompra 
         (folio, no_req, codigo, descripcion, umedida, marca, cantidad, precio, impuesto, impuesto_isr, impuesto_ieps, importe, token) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = mysqli_prepare($conection, $query)) {
         mysqli_stmt_bind_param($stmt, "iissssdddddds", $nofolio, $no_req, $codigo, $descripcion, $umedida, $marca, $cantidad, $precio, $impuesto, $imp_isr, $imp_ieps, $importe, $token);
