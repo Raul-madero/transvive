@@ -5315,7 +5315,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                     }
                     mysqli_stmt_close($stmt_detalle);
                 } else {
-                    echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta de detalles"]);
+                    echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta de detalles" . mysqli_error($conection)]);
                 }
             } else {
                 echo json_encode(["status" => "error", "message" => "No se pudo almacenar la requisición"]);
