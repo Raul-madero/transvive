@@ -5326,7 +5326,6 @@ if($_POST['action'] == 'AlmacenaRequerimiento')
 
 // Agregar Detalle a la Orden de Compra
 if ($_POST['action'] == 'AddDetalleOrdencompra') {
-    require_once "conexion.php"; // Asegúrate de incluir tu archivo de conexión
 
     if (empty($_POST['folio'])) {
         echo json_encode(["status" => "error", "message" => "El folio es obligatorio"]);
