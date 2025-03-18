@@ -5447,7 +5447,7 @@ if ($_POST['action'] == 'AddDetalleOrdencompra') {
 
         mysqli_stmt_close($stmt);
     } else {
-        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta" . mysqli_error($conection)]);
     }
 
     mysqli_close($conection);
