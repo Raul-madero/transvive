@@ -5240,68 +5240,97 @@ if($_POST['action'] == 'ActualizaMovcotizacion'){
 
 
 //Almacena Requisicion de compra
-if($_POST['action'] == 'AlmacenaRequerimiento')
-{
-    if(empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) )
-    {
-       echo 'error';
-    }else{
-        
-        $folio        = $_POST['folio'];
-        $fecha        = $_POST['fecha'];
-        $fecha_req    = $_POST['fecha_req'];
-        $tipo         = $_POST['tipo'];
-        $areasolicita = $_POST['areasolicita'];
-        $monto_aut    = $_POST['montoaut'];
-        $notas        = $_POST['notas'];
-        $mensaje      = $folio;
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+if ($_POST['action'] == 'AlmacenaRequerimiento') {
+    require '../PHPMailer/PHPMailerAutoload.php'; // PHPMailer
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_requisicion($folio, '$fecha', '$fecha_req', '$tipo', '$areasolicita', $monto_aut, '$notas', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            require '../PHPMailer/PHPMailerAutoload.php';
+    if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita'])) {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
+        exit;
+    }
 
-               
+    // Validación y saneamiento de entradas
+    $folio        = intval($_POST['folio']);
+    $fecha        = trim($_POST['fecha']);
+    $fecha_req    = trim($_POST['fecha_req']);
+    $tipo         = trim($_POST['tipo']);
+    $areasolicita = trim($_POST['areasolicita']);
+    $monto_aut    = floatval($_POST['montoaut']);
+    $notas        = trim($_POST['notas']);
+    $usuario      = intval($_SESSION['idUser']);
 
-                $msjdelbody="\r\n". 'Se genero una nueva Requisición: '. $mensaje."\r\n"."\r\n".'Favor de revisar.'."\r\n"."\r\n".'Gracias';
+    // Consulta para insertar en requisicion_compra
+    $query = "INSERT INTO requisicion_compra 
+        (no_requisicion, fecha, fecha_requiere, tipo_requisicion, area_solicitante, cant_autorizada, observaciones, usuario_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-                $enviomail  = "direccion@transvivegdl.com.mx";
-                $nombremail = "Raúl Gutiérrez";
-                $asunto = "Hay una nueva Requisición"; 
-                
-                $mail = new PHPMailer;
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.office365.com';
-                $mail->Port       = 587;
-                $mail->SMTPAuth   = true;
-                $mail->SMTPSecure = 'STARTTLS';
-                $mail->Username   = 'compras@transvivegdl.com.mx';
-                $mail->Password   = 'Feb241981@';
-                $mail->setFrom('compras@transvivegdl.com.mx', 'Compras');
-                $mail->addAddress($enviomail, $nombremail);
-                $mail->addCC('ejecutivo@transvivegdl.com.mx');
-                $mail->addBCC('raul.madero.ramirez@gmail.com');
+    if ($stmt = mysqli_prepare($conection, $query)) {
+        mysqli_stmt_bind_param($stmt, "issssdsd", $folio, $fecha, $fecha_req, $tipo, $areasolicita, $monto_aut, $notas, $usuario);
 
-                $mail->Subject = $asunto;
-                $mail->Body = $msjdelbody;
-                $mail->addAttachment('');
-                $mail->send();
+        if (mysqli_stmt_execute($stmt)) {
+            if (mysqli_affected_rows($conection) > 0) {
+                // Insertar los detalles de la requisición desde la tabla temporal
+                $query_detalle = "INSERT INTO detalle_requisicioncompra 
+                    (folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_omp, importe) 
+                    SELECT ?, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_omp, importe 
+                    FROM detalle_temp_requisicioncompra WHERE folio = ?";
 
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+                if ($stmt_detalle = mysqli_prepare($conection, $query_detalle)) {
+                    mysqli_stmt_bind_param($stmt_detalle, "ii", $folio, $folio);
+
+                    if (mysqli_stmt_execute($stmt_detalle)) {
+                        if (mysqli_affected_rows($conection) > 0) {
+                            // Si los detalles se insertaron correctamente, enviar el correo
+                            $mensaje = "Se generó una nueva Requisición: $folio \n\nFavor de revisar.\n\nGracias.";
+
+                            // Configurar PHPMailer
+                            $mail = new PHPMailer;
+                            $mail->isSMTP();
+                            $mail->Host       = 'smtp.office365.com';
+                            $mail->Port       = 587;
+                            $mail->SMTPAuth   = true;
+                            $mail->SMTPSecure = 'STARTTLS';
+
+                            // *** Usar variables de entorno para credenciales ***
+                            $mail->Username   = getenv('SMTP_USER') ?: 'compras@transvivegdl.com.mx';
+                            $mail->Password   = getenv('SMTP_PASS') ?: 'Feb241981@';
+
+                            $mail->setFrom('compras@transvivegdl.com.mx', 'Compras');
+                            $mail->addAddress('direccion@transvivegdl.com.mx', 'Raúl Gutiérrez');
+                            $mail->addCC('ejecutivo@transvivegdl.com.mx');
+                            $mail->addBCC('raul.madero.ramirez@gmail.com');
+
+                            $mail->Subject = "Nueva Requisición Generada";
+                            $mail->Body = $mensaje;
+
+                            if ($mail->send()) {
+                                echo json_encode(["status" => "success", "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
+                            } else {
+                                echo json_encode(["status" => "warning", "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
+                            }
+                        } else {
+                            echo json_encode(["status" => "error", "message" => "No se insertaron detalles en la requisición"]);
+                        }
+                    } else {
+                        echo json_encode(["status" => "error", "message" => "Error al ejecutar la inserción de detalles: " . mysqli_error($conection)]);
+                    }
+                    mysqli_stmt_close($stmt_detalle);
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta de detalles"]);
+                }
+            } else {
+                echo json_encode(["status" => "error", "message" => "No se pudo almacenar la requisición"]);
+            }
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error en la ejecución de la consulta: " . mysqli_error($conection)]);
         }
-    
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+    }
+
     mysqli_close($conection);
-  }
-   
     exit;
 }
-
 
 //****************************//
         //Cancelar orden de compra
