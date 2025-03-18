@@ -5325,159 +5325,134 @@ if($_POST['action'] == 'AlmacenaRequerimiento')
 //     }  
 
 // Agregar Detalle a la Orden de Compra
-        if($_POST['action'] == 'AddDetalleOrdencompra'){
-            if(empty($_POST['folio']) )
-            {
-                echo 'error';
-            }else{
-                $nofolio     = $_POST['folio'];
-                $codigo      = $_POST['codigo'];
-                $descripcion = $_POST['descripcion'];
-                $umedida     = $_POST['umedida'];
-                $marca       = $_POST['marca'];
-                $cantidad    = $_POST['cantidad'];
-                $precio      = $_POST['precio'];
-                $impuesto    = $_POST['impuesto'];
-                $imp_isr     = $_POST['imp_isr'];
-                $imp_ieps    = $_POST['imp_ieps'];
-                $importe     = $_POST['importe'];
+if ($_POST['action'] == 'AddDetalleOrdencompra') {
+    require_once "conexion.php"; // Asegúrate de incluir tu archivo de conexión
+
+    if (empty($_POST['folio'])) {
+        echo json_encode(["status" => "error", "message" => "El folio es obligatorio"]);
+        exit;
+    }
+
+    // Validación y saneamiento de entradas
+    $nofolio     = intval($_POST['folio']);
+    $codigo      = trim($_POST['codigo']);
+    $descripcion = trim($_POST['descripcion']);
+    $umedida     = trim($_POST['umedida']);
+    $marca       = trim($_POST['marca']);
+    $cantidad    = floatval($_POST['cantidad']);
+    $precio      = floatval($_POST['precio']);
+    $impuesto    = floatval($_POST['impuesto'] > 0 ? $_POST['impuesto'] : 16);
+    $imp_isr     = floatval($_POST['imp_isr']);
+    $imp_ieps    = floatval($_POST['imp_ieps']);
+    $importe     = floatval($_POST['importe']);
+    
+    $token       = md5($_SESSION['idUser']);
+
+    // Preparar la consulta SQL con prepared statements
+    $query = "INSERT INTO detalle_temp_ordencompra 
+        (folio, codigo, descripcion, umedida, marca, cantidad, precio, impuesto, impuesto_isr, impuesto_ieps, importe, token) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    if ($stmt = mysqli_prepare($conection, $query)) {
+        mysqli_stmt_bind_param($stmt, "issssdddddds", $nofolio, $codigo, $descripcion, $umedida, $marca, $cantidad, $precio, $impuesto, $imp_isr, $imp_ieps, $importe, $token);
+
+        if (mysqli_stmt_execute($stmt)) {
+            // Obtener los detalles después de la inserción
+            $detalleTablaPe = '';
+            $detalleTotalesPe = '';
+            $subtotal    = 0;
+            $totsubtotal = 0;
+            $iva         = 0;
+            $isr         = 0;
+            $ieps        = 0;
+            $imprteIva   = 0;
+            $imprteIsr   = 0;
+            $imprteIeps  = 0;
+            $totiva      = 0;
+            $totisr      = 0;
+            $totieps     = 0;
+            $totalgral   = 0;
+
+            // Obtener los detalles de la orden de compra
+            $query_detalle_mantto = mysqli_query($conection, "SELECT * FROM detalle_temp_ordencompra WHERE folio = $nofolio");
+
+            while ($data = mysqli_fetch_assoc($query_detalle_mantto)) {
+                $subtotal = $data['cantidad'] * $data['precio'];
+                $iva = $data['impuesto'] / 100;
+                $isr = $data['impuesto_isr'] / 100;
+                $ieps = $data['cantidad'] * $data['impuesto_ieps'];
                 
-                $token       = md5($_SESSION['idUser']);
+                $totsubtotal += $subtotal;
+                $imprteIva  = $subtotal * $iva;
+                $imprteIsr  = $subtotal * $isr;
+                $totiva     += $imprteIva;
+                $totisr     += $imprteIsr;
+                $totieps    += $ieps;
 
-                $query_detalle_mantto = mysqli_query($conection,"CALL add_detalleditocomra($nofolio, '$codigo', '$descripcion', '$umedida', '$marca', $cantidad, $precio, $impuesto, $imp_isr, $imp_ieps, $importe, '$token')");
-                $result = mysqli_num_rows($query_detalle_mantto);
+                $detalleTablaPe .= '<tr>
+                                    <td align="right">' . number_format($data['cantidad'], 2) . '</td>
+                                    <td>' . $data['codigo'] . '</td>
+                                    <td>' . $data['descripcion'] . '</td>
+                                    <td>' . $data['umedida'] . '</td>
+                                    <td>' . $data['marca'] . '</td>
+                                    <td align="right">' . number_format($data['precio'], 2) . '</td>
+                                    <td align="right">' . number_format($subtotal, 2) . '</td>
+                                    <td align="center">
+                                        <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion(' . $data['id'] . ',' . $data['folio'] . ');">
+                                            <i class="far fa-trash-alt"></i>
+                                        </a>&nbsp;&nbsp;&nbsp;
+                                        <a id="alumno" data-toggle="modal" data-target="#modalEditCotizacion" 
+                                           data-id="' . $data['id'] . '" data-nofol="' . $data['folio'] . '" 
+                                           data-cantid="' . $data['cantidad'] . '" data-codig="' . $data['codigo'] . '"
+                                           data-descrip="' . $data['descripcion'] . '" data-umed="' . $data['umedida'] . '"
+                                           data-marca="' . $data['marca'] . '" data-precio="' . $data['precio'] . '"
+                                           data-impto="' . $data['impuesto'] . '" data-impisr="' . $data['impuesto_isr'] . '"
+                                           data-impieps="' . $data['impuesto_ieps'] . '" data-importe="' . $data['importe'] . '"
+                                           href="#" class="sepV_a" title="Cambiar Cantidad">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                  </tr>';
+            }
 
-                $detalleTablaPe = '';
-                $detalleTotalesPe = '';
-                $subtotal    = 0;
-                $totsubtotal = 0;
-                $iva         = 0;
-                $isr         = 0;
-                $ieps        = 0;
-                $imprteIva   = 0;
-                $imprteIsr   = 0;
-                $imprteIeps  = 0;
-                $totiva      = 0;
-                $totisr      = 0;
-                $totieps     = 0;
-                $total       = 0;
-                $precioTotal = 0;
-                        
-                $arrayData = array();
+            // Calcular el total general
+            $totalgral = $totsubtotal + $totiva - $totisr + $totieps;
 
-                if($result > 0){     
-                while ($data = mysqli_fetch_assoc($query_detalle_mantto)){
-                    $subtotal = $data['cantidad'] * $data['precio'];
-                        $iva = $data['impuesto'] /100;
-                        $isr = $data['impuesto_isr'] /100;
-                        $ieps = $data['cantidad'] * $data['impuesto_ieps'];
-                        $totsubtotal = $totsubtotal + $subtotal;
-                        $imprteIva  = $subtotal * $iva;
-                        $imprteIsr  = $subtotal * $isr;
-                        $totiva     = $totiva + $imprteIva;
-                        $totisr     = $totisr + $imprteIsr;
-                        $totieps    = $totieps + $ieps;
-                    
-                        $detalleTablaPe .= '<tr>
-                                            <td align="right">'.number_format($data['cantidad'],2).'</td>
-                                            <td>'.$data['codigo'].'</td>
-                                            <td>'.$data['descripcion'].'</td>
-                                            <td>'.$data['umedida'].'</td>
-                                            <td>'.$data['marca'].'</td>
-                                            <td align="right">'.number_format($data['precio'],2).'</td>
-                                            <td align="right">'.number_format($subtotal,2).'</td>
-                                            <td align="center"><a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <a id="alumno" 
-                                                data-target="#modalEditCotizacion" 
-                                                data-toggle="modal" 
-                                                data-id="'.$data['id'].'"
-                                                data-nofol="'.$data['folio'].'" 
-                                                data-cantid="'.$data['cantidad'].'"
-                                                data-codig="'.$data['codigo'].'"
-                                                data-descrip="'.$data['descripcion'].'"
-                                                data-umed="'.$data['umedida'].'"
-                                                data-marca="'.$data['marca'].'"
-                                                data-precio="'.$data['precio'].'"
-                                                data-impto="'.$data['impuesto'].'"
-                                                data-impisr="'.$data['impuesto_isr'].'"
-                                                data-impieps="'.$data['impuesto_ieps'].'"
-                                                data-importe="'.$data['importe'].'"
-                                                href="#" 
-                                                class="sepV_a" 
-                                                title="Cambiar Cantidad"><i class="fas fa-edit"></i></a>
-                                            </td>
-                                        </tr>';
-                    }
-                    if ($totisr > 0) {
-                        $totalgral = ($totsubtotal + $totiva) - $totisr ;
-                    $detalleTotalesPe .= '<tr>
-                                                <td colspan="6" align="right"> Subtotal: </td>
-                                                <td align="right">'.number_format($totsubtotal,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> (+) IVA: </td>
-                                                <td align="right">'.number_format($totiva,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> (-) ISR: </td>
-                                                <td align="right">'.number_format($totisr,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> Total: </td>
-                                                <td align="right">'.number_format($totalgral,2).'</td>
-                                            </tr>';
-                    }else {
-                        if ($totieps > 0) {
-                             $totalgral = $totsubtotal + $totiva + $totieps ;
-                             $detalleTotalesPe .= '<tr>
-                                                <td colspan="6" align="right"> Subtotal: </td>
-                                                <td align="right">'.number_format($totsubtotal,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> (+) IEPS: </td>
-                                                <td align="right">'.number_format($totieps,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> (+) IVA: </td>
-                                                <td align="right">'.number_format($totiva,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> Total: </td>
-                                                <td align="right">'.number_format($totalgral,2).'</td>
-                                            </tr>';
-                        }else {
-                        
-                    $totalgral = $totsubtotal + $totiva - $totisr + $totieps ;
-                    $detalleTotalesPe .= '<tr>
-                                                <td colspan="6" align="right"> Subtotal: </td>
-                                                <td align="right">'.number_format($totsubtotal,2).'</td>
-                                            </tr>
-                                           
-                                            <tr>
-                                                <td colspan="6" align="right"> IVA: </td>
-                                                <td align="right">'.number_format($totiva,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> Total: </td>
-                                                <td align="right">'.number_format($totalgral,2).'</td>
-                                            </tr>';
+            $detalleTotalesPe .= '<tr>
+                                    <td colspan="6" align="right"> Subtotal: </td>
+                                    <td align="right">' . number_format($totsubtotal, 2) . '</td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="6" align="right"> (+) IVA: </td>
+                                    <td align="right">' . number_format($totiva, 2) . '</td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="6" align="right"> (-) ISR: </td>
+                                    <td align="right">' . number_format($totisr, 2) . '</td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="6" align="right"> (+) IEPS: </td>
+                                    <td align="right">' . number_format($totieps, 2) . '</td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="6" align="right"> Total: </td>
+                                    <td align="right">' . number_format($totalgral, 2) . '</td>
+                                  </tr>';
 
-                 }
-             }
-                  
-                $arrayData['detalle'] = $detalleTablaPe;
-                $arrayData['totales'] = $detalleTotalesPe;
-           
-                echo json_encode($arrayData,JSON_UNESCAPED_UNICODE);
-
-                
-                mysqli_close($conection);   
-            }else{
-                echo "error";
-            }   
+            // Responder con JSON
+            echo json_encode(["status" => "success", "detalle" => $detalleTablaPe, "totales" => $detalleTotalesPe], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error al insertar en la base de datos: " . mysqli_error($conection)]);
         }
-            exit;   
-        }                             
+
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+    }
+
+    mysqli_close($conection);
+    exit;
+}                            
 
 //Almacena Almacen
 if($_POST['action'] == 'AlmacenaAlmacen')
@@ -5874,46 +5849,51 @@ if($_POST['action'] == 'ActualizaMovordencompra'){
         }  
 
 //Almacena Orden de compra
-if($_POST['action'] == 'AlmacenaOrdencompra')
-{
-    if(empty($_POST['fecha']) || empty($_POST['proveedor']))
-    {
-       echo 'error';
-    }else{
-        
-        $folio        = $_POST['folio'];
-        $noreq        = $_POST['noreq'];
-        $fecha        = $_POST['fecha'];
-        $proveedor    = $_POST['proveedor'];
-        $contacto     = $_POST['contacto'];
-        $telefono     = $_POST['telefono'];
-        $correo       = $_POST['correo'];
-        $formapago    = $_POST['forma_pago'];
-        $metodopago   = $_POST['metodo_pago'];
-        $usocfdi      = $_POST['uso_cfdi'];
-        $solicita     = $_POST['solicita'];
-        $notas        = $_POST['notas'];
-        $recibe       = $_POST['recibe'];
+if ($_POST['action'] == 'AlmacenaOrdencompra') {
+    require_once "conexion.php"; // Asegúrate de incluir el archivo de conexión
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+    if (empty($_POST['fecha']) || empty($_POST['proveedor'])) {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
+        exit;
+    }
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_ordencompra($folio, $noreq, '$fecha', $proveedor, '$contacto', '$telefono', '$correo', '$formapago', '$metodopago', '$usocfdi', '$solicita', '$notas', '$recibe', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+    $folio        = intval($_POST['folio']); // Asegurar que sea número
+    $noreq        = intval($_POST['noreq']);
+    $fecha        = $_POST['fecha']; // Suponiendo que viene en formato YYYY-MM-DD
+    $proveedor    = intval($_POST['proveedor']);
+    $contacto     = trim($_POST['contacto']);
+    $telefono     = trim($_POST['telefono']);
+    $correo       = trim($_POST['correo']);
+    $formapago    = trim($_POST['forma_pago']);
+    $metodopago   = trim($_POST['metodo_pago']);
+    $usocfdi      = trim($_POST['uso_cfdi']);
+    $solicita     = trim($_POST['solicita']);
+    $notas        = trim($_POST['notas']);
+    $recibe       = trim($_POST['recibe']);
+    $usuario      = intval($_SESSION['idUser']); // Verifica que sea numérico
+
+    // Generar una consulta segura con Prepared Statements
+    $query = "INSERT INTO orden_compra 
+        (no_orden, no_requisicion, fecha, proveedor, contacto, telefono, correo, forma_pago, metodo_pago, uso_cfdi, area_solicitante, observaciones, recibe, usuario_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    if ($stmt = mysqli_prepare($conection, $query)) {
+        mysqli_stmt_bind_param($stmt, "iisssssssssssi", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario);
+
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(["status" => "success", "message" => "Orden de compra almacenada", "insert_id" => mysqli_insert_id($conection)]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error en la consulta: " . mysqli_error($conection)]);
         }
-    
+
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+    }
+
     mysqli_close($conection);
-  }
-   
     exit;
 }
-
 
 //****************************//
         //Cancelar orden de compra
