@@ -22,6 +22,23 @@
               <li><a href="clientes.php" class="dropdown-item">Clientes</a></li>-->
 
               <li class="dropdown-divider"></li>
+			  <li class="dropdown-submenu dropdown-hover">
+          <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Compras</a>
+          <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+            <li><a href="requisiciones23.php" class="dropdown-item">Requisición</a></li>
+            <!-- <li><a href="ordenes_compra23.php" class="dropdown-item">Orden de Compra</a></li>
+            <li><a href="compras23.php" class="dropdown-item">Compra</a></li>
+            <li class="dropdown-divider"></li> -->
+            <!--
+                  <li><a href="pagos_proveedor.php" class="dropdown-item">Pago a Proveedor</a></li>
+                  <li class="dropdown-divider"></li>
+                  <li><a href="devolucion_compra.php" class="dropdown-item">Devolución sobre Compra</a></li>
+                -->
+            <!--<li class="dropdown-divider"></li>
+                  <li><a href="evaluacion_proveedores.php" class="dropdown-item">Evaluación de Proveedores</a></li>-->
+          </ul>
+        </li>
                <li class="dropdown-submenu dropdown-hover">
                 <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Utilerias</a>
                 <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
@@ -44,7 +61,6 @@
               <li class="dropdown-submenu dropdown-hover">
                 <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Combustibles</a>
                 <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
-                  
                   <li><a href="combustible_fechas.php" class="dropdown-item">Consumo por Fechas</a></li>
                   <li><a href="combustible_rendimiento.php" class="dropdown-item">Rendimiento x Unidad</a></li>
                   
