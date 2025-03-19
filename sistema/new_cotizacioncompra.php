@@ -143,7 +143,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Folio</label>
                     <div class="col-sm-3">
-                      <input style="text-align:right;" type="text" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo "REQ-" . $nuevofolio;?>" readonly>
+                      <input style="text-align:right; font-weight: bold; color: #F05B0E" type="text" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo "REQ-" . $nuevofolio;?>" readonly>
                     </div>
                   </div>
 
@@ -237,11 +237,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        <option value="<?= $oprc['nombre'] ?>"><?= $oprc['nombre'] ?></option>  
                        <?php endforeach; ?>
                     </select>
-                    </div>
-                  </div>
-
-                  
-
+                </div>
+            </div>
                 <!-- /.card-body -->
                 <div class="form-group row" style="text-align:right;">
                         <div class="offset-sm-2 col-sm-10">
@@ -252,28 +249,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- /.card-footer -->
               </form>
             </div>
-     </div>
-     </div>
-     
+    </div>
+</div>
 </center>
-    
-    <!-- /.content -->
-
-
-
+  <!-- /.content -->
   <!-- /.content-wrapper -->
-  
   <!-- Control Sidebar -->
-  
   <!-- /.control-sidebar -->
-
   <!-- Main Footer -->
   <?php include('includes/footer.php') ?>
 </div>
 <!-- ./wrapper -->
-
 <!-- REQUIRED SCRIPTS -->
-
 <!-- jQuery -->
 <script src="../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
@@ -287,83 +274,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
  
 
  <script>
-
-$('#btn_salir').click(function(e){
+    $('#btn_salir').click(function(e){
         e.preventDefault();
 
-            
-        Swal
-    .fire({
-        title: "DESEA SALIR!",
-        text: "",
-        icon: 'info',
+                
+        Swal.fire({
+            title: "DESEA SALIR!",
+            text: "",
+            icon: 'info',
 
-        showCancelButton: true,
-        confirmButtonText: "Regresar",
-        cancelButtonText: "Salir",
-       
-
-       
-    })
-     .then(resultado => {
-        if (resultado.value) {
-            // Hicieron click en "Sí"
-             //*location.href = 'lista_ncplantasa.php';
-             console.log("Alerta cerrada");
-        } else {
-            // Dijeron que no
-            //*location.reload();
-           var norecibo  = $('#inputFolio').val();
-            var action = 'procesarSalirCortizacioncp';
-                       
-            $.ajax({
-                url: 'includes/ajax.php',
-                type: "POST",
-                async : true,
-                data: {action:action, norecibo:norecibo},
-
-                success: function(response)
-                {
-                    
-                    if(response != 'error')
-                    {
-                      var info = JSON.parse(response);
-                      console.log(response); 
-                      location.href = 'requisiciones23.php';
-                       //*location.reload();
-
-               
-                        
-                    }else{
-                        console.log('no data');
-                    }
-                },
-                error: function(error){                
-                }
-            });
-        }
+            showCancelButton: true,
+            confirmButtonText: "Regresar",
+            cancelButtonText: "Salir",
+        })
+        .then(resultado => {
+            if (resultado.value) {
+                // Hicieron click en "Sí"
+                //*location.href = 'lista_ncplantasa.php';
+                console.log("Alerta cerrada");
+            } else {
+                // Dijeron que no
+                location.href = 'requisiciones23.php';
+            }
+        });
     });
-
-   
-
-    });
-    </script>
+</script>
 
 <script>
-   $('#guardar_tipoactividad').click(function(e){
+    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
 
-       var folio         = $('#inputFolio').val();
-       var fecha         = $('#inputFecha').val();
-       var fecha_req     = $('#inputFecharequiere').val();
-       var tipo          = $('#inputTipo').val();
-       var areasolicita  = $('#inputAsolicita').val();
-      
-       var montoaut      = $('#inputMontoaut').val();
-       var notas         = $('#inputNotas').val();
-   
-     
-       var action       = 'AlmacenaRequerimiento';
+        var folioVal         = $('#inputFolio').val();
+        let folio           = folioVal.replace(/\D+/g, '');
+        console.log(folio);
+        var fecha         = $('#inputFecha').val();
+        var fecha_req     = $('#inputFecharequiere').val();
+        var tipo          = $('#inputTipo').val();
+        var areasolicita  = $('#inputAsolicita').val();
+        var montoaut      = $('#inputMontoaut').val();
+        var notas         = $('#inputNotas').val();
+        var action       = 'AlmacenaRequerimiento';
 
         $.ajax({
                     url: 'includes/ajax.php',
@@ -440,15 +390,12 @@ $('#btn_salir').click(function(e){
 <!-- Page specific script -->
 <div class="modal fade" id="modalEditcliente" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   
-  
    <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Movimiento</h5>
-      </div>
-      <div class="modal-body">
-
-        
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Movimiento</h5>
+        </div>
+        <div class="modal-body">
         <form>
         <div class="col-md-12">
           <div class="form-group"> 
@@ -491,7 +438,7 @@ $('#btn_salir').click(function(e){
          <div class="form-group row">
            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Cantidad:</label>
            <div class="col-sm-9">
-            <input type="number" step="any" class="form-control" id="inputCantidad" name="inputCantidad" value="0">
+            <input type="number" step="any" class="form-control" id="inputCantidad" name="inputCantidad" value="1">
            </div>
         </div>
 

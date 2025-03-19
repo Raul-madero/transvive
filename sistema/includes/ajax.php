@@ -1060,7 +1060,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->addAddress($correo, $nombre);
             $mail->addCC('ejecutivo@transvivegdl.com.mx');
             $mail->addCC('ejecutivo@transvivegdl.com.mx');
-            $mail->addBCC('rmadero@transvivegdl.com.mx');
+            $mail->addBCC('raul.madero.ramirez@gmail.com');
             $mail->Subject = $asunto;
             $mail->Body    = $msjBody;
 
@@ -4933,24 +4933,24 @@ if ($_POST['action'] == 'AlmacenaEditProveedor') {
 
 //****************************//
         //Cancelar Requisicion
-   if($_POST['action'] == 'procesarSalirCortizacioncp'){
+//    if($_POST['action'] == 'procesarSalirCortizacioncp'){
 
                           
-        $norecibo  = $_POST['norecibo'];
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+//         $norecibo  = $_POST['norecibo'];
+//         $token       = md5($_SESSION['idUser']);
+//         $usuario     = $_SESSION['idUser'];
 
-        $query_procesarcf = mysqli_query($conection,"CALL salir_cotizacioncompra($norecibo, '$token')");
-        $result_procesarcf = mysqli_num_rows($query_procesarcf);
+//         $query_procesarcf = mysqli_query($conection,"CALL salir_cotizacioncompra($norecibo, '$token')");
+//         $result_procesarcf = mysqli_num_rows($query_procesarcf);
                 
-        if($result_procesarcf > 0){
-            $data = mysqli_fetch_assoc($query_procesarcf);
-                    echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-                    echo "error";
-        }
+//         if($result_procesarcf > 0){
+//             $data = mysqli_fetch_assoc($query_procesarcf);
+//                     echo json_encode($data,JSON_UNESCAPED_UNICODE);
+//         }else{
+//                     echo "error";
+//         }
             
-    }   
+//     }   
 
 // Buscar Cliente para Pedido
         if($_POST['action'] == 'searchRefaccionesmov')
@@ -5240,244 +5240,248 @@ if($_POST['action'] == 'ActualizaMovcotizacion'){
 
 
 //Almacena Requisicion de compra
-if($_POST['action'] == 'AlmacenaRequerimiento')
-{
-    if(empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) )
-    {
-       echo 'error';
-    }else{
-        
-        $folio        = $_POST['folio'];
-        $fecha        = $_POST['fecha'];
-        $fecha_req    = $_POST['fecha_req'];
-        $tipo         = $_POST['tipo'];
-        $areasolicita = $_POST['areasolicita'];
-        $monto_aut    = $_POST['montoaut'];
-        $notas        = $_POST['notas'];
-        $mensaje      = $folio;
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+if ($_POST['action'] == 'AlmacenaRequerimiento') {
+    require '../PHPMailer/PHPMailerAutoload.php'; // PHPMailer
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_requisicion($folio, '$fecha', '$fecha_req', '$tipo', '$areasolicita', $monto_aut, '$notas', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            require '../PHPMailer/PHPMailerAutoload.php';
+    if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita'])) {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
+        exit;
+    }
 
-               
+    // Validación y saneamiento de entradas
+    $folio        = intval($_POST['folio']);
+    $fecha        = trim($_POST['fecha']);
+    $fecha_req    = trim($_POST['fecha_req']);
+    $tipo         = trim($_POST['tipo']);
+    $areasolicita = trim($_POST['areasolicita']);
+    $monto_aut    = floatval($_POST['montoaut']);
+    $notas        = trim($_POST['notas']);
+    $usuario      = intval($_SESSION['idUser']);
 
-                $msjdelbody="\r\n". 'Se genero una nueva Requisición: '. $mensaje."\r\n"."\r\n".'Favor de revisar.'."\r\n"."\r\n".'Gracias';
+    // Consulta para insertar en requisicion_compra
+    $query = "INSERT INTO requisicion_compra 
+        (no_requisicion, fecha, fecha_requiere, tipo_requisicion, area_solicitante, cant_autorizada, observaciones, usuario_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-                $enviomail  = "direccion@transvivegdl.com.mx";
-                $nombremail = "Raúl Gutiérrez";
-                $asunto = "Hay una nueva Requisición"; 
-                
-                $mail = new PHPMailer;
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.office365.com';
-                $mail->Port       = 587;
-                $mail->SMTPAuth   = true;
-                $mail->SMTPSecure = 'STARTTLS';
-                $mail->Username   = 'compras@transvivegdl.com.mx';
-                $mail->Password   = 'Feb241981@';
-                $mail->setFrom('compras@transvivegdl.com.mx', 'Compras');
-                $mail->addAddress($enviomail, $nombremail);
-                $mail->addCC('ejecutivo@transvivegdl.com.mx');
-                $mail->addBCC('rmadero@transvivegdl.com.mx');
+    if ($stmt = mysqli_prepare($conection, $query)) {
+        mysqli_stmt_bind_param($stmt, "issssdsd", $folio, $fecha, $fecha_req, $tipo, $areasolicita, $monto_aut, $notas, $usuario);
 
-                $mail->Subject = $asunto;
-                $mail->Body = $msjdelbody;
-                $mail->addAttachment('');
-                $mail->send();
+        if (mysqli_stmt_execute($stmt)) {
+            if (mysqli_affected_rows($conection) > 0) {
+                // Insertar los detalles de la requisición desde la tabla temporal
+                $query_detalle = "INSERT INTO detalle_requisicioncompra 
+                    (folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token) 
+                    SELECT folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token 
+                    FROM detalle_temp_cotizacioncompra WHERE folio = ?";
 
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+                if ($stmt_detalle = mysqli_prepare($conection, $query_detalle)) {
+                    mysqli_stmt_bind_param($stmt_detalle, "i", $folio);
+
+                    if (mysqli_stmt_execute($stmt_detalle)) {
+                        if (mysqli_affected_rows($conection) > 0) {
+                            // Si los detalles se insertaron correctamente, enviar el correo
+                            $mensaje = "Se generó una nueva Requisición: $folio \n\nFavor de revisar.\n\nGracias.";
+
+                            // Configurar PHPMailer
+                            $mail = new PHPMailer;
+                            $mail->isSMTP();
+                            $mail->Host       = 'smtp.office365.com';
+                            $mail->Port       = 587;
+                            $mail->SMTPAuth   = true;
+                            $mail->SMTPSecure = 'STARTTLS';
+
+                            // *** Usar variables de entorno para credenciales ***
+                            $mail->Username   = getenv('SMTP_USER') ?: 'compras@transvivegdl.com.mx';
+                            $mail->Password   = getenv('SMTP_PASS') ?: 'Feb241981@';
+
+                            $mail->setFrom('compras@transvivegdl.com.mx', 'Compras');
+                            // $mail->addAddress('direccion@transvivegdl.com.mx', 'Raúl Gutiérrez');
+                            // $mail->addCC('ejecutivo@transvivegdl.com.mx');
+                            $mail->addBCC('raul.madero.ramirez@gmail.com');
+
+                            $mail->Subject = "Nueva Requisición Generada";
+                            $mail->Body = $mensaje;
+
+                            if ($mail->send()) {
+                                echo json_encode(["status" => "success", "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
+                            } else {
+                                echo json_encode(["status" => "warning", "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
+                            }
+                        } else {
+                            echo json_encode(["status" => "error", "message" => "No se insertaron detalles en la requisición" . mysqli_error($conection)]);
+                        }
+                    } else {
+                        echo json_encode(["status" => "error", "message" => "Error al ejecutar la inserción de detalles: " . mysqli_error($conection)]);
+                    }
+                    mysqli_stmt_close($stmt_detalle);
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta de detalles" . mysqli_error($conection)]);
+                }
+            } else {
+                echo json_encode(["status" => "error", "message" => "No se pudo almacenar la requisición" . mysqli_error($conection)]);
+            }
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error en la ejecución de la consulta: " . mysqli_error($conection)]);
         }
-    
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta" . mysqli_error($conection)]);
+    }
+
     mysqli_close($conection);
-  }
-   
     exit;
 }
 
-
 //****************************//
         //Cancelar orden de compra
-   if($_POST['action'] == 'procesarSalirOrdencompra'){
+//    if($_POST['action'] == 'procesarSalirOrdencompra'){
 
                           
-        $norecibo  = $_POST['norecibo'];
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+//         $norecibo  = $_POST['norecibo'];
+//         $token       = md5($_SESSION['idUser']);
+//         $usuario     = $_SESSION['idUser'];
 
-        $query_procesarcf = mysqli_query($conection,"CALL salir_ordencompra($norecibo, '$token')");
-        $result_procesarcf = mysqli_num_rows($query_procesarcf);
+//         $query_procesarcf = mysqli_query($conection,"CALL salir_ordencompra($norecibo, '$token')");
+//         $result_procesarcf = mysqli_num_rows($query_procesarcf);
                 
-        if($result_procesarcf > 0){
-            $data = mysqli_fetch_assoc($query_procesarcf);
-                    echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-                    echo "error";
-        }
+//         if($result_procesarcf > 0){
+//             $data = mysqli_fetch_assoc($query_procesarcf);
+//                     echo json_encode($data,JSON_UNESCAPED_UNICODE);
+//         }else{
+//                     echo "error";
+//         }
             
-    }  
+//     }  
 
 // Agregar Detalle a la Orden de Compra
-        if($_POST['action'] == 'AddDetalleOrdencompra'){
-            if(empty($_POST['folio']) )
-            {
-                echo 'error';
-            }else{
-                $nofolio     = $_POST['folio'];
-                $codigo      = $_POST['codigo'];
-                $descripcion = $_POST['descripcion'];
-                $umedida     = $_POST['umedida'];
-                $marca       = $_POST['marca'];
-                $cantidad    = $_POST['cantidad'];
-                $precio      = $_POST['precio'];
-                $impuesto    = $_POST['impuesto'];
-                $imp_isr     = $_POST['imp_isr'];
-                $imp_ieps    = $_POST['imp_ieps'];
-                $importe     = $_POST['importe'];
+if ($_POST['action'] == 'AddDetalleOrdencompra') {
+
+    if (empty($_POST['folio'])) {
+        echo json_encode(["status" => "error", "message" => "El folio es obligatorio"]);
+        exit;
+    }
+
+    // Validación y saneamiento de entradas
+    $nofolio     = intval($_POST['folio']);
+    $no_req     = intval($_POST['noreq']);
+    $codigo      = trim($_POST['codigo']);
+    $descripcion = trim($_POST['descripcion']);
+    $umedida     = trim($_POST['umedida']);
+    $marca       = trim($_POST['marca']);
+    $cantidad    = floatval($_POST['cantidad']);
+    $precio      = floatval($_POST['precio']);
+    $impuesto    = floatval($_POST['impuesto'] > 0 ? $_POST['impuesto'] : 16);
+    $imp_isr     = floatval($_POST['imp_isr']);
+    $imp_ieps    = floatval($_POST['imp_ieps']);
+    $importe     = floatval($_POST['importe']);
+    
+    $token       = md5($_SESSION['idUser']);
+
+    // Preparar la consulta SQL con prepared statements
+    $query = "INSERT INTO detalle_temp_ordencompra 
+        (folio, no_req, codigo, descripcion, umedida, marca, cantidad, precio, impuesto, impuesto_isr, impuesto_ieps, importe, token) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    if ($stmt = mysqli_prepare($conection, $query)) {
+        mysqli_stmt_bind_param($stmt, "iissssdddddds", $nofolio, $no_req, $codigo, $descripcion, $umedida, $marca, $cantidad, $precio, $impuesto, $imp_isr, $imp_ieps, $importe, $token);
+
+        if (mysqli_stmt_execute($stmt)) {
+            // Obtener los detalles después de la inserción
+            $detalleTablaPe = '';
+            $detalleTotalesPe = '';
+            $subtotal    = 0;
+            $totsubtotal = 0;
+            $iva         = 0;
+            $isr         = 0;
+            $ieps        = 0;
+            $imprteIva   = 0;
+            $imprteIsr   = 0;
+            $imprteIeps  = 0;
+            $totiva      = 0;
+            $totisr      = 0;
+            $totieps     = 0;
+            $totalgral   = 0;
+
+            // Obtener los detalles de la orden de compra
+            $query_detalle_mantto = mysqli_query($conection, "SELECT * FROM detalle_temp_ordencompra WHERE folio = $nofolio");
+
+            while ($data = mysqli_fetch_assoc($query_detalle_mantto)) {
+                $subtotal = $data['cantidad'] * $data['precio'];
+                $iva = $data['impuesto'] / 100;
+                $isr = $data['impuesto_isr'] / 100;
+                $ieps = $data['cantidad'] * $data['impuesto_ieps'];
                 
-                $token       = md5($_SESSION['idUser']);
+                $totsubtotal += $subtotal;
+                $imprteIva  = $subtotal * $iva;
+                $imprteIsr  = $subtotal * $isr;
+                $totiva     += $imprteIva;
+                $totisr     += $imprteIsr;
+                $totieps    += $ieps;
 
-                $query_detalle_mantto = mysqli_query($conection,"CALL add_detalleditocomra($nofolio, '$codigo', '$descripcion', '$umedida', '$marca', $cantidad, $precio, $impuesto, $imp_isr, $imp_ieps, $importe, '$token')");
-                $result = mysqli_num_rows($query_detalle_mantto);
+                $detalleTablaPe .= '<tr>
+                                    <td align="right">' . number_format($data['cantidad'], 2) . '</td>
+                                    <td>' . $data['codigo'] . '</td>
+                                    <td>' . $data['descripcion'] . '</td>
+                                    <td>' . $data['umedida'] . '</td>
+                                    <td>' . $data['marca'] . '</td>
+                                    <td align="right">' . number_format($data['precio'], 2) . '</td>
+                                    <td align="right">' . number_format($subtotal, 2) . '</td>
+                                    <td align="center">
+                                        <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion(' . $data['id'] . ',' . $data['folio'] . ');">
+                                            <i class="far fa-trash-alt"></i>
+                                        </a>&nbsp;&nbsp;&nbsp;
+                                        <a id="alumno" data-toggle="modal" data-target="#modalEditCotizacion" 
+                                           data-id="' . $data['id'] . '" data-nofol="' . $data['folio'] . '" 
+                                           data-cantid="' . $data['cantidad'] . '" data-codig="' . $data['codigo'] . '"
+                                           data-descrip="' . $data['descripcion'] . '" data-umed="' . $data['umedida'] . '"
+                                           data-marca="' . $data['marca'] . '" data-precio="' . $data['precio'] . '"
+                                           data-impto="' . $data['impuesto'] . '" data-impisr="' . $data['impuesto_isr'] . '"
+                                           data-impieps="' . $data['impuesto_ieps'] . '" data-importe="' . $data['importe'] . '"
+                                           href="#" class="sepV_a" title="Cambiar Cantidad">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                  </tr>';
+            }
 
-                $detalleTablaPe = '';
-                $detalleTotalesPe = '';
-                $subtotal    = 0;
-                $totsubtotal = 0;
-                $iva         = 0;
-                $isr         = 0;
-                $ieps        = 0;
-                $imprteIva   = 0;
-                $imprteIsr   = 0;
-                $imprteIeps  = 0;
-                $totiva      = 0;
-                $totisr      = 0;
-                $totieps     = 0;
-                $total       = 0;
-                $precioTotal = 0;
-                        
-                $arrayData = array();
+            // Calcular el total general
+            $totalgral = $totsubtotal + $totiva - $totisr + $totieps;
 
-                if($result > 0){     
-                while ($data = mysqli_fetch_assoc($query_detalle_mantto)){
-                    $subtotal = $data['cantidad'] * $data['precio'];
-                        $iva = $data['impuesto'] /100;
-                        $isr = $data['impuesto_isr'] /100;
-                        $ieps = $data['cantidad'] * $data['impuesto_ieps'];
-                        $totsubtotal = $totsubtotal + $subtotal;
-                        $imprteIva  = $subtotal * $iva;
-                        $imprteIsr  = $subtotal * $isr;
-                        $totiva     = $totiva + $imprteIva;
-                        $totisr     = $totisr + $imprteIsr;
-                        $totieps    = $totieps + $ieps;
-                    
-                        $detalleTablaPe .= '<tr>
-                                            <td align="right">'.number_format($data['cantidad'],2).'</td>
-                                            <td>'.$data['codigo'].'</td>
-                                            <td>'.$data['descripcion'].'</td>
-                                            <td>'.$data['umedida'].'</td>
-                                            <td>'.$data['marca'].'</td>
-                                            <td align="right">'.number_format($data['precio'],2).'</td>
-                                            <td align="right">'.number_format($subtotal,2).'</td>
-                                            <td align="center"><a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <a id="alumno" 
-                                                data-target="#modalEditCotizacion" 
-                                                data-toggle="modal" 
-                                                data-id="'.$data['id'].'"
-                                                data-nofol="'.$data['folio'].'" 
-                                                data-cantid="'.$data['cantidad'].'"
-                                                data-codig="'.$data['codigo'].'"
-                                                data-descrip="'.$data['descripcion'].'"
-                                                data-umed="'.$data['umedida'].'"
-                                                data-marca="'.$data['marca'].'"
-                                                data-precio="'.$data['precio'].'"
-                                                data-impto="'.$data['impuesto'].'"
-                                                data-impisr="'.$data['impuesto_isr'].'"
-                                                data-impieps="'.$data['impuesto_ieps'].'"
-                                                data-importe="'.$data['importe'].'"
-                                                href="#" 
-                                                class="sepV_a" 
-                                                title="Cambiar Cantidad"><i class="fas fa-edit"></i></a>
-                                            </td>
-                                        </tr>';
-                    }
-                    if ($totisr > 0) {
-                        $totalgral = ($totsubtotal + $totiva) - $totisr ;
-                    $detalleTotalesPe .= '<tr>
-                                                <td colspan="6" align="right"> Subtotal: </td>
-                                                <td align="right">'.number_format($totsubtotal,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> (+) IVA: </td>
-                                                <td align="right">'.number_format($totiva,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> (-) ISR: </td>
-                                                <td align="right">'.number_format($totisr,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> Total: </td>
-                                                <td align="right">'.number_format($totalgral,2).'</td>
-                                            </tr>';
-                    }else {
-                        if ($totieps > 0) {
-                             $totalgral = $totsubtotal + $totiva + $totieps ;
-                             $detalleTotalesPe .= '<tr>
-                                                <td colspan="6" align="right"> Subtotal: </td>
-                                                <td align="right">'.number_format($totsubtotal,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> (+) IEPS: </td>
-                                                <td align="right">'.number_format($totieps,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> (+) IVA: </td>
-                                                <td align="right">'.number_format($totiva,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> Total: </td>
-                                                <td align="right">'.number_format($totalgral,2).'</td>
-                                            </tr>';
-                        }else {
-                        
-                    $totalgral = $totsubtotal + $totiva - $totisr + $totieps ;
-                    $detalleTotalesPe .= '<tr>
-                                                <td colspan="6" align="right"> Subtotal: </td>
-                                                <td align="right">'.number_format($totsubtotal,2).'</td>
-                                            </tr>
-                                           
-                                            <tr>
-                                                <td colspan="6" align="right"> IVA: </td>
-                                                <td align="right">'.number_format($totiva,2).'</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" align="right"> Total: </td>
-                                                <td align="right">'.number_format($totalgral,2).'</td>
-                                            </tr>';
+            $detalleTotalesPe .= '<tr>
+                                    <td colspan="6" align="right"> Subtotal: </td>
+                                    <td align="right">' . number_format($totsubtotal, 2) . '</td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="6" align="right"> (+) IVA: </td>
+                                    <td align="right">' . number_format($totiva, 2) . '</td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="6" align="right"> (-) ISR: </td>
+                                    <td align="right">' . number_format($totisr, 2) . '</td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="6" align="right"> (+) IEPS: </td>
+                                    <td align="right">' . number_format($totieps, 2) . '</td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="6" align="right"> Total: </td>
+                                    <td align="right">' . number_format($totalgral, 2) . '</td>
+                                  </tr>';
 
-                 }
-             }
-                  
-                $arrayData['detalle'] = $detalleTablaPe;
-                $arrayData['totales'] = $detalleTotalesPe;
-           
-                echo json_encode($arrayData,JSON_UNESCAPED_UNICODE);
-
-                
-                mysqli_close($conection);   
-            }else{
-                echo "error";
-            }   
+            // Responder con JSON
+            echo json_encode(["status" => "success", "detalle" => $detalleTablaPe, "totales" => $detalleTotalesPe], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error al insertar en la base de datos: " . mysqli_error($conection)]);
         }
-            exit;   
-        }                             
+
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta" . mysqli_error($conection)]);
+    }
+
+    mysqli_close($conection);
+    exit;
+}                            
 
 //Almacena Almacen
 if($_POST['action'] == 'AlmacenaAlmacen')
@@ -5874,46 +5878,50 @@ if($_POST['action'] == 'ActualizaMovordencompra'){
         }  
 
 //Almacena Orden de compra
-if($_POST['action'] == 'AlmacenaOrdencompra')
-{
-    if(empty($_POST['fecha']) || empty($_POST['proveedor']))
-    {
-       echo 'error';
-    }else{
-        
-        $folio        = $_POST['folio'];
-        $noreq        = $_POST['noreq'];
-        $fecha        = $_POST['fecha'];
-        $proveedor    = $_POST['proveedor'];
-        $contacto     = $_POST['contacto'];
-        $telefono     = $_POST['telefono'];
-        $correo       = $_POST['correo'];
-        $formapago    = $_POST['forma_pago'];
-        $metodopago   = $_POST['metodo_pago'];
-        $usocfdi      = $_POST['uso_cfdi'];
-        $solicita     = $_POST['solicita'];
-        $notas        = $_POST['notas'];
-        $recibe       = $_POST['recibe'];
+if ($_POST['action'] == 'AlmacenaOrdencompra') {
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+    if (empty($_POST['fecha']) || empty($_POST['proveedor'])) {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
+        exit;
+    }
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_ordencompra($folio, $noreq, '$fecha', $proveedor, '$contacto', '$telefono', '$correo', '$formapago', '$metodopago', '$usocfdi', '$solicita', '$notas', '$recibe', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+    $folio        = intval($_POST['folio']); // Asegurar que sea número
+    $noreq        = intval($_POST['noreq']);
+    $fecha        = $_POST['fecha']; // Suponiendo que viene en formato YYYY-MM-DD
+    $proveedor    = intval($_POST['proveedor']);
+    $contacto     = trim($_POST['contacto']);
+    $telefono     = trim($_POST['telefono']);
+    $correo       = trim($_POST['correo']);
+    $formapago    = trim($_POST['forma_pago']);
+    $metodopago   = trim($_POST['metodo_pago']);
+    $usocfdi      = trim($_POST['uso_cfdi']);
+    $solicita     = trim($_POST['solicita']);
+    $notas        = trim($_POST['notas']);
+    $recibe       = trim($_POST['recibe']);
+    $usuario      = intval($_SESSION['idUser']); // Verifica que sea numérico
+
+    // Generar una consulta segura con Prepared Statements
+    $query = "INSERT INTO orden_compra 
+        (no_orden, no_requisicion, fecha, proveedor, contacto, telefono, correo, forma_pago, metodo_pago, uso_cfdi, area_solicitante, observaciones, recibe, usuario_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    if ($stmt = mysqli_prepare($conection, $query)) {
+        mysqli_stmt_bind_param($stmt, "iisssssssssssi", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario);
+
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(["status" => "success", "message" => "Orden de compra almacenada", "insert_id" => mysqli_insert_id($conection)]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error en la consulta: " . mysqli_error($conection)]);
         }
-    
+
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+    }
+
     mysqli_close($conection);
-  }
-   
     exit;
 }
-
 
 //****************************//
         //Cancelar orden de compra
@@ -12103,7 +12111,7 @@ if ($_POST['action'] == 'AlmacenaEditNc') {
     // Sanitizar y validar datos
     $id_nc       = intval($_POST['idnq']);
     $no_queja    = intval($_POST['noqueja']);
-    $date_nc     = mysqli_real_escape_string($conection, $_POST['fecha']);
+    $date_nc     = mysqli_real_escape_string($conection, $_POST['fecha']) ?? NULL;
     $mes_nc      = mysqli_real_escape_string($conection, $_POST['mes']);
     $cliente_nc  = mysqli_real_escape_string($conection, $_POST['cliente']);
     $formato     = mysqli_real_escape_string($conection, $_POST['formato']);
@@ -12115,20 +12123,20 @@ if ($_POST['action'] == 'AlmacenaEditNc') {
     $unidad_nc   = mysqli_real_escape_string($conection, $_POST['unidad']);
     $ruta_nc     = mysqli_real_escape_string($conection, $_POST['ruta']);
     $parada_nc   = mysqli_real_escape_string($conection, $_POST['parada']);
-    $date_incid  = mysqli_real_escape_string($conection, $_POST['dateincident']);
+    $date_incid  = mysqli_real_escape_string($conection, $_POST['dateincident']) ?? NULL;
     $turno_nc    = mysqli_real_escape_string($conection, $_POST['turno']);
     $procede_nc  = mysqli_real_escape_string($conection, $_POST['procede']);
     $porkprocede = mysqli_real_escape_string($conection, $_POST['porkprocede']);
     $analisis_nc = mysqli_real_escape_string($conection, $_POST['analisis']);
     $accion_nc   = mysqli_real_escape_string($conection, $_POST['accion']);
-    $date_accion = mysqli_real_escape_string($conection, $_POST['dateaccion']);
+    $date_accion = mysqli_real_escape_string($conection, $_POST['dateaccion']) ?? NULL;
     $observa_nc  = mysqli_real_escape_string($conection, $_POST['notas']);
     $tipo_incid  = mysqli_real_escape_string($conection, $_POST['tipoinc']);
     $estatus_nc  = mysqli_real_escape_string($conection, $_POST['estatus']);
     $causa_nc    = mysqli_real_escape_string($conection, $_POST['causa']);
     $afecta_cte  = mysqli_real_escape_string($conection, $_POST['afectacte']);
     $area_resp   = mysqli_real_escape_string($conection, $_POST['arearespons']);
-    $date_cierre = mysqli_real_escape_string($conection, $_POST['datecierre']);
+    $date_cierre = mysqli_real_escape_string($conection, $_POST['datecierre']) ?? NULL;
     
     // Convertir array a string (si existe)
     $resp_accion = !empty($_POST['respaccion']) && is_array($_POST['respaccion']) 

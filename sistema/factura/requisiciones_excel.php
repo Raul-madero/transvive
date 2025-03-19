@@ -52,14 +52,14 @@ $objPHPExcel->getProperties()->setCreator("Transvive CRM")
                ->setCategory("Test result file");
 
 $objPHPExcel ->getActiveSheet()
-             ->getStyle('A3:L3')
+             ->getStyle('A3:M3')
              ->getFill()
              ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
              ->getStartColor()
              ->setRGB('8ACEC3'); //i.e,colorcode=D3D3D3 
 
 
-$objPHPExcel->getActiveSheet()->getStyle('A3:L3')
+$objPHPExcel->getActiveSheet()->getStyle('A3:M3')
     ->getAlignment()->setWrapText(true);                      
 
 $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:L1');
@@ -77,16 +77,17 @@ $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('G3', 'Tipo de requisición')
             ->setCellValue('H3', 'Área solicitante')
             ->setCellValue('I3', 'Cantidad autorizada')
-            ->setCellValue('J3', 'recibe')
-            ->setCellValue('K3', 'Estatus')
-            ->setCellValue('L3', 'Observaciones');
+            ->setCellValue('J3', 'Fecha recepcion')
+            ->setCellValue('K3', 'recibe')
+            ->setCellValue('L3', 'Estatus')
+            ->setCellValue('M3', 'Observaciones');
 
 
 
 // Fuente de la primera fila en negrita
 $boldArray = array('font' => array('bold' => true,),'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER));
  
-$objPHPExcel->getActiveSheet()->getStyle('A1:L3')->applyFromArray($boldArray);
+$objPHPExcel->getActiveSheet()->getStyle('A1:M3')->applyFromArray($boldArray);
 $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(13);
 $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
@@ -95,9 +96,10 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
 $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(12);
-$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(25);
-$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(13);
-$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(30);
+$objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(10);
+$objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+$objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(13);
+$objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(30);
 
 
 $query_productos = mysqli_query($conection,"SELECT id, no_requisicion, fecha, fecha_requiere, tipo_requisicion, area_solicitante, cant_autorizada, recibe, if(estatus = 1,'Activa',if(estatus = 2,'Autorizada', if(estatus = 3, 'Procesada', 'Cancelada'))) as Status, observaciones FROM requisicion_compra");
@@ -178,9 +180,10 @@ $total = 0;
             ->setCellValue('G'.$fila, $row['tipo_requisicion'])
             ->setCellValue('H'.$fila, $row['area_solicitante'])
             ->setCellValue('I'.$fila, $row['cant_autorizada'])
-            ->setCellValue('J'.$fila, $row['recibe'])
-            ->setCellValue('K'.$fila, $row['Status'])
-            ->setCellValue('L'.$fila, $row['observaciones']);
+            ->setCellValue('J'.$fila, "")
+            ->setCellValue('K'.$fila, $row['recibe'])
+            ->setCellValue('L'.$fila, $row['Status'])
+            ->setCellValue('M'.$fila, $row['observaciones']);
   //formato de numeros
   //$objPHPExcel->getActiveSheet()->getStyle('F'.$fila)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);          
 $fila++;   
