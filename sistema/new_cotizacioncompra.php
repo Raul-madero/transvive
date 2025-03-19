@@ -437,7 +437,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
          <div class="form-group row">
            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Cantidad:</label>
            <div class="col-sm-9">
-            <input type="number" step="any" class="form-control" id="inputCantidad" name="inputCantidad" value="0">
+            <input type="number" step="any" class="form-control" id="inputCantidad" name="inputCantidad" value="1">
            </div>
         </div>
 
@@ -520,7 +520,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         e.preventDefault();
 
         var folio        = $('#inputfoliodet').val();
-        console.log(folio);
         var codigo       = $('#inputCodigo').val();
         var descripcion  = $('#inputDescripcion').val();
         var marca        = $('#inputMarca').val();
@@ -534,7 +533,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var datoom       = $('#inputDatoom').val();        
 
        var action       = 'AddDetallecotizacion';
-       exit;
 
         $.ajax({
                     url: 'includes/ajax.php',
