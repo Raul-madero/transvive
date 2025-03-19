@@ -237,11 +237,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        <option value="<?= $oprc['nombre'] ?>"><?= $oprc['nombre'] ?></option>  
                        <?php endforeach; ?>
                     </select>
-                    </div>
-                  </div>
-
-                  
-
+                </div>
+            </div>
                 <!-- /.card-body -->
                 <div class="form-group row" style="text-align:right;">
                         <div class="offset-sm-2 col-sm-10">
@@ -252,28 +249,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- /.card-footer -->
               </form>
             </div>
-     </div>
-     </div>
-     
+    </div>
+</div>
 </center>
-    
-    <!-- /.content -->
-
-
-
+  <!-- /.content -->
   <!-- /.content-wrapper -->
-  
   <!-- Control Sidebar -->
-  
   <!-- /.control-sidebar -->
-
   <!-- Main Footer -->
   <?php include('includes/footer.php') ?>
 </div>
 <!-- ./wrapper -->
-
 <!-- REQUIRED SCRIPTS -->
-
 <!-- jQuery -->
 <script src="../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
@@ -314,20 +301,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </script>
 
 <script>
-   $('#guardar_tipoactividad').click(function(e){
+    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
 
-       var folio         = $('#inputFolio').val();
-       var fecha         = $('#inputFecha').val();
-       var fecha_req     = $('#inputFecharequiere').val();
-       var tipo          = $('#inputTipo').val();
-       var areasolicita  = $('#inputAsolicita').val();
-      
-       var montoaut      = $('#inputMontoaut').val();
-       var notas         = $('#inputNotas').val();
-   
-     
-       var action       = 'AlmacenaRequerimiento';
+        var folio         = $('#inputFolio').val();
+        var fecha         = $('#inputFecha').val();
+        var fecha_req     = $('#inputFecharequiere').val();
+        var tipo          = $('#inputTipo').val();
+        var areasolicita  = $('#inputAsolicita').val();
+        var montoaut      = $('#inputMontoaut').val();
+        var notas         = $('#inputNotas').val();
+        var action       = 'AlmacenaRequerimiento';
 
         $.ajax({
                     url: 'includes/ajax.php',
@@ -404,15 +388,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Page specific script -->
 <div class="modal fade" id="modalEditcliente" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   
-  
    <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Movimiento</h5>
-      </div>
-      <div class="modal-body">
-
-        
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Movimiento</h5>
+        </div>
+        <div class="modal-body">
         <form>
         <div class="col-md-12">
           <div class="form-group"> 
@@ -538,6 +519,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         e.preventDefault();
 
         var folio        = $('#inputfoliodet').val();
+        console.log(folio);
         var codigo       = $('#inputCodigo').val();
         var descripcion  = $('#inputDescripcion').val();
         var marca        = $('#inputMarca').val();
@@ -551,6 +533,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var datoom       = $('#inputDatoom').val();        
 
        var action       = 'AddDetallecotizacion';
+       exit;
 
         $.ajax({
                     url: 'includes/ajax.php',
