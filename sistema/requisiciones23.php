@@ -270,8 +270,6 @@ session_start();
    
    <?php
       if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3) {
-         
-       
    ?>
  
     <script type="text/javascript">
@@ -334,10 +332,7 @@ buttons: [
                     "render": function ( data, type, full, meta ) {
         return '<!--<a class="link_edit" style="color:#007bff;" href= \'edit_cotizacioncompra.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Edit</a> | --><a href= \'factura/requisicion.php?id=' + full.Folio + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.Folio +  '\' data-date=\'' + full.fecha_req +  '\' data-name=\'' + full.tipor +  '\' href="javascript:void(0)">&nbsp;<i class="fa fa-thumbs-up"></i> Authorize</a> <!--| <a data-toggle="modal" data-target="#modalBorra"  data-id=\'' + full.Folio +  '\' data-name=\'' + full.arear +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-trash"></i> Delete</a>--> ';
     }      
- } 
-
-         
-            
+ }   
           ],
           "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
     "buttons": [
@@ -350,7 +345,6 @@ buttons: [
             columns: '0,1,2,3,4,5,6'
         }
     ],
-         
         }); 
       }  
 
@@ -381,22 +375,16 @@ buttons: [
           }
         }
       });
-
-      
-
             // Datapicker 
             $( ".datepicker" ).datepicker({
                 language: 'es',
                 "dateFormat": "yy-mm-dd",
                 changeYear: true
             });
-
-
     </script>
 
   <?php
-  } else if($_SESSION['rol'] == 16) {
-   
+  } else if($_SESSION['rol'] == 16 || $_SESSion['rol'] == 1) {
   ?>
    <script type="text/javascript">
 
