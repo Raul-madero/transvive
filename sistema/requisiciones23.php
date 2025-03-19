@@ -384,7 +384,7 @@ buttons: [
     </script>
 
   <?php
-  } else if($_SESSION['rol'] == 16 || $_SESSion['rol'] == 1) {
+  } else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1) {
   ?>
    <script type="text/javascript">
 
