@@ -10,6 +10,7 @@
             <li><a href="viajes23.php" class="dropdown-item">Registro de Viaje </a></li>
             <li><a href="alertas.php" class="dropdown-item">Registro de Alertas </a></li>
             <li><a href="orden_trabajo23.php" class="dropdown-item">Orden de Trabajo de Mantenimiento</a></li>
+            <li><a href="requisiciones23.php" class="dropdown-item">Requisición</a></li>
               <!--<li><a href="#" class="dropdown-item">Equipo</a></li>-->
               
               <li><a href="carga_combustible23.php" class="dropdown-item">Carga de Combustible</a></li>
