@@ -304,7 +304,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
 
-        var folio         = $('#inputFolio').val();
+        var folioVal         = $('#inputFolio').val();
+        let folio           = folioVal.replace(/\D+/g, '');
         console.log(folio);
         var fecha         = $('#inputFecha').val();
         var fecha_req     = $('#inputFecharequiere').val();
