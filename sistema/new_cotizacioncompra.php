@@ -153,7 +153,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Area Solicitante</label>
                                 <div class="col-sm-9">
                                     <?php
-                                        switch (intval($_SESSion['rol'])):
+                                        switch (intval($_SESSion['rol'])) {
                                             case 1:
                                                 $solicita = "Administracion";
                                                 break;
@@ -175,6 +175,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             default:
                                                 $solicita = "Compras";
                                                 break;
+                                        }
                                         ?>
                                         <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly/>
                                     <select style=" font-size: 14px;" name="inputAsolicita" id="inputAsolicita" required class="form-control custom-select" >
