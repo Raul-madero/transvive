@@ -1,48 +1,52 @@
 <?php
 include "../conexion.php";
 session_start();
-  $User=$_SESSION['user'];
-  $rol=$_SESSION['rol'];
-  $sql = "select * from rol where idrol =$rol ";
-  $query = mysqli_query($conection, $sql);
-  $filas = mysqli_fetch_assoc($query); 
+$User=$_SESSION['user'];
+$rol=$_SESSION['rol'];
+$sql = "select * from rol where idrol =$rol ";
+$query = mysqli_query($conection, $sql);
+$filas = mysqli_fetch_assoc($query); 
 
-  $namerol = $filas['rol'];
-   if (!isset($_SESSION['idUser'])) {
-  header('Location: ../index.php');
+$namerol = $filas['rol'];
+if (!isset($_SESSION['idUser'])) {
+  	header('Location: ../index.php');
 }
 
-var_dump($_REQUEST);
-  $sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados where estatus = 1 ORDER BY nombres";
-  $queryoper = mysqli_query($conection, $sqloper);
-  $filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
+if(!isset($_SESSION['req'])) {
+ 	header('Location: new_cotizacioncompra.php');
+}
+$requisicion = $_REQUEST['req'];
 
-  $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
-  $queryrecb = mysqli_query($conection, $sqlrecb);
-  $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
+$sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados where estatus = 1 ORDER BY nombres";
+$queryoper = mysqli_query($conection, $sqloper);
+$filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
 
-  $sqlprod   = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY codigo";
-  $queryprod = mysqli_query($conection, $sqlprod);
-  $filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
+$sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
+$queryrecb = mysqli_query($conection, $sqlrecb);
+$filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
 
-  $sqlprodnm = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
-  $queryprodnm = mysqli_query($conection, $sqlprodnm);
-  $filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
+$sqlprod   = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY codigo";
+$queryprod = mysqli_query($conection, $sqlprod);
+$filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
 
-  $sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
-  $queryprov = mysqli_query($conection, $sqlprov);
-  $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
+$sqlprodnm = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
+$queryprodnm = mysqli_query($conection, $sqlprodnm);
+$filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
 
-  $sqlumed   = "select codigo, descripcion from unidades_medida ORDER BY codigo";
-  $queryumed = mysqli_query($conection, $sqlumed);
-  $filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
+$sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
+$queryprov = mysqli_query($conection, $sqlprov);
+$filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
 
-  $sqloc   = "select id, no_requisicion from requisicion_compra where estatus = 2";
-  $queryoc = mysqli_query($conection, $sqloc);
-  $filasoc = mysqli_fetch_all($queryoc, MYSQLI_ASSOC); 
+$sqlumed   = "select codigo, descripcion from unidades_medida ORDER BY codigo";
+$queryumed = mysqli_query($conection, $sqlumed);
+$filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
+
+$sqloc   = "select id, no_requisicion from requisicion_compra where estatus = 2";
+$queryoc = mysqli_query($conection, $sqloc);
+$filasoc = mysqli_fetch_all($queryoc, MYSQLI_ASSOC); 
 
 
-  mysqli_close($conection);
+mysqli_close($conection);
 ?>
 
 <!DOCTYPE html>
@@ -140,13 +144,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="form-group row" style="text-align:left;">
                     <label  for="inputEmail3" class="col-sm-2 col-form-label">No. Requsicion</label>
                     <div class="col-sm-2">
-                     <select style=" font-size: 14px;"  class="form-control select2bs4" style="width: 100%; text-align: left" id="inputNoorden" name="inputNoorden">
+						<input type="text" class="form-control" id="inputReq" name="inputReq" value="<?php echo "REQ-" . $requisicion; ?>" readonly>
+					</div>
+                     <!-- <select style=" font-size: 14px;"  class="form-control select2bs4" style="width: 100%; text-align: left" id="inputNoorden" name="inputNoorden">
                        <option value="">No. Requisicion</option>
                        <?php foreach ($filasoc as $opoc): //llenar las opciones del primer select ?>
                        <option value="<?= $opoc['no_requisicion'] ?>"><?= $opoc['no_requisicion'] ?></option>  
                        <?php endforeach; ?>
                     </select>
-                    </div>
+                    </div> -->
                   
                     <label for="inputEmail3" class="col-sm-2 col-form-label" style="text-align: right;">Fecha</label>
                     <div class="col-sm-2">
