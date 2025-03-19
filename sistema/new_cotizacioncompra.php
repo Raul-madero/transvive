@@ -305,6 +305,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         e.preventDefault();
 
         var folio         = $('#inputFolio').val();
+        console.log(folio);
         var fecha         = $('#inputFecha').val();
         var fecha_req     = $('#inputFecharequiere').val();
         var tipo          = $('#inputTipo').val();
