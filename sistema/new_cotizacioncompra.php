@@ -176,7 +176,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                 $solicita = "Compras";
                                                 break;
                                         ?>
-                                        <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly>
+                                        <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly/>
                                     <select style=" font-size: 14px;" name="inputAsolicita" id="inputAsolicita" required class="form-control custom-select" >
                                         <option value="">--  Seleccione --</option>
                                         <option value="Aseguramiento de Calidad">Aseguramiento de Calidad</option>
