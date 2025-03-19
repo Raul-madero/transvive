@@ -152,6 +152,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="form-group row" style="text-align:left;">
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Area Solicitante</label>
                                 <div class="col-sm-9">
+                                    <?php
+                                        switch (intval($_SESSion['rol'])):
+                                            case 1:
+                                                $solicita = "Administracion";
+                                                break;
+                                            case 5:
+                                                $solicita = "Recursos Humanos";
+                                                break;
+                                            case 6:
+                                                $solicita = "Operaciones";
+                                                break;
+                                            case 7:
+                                                $solicita = "Mantenimiento";
+                                                break;
+                                            case 10:
+                                                $solicita = "Almacen";
+                                                break;
+                                            case 14:
+                                                $solicita = "Calidad";
+                                                break;
+                                            default:
+                                                $solicita = "Compras";
+                                                break;
+                                        ?>
+                                        <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly>
                                     <select style=" font-size: 14px;" name="inputAsolicita" id="inputAsolicita" required class="form-control custom-select" >
                                         <option value="">--  Seleccione --</option>
                                         <option value="Aseguramiento de Calidad">Aseguramiento de Calidad</option>
