@@ -150,7 +150,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               
 
                             <div class="form-group row" style="text-align:left;">
-                                <label for="inputEmail3" class="col-sm-3 col-form-label">Area Solicitante</label>
+                                <label for="inputSolicita" class="col-sm-3 col-form-label">Area Solicitante</label>
                                 <div class="col-sm-9">
                                     <?php
                                         switch (intval($_SESSION['rol'])) {
@@ -178,7 +178,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         }
                                         ?>
                                         <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly/>
-                                    <!-- <select style=" font-size: 14px;" name="inputAsolicita" id="inputAsolicita" required class="form-control custom-select" >
+                                    <!-- <select style=" font-size: 14px;" name="inputSolicita" id="inputSolicita" required class="form-control custom-select" >
                                         <option value="">--  Seleccione --</option>
                                         <option value="Aseguramiento de Calidad">Aseguramiento de Calidad</option>
                                         <option value="Administracion">Administracion</option>
@@ -311,7 +311,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             var fecha         = $('#inputFecha').val();
             var fecha_req     = $('#inputFecharequiere').val();
             var tipo          = $('#inputTipo').val();
-            var areasolicita  = $('#inputAsolicita').val();
+            var areasolicita  = $('#inputSolicita').val();
             var montoaut      = $('#inputMontoaut').val();
             var notas         = $('#inputNotas').val();
             var action       = 'AlmacenaRequerimiento';
