@@ -13,6 +13,7 @@
               
               <li><a href="alertas.php" class="dropdown-item">Registro de Alertas </a></li>-->
               <li><a href="orden_trabajo23.php" class="dropdown-item">Orden de Trabajo de Mantenimiento</a></li>
+              <li><a href="requisiciones23.php" class="dropdown-item">Requisición</a></li>
               <!--<li><a href="#" class="dropdown-item">Equipo</a></li>-->
               <!--<li><a href="#" class="dropdown-item">Solicitud de Servicio</a></li>-->
               <!--
