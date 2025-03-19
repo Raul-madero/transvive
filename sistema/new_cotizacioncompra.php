@@ -153,7 +153,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <label for="inputSolicita" class="col-sm-3 col-form-label">Area Solicitante</label>
                                 <div class="col-sm-9">
                                     <?php
-                                        switch (intval($_SESSION['rol'])) {
+                                        switch (intval($rol)) {
                                             case 1:
                                                 $solicita = "Administracion";
                                                 break;

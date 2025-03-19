@@ -5403,7 +5403,7 @@ if ($_POST['action'] == 'AddDetalleOrdencompra') {
             $totalgral   = 0;
 
             // Obtener los detalles de la orden de compra
-            $query_detalle_mantto = mysqli_query($conection, "SELECT * FROM detalle_temp_ordencompra WHERE folio = $nofolio");
+            $query_detalle_mantto = mysqli_query($conection, "SELECT * FROM detalle_requisicioncompra WHERE folio = $nofolio");
 
             while ($data = mysqli_fetch_assoc($query_detalle_mantto)) {
                 $subtotal = $data['cantidad'] * $data['precio'];

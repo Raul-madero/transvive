@@ -11,6 +11,7 @@
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
               <li><a href="viajes23.php" class="dropdown-item">Registro de Viaje </a></li>
               <li><a href="alertas.php" class="dropdown-item">Registro de Alertas </a></li>
+              <li><a href="requisiciones23.php" class="dropdown-item">Requisición</a></li>
               <!--<li><a href="mis_actividades.php" class="dropdown-item">Solicitud de Mantenimiento</a></li>-->
               <!--<li><a href="#" class="dropdown-item">Equipo</a></li>-->
               <!--<li><a href="mailbox.php" class="dropdown-item">Solicitud de Servicio</a></li>-->
