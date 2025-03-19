@@ -12,7 +12,7 @@ if (!isset($_SESSION['idUser'])) {
   	header('Location: ../index.php');
 }
 
-if(!isset($_SESSION['req'])) {
+if(!isset($_REQUEST['req'])) {
  	header('Location: new_cotizacioncompra.php');
 }
 $requisicion = $_REQUEST['req'];
