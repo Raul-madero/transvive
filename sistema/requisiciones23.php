@@ -395,7 +395,7 @@ buttons: [
     </script>
 
   <?php
-  } else {
+  } else if($_SESSION['rol'] == 16) {
    
   ?>
    <script type="text/javascript">
@@ -452,7 +452,6 @@ buttons: [
             { "data" : "notas", "width": "27%", "orderable":false },
             { "data" : "estatusped", "width": "8%", "orderable":false },
               
-          
             {
 
                     "render": function ( data, type, full, meta ) {
@@ -521,10 +520,131 @@ buttons: [
     </script>
 <?php
 
+}else {
+?>
+<script type="text/javascript">
+
+load_data(); // first load
+
+function load_data(initial_date, final_date, gender){
+  var ajax_url = "data/datadetorders_req.php";
+
+  $('#fetch_generated_wills').DataTable({
+    "order": [[ 0, "desc" ]],
+    dom: 'Bfrtip',
+lengthMenu: [
+[20, 25, 50, -1],
+['20 rows', '25 rows', '50 rows', 'Show all']
+],
+buttons: [
+'excelHtml5',
+'pageLength'
+],
+    "processing": true,
+    "serverSide": true,
+    "stateSave": true,
+    "responsive": true,
+    "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+    "ajax" : {
+      "url" : ajax_url,
+      "dataType": "json",
+      "type": "POST",
+      "data" : { 
+        "action" : "fetch_users", 
+        "initial_date" : initial_date, 
+        "final_date" : final_date,
+        "gender" : gender 
+        
+      },
+      "dataSrc": "records"
+    },
+    "columns": [
+      { "data" : "pedidono", "width": "3%", className: "text-right" },
+      { 
+        "data": "Folio", 
+        "width": "3%", 
+        "className": "text-right", 
+        "render": function(data, type, full, meta) {
+          return 'req-' + data; // Sin etiquetas HTML
+        }
+      },
+      { "data" : "fechaa", "width": "8%", className: "text-center" },            
+      { "data" : "fecha_req", "width": "10%", className:"text-center", "orderable": false},
+      { "data" : "tipor", "width": "5%", "orderable":false },
+      { "data" : "arear", "width": "10%", "orderable":false },
+      { "data" : "monto", "width": "6%", render: $.fn.dataTable.render.number( ',', '.', 2 ), className: "text-right", "orderable":false },
+      { "data" : "notas", "width": "27%", "orderable":false },
+      { "data" : "estatusped", "width": "8%", "orderable":false },
+        
+      {
+
+              "render": function ( data, type, full, meta ) {
+  return '<a class="link_edit" style="color:#007bff;" href= \'edit_cotizacioncompra.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> </a> | <a href= \'factura/requisicion.php?id=' + full.Folio + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> </a> |<!-- <a data-toggle="modal" data-target="#modalCancela"  data-id=\'' + full.Folio +  '\' data-date=\'' + full.fecha_req +  '\' data-name=\'' + full.arear +  '\' href="javascript:void(0)">&nbsp;<i class="fa fa-ban"></i></a> | <a data-toggle="modal" data-target="#modalBorra"  data-id=\'' + full.Folio +  '\' data-name=\'' + full.arear +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-trash"></i> </a> --> ';
+}
+              
+      
+} 
+
+   
+      
+    ],
+    "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
+"buttons": [
+  'copyHtml5',
+  'excelHtml5',
+  'csvHtml5',     
+  {
+      extend: 'colvis',
+      postfixButtons: [ 'colvisRestore' ],
+      columns: '0,1,2,3,4,5,6'
+  }
+],
+   
+  }); 
+}  
+
+$("#filter").click(function(){
+  var initial_date = $("#initial_date").val();
+  var final_date = $("#final_date").val();
+  var gender = $("#gender").val();
+
+  if(initial_date == '' && final_date == ''){
+    $('#fetch_generated_wills').DataTable().destroy();
+    load_data("", "", gender); // filter immortalize only
+  }else{
+    var date1 = new Date(initial_date);
+    var date2 = new Date(final_date);
+    var diffTime = Math.abs(date2 - date1);
+    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+    if(initial_date == '' || final_date == ''){
+        $("#error_log").html("Warning: You must select both (start and end) date.</span>");
+    }else{
+      if(date1 > date2){
+          $("#error_log").html("Warning: End date should be greater then start date.");
+      }else{
+         $("#error_log").html(""); 
+         $('#fetch_generated_wills').DataTable().destroy();
+         load_data(initial_date, final_date, gender);
+      }
+    }
+  }
+});
+
+
+
+      // Datapicker 
+      $( ".datepicker" ).datepicker({
+          language: 'es',
+          "dateFormat": "yy-mm-dd",
+          changeYear: true
+      });
+
+
+</script>
+<?php
 }
 ?>
-
-
 <script type="text/javascript">
 
 
