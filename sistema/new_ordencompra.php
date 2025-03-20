@@ -359,8 +359,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../dist/js/demo.js"></script> -->
  
 
- <script>
-
 $('#btn_salir').click(function(e) {
     e.preventDefault();
 
@@ -476,37 +474,7 @@ $('#btn_salir').click(function(e) {
     </script>  
 <script src="js/sweetalert2.all.min.js"></script>   
 <!-- Page specific script -->
-
-	<script>
-		$(document).ready(function() {
-			var folio = "<?php echo $requisicion; ?>";
-			$("#detalle_ordencompra").DataTable({
-				"processing": true,
-				"serverSide": true,
-				"ajax": {
-					"url": "data/detalles_requisicion.php",
-					"type": "POST",
-					"data": {
-						"folio": folio
-					}
-				},
-				"columns": [
-					{"data": "cantidad"},
-					{"data": "codigo"},
-					{"data": "descripcion"},
-					{"data": "umedida"},
-					{"data": "marca"},
-					{"data": "precio"},
-					{"data": "importe"},
-					{"data": "acciones"}
-				],
-				"language": {
-					"url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/Spanish.json"
-				}
-			})
-		})
-	</script>
-<!-- <div class="modal fade" id="modalEditcliente" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalEditcliente" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   
   
    <div class="modal-dialog modal-dialog-centered" role="document">
@@ -627,7 +595,7 @@ $('#btn_salir').click(function(e) {
   </div>
 </div> 
 
-</div> -->
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
