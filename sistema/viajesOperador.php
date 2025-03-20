@@ -170,10 +170,14 @@ session_start();
                         }
                     },
                     columns: [
-                        {data: 'noempleado'},
-                        {data: null, render: function(data, type, row) {
-                            return row.nombres + ' ' + row.apellido_paterno + ' ' + row.apellido_materno;
-                        }}
+                        {data: 'noempleado', class: 'text-center'},
+                        {
+                            data: null, 
+                            render: function(data, type, row) {
+                                return row.nombres + ' ' + row.apellido_paterno + ' ' + row.apellido_materno;
+                            },
+                            class: 'text-center'
+                        }
                     ],
                     language: {
                         processing: "Procesando...",
