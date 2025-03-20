@@ -401,6 +401,17 @@ if(!in_array($rol, $allowed)) {
                 }
             }
         });
+
+        $(document).on('click', '#tableUnidad tbody tr', function(e) {
+            const table = $('#tableUnidad').DataTable();
+            const clickedColimnIndex = $(e.target).closest('td').index();
+            const rowData = table.row(this).data();
+            mostrarModal(rowData);
+        })
+
+        function mostrarModal(rowData) {
+            console.log(rowData);
+        }
     }
 });
     </script>
