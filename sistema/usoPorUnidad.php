@@ -94,7 +94,7 @@ if(!in_array($rol, $allowed)) {
             <div class="card">
                 <div class="card-body">
                     <input type="hidden" id="supervisor" name="supervisor" value="<?php echo $supervisor; ?>">
-                    <table id="tableOperador" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                    <table id="tableUnidad" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
                         <thead>
                             <tr>
                                 <th class="text-center">No. Unidad</th>
@@ -137,25 +137,227 @@ if(!in_array($rol, $allowed)) {
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- DataTables Initialization -->
     <script>
-        $(document).ready(function() {
-            const load_data = (semana, anio) => {
-                const ajaxUrl = 'data/usoPorUnidad.php';
-                //Si no hay datos de semana o anio destruye la tabla y muestra vacia
-                if(!semana || !anio) {
-                    const table = $('#tableOperador').DataTable();
-                    table.clear().draw(); //Vaciar la tabla
-                    return;
-                }
+        // $(document).ready(function() {
+        //     const load_data = (semana, anio) => {
+        //         const supervisor = $('#supervisor').val();
+        //         const ajaxUrl = 'data/usoPorUnidad.php';
+        //         //Si no hay datos de semana o anio destruye la tabla y muestra vacia
+        //         if(!semana || !anio) {
+        //             const table = $('#tableOperador').DataTable();
+        //             table.clear().draw(); //Vaciar la tabla
+        //             return;
+        //         }
 
-                let table = $('#tableOperador').DataTable();
-                table.destroy();
-                table = $('#tableOperador').DataTable({
+        //         let table = $('#tableOperador').DataTable();
+        //         table.destroy();
+        //         table = $('#tableOperador').DataTable({
+        //             responsive: true,
+        //             autoWidth: false,
+        //             dom: 'Bftrip',
+        //             buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
+        //             ajax: {
+        //                 url: ajaxUrl,
+        //                 type: 'POST',
+        //                 data: {
+        //                     supervisor_id: supervisor,
+        //                     semana: semana,
+        //                     anio: anio
+        //                 },
+        //                 dataSrc: function(json) {
+        //                     return json.data;
+        //                 }
+        //             },
+        //             columns: [
+        //                 {data: 'nounidad'},
+        //                 {data: null, render: function(data, type, row) {
+        //                     return row.nombres + ' ' + row.apellido_paterno + ' ' + row.apellido_materno;
+        //                 }}
+        //             ],
+        //             language: {
+        //                 processing: "Procesando...",
+        //                 search: "Buscar:",
+        //                 lengthMenu: "Mostrar _MENU_ registros",
+        //                 info: "Mostrando de _START_ a _END_ de _TOTAL_ registros",
+        //                 infoEmpty: "Mostrando 0 a 0 de 0 registros",
+        //                 infoFiltered: "(filtrado de _MAX_ registros totales)",
+        //                 loadingRecords: "Cargando...",
+        //                 zeroRecords: "No se encontraron resultados",
+        //                 emptyTable: "No hay datos disponibles",
+        //                 paginate: {
+        //                     first: "Primero",
+        //                     previous: "Anterior",
+        //                     next: "Siguiente",
+        //                     last: "Último"
+        //                 },
+        //                 aria: {
+        //                     sortAscending: ": activar para ordenar ascendente",
+        //                     sortDescending: ": activar para ordenar descendente"
+        //                 }
+        //             }
+        //         });
+
+        //         c
+
+        //         //Funcion para mostrar el modal de viajes
+        //         function mostrarModal(datos) {
+        //             console.log(datos);
+
+        //             // Vaciar el contenido del modal sin afectar los encabezados
+        //             $('#miModalLabel').text('Asignación Semanal de Viajes');
+        //             $('#miModalOperador').text('');
+        //             $('#unidad').text('');
+        //             // $('#modalSupervisor').text('');
+        //             $('#semana').text('');
+        //             $('#fecha').text('');
+        //             $('.modal-body .contenido-modal').empty(); // Limpiar solo el contenido dinámico
+
+        //             if (!datos.viajes || datos.viajes.length === 0) return;
+
+        //             $('#miModalOperador').text(`Operador: ${datos.viajes[0].operador}`);
+        //             $('#unidad').text(`No. Unidad: ${datos.viajes[0].num_unidad}`);
+        //             // $('#modalSupervisor').text(`Supervisor: ${datos.supervisor}`);
+        //             $('#semana').text(`${datos.viajes[0].semana}`);
+
+        //             let diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+        //             function obtenerRangoSemana(año, semana) {
+        //                 // Obtener el primer día del año
+        //                 let primerDiaAño = new Date(año, 0, 1); // 1 de enero
+
+        //                 // Obtener el primer lunes del año
+        //                 let primerLunes = new Date(primerDiaAño);
+        //                 let diaSemana = primerDiaAño.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+                        
+        //                 if (diaSemana !== 1) { // Si no es lunes, ajustar al primer lunes
+        //                     let ajuste = diaSemana === 0 ? 1 : 8 - diaSemana;
+        //                     primerLunes.setDate(primerDiaAño.getDate() + ajuste);
+        //                 }
+
+        //                 // Calcular el lunes de la semana deseada
+        //                 let lunesSemana = new Date(primerLunes);
+        //                 lunesSemana.setDate(primerLunes.getDate() + (semana - 1) * 7);
+        //                 console.log(lunesSemana);
+
+        //                 // Calcular el domingo de la misma semana (sumando 6 días)
+        //                 let domingoSemana = new Date(lunesSemana);
+        //                 domingoSemana.setDate(lunesSemana.getDate() + 6);
+
+        //                 // Formatear fechas (YYYY-MM-DD)
+        //                 let formatoFecha = (fecha) => fecha.toISOString().split('T')[0];
+        //                 console.log(formatoFecha(lunesSemana))
+
+        //                 return {
+        //                     lunes: formatoFecha(lunesSemana),
+        //                     domingo: formatoFecha(domingoSemana)
+        //                 };
+        //             }
+
+        //             let textoSemana = datos.viajes[0].semana;
+        //             let numeroSemana = textoSemana.match(/\d+/)[0]; // Extrae solo el número
+        //             console.log(numeroSemana); // "07"
+
+        //             // Si quieres convertirlo en número entero:
+        //             let semanaEntero = parseInt(numeroSemana, 10);
+        //             let semanaCalculo = semanaEntero - 1;
+        //             console.log(semanaCalculo); // 6
+
+        //             let fecha = new Date(datos.viajes[0].fecha); // Ejemplo de fecha
+        //             let anioSemana = fecha.getFullYear();
+        //             console.log(anioSemana);
+
+
+        //             let dias = obtenerRangoSemana(anioSemana, semanaCalculo)
+        //             console.log(dias)
+
+        //             $('#fecha').text(`DEL ${dias.lunes} AL ${dias.domingo}`);
+
+        //             // Agrupar viajes por cliente, ruta y horario
+        //             let viajesAgrupados = {};
+
+        //             datos.viajes.forEach(viaje => {
+        //                 let key = `${viaje.cliente}_${viaje.hora_inicio}_${viaje.hora_fin}`;
+        //                 if (!viajesAgrupados[key]) {
+        //                     viajesAgrupados[key] = {
+        //                         cliente: viaje.cliente,
+        //                         ruta: viaje.ruta,
+        //                         hora_inicio: viaje.hora_inicio,
+        //                         hora_fin: viaje.hora_fin,
+        //                         dias: {
+        //                             Lunes: 'red', Martes: 'red', Miércoles: 'red', Jueves: 'red',
+        //                             Viernes: 'red', Sábado: 'red', Domingo: 'red'
+        //                         }
+        //                     };
+        //                 }
+        //                 let fechaViaje = new Date(viaje.fecha);
+        //                 let dia = diasSemana[fechaViaje.getDay()]; // Obtener el nombre del día
+        //                 console.log(dia)
+        //                 if (dia) viajesAgrupados[key].dias[dia] = 'green';
+        //             });
+
+        //             // Convertir el objeto en un array y ordenar por `hora_fin`
+        //             let viajesOrdenados = Object.values(viajesAgrupados).sort((a, b) => {
+        //                 return a.hora_inicio.localeCompare(b.hora_inicio); // Ordenar por hora_fin
+        //             });
+
+        //             // Construir la tabla de horarios con colores
+        //             let tablaHTML = '';
+        //             viajesOrdenados.forEach(viaje => {
+        //                 tablaHTML += `<div class='row text-center p-2'>
+        //                     <div class='col-1 border'>${viaje.cliente}</div>
+        //                     <div class='col-1 border'>${viaje.ruta}</div>
+        //                     <div class='col-1 border'>${viaje.hora_inicio}</div>
+        //                     <div class='col-1 border'>${viaje.hora_fin}</div>
+        //                     ${diasSemana.map(dia => `<div class='col-1 border' style='background-color: ${viaje.dias[dia]};'></div>`).join('')}
+        //                 </div>`;
+        //             });
+
+        //             $('.modal-body .contenido-modal').append(tablaHTML);
+        //             $('#miModal').modal('show');
+        //         }
+        //     }
+        //     load_data();
+            
+        //     $('#seleccionaSemana').on('click', function() {
+        //         console.log('Click');
+        //         const semana = $('#semanaSelec').val();
+        //         const anio = $('#anio').val();
+        //         if(validarDatos(semana, anio)) {
+        //             load_data(semana, anio)
+        //         }
+        //     })
+
+        //     $('#miModal').on('hidden.bs.modal', function () {
+        //         console.log('Modal cerrado, reseteando selección.');
+        //         $('#semanaSelec').val('0'); // Restablece la selección
+        //         $('#anio').val('2025'); // Restablece el año por defecto
+        //     });
+
+        //     const validarDatos = (semana, anio) => {
+        //         if(semana <= 0 || semana > 52) {
+        //             alert('Seleccione una semana valida');
+        //             return false;
+        //         }
+        //         if(anio < 2000) {
+        //             alert('Seleccione una fecha correcta')
+        //             return false;
+        //         }
+        //         return true;
+        //     }
+            
+        // })
+    </script>
+    <script>
+        $(document).ready(function() {
+            load_data();
+            function load_data(semana, anio) {
+                let ajax_url = 'data/usoPorUnidad.php';
+                $('#tableUnidad').DataTable({
                     responsive: true,
                     autoWidth: false,
                     dom: 'Bftrip',
                     buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
                     ajax: {
-                        url: ajaxUrl,
+                        url: ajax_url,
                         type: 'POST',
                         data: {
                             semana: semana,
@@ -166,182 +368,11 @@ if(!in_array($rol, $allowed)) {
                         }
                     },
                     columns: [
-                        {data: 'nounidad'},
-                        {data: null, render: function(data, type, row) {
-                            return row.nombres + ' ' + row.apellido_paterno + ' ' + row.apellido_materno;
-                        }}
+                        {data: 'no_unidad'},
+                        {data: 'tipo'}
                     ],
-                    language: {
-                        processing: "Procesando...",
-                        search: "Buscar:",
-                        lengthMenu: "Mostrar _MENU_ registros",
-                        info: "Mostrando de _START_ a _END_ de _TOTAL_ registros",
-                        infoEmpty: "Mostrando 0 a 0 de 0 registros",
-                        infoFiltered: "(filtrado de _MAX_ registros totales)",
-                        loadingRecords: "Cargando...",
-                        zeroRecords: "No se encontraron resultados",
-                        emptyTable: "No hay datos disponibles",
-                        paginate: {
-                            first: "Primero",
-                            previous: "Anterior",
-                            next: "Siguiente",
-                            last: "Último"
-                        },
-                        aria: {
-                            sortAscending: ": activar para ordenar ascendente",
-                            sortDescending: ": activar para ordenar descendente"
-                        }
-                    }
-                });
-
-                c
-
-                //Funcion para mostrar el modal de viajes
-                function mostrarModal(datos) {
-                    console.log(datos);
-
-                    // Vaciar el contenido del modal sin afectar los encabezados
-                    $('#miModalLabel').text('Asignación Semanal de Viajes');
-                    $('#miModalOperador').text('');
-                    $('#unidad').text('');
-                    // $('#modalSupervisor').text('');
-                    $('#semana').text('');
-                    $('#fecha').text('');
-                    $('.modal-body .contenido-modal').empty(); // Limpiar solo el contenido dinámico
-
-                    if (!datos.viajes || datos.viajes.length === 0) return;
-
-                    $('#miModalOperador').text(`Operador: ${datos.viajes[0].operador}`);
-                    $('#unidad').text(`No. Unidad: ${datos.viajes[0].num_unidad}`);
-                    // $('#modalSupervisor').text(`Supervisor: ${datos.supervisor}`);
-                    $('#semana').text(`${datos.viajes[0].semana}`);
-
-                    let diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-
-                    function obtenerRangoSemana(año, semana) {
-                        // Obtener el primer día del año
-                        let primerDiaAño = new Date(año, 0, 1); // 1 de enero
-
-                        // Obtener el primer lunes del año
-                        let primerLunes = new Date(primerDiaAño);
-                        let diaSemana = primerDiaAño.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
-                        
-                        if (diaSemana !== 1) { // Si no es lunes, ajustar al primer lunes
-                            let ajuste = diaSemana === 0 ? 1 : 8 - diaSemana;
-                            primerLunes.setDate(primerDiaAño.getDate() + ajuste);
-                        }
-
-                        // Calcular el lunes de la semana deseada
-                        let lunesSemana = new Date(primerLunes);
-                        lunesSemana.setDate(primerLunes.getDate() + (semana - 1) * 7);
-                        console.log(lunesSemana);
-
-                        // Calcular el domingo de la misma semana (sumando 6 días)
-                        let domingoSemana = new Date(lunesSemana);
-                        domingoSemana.setDate(lunesSemana.getDate() + 6);
-
-                        // Formatear fechas (YYYY-MM-DD)
-                        let formatoFecha = (fecha) => fecha.toISOString().split('T')[0];
-                        console.log(formatoFecha(lunesSemana))
-
-                        return {
-                            lunes: formatoFecha(lunesSemana),
-                            domingo: formatoFecha(domingoSemana)
-                        };
-                    }
-
-                    let textoSemana = datos.viajes[0].semana;
-                    let numeroSemana = textoSemana.match(/\d+/)[0]; // Extrae solo el número
-                    console.log(numeroSemana); // "07"
-
-                    // Si quieres convertirlo en número entero:
-                    let semanaEntero = parseInt(numeroSemana, 10);
-                    let semanaCalculo = semanaEntero - 1;
-                    console.log(semanaCalculo); // 6
-
-                    let fecha = new Date(datos.viajes[0].fecha); // Ejemplo de fecha
-                    let anioSemana = fecha.getFullYear();
-                    console.log(anioSemana);
-
-
-                    let dias = obtenerRangoSemana(anioSemana, semanaCalculo)
-                    console.log(dias)
-
-                    $('#fecha').text(`DEL ${dias.lunes} AL ${dias.domingo}`);
-
-                    // Agrupar viajes por cliente, ruta y horario
-                    let viajesAgrupados = {};
-
-                    datos.viajes.forEach(viaje => {
-                        let key = `${viaje.cliente}_${viaje.hora_inicio}_${viaje.hora_fin}`;
-                        if (!viajesAgrupados[key]) {
-                            viajesAgrupados[key] = {
-                                cliente: viaje.cliente,
-                                ruta: viaje.ruta,
-                                hora_inicio: viaje.hora_inicio,
-                                hora_fin: viaje.hora_fin,
-                                dias: {
-                                    Lunes: 'red', Martes: 'red', Miércoles: 'red', Jueves: 'red',
-                                    Viernes: 'red', Sábado: 'red', Domingo: 'red'
-                                }
-                            };
-                        }
-                        let fechaViaje = new Date(viaje.fecha);
-                        let dia = diasSemana[fechaViaje.getDay()]; // Obtener el nombre del día
-                        console.log(dia)
-                        if (dia) viajesAgrupados[key].dias[dia] = 'green';
-                    });
-
-                    // Convertir el objeto en un array y ordenar por `hora_fin`
-                    let viajesOrdenados = Object.values(viajesAgrupados).sort((a, b) => {
-                        return a.hora_inicio.localeCompare(b.hora_inicio); // Ordenar por hora_fin
-                    });
-
-                    // Construir la tabla de horarios con colores
-                    let tablaHTML = '';
-                    viajesOrdenados.forEach(viaje => {
-                        tablaHTML += `<div class='row text-center p-2'>
-                            <div class='col-1 border'>${viaje.cliente}</div>
-                            <div class='col-1 border'>${viaje.ruta}</div>
-                            <div class='col-1 border'>${viaje.hora_inicio}</div>
-                            <div class='col-1 border'>${viaje.hora_fin}</div>
-                            ${diasSemana.map(dia => `<div class='col-1 border' style='background-color: ${viaje.dias[dia]};'></div>`).join('')}
-                        </div>`;
-                    });
-
-                    $('.modal-body .contenido-modal').append(tablaHTML);
-                    $('#miModal').modal('show');
-                }
-            }
-            load_data();
-            
-            $('#seleccionaSemana').on('click', function() {
-                console.log('Click');
-                const semana = $('#semanaSelec').val();
-                const anio = $('#anio').val();
-                if(validarDatos(semana, anio)) {
-                    load_data(semana, anio)
-                }
-            })
-
-            $('#miModal').on('hidden.bs.modal', function () {
-                console.log('Modal cerrado, reseteando selección.');
-                $('#semanaSelec').val('0'); // Restablece la selección
-                $('#anio').val('2025'); // Restablece el año por defecto
-            });
-
-            const validarDatos = (semana, anio) => {
-                if(semana <= 0 || semana > 52) {
-                    alert('Seleccione una semana valida');
-                    return false;
-                }
-                if(anio < 2000) {
-                    alert('Seleccione una fecha correcta')
-                    return false;
-                }
-                return true;
-            }
-            
+                })
+            } 
         })
     </script>
 
