@@ -5,8 +5,8 @@ include('../../conexion.php');
 //     die(json_encode(array('error'=> 'No se encontraron datos'), JSON_UNESCAPED_UNICODE));
 // }
 
-$semana = $_POST['semana'];
-$anio = $_POST['anio'];
+$semana = $_POST['semana'] ?? "";
+$anio = $_POST['anio'] ?? "";
 
 $sql = "SELECT no_unidad FROM unidades";
 $result = mysqli_query($conection, $sql);
