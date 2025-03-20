@@ -14,7 +14,7 @@ if(mysqli_num_rows($result) == 0) {
     die(json_encode(array("error"=> "No se encontraron datos"), JSON_UNESCAPED_UNICODE));
 }
 
-$unidades = [];
+$data = [];
 while($row = mysqli_fetch_assoc($result)) {
     $nounidad = $row['no_unidad'];
     $partes = explode('-', $nounidad);
