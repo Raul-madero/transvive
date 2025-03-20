@@ -60,7 +60,7 @@ if(!in_array($rol, $allowed)) {
                 <div class="container">
                     <div class="row mb-2">
                         <div class="col-md-6">
-                            <h4 class="m-0">Viajes por <small>Operador</small></h4>
+                            <h4 class="m-0">Uso por <small>Unidad</small></h4>
                         </div>
                         <div class="col-md-6">
 							<div class="row">
@@ -97,8 +97,8 @@ if(!in_array($rol, $allowed)) {
                     <table id="tableOperador" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
                         <thead>
                             <tr>
-                                <th class="text-center">No. Empleado</th>
-                                <th class="text-center">Operador</th>
+                                <th class="text-center">No. Unidad</th>
+                                <th class="text-center">Tipo</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -139,8 +139,7 @@ if(!in_array($rol, $allowed)) {
     <script>
         $(document).ready(function() {
             const load_data = (semana, anio) => {
-                const supervisor = $('#supervisor').val();
-                const ajaxUrl = 'data/viajesOperador.php';
+                const ajaxUrl = 'data/usoPorUnidad.php';
                 //Si no hay datos de semana o anio destruye la tabla y muestra vacia
                 if(!semana || !anio) {
                     const table = $('#tableOperador').DataTable();
@@ -159,7 +158,6 @@ if(!in_array($rol, $allowed)) {
                         url: ajaxUrl,
                         type: 'POST',
                         data: {
-                            supervisor_id: supervisor,
                             semana: semana,
                             anio: anio
                         },
@@ -168,7 +166,7 @@ if(!in_array($rol, $allowed)) {
                         }
                     },
                     columns: [
-                        {data: 'noempleado'},
+                        {data: 'nounidad'},
                         {data: null, render: function(data, type, row) {
                             return row.nombres + ' ' + row.apellido_paterno + ' ' + row.apellido_materno;
                         }}
