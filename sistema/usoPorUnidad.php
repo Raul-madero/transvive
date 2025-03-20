@@ -347,33 +347,41 @@ if(!in_array($rol, $allowed)) {
         // })
     </script>
     <script>
-        $(document).ready(function() {
-            load_data();
-            function load_data(semana, anio) {
-                let ajax_url = 'data/usoPorUnidad.php';
-                $('#tableUnidad').DataTable({
-                    responsive: true,
-                    autoWidth: false,
-                    dom: 'Bftrip',
-                    buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
-                    ajax: {
-                        url: ajax_url,
-                        type: 'POST',
-                        data: {
-                            semana: semana,
-                            anio: anio
-                        },
-                        dataSrc: function(json) {
-                            return json.data;
-                        }
-                    },
-                    columns: [
-                        {data: 'no_unidad'},
-                        {data: 'tipo'}
-                    ],
-                })
-            } 
-        })
+       $(document).ready(function() {
+    load_data("", ""); // Llama a la función con valores vacíos por defecto
+
+    function load_data(semana = "", anio = "") {
+        let ajax_url = 'data/usoPorUnidad.php';
+
+        $('#tableUnidad').DataTable({
+            destroy: true,  // ✅ Agrega esto para evitar duplicados en DataTable
+            responsive: true,
+            autoWidth: false,
+            dom: 'Bftrip',
+            buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
+            ajax: {
+                url: ajax_url,
+                type: 'POST',
+                data: {
+                    semana: semana,
+                    anio: anio
+                },
+                dataSrc: function(json) {
+                    console.log("Respuesta JSON recibida:", json); // ✅ Verifica la respuesta en consola
+                    if (json.error) {
+                        alert(json.error); // Muestra un mensaje si hay error
+                        return [];
+                    }
+                    return json.data;
+                }
+            },
+            columns: [
+                { data: 'no_unidad' },
+                { data: 'tipo' }
+            ],
+        });
+    }
+});
     </script>
 
     <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
