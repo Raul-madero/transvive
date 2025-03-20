@@ -376,8 +376,8 @@ if(!in_array($rol, $allowed)) {
                 }
             },
             columns: [
-                { data: 'no_unidad' },
-                { data: 'tipo' }
+                { data: 'no_unidad', class: "text-center" },
+                { data: 'tipo', class: "text-center" }
             ],
         });
     }
