@@ -358,29 +358,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
  
+<script>
 
-$('#btn_salir').click(function(e) {
-    e.preventDefault();
-
-    Swal.fire({
-        title: "DESEA SALIR!",
-        text: "",
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: "Regresar",
-        cancelButtonText: "Salir",
-    }).then(resultado => {
-        if (resultado.value) {
-            // Hicieron click en "Regresar"
-            console.log("Alerta cerrada");
-        } else {
-            // Hicieron click en "Salir", redirigir sin AJAX
-            location.href = 'ordenes_compra23.php';
-        }
-    });
-});
-
-    </script>
+	$('#btn_salir').click(function(e) {
+		e.preventDefault();
+		
+		Swal.fire({
+			title: "DESEA SALIR!",
+			text: "",
+			icon: 'info',
+			showCancelButton: true,
+			confirmButtonText: "Regresar",
+			cancelButtonText: "Salir",
+		}).then(resultado => {
+			if (resultado.value) {
+				// Hicieron click en "Regresar"
+				console.log("Alerta cerrada");
+			} else {
+				// Hicieron click en "Salir", redirigir sin AJAX
+				location.href = 'ordenes_compra23.php';
+			}
+		});
+	});
+	</script>
 
 <script>
    $('#guardar_tipoactividad').click(function(e){
