@@ -2,6 +2,7 @@
 include "../conexion.php";
 session_start();
 $User=$_SESSION['user'];
+var_dump($User);
 $rol=$_SESSION['rol'];
 $sql = "select * from rol where idrol =$rol ";
 $query = mysqli_query($conection, $sql);
@@ -153,6 +154,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <label for="inputSolicita" class="col-sm-3 col-form-label">Area Solicitante</label>
                                 <div class="col-sm-9">
                                     <?php
+                                    
                                         switch (intval($rol)) {
                                             case 1:
                                                 $solicita = "Administracion";
