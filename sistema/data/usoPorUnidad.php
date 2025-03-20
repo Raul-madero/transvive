@@ -16,7 +16,32 @@ if(mysqli_num_rows($result) == 0) {
 
 $unidades = [];
 while($row = mysqli_fetch_assoc($result)) {
-    $data[] = $row['no_unidad'];
+    $nounidad = $row['no_unidad'];
+    $partes = explode('-', $nounidad);
+    $tipo = "";
+    switch ($partes[0]) {
+        case "A":
+            $tipo = "Automovil";
+            break;
+        case "C":
+            $tipo = "Camion";
+            break;
+        case "T":
+            $tipo = "Camioneta";
+            break;
+        case "S":
+            $tipo = "Sprinter";
+            break;
+        default:
+            $tipo = "Desconocido";
+            break;
+        }
+    $data[] = [
+        "no_unidad" => $nounidad,
+        "tipo" => $tipo,
+        "semana" => $semana,
+        "anio" => $anio
+    ];
 }
 
 if(count($data) == 0) {
@@ -24,6 +49,6 @@ if(count($data) == 0) {
 }
 
 header('Content-Type: application/json');
-echo json_encode([$data, $semana, $anio], JSON_UNESCAPED_UNICODE);
+echo json_encode([$data], JSON_UNESCAPED_UNICODE);
 ?>
 // ✅ Respuesta en JSON
