@@ -198,7 +198,12 @@ session_start();
                     }
                 });
 
-                c
+                $(document).on('click', '#tableOperador tbody tr', function (e) {
+                    const table = $('#tableOperador').DataTable();
+                    const clickedColumnIndex = $(e.target).closest('td').index();
+                    const rowData = table.row(this).data();
+                    mostrarModal(rowData);
+                });
 
                 //Funcion para mostrar el modal de viajes
                 function mostrarModal(datos) {
