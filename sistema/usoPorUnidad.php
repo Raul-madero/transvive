@@ -379,6 +379,27 @@ if(!in_array($rol, $allowed)) {
                 { data: 'no_unidad', class: "text-center" },
                 { data: 'tipo', class: "text-center" }
             ],
+            language: {
+                processing: "Procesando...",
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ registros",
+                info: "Mostrando de _START_ a _END_ de _TOTAL_ registros",
+                infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                infoFiltered: "(filtrado de _MAX_ registros totales)",
+                loadingRecords: "Cargando...",
+                zeroRecords: "No se encontraron resultados",
+                emptyTable: "No hay datos disponibles",
+                paginate: {
+                    first: "Primero",
+                    previous: "Anterior",
+                    next: "Siguiente",
+                    last: "Último"
+                },
+                aria: {
+                    sortAscending: ": activar para ordenar ascendente",
+                    sortDescending: ": activar para ordenar descendente"
+                }
+            }
         });
     }
 });
