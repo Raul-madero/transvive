@@ -5360,9 +5360,6 @@ if ($_POST['action'] == 'AddDetalleOrdencompra') {
         exit;
     }
 
-    // Conexión a la base de datos
-    require_once 'conexion.php';
-
     $nofolio     = intval($_POST['folio']);
     $no_req      = isset($_POST['noreq']) ? intval($_POST['noreq']) : 0;
     $codigo      = trim($_POST['codigo']);
