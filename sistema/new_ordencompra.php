@@ -612,70 +612,77 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <script>
    $('#actualizaclientes').click(function(e){
-        e.preventDefault();
+    e.preventDefault();
 
-        var folio       = $('#inputfoliodet').val();
-        var codigo      = $('#inputCodigo').val();
-        var descripcion = $('#inputDescripcion').val();
-        var umedida     = $('#inputUmedida').val();
-        var marca       = $('#inputMarca').val();
-        var cantidad    = $('#inputCantidad').val();
-        var precio      = $('#inputPrecio').val();
-        var impuesto    = $('#inputImpuesto').val();
-        var imp_isr     = $('#inputImpuestoisr').val();
-        var imp_ieps    = $('#inputImpuestoieps').val();
-        var importe     = $('#inputImporte').val();
-        
+    var folio       = $('#inputfoliodet').val();
+    var codigo      = $('#inputCodigo').val();
+    var descripcion = $('#inputDescripcion').val();
+    var umedida     = $('#inputUmedida').val();
+    var marca       = $('#inputMarca').val();
+    var cantidad    = $('#inputCantidad').val();
+    var precio      = $('#inputPrecio').val();
+    var impuesto    = $('#inputImpuesto').val();
+    var imp_isr     = $('#inputImpuestoisr').val();
+    var imp_ieps    = $('#inputImpuestoieps').val();
+    var importe     = $('#inputImporte').val();
 
-       var action       = 'AddDetalleOrdencompra';
+    var action = 'AddDetalleOrdencompra';
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, folio:folio, codigo:codigo, descripcion:descripcion, umedida:umedida, marca:marca, cantidad:cantidad, precio:precio, impuesto:impuesto, imp_isr:imp_isr, imp_ieps:imp_ieps, importe:importe},
+    $.ajax({
+        url: 'includes/ajax.php',
+        type: "POST",
+        async: true,
+        data: {
+            action: action,
+            folio: folio,
+            codigo: codigo,
+            descripcion: descripcion,
+            umedida: umedida,
+            marca: marca,
+            cantidad: cantidad,
+            precio: precio,
+            impuesto: impuesto,
+            imp_isr: imp_isr,
+            imp_ieps: imp_ieps,
+            importe: importe
+        },
+        success: function(response) {
+            console.log("Respuesta del servidor:", response);
 
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                             //console.log(response);
-                            var info = JSON.parse(response);
-                            console.log(info);
-                            //$('#modalFactura').modal('hide');
-                            $('#detalle_ordencompra').html(info.detalle);
-                            $('#detalle_totordencompra').html(info.totales);
-                            
-                           
-                            //alert('Cliente Agregado');
+            try {
+                var info = JSON.parse(response);
+                console.log("Datos procesados:", info);
 
-                            $('#modalEditcliente').modal('hide');
-                            $('#inputCodigo').val('');
-                            //$('#inputDescripcion').val('');
-                            $('#inputDescripcion').val(null).trigger('change');
-                            $('#inputMarca').val('');
-                            $('#inputCantidad').val('0');
-                            $('#inputPrecio').val('0.00');
-                            $('#inputImpuesto').val('0.00');
-                            $('#inputImpuestoisr').val('0.00');
-                            $('#inputImpuestoieps').val('0.00');
-                            $('#inputImporte').val('0.00');
-                            //location.reload(true);
-                            
-    
-                        }else{
-                           console.log('no data');
-                           alert('faltan datos');
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
+                if (info.status === "success") {
+                    $('#detalle_ordencompra').html(info.detalle);
+                    $('#detalle_totordencompra').html(info.totales);
+                    
+                    // Limpiar los campos del formulario
+                    $('#inputCodigo').val('');
+                    $('#inputDescripcion').val(null).trigger('change');
+                    $('#inputMarca').val('');
+                    $('#inputCantidad').val('0');
+                    $('#inputPrecio').val('0.00');
+                    $('#inputImpuesto').val('0.00');
+                    $('#inputImpuestoisr').val('0.00');
+                    $('#inputImpuestoieps').val('0.00');
+                    $('#inputImporte').val('0.00');
+                } else {
+                    console.log("Error en la respuesta:", info.message);
+                    alert("Error: " + info.message);
+                }
+            } catch (error) {
+                console.log("Error al procesar JSON:", error);
+                console.log("Respuesta recibida:", response);
+                alert("Error al procesar la respuesta del servidor.");
+            }
+        },
+        error: function(error) {
+            console.log("Error AJAX:", error);
+            alert("Hubo un problema con la solicitud AJAX.");
+        }
     });
-
+});
     </script> 
 
      <script> 
