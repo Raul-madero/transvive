@@ -2,7 +2,7 @@
 include "../conexion.php";
 session_start();
 $User=$_SESSION['user'];
-var_dump($User);
+// var_dump($User);
 $rol=$_SESSION['rol'];
 $sql = "select * from rol where idrol =$rol ";
 $query = mysqli_query($conection, $sql);
@@ -154,29 +154,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <label for="inputSolicita" class="col-sm-3 col-form-label">Area Solicitante</label>
                                 <div class="col-sm-9">
                                     <?php
-                                    
-                                        switch (intval($rol)) {
-                                            case 1:
-                                                $solicita = "Administracion";
-                                                break;
-                                            case 5:
-                                                $solicita = "Recursos Humanos";
-                                                break;
-                                            case 6:
-                                                $solicita = "Operaciones";
-                                                break;
-                                            case 7:
-                                                $solicita = "Mantenimiento";
-                                                break;
-                                            case 10:
-                                                $solicita = "Almacen";
-                                                break;
-                                            case 14:
-                                                $solicita = "Calidad";
-                                                break;
-                                            default:
-                                                $solicita = "Compras";
-                                                break;
+                                        if($User === "Elena") {
+                                            $solicita = "Administracion";
+                                        }else {
+                                            switch (intval($rol)) {
+                                                case 1:
+                                                    $solicita = "Administracion";
+                                                    break;
+                                                case 5:
+                                                    $solicita = "Recursos Humanos";
+                                                    break;
+                                                case 6:
+                                                    $solicita = "Operaciones";
+                                                    break;
+                                                case 7:
+                                                    $solicita = "Mantenimiento";
+                                                    break;
+                                                case 10:
+                                                    $solicita = "Almacen";
+                                                    break;
+                                                case 14:
+                                                    $solicita = "Calidad";
+                                                    break;
+                                                default:
+                                                    $solicita = "Compras";
+                                                    break;
+                                            }
                                         }
                                         ?>
                                         <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly/>
