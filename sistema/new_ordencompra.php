@@ -479,7 +479,7 @@ $('#btn_salir').click(function(e) {
 
 	<script>
 		$(document).ready(function() {
-			var folio = "<php echo $requisicion; ?>";
+			var folio = "<?php echo $requisicion; ?>";
 			$("#detalle_ordencompra").DataTable({
 				"processing": true,
 				"serverSide": true,
