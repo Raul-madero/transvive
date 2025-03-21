@@ -429,6 +429,12 @@ if(!in_array($rol, $allowed)) {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <div class="row text-center mt-3">
+                    <div class="col">
+                        <button class="btn-primary" id="semanaAnterior">Semana Anterior</button>
+                        <button class="btn-primary" id="semanaSiguiente">Semana Siguiente</button>
+                    </div>
+                </div>
                 <div class="row text-center">
                     <div class="col-8 text-left pl-4" id="numUnidad"></div>
                     <div class="col-4" id="unidad"></div>
@@ -449,10 +455,35 @@ if(!in_array($rol, $allowed)) {
                     <div class="col text-center">0</div>
                     <div class="col text-center">0%</div>
                 </div>
+                <div class="row text-center p-2">
+                    <div class="col text-center">Martes</div>
+                    <div class="col text-center">0</div>
+                    <div class="col text-center">0%</div>
                 </div>
-                <!-- Contenido dinámico de la tabla -->
-                <div class="modal-body">
-                    <div class="contenido-modal"></div>
+                <div class="row text-center p-2">
+                    <div class="col text-center">Miercoles</div>
+                    <div class="col text-center">0</div>
+                    <div class="col text-center">0%</div>
+                </div>
+                <div class="row text-center p-2">
+                    <div class="col text-center">Jueves</div>
+                    <div class="col text-center">0</div>
+                    <div class="col text-center">0%</div>
+                </div>
+                <div class="row text-center p-2">
+                    <div class="col text-center">Viernes</div>
+                    <div class="col text-center">0</div>
+                    <div class="col text-center">0%</div>
+                </div>
+                <div class="row text-center p-2">
+                    <div class="col text-center">Sabado</div>
+                    <div class="col text-center">0</div>
+                    <div class="col text-center">0%</div>
+                </div>
+                <div class="row text-center p-2">
+                    <div class="col text-center">Domingo</div>
+                    <div class="col text-center">0</div>
+                    <div class="col text-center">0%</div>
                 </div>
             </div>
         </div>
