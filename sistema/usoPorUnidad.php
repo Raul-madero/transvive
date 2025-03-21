@@ -411,6 +411,10 @@ if(!in_array($rol, $allowed)) {
 
         function mostrarModal(rowData) {
             console.log(rowData);
+            $('#miModalLabel').text('Uso por unidad semanal');
+            $('#numUnidad').text(`No. Unidad: ${rowData.no_unidad}`);
+            $('#unidad').text(`Tipo: ${rowData.tipo}`);
+            $('#miModal').modal('show');
         }
     }
 });
@@ -426,11 +430,11 @@ if(!in_array($rol, $allowed)) {
                     </button>
                 </div>
                 <div class="row text-center">
-                    <div class="col-8 text-left pl-4" id="miModalOperador"></div>
+                    <div class="col-8 text-left pl-4" id="numUnidad"></div>
                     <div class="col-4" id="unidad"></div>
                 </div>
                 <div class="row text-center">
-                    <div class="col-5 text-left pl-4" id="modalSupervisor"></div>
+                    <div class="col-5 text-left pl-4" id="unidad"></div>
                     <div class="col-3" id="semana"></div>
                     <div class="col-3" id="fecha"></div>
                 </div>
