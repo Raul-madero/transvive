@@ -440,17 +440,15 @@ if(!in_array($rol, $allowed)) {
                 </div>
                 <!-- Encabezado de la tabla -->
                 <div class="row text-center p-2">
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Cliente</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Ruta</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Horario de inicio de ruta</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Horario compromiso</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Lunes</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Martes</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Miércoles</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Jueves</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Viernes</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Sábado</div>
-                    <div class="col-1 border bg-body-tertiary fw-bold fs-lg">Domingo</div>
+                    <div class="col text-center fw-bold">Dia</div>
+                    <div class="col text-center fw-bold">Num. de vueltas</div>
+                    <div class="col text-center fw-bold">% Uso Diario</div>
+                </div>
+                <div class="row text-center p-2">
+                    <div class="col text-center">Lunes</div>
+                    <div class="col text-center">0</div>
+                    <div class="col text-center">0%</div>
+                </div>
                 </div>
                 <!-- Contenido dinámico de la tabla -->
                 <div class="modal-body">
