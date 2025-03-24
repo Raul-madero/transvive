@@ -403,16 +403,14 @@ if(!in_array($rol, $allowed)) {
         });
 
         $(document).on('click', '#tableUnidad tbody tr', function(e) {
-            semana = "";
-            $('#seleccionaSemana').on('click', function() {
-                console.log('Click');
-                const semana = $('#semanaSelec').val();
-                const anio = $('#anio').val();
-            })
-            let semanaActual = obtenerSemana(semana);
+            const table = $('#tableUnidad').DataTable();
+            const rowData = table.row(this).data();
+
+            let fechaActual = new Date();
+            let semanaActual = obtenerSemana(fechaActual);
 
             //Llamar Ajax para obtener datos de unidad y semana
-            cargardatosUnidad(rowData.no_unidad, semana);
+            cargardatosUnidad(rowData.no_unidad, semanaActual);
         })
 
         function obtenerSemana(fecha) {
