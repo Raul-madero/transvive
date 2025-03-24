@@ -19,6 +19,7 @@ $descripcion  = $_POST['inputDescribe'];
 $nplacas      = $_POST['inputPlacas'];
 $nserie       = $_POST['inputNserie'];
 $year         = $_POST['inputYear'] ?? NULL;
+$year_sql = is_numeric($year) ? $year : 'NULL';
 $tipogas      = $_POST['inputTipogas'];
 $nopoliza     = $_POST['inputNopoliza'];
 $aseguradora  = $_POST['inputAseguradora'];
@@ -77,7 +78,7 @@ if ($nombre_foto3 != null) {
 }else {
   $ruta3 = "";
 }
-        $updateSQL = "UPDATE unidades SET no_unidad = '$nounidad',  socio = '$socio', descripcion = '$descripcion', placas = '$nplacas', no_serie = '$nserie', year = $year, tipo_combustible = '$tipogas', no_poliza = '$nopoliza', aseguradora = '$aseguradora', inicio_poliza = '$iniciapol', fin_poliza = '$terminapol', tarjeta_circulacion = '$notarjeta', vence_tcirculacion = '$vencetarjeta', fecha_entregadoc = '$entregadoc', rendimiendo_estandar = $parametro, notas = '$notas' WHERE id = $Id";
+        $updateSQL = "UPDATE unidades SET no_unidad = '$nounidad',  socio = '$socio', descripcion = '$descripcion', placas = '$nplacas', no_serie = '$nserie', year = $year_sql, tipo_combustible = '$tipogas', no_poliza = '$nopoliza', aseguradora = '$aseguradora', inicio_poliza = '$iniciapol', fin_poliza = '$terminapol', tarjeta_circulacion = '$notarjeta', vence_tcirculacion = '$vencetarjeta', fecha_entregadoc = '$entregadoc', rendimiendo_estandar = $parametro, notas = '$notas' WHERE id = $Id";
         echo $updateSQL;
         $resultado = mysqli_query($conection, $updateSQL);
         if($resultado){
