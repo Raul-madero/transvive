@@ -78,6 +78,7 @@ if ($nombre_foto3 != null) {
   $ruta3 = "";
 }
         $updateSQL = "UPDATE unidades SET no_unidad = '$nounidad',  socio = '$socio', descripcion = '$descripcion', placas = '$nplacas', no_serie = '$nserie', year = $year, tipo_combustible = '$tipogas', no_poliza = '$nopoliza', aseguradora = '$aseguradora', inicio_poliza = '$iniciapol', fin_poliza = '$terminapol', tarjeta_circulacion = '$notarjeta', vence_tcirculacion = '$vencetarjeta', fecha_entregadoc = '$entregadoc', rendimiendo_estandar = $parametro, notas = '$notas' WHERE id = $Id";
+        echo $updateSQL;
         $resultado = mysqli_query($conection, $updateSQL);
         if($resultado){
 
