@@ -63,7 +63,7 @@ if(!in_array($rol, $allowed)) {
                             <h4 class="m-0">Uso por <small>Unidad</small></h4>
                         </div>
                         <div class="col-md-6">
-							<!-- <div class="row">
+							<div class="row">
 								<div class="col-3 align-center">
 									<label for="semana" class="text-center">Numero de Semana</label>
 								</div>
@@ -71,10 +71,10 @@ if(!in_array($rol, $allowed)) {
 									<select class="form-control select2bs4" style="text-align: left; margin-bottom: 12px" name="semana" id="semanaSelec" id="nosemana">
 										<option value="0">--Selecciona la Semana--</option>
 										<?php 
-										// for($i = 0; $i < 52; $i++) {
-										// 	$semanaSelec = $i + 1;
-										//     echo '<option value="' . $semanaSelec . '">' ."Semana " . $semanaSelec . '</option>';
-										// }
+										for($i = 0; $i < 52; $i++) {
+											$semanaSelec = $i + 1;
+										    echo '<option value="' . $semanaSelec . '">' ."Semana " . $semanaSelec . '</option>';
+										}
 										?>
 									</select>
 								</div>
@@ -84,7 +84,7 @@ if(!in_array($rol, $allowed)) {
 								<div class="col-2">
 									<button id="seleccionaSemana" class="btn btn-success" style="height: 35px">Seleccionar</button>
 								</div>
-							</div> -->
+							</div>
 							<!-- /.row -->
 						</div><!-- /.col -->
                     </div>
