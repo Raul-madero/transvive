@@ -37,7 +37,7 @@ switch ($letra) {
 }
 
 
-$sql = "SELECT fecha, COALESCE(SUM(valor_vuelta), 0) AS vueltas, num_unidad, FROM registro_viajes WHERE num_unidad = ? AND fecha BETWEEN ? AND ? GROUP BY fecha";
+$sql = "SELECT fecha, COALESCE(SUM(valor_vuelta), 0) AS vueltas, num_unidad FROM registro_viajes WHERE num_unidad = ? AND fecha BETWEEN ? AND ? GROUP BY fecha";
 $stmt = $conection->prepare($sql);
 $stmt->bind_param('sss', $no_unidad, $fecha_inicio, $fecha_fin);
 $stmt->execute();
