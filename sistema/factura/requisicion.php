@@ -206,7 +206,7 @@ if ($resultr >= 32) {
             // $cw = $pdf->CurrentFont['cw'];
             if($w == 0)
                 $w = $pdf->w - $pdf->rMargin - $pdf->x;
-            $wmax = ($w - 2 * $pdf->cMargin) * 1000 / $pdf->FontSize;
+            // $wmax = ($w - 2 * $pdf->cMargin) * 1000 / $pdf->FontSize;
             $s = str_replace("\r", '', $txt);
             $nb = strlen($s);
             if($nb > 0 and $s[$nb - 1] == "\n")
