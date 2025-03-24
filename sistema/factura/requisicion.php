@@ -203,7 +203,7 @@ if ($resultr >= 32) {
       }
       for ($i = 1; $i < $filas; $i++) {
         function getNbLines($pdf, $w, $txt) {
-            $cw = $pdf->CurrentFont['cw'];
+            // $cw = $pdf->CurrentFont['cw'];
             if($w == 0)
                 $w = $pdf->w - $pdf->rMargin - $pdf->x;
             $wmax = ($w - 2 * $pdf->cMargin) * 1000 / $pdf->FontSize;
