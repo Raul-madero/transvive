@@ -329,7 +329,7 @@ $pdf->SetFont('Arial','B',9);
 $pdf->Cell(85,5,'______________________________________',0,0,'C');
 $pdf->Cell(85,5,'______________________________________',0,1,'C');
 $pdf->Cell(85,5,'LIC. RUTH ELIZABETH MIRAMONTES DORADO',0,0,'C');
-$pdf->Cell(85,5,'LIC. FABRIZIO PLASCENCIA AGUAYO',0,1,'C');
+$pdf->Cell(85,5,'LIC. BRENDA BERENICE ROMO CORDERO',0,1,'C');
 $pdf->SetFont('Arial','',9);
 $pdf->Cell(85,5,'TESTIGO',0,0,'C');
 $pdf->Cell(85,5,'TESTIGO',0,1,'C');

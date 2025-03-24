@@ -202,16 +202,84 @@ if ($resultr >= 32) {
          $filas = 32 - $resultr;
       }
       for ($i = 1; $i < $filas; $i++) {
+        function getNbLines($pdf, $w, $txt) {
+            $cw = $pdf->CurrentFont['cw'];
+            if($w == 0)
+                $w = $pdf->w - $pdf->rMargin - $pdf->x;
+            $wmax = ($w - 2 * $pdf->cMargin) * 1000 / $pdf->FontSize;
+            $s = str_replace("\r", '', $txt);
+            $nb = strlen($s);
+            if($nb > 0 and $s[$nb - 1] == "\n")
+                $nb--;
+            $sep = -1;
+            $i = 0;
+            $j = 0;
+            $l = 0;
+            $nl = 1;
+            while($i < $nb) {
+                $c = $s[$i];
+                if($c == "\n") {
+                    $i++;
+                    $sep = -1;
+                    $j = $i;
+                    $l = 0;
+                    $nl++;
+                    continue;
+                }
+                if($c == ' ')
+                    $sep = $i;
+                $l += $cw[$c];
+                if($l > $wmax) {
+                    if($sep == -1) {
+                        if($i == $j)
+                            $i++;
+                    } else
+                        $i = $sep + 1;
+                    $sep = -1;
+                    $j = $i;
+                    $l = 0;
+                    $nl++;
+                } else
+                    $i++;
+            }
+            return $nl;
+        }
+        
 
-
-while ($row = mysqli_fetch_assoc($queryr)){
-$pdf->SetFont('Arial','',6.8);
-$pdf->Cell(13,5,number_format($row['cantidad'],2),1,0,'R');
-$pdf->Cell(90,5,utf8_decode($row['descripcion']),1,0,'L');
-$pdf->Cell(46,5,utf8_decode($row['marca']),1,0,'L');
-$pdf->Cell(20,5,utf8_decode($row['dato_e']),1,0,'C');
-$pdf->Cell(20,5,utf8_decode($row['dato_om']),1,1,'C');    
-}
+        while ($row = mysqli_fetch_assoc($queryr)) {
+            $pdf->SetFont('Arial','',6.8);
+        
+            // Posiciones iniciales
+            $x = $pdf->GetX();
+            $y = $pdf->GetY();
+        
+            // Anchos de columna
+            $w_cant = 13;
+            $w_desc = 90;
+            $w_marca = 46;
+            $w_datoe = 20;
+            $w_datoom = 20;
+            $line_height = 5;
+        
+            // Texto de descripción
+            $desc = utf8_decode($row['descripcion']);
+            $desc_lines = getNbLines($pdf, $w_desc, $desc);
+            $cell_height = $line_height * $desc_lines;
+        
+            // Cantidad
+            $pdf->Cell($w_cant, $cell_height, number_format($row['cantidad'],2), 1, 0, 'R');
+        
+            // Descripción (MultiCell)
+            $pdf->SetXY($x + $w_cant, $y);
+            $pdf->MultiCell($w_desc, $line_height, $desc, 1, 'L');
+        
+            // Resto de columnas
+            $pdf->SetXY($x + $w_cant + $w_desc, $y);
+            $pdf->Cell($w_marca, $cell_height, utf8_decode($row['marca']), 1, 0, 'L');
+            $pdf->Cell($w_datoe, $cell_height, utf8_decode($row['dato_e']), 1, 0, 'C');
+            $pdf->Cell($w_datoom, $cell_height, utf8_decode($row['dato_om']), 1, 1, 'C');
+        }
+        
 $pdf->SetFont('Arial','',6.8);
 $pdf->Cell(13,5,utf8_decode(''),1,0,'R');
 $pdf->Cell(90,5,utf8_decode(''),1,0,'L');
