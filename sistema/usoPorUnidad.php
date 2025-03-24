@@ -404,9 +404,53 @@ if(!in_array($rol, $allowed)) {
 
         $(document).on('click', '#tableUnidad tbody tr', function(e) {
             const table = $('#tableUnidad').DataTable();
-            const clickedColimnIndex = $(e.target).closest('td').index();
             const rowData = table.row(this).data();
-            mostrarModal(rowData);
+
+            let fechaActual = new Date();
+            let semanaActual = obtenerSemana(fechaAcrual);
+
+            //Llamar Ajax para obtener datos de unidad y semana
+            cargardatosUnidad(rowData.no_unidad, semanaActual);
+        })
+
+        function obtenerSemana(fecha) {
+            let primerDiaAnio = new Date(fecha.getFullYear(), 0, 1);
+            let diferencia = fecha - primerDiaAnio;
+            let dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+            return Math.ceil((dias + primerDiaAnio.getday() + 1) / 7);
+        }
+
+        function cargardatosUnidad(noUnidad, semana) {
+            $.ajax({
+                url: 'data/usoPorUnidadDetalle.php',
+                type: 'POST',
+                data: {no_unidad: noUnidad, semana: semana },
+                dataType: 'json',
+                success: function(response) {
+                    $('#miModalLabel').text(`Uso por unidad semana: ${semana}`);
+                    $('#numUnidad').text(`No. Unidad: ${response.no_unidad}`);
+                    $('#unidad').text(`Tipo: ${response.tipo}`);
+                    $('#semana').text(`Semana: ${response.semana}`);
+                    $('#fecha').text(`Del ${response.fecha_inicio} al ${response.fecha_fin}`);
+
+                    let dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
+                    $('.modal-content .row.text-center.p-2:not(:first)').each(function(index) {
+                        $(this).find('.col.text-center:nth-child(2)').text(response.datos[dias[index]].vueltas);
+                        $(this).find('.col.text-center:nth-child(3').text(response.datos[dias[index]].uso + '%');
+                    });
+
+                    $('#miModal').modal('show');
+                }
+            })
+        }
+
+        // Funcion para cambiar de semana
+        $(document).on('click', '#semanaAnterior, #semanasiguiente', function() {
+            let semana = parseInt($('#semana').text().replace('Semana: ', ''));
+            semana += $(this).attr('id') === 'semanaAnterior' ? -1 : 1;
+
+            let nounidad = $('#numUnidad').text(replace('No. Unidad: ', ''));
+            cargardatosUnidad(nounidad, semana);
         })
 
         function mostrarModal(rowData) {
