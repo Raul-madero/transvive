@@ -346,122 +346,145 @@ if(!in_array($rol, $allowed)) {
             
         // })
     </script>
+
     <script>
-       $(document).ready(function() {
-    load_data("", ""); // Llama a la función con valores vacíos por defecto
+        $(document).ready(function() {
+            load_data("", ""); // Llama a la función con valores vacíos por defecto
 
-    function load_data(semana = "", anio = "") {
-        let ajax_url = 'data/usoPorUnidad.php';
+            function load_data(semana = "", anio = "") {
+                let ajax_url = 'data/usoPorUnidad.php';
+                console.log(semana, anio); // ✅ Verifica los valores recibidos
 
-        $('#tableUnidad').DataTable({
-            destroy: true,  // ✅ Agrega esto para evitar duplicados en DataTable
-            responsive: true,
-            autoWidth: false,
-            dom: 'Bftrip',
-            buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
-            ajax: {
-                url: ajax_url,
-                type: 'POST',
-                data: {
-                    semana: semana,
-                    anio: anio
-                },
-                dataSrc: function(json) {
-                    console.log("Respuesta JSON recibida:", json); // ✅ Verifica la respuesta en consola
-                    if (json.error) {
-                        alert(json.error); // Muestra un mensaje si hay error
-                        return [];
+                $('#tableUnidad').DataTable({
+                    destroy: true,  // ✅ Agrega esto para evitar duplicados en DataTable
+                    responsive: true,
+                    autoWidth: false,
+                    dom: 'Bftrip',
+                    buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
+                    ajax: {
+                        url: ajax_url,
+                        type: 'POST',
+                        data: {
+                            semana: semana,
+                            anio: anio
+                        },
+                        dataSrc: function(json) {
+                            console.log("Respuesta JSON recibida:", json); // ✅ Verifica la respuesta en consola
+                            if (json.error) {
+                                alert(json.error); // Muestra un mensaje si hay error
+                                return [];
+                            }
+                            return json.data;
+                        }
+                    },
+                    columns: [
+                        { data: 'no_unidad', class: "text-center" },
+                        { data: 'tipo', class: "text-center" }
+                    ],
+                    language: {
+                        processing: "Procesando...",
+                        search: "Buscar:",
+                        lengthMenu: "Mostrar _MENU_ registros",
+                        info: "Mostrando de _START_ a _END_ de _TOTAL_ registros",
+                        infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                        infoFiltered: "(filtrado de _MAX_ registros totales)",
+                        loadingRecords: "Cargando...",
+                        zeroRecords: "No se encontraron resultados",
+                        emptyTable: "No hay datos disponibles",
+                        paginate: {
+                            first: "Primero",
+                            previous: "Anterior",
+                            next: "Siguiente",
+                            last: "Último"
+                        },
+                        aria: {
+                            sortAscending: ": activar para ordenar ascendente",
+                            sortDescending: ": activar para ordenar descendente"
+                        }
                     }
-                    return json.data;
+                });
+
+                $(document).on('click', '#tableUnidad tbody tr', function(e) {
+                    const table = $('#tableUnidad').DataTable();
+                    const rowData = table.row(this).data();
+
+                    let fechaActual = new Date();
+                    let semanaActual = obtenerSemana(fechaActual);
+
+                    //Llamar Ajax para obtener datos de unidad y semana
+                    cargardatosUnidad(rowData.no_unidad, semanaActual);
+                })
+
+                function obtenerSemana(fecha) {
+                    let primerDiaAnio = new Date(fecha.getFullYear(), 0, 1);
+                    let diferencia = fecha - primerDiaAnio;
+                    let dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+                    return Math.ceil((dias + primerDiaAnio.getDay() + 1) / 7);
                 }
-            },
-            columns: [
-                { data: 'no_unidad', class: "text-center" },
-                { data: 'tipo', class: "text-center" }
-            ],
-            language: {
-                processing: "Procesando...",
-                search: "Buscar:",
-                lengthMenu: "Mostrar _MENU_ registros",
-                info: "Mostrando de _START_ a _END_ de _TOTAL_ registros",
-                infoEmpty: "Mostrando 0 a 0 de 0 registros",
-                infoFiltered: "(filtrado de _MAX_ registros totales)",
-                loadingRecords: "Cargando...",
-                zeroRecords: "No se encontraron resultados",
-                emptyTable: "No hay datos disponibles",
-                paginate: {
-                    first: "Primero",
-                    previous: "Anterior",
-                    next: "Siguiente",
-                    last: "Último"
-                },
-                aria: {
-                    sortAscending: ": activar para ordenar ascendente",
-                    sortDescending: ": activar para ordenar descendente"
+
+                function cargardatosUnidad(noUnidad, semana) {
+                    $.ajax({
+                        url: 'data/usoPorUnidadDetalle.php',
+                        type: 'POST',
+                        data: {no_unidad: noUnidad, semana: semana },
+                        dataType: 'json',
+                        success: function(response) {
+                            $('#miModalLabel').text(`Uso por unidad semana: ${semana}`);
+                            $('#numUnidad').text(`No. Unidad: ${response.no_unidad}`);
+                            $('#unidad').text(`Tipo: ${response.tipo}`);
+                            $('#semana').text(`Semana: ${response.semana}`);
+                            $('#fecha').text(`Del ${response.fecha_inicio} al ${response.fecha_fin}`);
+
+                            let dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
+                            $('.modal-content .row.text-center.p-2:not(:first)').each(function(index) {
+                                $(this).find('.col.text-center:nth-child(2)').text(response.datos[dias[index]].vueltas);
+                                $(this).find('.col.text-center:nth-child(3').text(response.datos[dias[index]].uso + '%');
+                            });
+
+                            $('#miModal').modal('show');
+                        }
+                    })
+                }
+                
+                $('#seleccionaSemana').on('click', function() {
+                    console.log('Click');
+                    const semana = $('#semanaSelec').val();
+                    const anio = $('#anio').val();
+                    if(validarDatos(semana, anio)) {
+                        load_data(semana, anio)
+                    }
+                })
+                
+                const validarDatos = (semana, anio) => {
+                    if(semana <= 0 || semana > 52) {
+                        alert('Seleccione una semana valida');
+                        return false;
+                    }
+                    if(anio < 2000) {
+                        alert('Seleccione una fecha correcta')
+                        return false;
+                    }
+                    return true;
+                }
+
+                // Funcion para cambiar de semana
+                $(document).on('click', '#semanaAnterior, #semanasiguiente', function() {
+                    let semana = parseInt($('#semana').text().replace('Semana: ', ''));
+                    semana += $(this).attr('id') === 'semanaAnterior' ? -1 : 1;
+
+                    let nounidad = $('#numUnidad').text(replace('No. Unidad: ', ''));
+                    cargardatosUnidad(nounidad, semana);
+                })
+
+                function mostrarModal(rowData) {
+                    console.log(rowData);
+                    $('#miModalLabel').text('Uso por unidad semanal');
+                    $('#numUnidad').text(`No. Unidad: ${rowData.no_unidad}`);
+                    $('#unidad').text(`Tipo: ${rowData.tipo}`);
+                    $('#miModal').modal('show');
                 }
             }
         });
-
-        $(document).on('click', '#tableUnidad tbody tr', function(e) {
-            const table = $('#tableUnidad').DataTable();
-            const rowData = table.row(this).data();
-
-            let fechaActual = new Date();
-            let semanaActual = obtenerSemana(fechaActual);
-
-            //Llamar Ajax para obtener datos de unidad y semana
-            cargardatosUnidad(rowData.no_unidad, semanaActual);
-        })
-
-        function obtenerSemana(fecha) {
-            let primerDiaAnio = new Date(fecha.getFullYear(), 0, 1);
-            let diferencia = fecha - primerDiaAnio;
-            let dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-            return Math.ceil((dias + primerDiaAnio.getDay() + 1) / 7);
-        }
-
-        function cargardatosUnidad(noUnidad, semana) {
-            $.ajax({
-                url: 'data/usoPorUnidadDetalle.php',
-                type: 'POST',
-                data: {no_unidad: noUnidad, semana: semana },
-                dataType: 'json',
-                success: function(response) {
-                    $('#miModalLabel').text(`Uso por unidad semana: ${semana}`);
-                    $('#numUnidad').text(`No. Unidad: ${response.no_unidad}`);
-                    $('#unidad').text(`Tipo: ${response.tipo}`);
-                    $('#semana').text(`Semana: ${response.semana}`);
-                    $('#fecha').text(`Del ${response.fecha_inicio} al ${response.fecha_fin}`);
-
-                    let dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'];
-                    $('.modal-content .row.text-center.p-2:not(:first)').each(function(index) {
-                        $(this).find('.col.text-center:nth-child(2)').text(response.datos[dias[index]].vueltas);
-                        $(this).find('.col.text-center:nth-child(3').text(response.datos[dias[index]].uso + '%');
-                    });
-
-                    $('#miModal').modal('show');
-                }
-            })
-        }
-
-        // Funcion para cambiar de semana
-        $(document).on('click', '#semanaAnterior, #semanasiguiente', function() {
-            let semana = parseInt($('#semana').text().replace('Semana: ', ''));
-            semana += $(this).attr('id') === 'semanaAnterior' ? -1 : 1;
-
-            let nounidad = $('#numUnidad').text(replace('No. Unidad: ', ''));
-            cargardatosUnidad(nounidad, semana);
-        })
-
-        function mostrarModal(rowData) {
-            console.log(rowData);
-            $('#miModalLabel').text('Uso por unidad semanal');
-            $('#numUnidad').text(`No. Unidad: ${rowData.no_unidad}`);
-            $('#unidad').text(`Tipo: ${rowData.tipo}`);
-            $('#miModal').modal('show');
-        }
-    }
-});
     </script>
 
     <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="miModalLabel" aria-hidden="true">
