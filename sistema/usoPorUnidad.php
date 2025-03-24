@@ -407,7 +407,7 @@ if(!in_array($rol, $allowed)) {
             const rowData = table.row(this).data();
 
             let fechaActual = new Date();
-            let semanaActual = obtenerSemana(fechaAcrual);
+            let semanaActual = obtenerSemana(fechaActual);
 
             //Llamar Ajax para obtener datos de unidad y semana
             cargardatosUnidad(rowData.no_unidad, semanaActual);
