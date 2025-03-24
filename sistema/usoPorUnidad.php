@@ -417,7 +417,7 @@ if(!in_array($rol, $allowed)) {
             let primerDiaAnio = new Date(fecha.getFullYear(), 0, 1);
             let diferencia = fecha - primerDiaAnio;
             let dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-            return Math.ceil((dias + primerDiaAnio.getday() + 1) / 7);
+            return Math.ceil((dias + primerDiaAnio.getDay() + 1) / 7);
         }
 
         function cargardatosUnidad(noUnidad, semana) {
