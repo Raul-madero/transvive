@@ -547,110 +547,133 @@ $('#btn_salir').click(function(e){
     </script>
 
 <script>
-   $('#guardar_Cliente').click(function(e){
-        e.preventDefault();
+   $('#guardar_Cliente').click(function(e) {
+    e.preventDefault();
 
-       var nocte        = $('#inputNocliente').val();
-       var namecte      = $('#inputName').val();
-       var callenum     = $('#inputCallenum').val();
-       var colonia      = $('#inputColonia').val();
-       var ciudad       = $('#inputCiudad').val();
-       var municipio    = $('#inputMunicipio').val();
-       var estado       = $('#inputEstado').val();
-       var codpostal    = $('#inputCpostal').val();
-       var pais         = $('#inputPais').val();
-       var phone        = $('#inputPhone').val();
-       var contactorh   = $('#inputContactorh').val();
-       var correorh     = $('#inputCorreorh').val();
-       var giro         = $('#inputGiro').val();
-       var phonecontac  = $('#inputTelcontacto').val();
-       var servicio     = $('#inputServicio').val();
-       var sitioweb     = $('#inputSitioweb').val();
-       var tipocontrato = $('#inputTipocontrato').val();
-       var dateinic     = $('#inputDateini').val();
-       var datefinc     = $('#inputDatefin').val();
-       var razonsoc     = $('#inputRazonsoc').val();
-       var rfccte       = $('#inputRfc').val();
-       var formapago    = $('#fformpa').val();
-       var metodopago   = $('#fmetd').val();
-       var usocfdi      = $('#fusocfdi').val();
-       var contactocont = $('#inputCcontabilidad').val();
-       var emailconta   = $('#inputMailc').val();
-       var credito      = $('#fCredito').val();
-       var condicionesc = $('#fConcredito').val();
-       var supervisor   = $('#fsupervisor').val();
+    // Obtener y validar los valores requeridos
+    var nocte        = $('#inputNocliente').val().trim();
+    var namecte      = $('#inputName').val().trim();
 
-       var action       = 'AlmacenaCliente';
+    if (nocte === '' || namecte === '') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos requeridos',
+            text: 'Por favor, ingresa el número de cliente y el nombre del cliente.',
+        });
+        return;
+    }
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, nocte:nocte, namecte:namecte, callenum:callenum, colonia:colonia, ciudad:ciudad, municipio:municipio, estado:estado, codpostal:codpostal, pais:pais, phone:phone, contactorh:contactorh, correorh:correorh, giro:giro, phonecontac:phonecontac, servicio:servicio, sitioweb:sitioweb, tipocontrato:tipocontrato, dateinic:dateinic, datefinc:datefinc, razonsoc:razonsoc, rfccte:rfccte, formapago:formapago, metodopago:metodopago, usocfdi:usocfdi, contactocont:contactocont, emailconta:emailconta, credito:credito, condicionesc:condicionesc, supervisor:supervisor},
+    // Obtener el resto de los valores
+    var callenum     = $('#inputCallenum').val();
+    var colonia      = $('#inputColonia').val();
+    var ciudad       = $('#inputCiudad').val();
+    var municipio    = $('#inputMunicipio').val();
+    var estado       = $('#inputEstado').val();
+    var codpostal    = $('#inputCpostal').val();
+    var pais         = $('#inputPais').val();
+    var phone        = $('#inputPhone').val();
+    var contactorh   = $('#inputContactorh').val();
+    var correorh     = $('#inputCorreorh').val();
+    var giro         = $('#inputGiro').val();
+    var phonecontac  = $('#inputTelcontacto').val();
+    var servicio     = $('#inputServicio').val();
+    var sitioweb     = $('#inputSitioweb').val();
+    var tipocontrato = $('#inputTipocontrato').val();
+    var dateinic     = $('#inputDateini').val();
+    var datefinc     = $('#inputDatefin').val();
+    var razonsoc     = $('#inputRazonsoc').val();
+    var rfccte       = $('#inputRfc').val();
+    var formapago    = $('#fformpa').val();
+    var metodopago   = $('#fmetd').val();
+    var usocfdi      = $('#fusocfdi').val();
+    var contactocont = $('#inputCcontabilidad').val();
+    var emailconta   = $('#inputMailc').val();
+    var credito      = $('#fCredito').val();
+    var condicionesc = $('#fConcredito').val();
+    var supervisor   = $('#fsupervisor').val();
 
-                    success: function(response)
-                    {
-                       if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "CLIENTE ALMACENADO CORRECTAMENTE",
-                          icon: 'success',
+    var action       = 'AlmacenaCliente';
 
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'clientes.php';
-                       
+    $.ajax({
+        url: 'includes/ajax.php',
+        type: "POST",
+        async: true,
+        data: {
+            action: action,
+            nocte: nocte,
+            namecte: namecte,
+            callenum: callenum,
+            colonia: colonia,
+            ciudad: ciudad,
+            municipio: municipio,
+            estado: estado,
+            codpostal: codpostal,
+            pais: pais,
+            phone: phone,
+            contactorh: contactorh,
+            correorh: correorh,
+            giro: giro,
+            phonecontac: phonecontac,
+            servicio: servicio,
+            sitioweb: sitioweb,
+            tipocontrato: tipocontrato,
+            dateinic: dateinic,
+            datefinc: datefinc,
+            razonsoc: razonsoc,
+            rfccte: rfccte,
+            formapago: formapago,
+            metodopago: metodopago,
+            usocfdi: usocfdi,
+            contactocont: contactocont,
+            emailconta: emailconta,
+            credito: credito,
+            condicionesc: condicionesc,
+            supervisor: supervisor
+        },
+        success: function(response) {
+            try {
+                var info = JSON.parse(response);
+                console.log(info);
+
+                if (info.success === true) {
+                    Swal.fire({
+                        title: "¡Éxito!",
+                        text: "CLIENTE ALMACENADO CORRECTAMENTE",
+                        icon: 'success',
+                    }).then((resultado) => {
+                        if (resultado.value) {
+                            location.href = 'clientes.php';
                         } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'clientes.php';
+                            location.reload();
                         }
-                        });
-
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: info.message || 'No se pudo guardar el cliente.',
+                    });
+                }
+            } catch (e) {
+                console.error('Error al interpretar la respuesta del servidor:', response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error inesperado',
+                    text: 'La respuesta del servidor no es válida.',
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de red',
+                text: 'No se pudo comunicar con el servidor.',
+            });
+        }
     });
+});
+
 
     </script>  
 <script src="js/sweetalert2.all.min.js"></script>   
