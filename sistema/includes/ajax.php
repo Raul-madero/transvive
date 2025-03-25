@@ -4,69 +4,70 @@ include "../../conexion.php";
 session_start();
 
 //*Agregar Productos a Entrada
-if($_POST['action'] == 'AlmacenaCliente')
-{
-    if(!empty($_POST['nocte']) || !empty($_POST['namecte']) )
-    {     
-        $nocte        = $_POST['nocte'];
-        $namecte      = $_POST['namecte'];
-        $callenum     = $_POST['callenum'];
-        $colonia      = $_POST['colonia'];
-        $ciudad       = $_POST['ciudad'];
-        $municipio    = $_POST['municipio'];
-        $estado       = $_POST['estado'];
-        $codpostal    = $_POST['codpostal'];
-        $pais         = $_POST['pais'];
-        $phone        = $_POST['phone'];
-        $cont_rh      = $_POST['contactorh'];
-        $email_rh     = $_POST['correorh'];
-        $giro         = $_POST['giro'];
-        $phonecontac  = $_POST['phonecontac']; 
-        $servicio     = $_POST['servicio'];
-        $sitioweb     = $_POST['sitioweb'];
-        $tipocontrato = $_POST['tipocontrato'];
-        $fechaini     = $_POST['dateinic'];
-        $fechafin     = $_POST['datefinc'];
-        $razonsoc     = $_POST['razonsoc'];
-        $rfccte       = $_POST['rfccte'];
-        $formapago    = $_POST['formapago'];
-        $metodopago   = $_POST['metodopago'];
-        $usocfdi      = $_POST['usocfdi'];
-        $cont_conta   = $_POST['contactocont'];
-        $email_conta  = $_POST['emailconta'];
-        $credito      = $_POST['credito'];
-        $condicionesc = $_POST['condicionesc'];
-        $supervisor   = $_POST['supervisor'];
+if ($_POST['action'] == 'AlmacenaCliente') {
+    if (!empty($_POST['nocte']) && !empty($_POST['namecte'])) {
 
-        if ($supervisor > 0) {
-            $idsuperv = $supervisor;
-        }else {
-            $idsuperv = 0;
+        // Escapar todos los datos de entrada
+        $nocte        = intval($_POST['nocte']);
+        $namecte      = mysqli_real_escape_string($conection, $_POST['namecte']);
+        $callenum     = mysqli_real_escape_string($conection, $_POST['callenum']);
+        $colonia      = mysqli_real_escape_string($conection, $_POST['colonia']);
+        $ciudad       = mysqli_real_escape_string($conection, $_POST['ciudad']);
+        $municipio    = mysqli_real_escape_string($conection, $_POST['municipio']);
+        $estado       = mysqli_real_escape_string($conection, $_POST['estado']);
+        $codpostal    = mysqli_real_escape_string($conection, $_POST['codpostal']);
+        $pais         = mysqli_real_escape_string($conection, $_POST['pais']);
+        $phone        = mysqli_real_escape_string($conection, $_POST['phone']);
+        $cont_rh      = mysqli_real_escape_string($conection, $_POST['contactorh']);
+        $email_rh     = mysqli_real_escape_string($conection, $_POST['correorh']);
+        $giro         = mysqli_real_escape_string($conection, $_POST['giro']);
+        $phonecontac  = mysqli_real_escape_string($conection, $_POST['phonecontac']); 
+        $servicio     = mysqli_real_escape_string($conection, $_POST['servicio']);
+        $sitioweb     = mysqli_real_escape_string($conection, $_POST['sitioweb']);
+        $tipocontrato = mysqli_real_escape_string($conection, $_POST['tipocontrato']);
+        $fechaini     = mysqli_real_escape_string($conection, $_POST['dateinic']);
+        $fechafin     = mysqli_real_escape_string($conection, $_POST['datefinc']);
+        $razonsoc     = mysqli_real_escape_string($conection, $_POST['razonsoc']);
+        $rfccte       = mysqli_real_escape_string($conection, $_POST['rfccte']);
+        $formapago    = mysqli_real_escape_string($conection, $_POST['formapago']);
+        $metodopago   = mysqli_real_escape_string($conection, $_POST['metodopago']);
+        $usocfdi      = mysqli_real_escape_string($conection, $_POST['usocfdi']);
+        $cont_conta   = mysqli_real_escape_string($conection, $_POST['contactocont']);
+        $email_conta  = mysqli_real_escape_string($conection, $_POST['emailconta']);
+        $credito      = floatval($_POST['credito']);
+        $condicionesc = mysqli_real_escape_string($conection, $_POST['condicionesc']);
+        $supervisor   = intval($_POST['supervisor']);
+
+        $idsuperv = ($supervisor > 0) ? $supervisor : 0;
+        $usuario  = intval($_SESSION['idUser']);
+
+        // Preparar el INSERT
+        $sql = "INSERT INTO clientes (
+                    no_cliente, nombre_corto, calle, colonia, ciudad, municipio, estado, cod_postal, pais, telefono, 
+                    contacto, correo, giro, movil, servicio, sitio, tipo_contrato, fecha_iniciacontrato, fecha_fincontrato, 
+                    nombre, rfc, forma_pago, metodo_pago, uso_cfdi, contacto_conta, email_conta, credito, 
+                    condiciones_credito, id_supervisor, usuario_id
+                ) VALUES (
+                    $nocte, '$namecte', '$callenum', '$colonia', '$ciudad', '$municipio', '$estado', '$codpostal', 
+                    '$pais', '$phone', '$cont_rh', '$email_rh', '$giro', '$phonecontac', '$servicio', '$sitioweb', 
+                    '$tipocontrato', '$fechaini', '$fechafin', '$razonsoc', '$rfccte', '$formapago', '$metodopago', 
+                    '$usocfdi', '$cont_conta', '$email_conta', $credito, '$condicionesc', $idsuperv, $usuario
+                )";
+
+        $insert = mysqli_query($conection, $sql);
+
+        if ($insert) {
+            echo json_encode(['success' => true, 'message' => 'Cliente almacenado correctamente.'], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error al almacenar el cliente.'], JSON_UNESCAPED_UNICODE);
         }
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-    
-
-        $query_procesar = mysqli_query($conection,"CALL procesar_cliente($nocte, '$namecte', '$callenum', '$colonia', '$ciudad', '$municipio', '$estado', '$codpostal', '$pais', '$phone', '$cont_rh', '$email_rh', '$giro', '$phonecontac', '$servicio', '$sitioweb', '$tipocontrato', '$fechaini', '$fechafin', '$razonsoc', '$rfccte', '$formapago', '$metodopago', '$usocfdi', '$cont_conta', '$email_conta', '$credito', '$condicionesc', $idsuperv, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
-        }
-    
-    mysqli_close($conection);
-    
-    }else{
-        echo 'error';
+        mysqli_close($conection);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Datos incompletos.'], JSON_UNESCAPED_UNICODE);
     }
     exit;
 }
-
-
 
 //Agregar Productos a Entrada
 if($_POST['action'] == 'AlmacenaMotivo')
