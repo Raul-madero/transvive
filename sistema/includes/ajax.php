@@ -57,6 +57,7 @@ if ($_POST['action'] == 'AlmacenaCliente') {
         $insert = mysqli_query($conection, $sql);
 
         if ($insert) {
+            header('Content-Type: application/json');
             echo json_encode(['success' => true, 'message' => 'Cliente almacenado correctamente.'], JSON_UNESCAPED_UNICODE);
         } else {
             echo json_encode(['success' => false, 'message' => 'Error al almacenar el cliente.' . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
