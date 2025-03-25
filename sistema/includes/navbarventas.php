@@ -67,6 +67,24 @@
                     </ul>
                 </li>
                 <li class="dropdown-submenu dropdown-hover">
+          <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Calidad</a>
+          <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+
+
+            <li class="dropdown-submenu dropdown-hover">
+              <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Satisfaccion</a>
+              <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+                <li><a href="factura/detallado_encsatisfaccionew.php" target="_blank" class="dropdown-item">Detallado Encuesta Satisfacción</a></li>
+                <li><a href="factura/encuesta_calidadexcel.php" target="_blank" class="dropdown-item">Encuesta Satisfacción Excel</a></li>
+                <!--<li><a href="analisis_encuestasatisf.php" class="dropdown-item">Análisis Encuesta Satisfacción</a></li>-->
+
+              </ul>
+            </li>
+          </ul>
+        </li>
+                <li class="dropdown-submenu dropdown-hover">
                     <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Viajes</a>
                     <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
 
