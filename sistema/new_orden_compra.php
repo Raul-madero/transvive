@@ -153,12 +153,11 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
                     </div>
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Metodo de Pago</label>
                     <div class="col-sm-4">
-                        <input style=" font-size: 14px;" type="text" class="form-control" id="inputMetodopago" name="inputMetodopago">
-                      <!-- <select style=" font-size: 14px;" name="inputMetodopago" id="inputMetodopago" required class="form-control custom-select" >
+                      <select style=" font-size: 14px;" name="inputMetodopago" id="inputMetodopago" required class="form-control custom-select" >
                             <option value="">--  Seleccione --</option>
                             <option value="PUE Pago de Una Sola Exhibicion">PUE - Pago de Una Sola Exhibición</option>
                             <option value="PPD Pago en Parcialidades o Diferidos">PPD - Pago en Parcialidades o Diferidos</option>
-                          </select> -->
+                          </select>
                     </div>
                   </div>
 
@@ -166,8 +165,7 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
                   <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Uso de CFDI</label>
                     <div class="col-sm-4">
-                        <input style=" font-size: 14px;" type="text" class="form-control" id="inputUsocfdi" name="inputUsocfdi">
-                      <!-- <select style=" font-size: 14px;" name="inputUsocfdi" id="inputUsocfdi" required class="form-control custom-select" >
+                      <select style=" font-size: 14px;" name="inputUsocfdi" id="inputUsocfdi" required class="form-control custom-select" >
                             <option value="">-- Seleccione --</option>
                             <option value="G01 - Adquisición de mercancias">G01 - Adquisición de mercancías</option>
                             <option value="G02 - Devoluciones, descuentos o bonificaciones">G02 - Devoluciones, descuentos o bonificaciones</option>
@@ -184,7 +182,7 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
                             <option value="S01 - Sin efectos fiscales">S01 - Sin efectos fiscales</option>
                             <option value="CP01 - Pagos">CP01 - Pagos</option>
 
-                          </select> -->
+                          </select>
                     </div>
                    <label for="inputEmail3" class="col-sm-2 col-form-label">Area Solicitante</label>
                           <div class="col-sm-4">

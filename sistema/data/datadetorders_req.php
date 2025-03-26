@@ -64,6 +64,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         $sql.="AND ( no_requisicion LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR tipo_requisicion LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR area_solicitante LIKE '%".$requestData['search']['value']."%'  )";
+        $sql.=" OR observaciones LIKE '%".$requestData['search']['value']."%'  )";
        
         
     }
