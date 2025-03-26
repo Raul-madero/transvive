@@ -362,7 +362,14 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 						return `<button class="btn btn-danger btn-sm eliminar" data-id="${row.id}">Eliminar</button>`;
 					}
 				}
-			]
+			],
+			"paging": false,
+			"info": false,
+			"searching": false,
+			"lengthChange": false,
+			"language": {
+				"emptyTable": "No hay datos disponibles en la tabla."
+			}
 		})
 	})
 </script>
