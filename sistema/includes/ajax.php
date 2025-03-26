@@ -5876,10 +5876,7 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
     if ($stmt = mysqli_prepare($conection, $query)) {
         mysqli_stmt_bind_param($stmt, "iisssssssssssisissddisddddddd", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario, $codigo, $cantidad, $descripcion, $marca, $precio, $importe, $id, $unidad_medida, $subtotal, $iva, $isr, $ieps, $total, $ihospedaje);
 
-        if (!$stmt) {
-            echo json_encode(["status" => "error", "message" => "Error en prepare(): " . mysqli_error($conection)]);
-            exit;
-        }
+        
 
         if (mysqli_stmt_execute($stmt)) {
             echo json_encode(["status" => "success", "message" => "Orden de compra almacenada", "insert_id" => mysqli_insert_id($conection)]);
@@ -5889,6 +5886,10 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
 
         mysqli_stmt_close($stmt);
     } else {
+        if (!$stmt) {
+            echo json_encode(["status" => "error", "message" => "Error en prepare(): " . mysqli_error($conection)]);
+            exit;
+        }
         echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
     }
 
