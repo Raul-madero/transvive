@@ -5821,6 +5821,8 @@ if($_POST['action'] == 'ActualizaMovordencompra'){
 
 //Almacena Orden de compra
 if ($_POST['action'] == 'AlmacenaOrdencompra') {
+    var_dump($_POST);
+    exit;
 
     if (empty($_POST['fecha']) || empty($_POST['proveedor'])) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
