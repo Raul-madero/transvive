@@ -557,30 +557,37 @@ $(document).ready(function () {
         impuestos: JSON.stringify(impuestosAdicionales)
       },
       success: function (response) {
-        if (response !== 'error') {
-          const info = JSON.parse(response);
-          const mensaje = info.mensaje;
+  let info;
 
-          if (!mensaje) {
-            Swal.fire({
-              title: "Éxito!",
-              text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
-              icon: 'success'
-            }).then(resultado => {
-              if (resultado.value) {
-                generarimpformulaPDF(info.folio);
-                location.href = 'ordenes_compra23.php';
-              } else {
-                location.reload();
-              }
-            });
-          } else {
-            Swal.fire({ icon: 'error', title: 'Oops...', text: mensaje });
-          }
-        } else {
-          Swal.fire({ icon: 'info', text: 'Capture los datos requeridos' });
-        }
+  try {
+    info = JSON.parse(response);
+  } catch (e) {
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Respuesta inválida del servidor.' });
+    return;
+  }
+
+  if (info.status === 'success') {
+    Swal.fire({
+      title: "Éxito!",
+      text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
+      icon: 'success'
+    }).then(resultado => {
+      if (resultado.value) {
+        generarimpformulaPDF(info.folio);
+        location.href = 'ordenes_compra23.php';
+      } else {
+        location.reload();
       }
+    });
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: info.message || 'Ocurrió un error al guardar la orden.'
+    });
+  }
+}
+
     });
   });
 });
