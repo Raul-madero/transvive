@@ -368,103 +368,11 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 </script>
 
 <script>
-	$(document).ready(function() {
-		$('#requisicion').DataTable({
-			"ajax": {
-				"url": "data/detalles_requisicion.php",
-				"data": { folio: <?php echo $requisicion; ?> },
-				"type": "POST",
-				"dataSrc": "data"
-			},
-			"columns": [
-				{ "data": "cantidad" },
-				{ "data": "codigo" },
-				{ 
-					"data": "descripcion",
-					"render": function(data, type, row, meta) {
-						return `<input type="text" class="form-control form-control-sm descripcion" data-index="${meta.row}" value="${data}">`;
-					}
-				 },
-				{ "data": "unidad_medida" },
-				{ 
-					"data": "marca",
-					"render": function(data, type, row, meta) {
-						return `<input type="text" class="form-control form-control-sm marca" data-index="${meta.row}" value="${data}">`;
-					}
-				 },
-				{ 
-					"data": "precio", 
-					"render": function(data, type, row, meta) {
-						return `<input type="number" step="0.01" class="form-control form-control-sm precio" data-index="${meta.row}" value="${data}">`;
-					}
-				 },
-				{ "data": "importe", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
-				{
-					"data": null,
-					"orderable": false,
-					"render": function (data, type, row) {
-						return `<button class="btn btn-danger btn-sm eliminar" data-id="${row.id}">Eliminar</button>`;
-					}
-				}
-			],
-			"paging": false,
-			"info": false,
-			"searching": false,
-			"lengthChange": false,
-			"language": {
-				"emptyTable": "No hay datos disponibles en la tabla."
-			},
-			drawCallback: function(settings) {
-				let api = this.api();
-				let subtotal = api
-				.column(6, { page: 'current' }) // columna de importes
-				.data()
-				.reduce(function(a, b) {
-					return parseFloat(a) + parseFloat(b);
-				}, 0);
+	let impuestosAdicionales = [];
 
-				let iva = subtotal * 0.16;
-				let total = subtotal + iva;
-
-				// Formato moneda
-				const formatMoney = val => '$' + val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-
-				$('#subtotal').html(formatMoney(subtotal));
-				$('#iva').html(formatMoney(iva));
-				$('#total').html(formatMoney(total));
-			}
-		})
-		$('#requisicion tbody').on('input', '.precio', function () {
-			const rowIdx = $(this).data('index');
-			const precio = parseFloat($(this).val()) || 0;
-
-			const table = $('#requisicion').DataTable();
-			const rowData = table.row(rowIdx).data();
-			rowData.precio = precio;
-			rowData.importe = rowData.cantidad * precio;
-
-			table.row(rowIdx).data(rowData).invalidate(); // Actualiza fila
-			table.draw(false); // Redibuja sin recargar
-		});
-
-		let impuestosAdicionales = [];
-
-$('#btnAgregarImpuesto').on('click', function () {
-  const tipo = prompt("Nombre del impuesto (Ej. ISR, IEPS, Hospedaje):");
-  if (!tipo) return;
-
-  const porcentajeStr = prompt(`¿Qué porcentaje (%) aplica para ${tipo}?`, "0");
-  const porcentaje = parseFloat(porcentajeStr);
-
-  if (isNaN(porcentaje) || porcentaje <= 0) {
-    alert("Porcentaje no válido.");
-    return;
-  }
-
-  impuestosAdicionales.push({ tipo, porcentaje });
-  renderImpuestosAdicionales();
-  recalcularTotales();
-});
+function formatMoney(val) {
+  return '$' + val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
 
 function renderImpuestosAdicionales() {
   const contenedor = $('#impuestos_adicionales_footer');
@@ -480,13 +388,13 @@ function renderImpuestosAdicionales() {
     `);
   });
 }
+
 function recalcularTotales() {
   const api = $('#requisicion').DataTable();
   let subtotal = api.column(6, { page: 'current' }).data().reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
   let iva = subtotal * 0.16;
   let total = subtotal + iva;
 
-  // Calcular impuestos adicionales
   impuestosAdicionales.forEach((imp, idx) => {
     const monto = subtotal * (imp.porcentaje / 100);
     total += monto;
@@ -498,157 +406,184 @@ function recalcularTotales() {
   $('#total').html(formatMoney(total));
 }
 
-function formatMoney(val) {
-  return '$' + val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-}
+$(document).ready(function () {
 
-$('#requisicion').on('click', '.quitar-imp', function () {
-  const idx = $(this).data('idx');
-  impuestosAdicionales.splice(idx, 1);
-  renderImpuestosAdicionales();
-  recalcularTotales();
-});
+  // Selector proveedor autocompletado
+  $('#inputProveedor').on('change', function () {
+    const selectedId = $(this).val();
+    const proveedor = proveedoresData.find(p => p.id == selectedId);
 
-	})
-</script>
+    if (proveedor) {
+      $('#inputContacto').val(proveedor.contacto || "");
+      $('#inputTelefono').val(proveedor.telefono || "");
+      $('#inputCorreo').val(proveedor.correo || "");
+      $('#inputFormapago').val(proveedor.forma_pago || "");
+      $('#inputMetodopago').val(proveedor.metodo_pago || "");
+      $('#inputUsocfdi').val(proveedor.uso_cfdi || "");
+    } else {
+      $('#inputContacto, #inputTelefono, #inputCorreo, #inputFormapago, #inputMetodopago, #inputUsocfdi').val('');
+    }
+  });
 
-<script>
-	$('#guardar_tipoactividad').click(function(e){
-        e.preventDefault();
+  // Inicializa DataTable
+  const table = $('#requisicion').DataTable({
+    ajax: {
+      url: "data/detalles_requisicion.php",
+      type: "POST",
+      data: { folio: <?php echo $requisicion; ?> },
+      dataSrc: "data"
+    },
+    columns: [
+      { data: "cantidad" },
+      { data: "codigo" },
+      {
+        data: "descripcion",
+        render: (data, type, row, meta) => `<input type="text" class="form-control form-control-sm descripcion" data-index="${meta.row}" value="${data}">`
+      },
+      { data: "unidad_medida" },
+      {
+        data: "marca",
+        render: (data, type, row, meta) => `<input type="text" class="form-control form-control-sm marca" data-index="${meta.row}" value="${data}">`
+      },
+      {
+        data: "precio",
+        render: (data, type, row, meta) => `<input type="number" step="0.01" class="form-control form-control-sm precio" data-index="${meta.row}" value="${data}">`
+      },
+      {
+        data: "importe",
+        render: $.fn.dataTable.render.number(',', '.', 2, '$')
+      },
+      {
+        data: null,
+        orderable: false,
+        render: row => `<button class="btn btn-danger btn-sm eliminar" data-id="${row.id}">Eliminar</button>`
+      }
+    ],
+    paging: false,
+    info: false,
+    searching: false,
+    lengthChange: false,
+    language: {
+      emptyTable: "No hay datos disponibles en la tabla."
+    },
+    drawCallback: function () {
+      recalcularTotales();
+    }
+  });
 
+  // Escucha cambios en precio para actualizar importe
+  $('#requisicion tbody').on('input', '.precio', function () {
+    const rowIdx = $(this).data('index');
+    const precio = parseFloat($(this).val()) || 0;
+    const rowData = table.row(rowIdx).data();
 
-		var subtotalTexto = $('#subtotal').text();
-var ivaTexto = $('#iva').text();
-var totalTexto = $('#total').text();
+    rowData.precio = precio;
+    rowData.importe = rowData.cantidad * precio;
+    table.row(rowIdx).data(rowData).invalidate();
+    table.draw(false);
+  });
 
-function limpiarMoneda(valor) {
-  return parseFloat(valor.replace(/[$,]/g, '')) || 0;
-}
+  // Agregar impuestos dinámicos
+  $('#btnAgregarImpuesto').on('click', function () {
+    const tipo = prompt("Nombre del impuesto (Ej. ISR, IEPS, Hospedaje):");
+    if (!tipo) return;
 
-var subtotal = limpiarMoneda(subtotalTexto);
-var iva = limpiarMoneda(ivaTexto);
-var total = limpiarMoneda(totalTexto);
+    const porcentajeStr = prompt(`¿Qué porcentaje (%) aplica para ${tipo}?`, "0");
+    const porcentaje = parseFloat(porcentajeStr);
 
-       var folio       = $('#inputFolio').val();
-       var noreq       = $('#inputNoorden').val();
-       var fecha       = $('#inputFecha').val();
-       var proveedor   = $('#inputProveedor').val();
-       var contacto    = $('#inputContacto').val();
-       var telefono    = $('#inputTelefono').val();
-       var correo      = $('#inputCorreo').val();
-       var forma_pago  = $('#inputFormapago').val();
-       var metodo_pago = $('#inputMetodopago').val();
-       var uso_cfdi    = $('#inputUsocfdi').val();
-       var solicita    = $('#inputSolicita').val();
-       var notas       = $('#inputNotas').val();
-       var recibe      = $('#inputRecibe').val();
-       var action      = 'AlmacenaOrdencompra';
-	   // Obtener todos los datos de la tabla
-var detalle = [];
+    if (isNaN(porcentaje) || porcentaje <= 0) {
+      alert("Porcentaje no válido.");
+      return;
+    }
 
-var table = $('#requisicion').DataTable();
-table.rows().every(function(rowIdx, tableLoop, rowLoop) {
-  var row = this.node();
+    impuestosAdicionales.push({ tipo, porcentaje });
+    renderImpuestosAdicionales();
+    recalcularTotales();
+  });
 
-  detalle.push({
-    id: this.data().id,
-    cantidad: this.data().cantidad,
-    codigo: this.data().codigo,
-    descripcion: $(row).find('.descripcion').val(),
-    marca: $(row).find('.marca').val(),
-    precio: parseFloat($(row).find('.precio').val()) || 0,
-    importe: this.data().cantidad * (parseFloat($(row).find('.precio').val()) || 0)
+  // Eliminar impuesto adicional
+  $('#requisicion').on('click', '.quitar-imp', function () {
+    const idx = $(this).data('idx');
+    impuestosAdicionales.splice(idx, 1);
+    renderImpuestosAdicionales();
+    recalcularTotales();
+  });
+
+  // Enviar datos al guardar
+  $('#guardar_tipoactividad').on('click', function (e) {
+    e.preventDefault();
+
+    const subtotal = parseFloat($('#subtotal').text().replace(/[$,]/g, '')) || 0;
+    const iva = parseFloat($('#iva').text().replace(/[$,]/g, '')) || 0;
+    const total = parseFloat($('#total').text().replace(/[$,]/g, '')) || 0;
+
+    const detalle = [];
+    table.rows().every(function (rowIdx) {
+      const row = this.node();
+      detalle.push({
+        id: this.data().id,
+        cantidad: this.data().cantidad,
+        codigo: this.data().codigo,
+        descripcion: $(row).find('.descripcion').val(),
+        marca: $(row).find('.marca').val(),
+        precio: parseFloat($(row).find('.precio').val()) || 0,
+        importe: this.data().cantidad * (parseFloat($(row).find('.precio').val()) || 0)
+      });
+    });
+
+    $.ajax({
+      url: 'includes/ajax.php',
+      type: "POST",
+      data: {
+        action: 'AlmacenaOrdencompra',
+        folio: $('#inputFolio').val(),
+        noreq: $('#inputNoorden').val(),
+        fecha: $('#inputFecha').val(),
+        proveedor: $('#inputProveedor').val(),
+        contacto: $('#inputContacto').val(),
+        telefono: $('#inputTelefono').val(),
+        correo: $('#inputCorreo').val(),
+        forma_pago: $('#inputFormapago').val(),
+        metodo_pago: $('#inputMetodopago').val(),
+        uso_cfdi: $('#inputUsocfdi').val(),
+        solicita: $('#inputSolicita').val(),
+        notas: $('#inputNotas').val(),
+        recibe: $('#inputRecibe').val(),
+        detalle: JSON.stringify(detalle),
+        subtotal,
+        iva,
+        total,
+        impuestos: JSON.stringify(impuestosAdicionales)
+      },
+      success: function (response) {
+        if (response !== 'error') {
+          const info = JSON.parse(response);
+          const mensaje = info.mensaje;
+
+          if (!mensaje) {
+            Swal.fire({
+              title: "Éxito!",
+              text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
+              icon: 'success'
+            }).then(resultado => {
+              if (resultado.value) {
+                generarimpformulaPDF(info.folio);
+                location.href = 'ordenes_compra23.php';
+              } else {
+                location.reload();
+              }
+            });
+          } else {
+            Swal.fire({ icon: 'error', title: 'Oops...', text: mensaje });
+          }
+        } else {
+          Swal.fire({ icon: 'info', text: 'Capture los datos requeridos' });
+        }
+      }
+    });
   });
 });
 
-console.log(detalle);
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {
-						action:action, 
-						folio:folio, 
-						noreq:noreq, 
-						fecha:fecha, 
-						proveedor:proveedor, 
-						contacto:contacto, 
-						telefono:telefono, 
-						correo:correo, 
-						forma_pago:forma_pago, 
-						metodo_pago:metodo_pago, 
-						uso_cfdi:uso_cfdi, 
-						solicita:solicita, 
-						notas:notas, 
-						recibe:recibe,
-						detalle: JSON.stringify(detalle),
-						subtotal: subtotal,
-						iva: iva,
-						total: total,
-						impuestos: JSON.stringify(impuestosAdicionales)
-					},
-
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
-                          icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        generarimpformulaPDF(info.folio);
-                        location.href = 'ordenes_compra23.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'ordenes_compra23.php';
-                        }
-                        });
-
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-               });
-    });
 </script>
 </body>
 </html>
