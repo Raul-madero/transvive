@@ -17,7 +17,7 @@ $nuevofolio=$folioe["folio"] + 1;
 
 
 //Llamada para llenar el selector de proveedores
-$sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
+$sqlprov   = "SELECT id, no_prov, nombre, contacto, telefono, correo, forma_pago, uso_cfdi, metodo_pago FROM proveedores WHERE estatus = 1";
 $queryprov = mysqli_query($conection, $sqlprov);
 $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
 
@@ -299,4 +299,36 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 <script src="../plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
- 
+<script>
+  const proveedoresData = <?= json_encode($filasprov, JSON_UNESCAPED_UNICODE); ?>;
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const proveedorSelect = document.getElementById("inputProveedor");
+
+    proveedorSelect.addEventListener("change", function () {
+      const selectedId = this.value;
+
+      // Busca el proveedor por ID
+      const proveedor = proveedoresData.find(p => p.id == selectedId);
+
+      // Si lo encuentra, llena los campos
+      if (proveedor) {
+        document.getElementById("inputContacto").value = proveedor.contacto || "";
+        document.getElementById("inputTelefono").value = proveedor.telefono || "";
+        document.getElementById("inputCorreo").value = proveedor.correo || "";
+        document.getElementById("inputFormapago").value = proveedor.forma_pago || "";
+        document.getElementById("inputMetodopago").value = proveedor.metodo_pago || "";
+        document.getElementById("inputUsocfdi").value = proveedor.uso_cfdi || "";
+      } else {
+        // Si no hay proveedor seleccionado, limpia los campos
+        document.getElementById("inputContacto").value = "";
+        document.getElementById("inputTelefono").value = "";
+        document.getElementById("inputCorreo").value = "";
+        document.getElementById("inputFormapago").value = "";
+        document.getElementById("inputMetodopago").value = "";
+        document.getElementById("inputUsocfdi").value = "";
+      }
+    });
+  });
+</script>
