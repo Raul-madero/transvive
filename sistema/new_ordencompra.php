@@ -17,13 +17,13 @@ if(!isset($_REQUEST['req'])) {
 }
 $requisicion = $_REQUEST['req'];
 
-// $sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados where estatus = 1 ORDER BY nombres";
-// $queryoper = mysqli_query($conection, $sqloper);
-// $filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
+$sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados where estatus = 1 ORDER BY nombres";
+$queryoper = mysqli_query($conection, $sqloper);
+$filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
 
-// $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
-// $queryrecb = mysqli_query($conection, $sqlrecb);
-// $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
+$sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
+$queryrecb = mysqli_query($conection, $sqlrecb);
+$filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
 
 $sqlprod   = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY codigo";
 $queryprod = mysqli_query($conection, $sqlprod);

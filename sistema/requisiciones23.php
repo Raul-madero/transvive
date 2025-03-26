@@ -443,7 +443,6 @@ buttons: [
             {
 
                     "render": function ( data, type, full, meta ) {
-                      console.log(full);
                       if(full.estatus == 2) {
                         return '<a class="link_edit" style="color:#007bff;" href= \'edit_cotizacioncompra.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> </a> | <a href= \'factura/requisicion.php?id=' + full.Folio + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> </a> | <a data-toggle="modal" data-target="#modalCancela"  data-id=\'' + full.Folio +  '\' data-date=\'' + full.fecha_req +  '\' data-name=\'' + full.arear +  '\' href="javascript:void(0)">&nbsp;<i class="fa fa-ban"></i></a> | <a data-toggle="modal" data-target="#modalBorra"  data-id=\'' + full.Folio +  '\' data-name=\'' + full.arear +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-trash"></i> </a> | <a href="new_ordencompra.php?req=' + full.Folio + '" class="" style="color:green" ><i class="fa fa-clipboard"></i> </a> ';
                       }else {
