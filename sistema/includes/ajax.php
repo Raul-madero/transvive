@@ -1049,38 +1049,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $msjBody = "$mensaje\r\nDe antemano, Gracias\r\n\r\nLiga: https://encuesta.transvivegdl.com.mx\r\n\r\nTransvive.\r\nTel: (33) 3016220\r\nHidalgo #30, C.P. 45640 Col. Los Gavilanes\r\nTlajomulco de Zuñiga, Jal.\r\nDepartamento de ventas";
 
             // Configuración de PHPMailer
-            $mail = new PHPMailer(true);
-
+            $mail = new PHPMailer;
             $mail->isSMTP();
             $mail->Host       = 'smtp.office365.com';
             $mail->Port       = 587;
             $mail->SMTPAuth   = true;
-            $mail->SMTPSecure = 'tls'; // ← Esto representa STARTTLS
-            $mail->Username   = 'ventas@transvivegdl.com.mx';
-            $mail->Password   = 'oG3fFgAiT5XIdSG'; // Usa contraseña de app si tienes MFA
-            $mail->setFrom('ventas@transvivegdl.com.mx', 'Ventas Transvive');
+            $mail->SMTPSecure = 'STARTTLS';
+            $mail->Username   = 'compras@transvivegdl.com.mx';
+            $mail->Password   = 'AWATHsjvb6hW8qe';
+            $mail->setFrom('compras@transvivegdl.com.mx', 'Ventas Transvive');
+            $mail->addReplyTo('calidad@transvivegdl.com.mx', 'Encuesta Enviada');
             $mail->addAddress($correo, $nombre);
+            $mail->addCC('ejecutivo@transvivegdl.com.mx');
+            $mail->addCC('ejecutivo@transvivegdl.com.mx');
+            $mail->addBCC('raul.madero.ramirez@gmail.com');
             $mail->Subject = $asunto;
-            $mail->Body    = $mensaje;
-
-            $mail->SMTPDebug = 2;
-            $mail->Debugoutput = 'html';
-
-            $mail->SMTPOptions = [
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                ]
-            ];
-
+            $mail->Body    = $msjBody;
 
             if (!$mail->send()) {
-                echo "Error enviando correo: " . $mail->ErrorInfo;
-            } else {
-                echo "Correo enviado correctamente.";
+                echo json_encode(['status' => 'error', 'message' => 'Error enviando correo: ' . $mail->ErrorInfo]);
+                exit;
             }
-            
         }
 
         // Insertar registro del envío en la BD
@@ -1090,10 +1079,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         mysqli_stmt_execute($stmt);
 
         if (mysqli_affected_rows($conection) > 0) {
-            $sql_vaciar_clientes = "TRUNCATE TABLE clientes_encuestatemp";
-            $stmt_vaciar_clientes = mysqli_prepare($conection, $sql_vaciar_clientes);
-            mysqli_stmt_execute($stmt_vaciar_clientes);
-
             echo json_encode(['status' => 'success', 'message' => 'ENCUESTA ENVIADA CORRECTAMENTE']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Error guardando en la BD']);
