@@ -19,8 +19,12 @@ $nuevofolio=$folioe["folio"] + 1;
 //Llamada para llenar el selector de proveedores
 $sqlprov   = "SELECT id, no_prov, nombre, contacto, telefono, correo, forma_pago, uso_cfdi, metodo_pago FROM proveedores WHERE estatus = 1";
 $queryprov = mysqli_query($conection, $sqlprov);
-$filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
+$filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 
+//Llamada para llenar el selctor de quien recibe
+$sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
+$queryrecb = mysqli_query($conection, $sqlrecb);
+$filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
