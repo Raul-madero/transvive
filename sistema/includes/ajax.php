@@ -1054,7 +1054,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->Host       = 'smtp.office365.com';
             $mail->Port       = 587;
             $mail->SMTPAuth   = true;
-            $mail->SMTPSecure = 'STARTTLS';
+            $mail->SMTPSecure = 'tls';
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer'       => false,
+                    'verify_peer_name'  => false,
+                    'allow_self_signed' => true
+                ]
+            ];            
             $mail->Username   = 'ventas@transvivegdl.com.mx';
             $mail->Password   = 'oG3fFgAiT5XIdSG';
             $mail->SMTPDebug = 2; // O usa 3 para más info, 4 para nivel máximo
@@ -1069,9 +1076,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->Body    = $msjBody;
 
             if (!$mail->send()) {
-                echo json_encode(['status' => 'error', 'message' => 'Error enviando correo: ' . $mail->ErrorInfo]);
-                exit;
+                echo "Error enviando correo: " . $mail->ErrorInfo;
+            } else {
+                echo "Correo enviado correctamente.";
             }
+            
         }
 
         // Insertar registro del envío en la BD
