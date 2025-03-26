@@ -402,7 +402,6 @@ $('#btn_salir').click(function(e){
 </div> 
 
 </div>
-
 <script>
    $('#actualizaclientes').click(function(e){
         e.preventDefault();
