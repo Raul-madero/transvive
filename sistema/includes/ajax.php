@@ -1057,7 +1057,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->SMTPSecure = 'STARTTLS';
             $mail->Username   = 'compras@transvivegdl.com.mx';
             $mail->Password   = 'AWATHsjvb6hW8qe';
-            $mail->setFrom('ventas@transvivegdl.com.mx', 'Ventas Transvive');
+            $mail->setFrom('compras@transvivegdl.com.mx', 'Ventas Transvive');
             $mail->addReplyTo('calidad@transvivegdl.com.mx', 'Encuesta Enviada');
             $mail->addAddress($correo, $nombre);
             $mail->addCC('ejecutivo@transvivegdl.com.mx');
