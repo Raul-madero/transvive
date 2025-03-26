@@ -60,12 +60,16 @@ if($_REQUEST['action'] == 'fetch_users'){
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
-    if( !empty($requestData['search']['value']) ) {
-        $sql.="AND ( no_requisicion LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR tipo_requisicion LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR area_solicitante LIKE '%".$requestData['search']['value']."%'  )";
-        $sql.=" OR observaciones LIKE '%".$requestData['search']['value']."%'  )";
+    if (!empty($requestData['search']['value'])) {
+        $search = $requestData['search']['value'];
+        $sql .= " AND (
+            no_requisicion LIKE '%$search%' OR
+            tipo_requisicion LIKE '%$search%' OR
+            area_solicitante LIKE '%$search%' OR
+            observaciones LIKE '%$search%'
+        )";
     }
+    
 
     $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
