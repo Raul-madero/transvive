@@ -369,10 +369,25 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 			"columns": [
 				{ "data": "cantidad" },
 				{ "data": "codigo" },
-				{ "data": "descripcion" },
+				{ 
+					"data": "descripcion",
+					"render": function(data, type, row, meta) {
+						return `<input type="text" class="form-control form-control-sm descripcion" data-index="${meta.row}" value="${data}">`;
+					}
+				 },
 				{ "data": "unidad_medida" },
-				{ "data": "marca" },
-				{ "data": "precio", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
+				{ 
+					"data": "marca",
+					"render": function(data, type, row, meta) {
+						return `<input type="text" class="form-control form-control-sm marca" data-index="${meta.row}" value="${data}">`;
+					}
+				 },
+				{ 
+					"data": "precio", 
+					"render": function(data, type, row, meta) {
+						return `<input type="number" step="0.01" class="form-control form-control-sm precio" data-index="${meta.row}" value="${data}">`;
+					}
+				 },
 				{ "data": "importe", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
 				{
 					"data": null,
