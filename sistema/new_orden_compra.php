@@ -438,5 +438,127 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 		});
 	})
 </script>
+
+<script>
+	$('#guardar_tipoactividad').click(function(e){
+        e.preventDefault();
+
+       var folio       = $('#inputFolio').val();
+       var noreq       = $('#inputNoorden').val();
+       var fecha       = $('#inputFecha').val();
+       var proveedor   = $('#inputProveedor').val();
+       var contacto    = $('#inputContacto').val();
+       var telefono    = $('#inputTelefono').val();
+       var correo      = $('#inputCorreo').val();
+       var forma_pago  = $('#inputFormapago').val();
+       var metodo_pago = $('#inputMetodopago').val();
+       var uso_cfdi    = $('#inputUsocfdi').val();
+       var solicita    = $('#inputSolicita').val();
+       var notas       = $('#inputNotas').val();
+       var recibe      = $('#inputRecibe').val();
+       var action      = 'AlmacenaOrdencompra';
+	   // Obtener todos los datos de la tabla
+var detalle = [];
+
+var table = $('#requisicion').DataTable();
+table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+  var row = this.node();
+
+  detalle.push({
+    id: this.data().id,
+    cantidad: this.data().cantidad,
+    codigo: this.data().codigo,
+    descripcion: $(row).find('.descripcion').val(),
+    marca: $(row).find('.marca').val(),
+    precio: parseFloat($(row).find('.precio').val()) || 0,
+    importe: this.data().cantidad * (parseFloat($(row).find('.precio').val()) || 0)
+  });
+});
+
+console.log(detalle);
+    //     $.ajax({
+    //                 url: 'includes/ajax.php',
+    //                 type: "POST",
+    //                 async : true,
+    //                 data: {
+	// 					action:action, 
+	// 					folio:folio, 
+	// 					noreq:noreq, 
+	// 					fecha:fecha, 
+	// 					proveedor:proveedor, 
+	// 					contacto:contacto, 
+	// 					telefono:telefono, 
+	// 					correo:correo, 
+	// 					forma_pago:forma_pago, 
+	// 					metodo_pago:metodo_pago, 
+	// 					uso_cfdi:uso_cfdi, 
+	// 					solicita:solicita, 
+	// 					notas:notas, 
+	// 					recibe:recibe,
+	// 					detalle: JSON.stringify(detalle)
+	// 				},
+
+    //                 success: function(response)
+    //                 {
+    //                   if(response != 'error')
+    //                     {
+    //                      console.log(response);
+    //                     var info = JSON.parse(response);
+    //                     console.log(info);
+    //                     $mensaje=(info.mensaje);
+    //                       if ($mensaje === undefined)
+    //                       {
+    //                         Swal
+    //                      .fire({
+    //                       title: "Exito!",
+    //                       text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
+    //                       icon: 'success',
+
+    //                       //showCancelButton: true,
+    //                       //confirmButtonText: "Regresar",
+    //                       //cancelButtonText: "Salir",
+       
+    //                    })
+    //                     .then(resultado => {
+    //                    if (resultado.value) {
+    //                     generarimpformulaPDF(info.folio);
+    //                     location.href = 'ordenes_compra23.php';
+                       
+    //                     } else {
+    //                       // Dijeron que no
+    //                       location.reload();
+    //                      location.href = 'ordenes_compra23.php';
+    //                     }
+    //                     });
+
+
+    //                      }else {  
+                            
+    //                         //swal('Mensaje del sistema', $mensaje, 'warning');
+    //                         //location.reload();
+    //                         Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Oops...',
+    //                         text: $mensaje,
+    //                         })
+    //                     }
+
+                                                        
+    
+    //                     }else{
+    //                       Swal.fire({
+    //                         icon: 'info',
+    //                         title: '',
+    //                         text: 'Capture los datos requeridos',
+    //                         })
+        
+    //                     }
+    //                     //viewProcesar();
+    //              },
+    //              error: function(error) {
+    //              }
+    //            });
+    });
+</script>
 </body>
 </html>
