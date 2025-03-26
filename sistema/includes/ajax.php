@@ -1057,11 +1057,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->SMTPAuth   = true;
             $mail->SMTPSecure = 'tls'; // ← Esto representa STARTTLS
             $mail->Username   = 'ventas@transvivegdl.com.mx';
-            $mail->Password   = 'tu_contraseña_real_o_de_app'; // Usa contraseña de app si tienes MFA
+            $mail->Password   = 'oG3fFgAiT5XIdSG'; // Usa contraseña de app si tienes MFA
             $mail->setFrom('ventas@transvivegdl.com.mx', 'Ventas Transvive');
-            $mail->addAddress('destinatario@correo.com', 'Nombre del destinatario');
-            $mail->Subject = 'Correo de prueba desde servidor';
-            $mail->Body    = 'Este es un correo de prueba usando PHPMailer con Office365.';
+            $mail->addAddress($correo, $nombre);
+            $mail->Subject = $asunto;
+            $mail->Body    = $mensaje;
 
             $mail->SMTPDebug = 2;
             $mail->Debugoutput = 'html';
