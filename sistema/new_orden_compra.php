@@ -424,6 +424,18 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 				$('#total').html(formatMoney(total));
 			}
 		})
+		$('#requisicion tbody').on('input', '.precio', function () {
+			const rowIdx = $(this).data('index');
+			const precio = parseFloat($(this).val()) || 0;
+
+			const table = $('#requisicion').DataTable();
+			const rowData = table.row(rowIdx).data();
+			rowData.precio = precio;
+			rowData.importe = rowData.cantidad * precio;
+
+			table.row(rowIdx).data(rowData).invalidate(); // Actualiza fila
+			table.draw(false); // Redibuja sin recargar
+		});
 	})
 </script>
 </body>
