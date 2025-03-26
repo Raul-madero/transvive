@@ -4,6 +4,12 @@ $user = $_SESSION["nombre"];
 $rol = $_SESSION['rol'];
 $requisicion = $_REQUEST['req'];
 
+
+//Llamada para llenar el selector de proveedores
+$sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
+$queryprov = mysqli_query($conection, $sqlprov);
+$filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
+
 ?>
 
 <!DOCTYPE html>
