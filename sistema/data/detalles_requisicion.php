@@ -9,6 +9,9 @@ $folio_requisicion = isset($_POST['folio'] ) ? $_POST['folio'] : die("Error al o
 
 $sql = "SELECT * FROM detalle_requisicion WHERE folio_requisicion = ?";
 $stmt = $conection->prepare($sql);
+if (!$stmt) {
+    die("Error en prepare(): " . $conection->error);
+}
 $stmt->bind_param("i", $folio_requisicion);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -18,6 +21,6 @@ while($row = $result->fetch_assoc()) {
     $data[] = $row;
 }
 
-echo json_encode([$data]);
+echo json_encode(["data" => $data], JSON_UNESCAPED_UNICODE);
 $stmt->close();
 $conection->close();
