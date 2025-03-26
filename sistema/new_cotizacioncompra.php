@@ -156,6 +156,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <?php
                                         if($User === "Elena") {
                                             $solicita = "Administracion";
+                                        }else if($User === "Lu"){
+                                            $solicita = "SGC";
                                         }else {
                                             switch (intval($rol)) {
                                                 case 1:
