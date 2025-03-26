@@ -7,7 +7,7 @@ if($conection->connect_error) {
 
 $folio_requisicion = isset($_POST['folio'] ) ? $_POST['folio'] : die("Error al obtener el folio de la requisicion");
 
-$sql = "SELECT * FROM detalle_requisicion WHERE folio_requisicion = ?";
+$sql = "SELECT * FROM detalle_requisicioncompra WHERE folio_requisicion = ?";
 $stmt = $conection->prepare($sql);
 if (!$stmt) {
     die("Error en prepare(): " . $conection->error);
