@@ -1,8 +1,19 @@
 <?php
 session_start();
+include('../conexion.php');
 $user = $_SESSION["nombre"];
 $rol = $_SESSION['rol'];
 $requisicion = $_REQUEST['req'];
+
+//Obtener fecha actual
+date_default_timezone_set('America/Mexico_City');
+$fcha = date("Y-m-d");
+
+//Obtener el ultimo folio para la orden de compra
+$query_folio = mysqli_query($conection,"SELECT MAX(no_orden) AS folio  FROM orden_compra");
+$result_folio = mysqli_num_rows($query_folio);
+$folioe = mysqli_fetch_array($query_folio);
+$nuevofolio=$folioe["folio"] + 1; 
 
 
 //Llamada para llenar el selector de proveedores
@@ -13,10 +24,6 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -39,16 +46,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </head>
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
-
- 
-  <!-- /.navbar -->
-
-  <!-- Content Wrapper. Contains page content -->
- 
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-      <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <section class="content-header">
       <div class="container-fluid">
@@ -67,26 +64,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </section>
     <center>
 
-       <?php
-                    
-          include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT MAX(no_orden) AS folio  FROM orden_compra");
-          $result_folio = mysqli_num_rows($query_folio);
-
-          $folioe = mysqli_fetch_array($query_folio);
-          $nuevofolio=$folioe["folio"]+1; 
-
-          // $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'CP'");
-          
-
-          mysqli_close($conection);
-        ?>  
          <?php
-         date_default_timezone_set('America/Mexico_City');
-         $fcha = date("Y-m-d");
      ?>  
-
-     <!-- Horizontal Form -->
 
      <div class="col-md-10">
      <div class="card card-secondary">
