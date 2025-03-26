@@ -211,7 +211,7 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
                     </div>
                   </div>
 
-                   <div class="col-sm-12">
+                   <div class="col-sm-12 mb-4">
                           <table id="requisicion" class="table table-bordered table-hover">
                           <thead>
                             <tr>
@@ -353,8 +353,8 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 				{ "data": "descripcion" },
 				{ "data": "unidad_medida" },
 				{ "data": "marca" },
-				{ "data": "precio" },
-				{ "data": "importe" },
+				{ "data": "precio", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
+				{ "data": "importe", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
 				{
 					"data": null,
 					"orderable": false,
