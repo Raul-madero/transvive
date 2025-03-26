@@ -112,7 +112,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         $nestedData['counter'] = $count;
         $nestedData['pedidono'] =  $row["id"];
         $nestedData['Folio'] = $row["no_requisicion"];
-
+        $nestedData['estatus'] = $row['estatus'];
         $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id='.($row["id"]).'" target="_blank">'.($row["id"]).'</a>';
         $time = strtotime($row["fecha"]);
         $nestedData['fechaa'] = date('d/m/Y', $time);
