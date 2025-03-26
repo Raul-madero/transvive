@@ -206,13 +206,13 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
                  <div class="form-group row" >
                     <label for="inputEmail3" class="col-sm-10 col-form-label" style="text-align:center; background-color: gainsboro;">Movimientos</label>
                     <div class="col-sm-2">
-                      <a href="#"  class="btn btn-success" data-toggle="modal" data-target="#modalEditcliente" style="color:white;" ><i class="fa fa-plus"></i></a>
+                      <!-- <a href="#"  class="btn btn-success" data-toggle="modal" data-target="#modalEditcliente" style="color:white;" ><i class="fa fa-plus"></i></a> -->
                       
                     </div>
                   </div>
 
                    <div class="col-sm-12">
-                          <table class="table table-bordered table-hover">
+                          <table id="requisicion" class="table table-bordered table-hover">
                           <thead>
                             <tr>
                                <th style="width:10%; background-color:#e9ecef; text-align: center;" >Cantidad</th>
@@ -331,4 +331,33 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
       }
     });
   });
+</script>
+
+<script>
+	$(document).ready(function() {
+		$('#requisicion').DataTable({
+			"ajax": {
+				"url": "data/detalles_requisicion.php",
+				"data": { folio: <?php echo $requisicion; ?> },
+				"type": "POST",
+				"dataSrc": "data"
+			},
+			"columns": [
+				{ "data": "cantidad" },
+				{ "data": "codigo" },
+				{ "data": "descripcion" },
+				{ "data": "unidad_medida" },
+				{ "data": "marca" },
+				{ "data": "precio" },
+				{ "data": "importe" },
+				{
+					"data": null,
+					"orderable": false,
+					"render": function (data, type, row) {
+						return `<button class="btn btn-danger btn-sm eliminar" data-id="${row.id}">Eliminar</button>`;
+					}
+				}
+			]
+		})
+	})
 </script>
