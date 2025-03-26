@@ -1049,31 +1049,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $msjBody = "$mensaje\r\nDe antemano, Gracias\r\n\r\nLiga: https://encuesta.transvivegdl.com.mx\r\n\r\nTransvive.\r\nTel: (33) 3016220\r\nHidalgo #30, C.P. 45640 Col. Los Gavilanes\r\nTlajomulco de Zuñiga, Jal.\r\nDepartamento de ventas";
 
             // Configuración de PHPMailer
-            $mail = new PHPMailer;
+            $mail = new PHPMailer(true);
+
             $mail->isSMTP();
             $mail->Host       = 'smtp.office365.com';
             $mail->Port       = 587;
             $mail->SMTPAuth   = true;
-            $mail->SMTPSecure = 'STARTTLS';
+            $mail->SMTPSecure = 'tls'; // ← Esto representa STARTTLS
+            $mail->Username   = 'ventas@transvivegdl.com.mx';
+            $mail->Password   = 'oG3fFgAiT5XIdSG'; // Usa contraseña de app si tienes MFA
+            $mail->setFrom('ventas@transvivegdl.com.mx', 'Ventas Transvive');
+            $mail->addAddress($correo, $nombre);
+            $mail->Subject = $asunto;
+            $mail->Body    = $mensaje;
+
+            $mail->SMTPDebug = 2;
+            $mail->Debugoutput = 'html';
+
             $mail->SMTPOptions = [
                 'ssl' => [
-                    'verify_peer'       => false,
-                    'verify_peer_name'  => false,
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
                     'allow_self_signed' => true
                 ]
-            ];            
-            $mail->Username   = 'ventas@transvivegdl.com.mx';
-            $mail->Password   = 'oG3fFgAiT5XIdSG';
-            $mail->SMTPDebug = 2; // O usa 3 para más info, 4 para nivel máximo
-            $mail->Debugoutput = 'html'; // para que se vea bonito en el navegador
-            $mail->setFrom('ventas@transvivegdl.com.mx', 'Ventas Transvive');
-            $mail->addReplyTo('ventas@transvivegdl.com.mx', 'Encuesta Enviada');
-            $mail->addAddress($correo, $nombre);
-            $mail->addCC('ejecutivo@transvivegdl.com.mx');
-            $mail->addCC('ejecutivo@transvivegdl.com.mx');
-            $mail->addBCC('raul.madero.ramirez@gmail.com');
-            $mail->Subject = $asunto;
-            $mail->Body    = $msjBody;
+            ];
+
 
             if (!$mail->send()) {
                 echo "Error enviando correo: " . $mail->ErrorInfo;
