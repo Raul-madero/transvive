@@ -539,7 +539,7 @@ $(document).ready(function () {
       data: {
         action: 'AlmacenaOrdencompra',
         folio: $('#inputFolio').val(),
-        noreq: $('#inputNoorden').val(),
+        noreq: $('#inputReq').val(),
         fecha: $('#inputFecha').val(),
         proveedor: $('#inputProveedor').val(),
         contacto: $('#inputContacto').val(),
@@ -574,7 +574,7 @@ $(document).ready(function () {
       icon: 'success'
     }).then(() => {
         generarimpformulaPDF(info.folio);
-        location.href = 'ordenes_compra23.php';
+        window.location.href = 'ordenes_compra23.php';
       
     });
   } else {
