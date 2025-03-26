@@ -443,6 +443,19 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 	$('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
 
+
+		var subtotalTexto = $('#subtotal').text();
+var ivaTexto = $('#iva').text();
+var totalTexto = $('#total').text();
+
+function limpiarMoneda(valor) {
+  return parseFloat(valor.replace(/[$,]/g, '')) || 0;
+}
+
+var subtotal = limpiarMoneda(subtotalTexto);
+var iva = limpiarMoneda(ivaTexto);
+var total = limpiarMoneda(totalTexto);
+
        var folio       = $('#inputFolio').val();
        var noreq       = $('#inputNoorden').val();
        var fecha       = $('#inputFecha').val();
