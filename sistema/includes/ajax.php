@@ -5821,8 +5821,6 @@ if($_POST['action'] == 'ActualizaMovordencompra'){
 
 //Almacena Orden de compra
 if ($_POST['action'] == 'AlmacenaOrdencompra') {
-    var_dump($_POST);
-    exit;
 
     if (empty($_POST['fecha']) || empty($_POST['proveedor'])) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
@@ -5843,14 +5841,40 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
     $notas        = trim($_POST['notas']);
     $recibe       = trim($_POST['recibe']);
     $usuario      = intval($_SESSION['idUser']); // Verifica que sea numérico
+    $subtotal    = floatval($_POST['subtotal']);
+    $iva         = floatval($_POST['iva']) ?? 0;
+    $isr         = floatval($_POST['isr']) ?? 0;
+    $ieps        = floatval($_POST['ieps']) ?? 0;;
+    $total       = floatval($_POST['total']);
+    $ihospedaje  = floatval($_POST['ihospedaje']) ?? 0;;
+    $detalle = json_decode($_POST['detalle'], true); // Decodificar el JSON
+    foreach ($detalle as $item) {
+        $id = $item['id'];
+        $codigo = $item['codigo'];
+        $cantidad = $item['cantidad'];
+        $unidad_medida = $item['unidad_medida'];
+        $descripcion = $item['descripcion'];
+        $marca = $item['marca'];
+        $precio = $item['precio'];
+        $importe = $item['importe'];
+        // Insertar o actualizar como necesites
+    }
+    $impuestos = json_decode($_POST['impuestos'], true);
+    foreach ($impuestos as $impuesto) {
+        $nombre = $impuesto['nombre'];
+        $importe = $impuesto['importe'];
+        // Insertar o actualizar como necesites
+    }
+// Recorrerlos si necesitas guardarlos uno por uno
+
 
     // Generar una consulta segura con Prepared Statements
     $query = "INSERT INTO orden_compra 
-        (no_orden, no_requisicion, fecha, proveedor, contacto, telefono, correo, forma_pago, metodo_pago, uso_cfdi, area_solicitante, observaciones, recibe, usuario_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        (no_orden, no_requisicion, fecha, proveedor, contacto, telefono, correo, forma_pago, metodo_pago, uso_cfdi, area_solicitante, observaciones, recibe, usuario_id, codigo, cantidad, descripcion, marca, precio, importe, id_prod, umedida, subtotal, iva, isr, ieps, total, ihospedaje) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = mysqli_prepare($conection, $query)) {
-        mysqli_stmt_bind_param($stmt, "iisssssssssssi", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario);
+        mysqli_stmt_bind_param($stmt, "iisssssssssssisissddisdddddd", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario, $codigo, $cantidad, $descripcion, $marca, $precio, $importe, $id, $unidad_medida, $subtotal, $iva, $isr, $ieps, $total, $ihospedaje);
 
         if (mysqli_stmt_execute($stmt)) {
             echo json_encode(["status" => "success", "message" => "Orden de compra almacenada", "insert_id" => mysqli_insert_id($conection)]);

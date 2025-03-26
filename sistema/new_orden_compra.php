@@ -243,12 +243,22 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
     <th id="iva" style="text-align:right"></th>
     <th></th>
   </tr>
+
+  <!-- Aquí irán impuestos dinámicos -->
+  <tbody id="impuestos_adicionales_footer"></tbody>
+
   <tr>
     <th colspan="6" style="text-align:right">Total:</th>
     <th id="total" style="text-align:right; font-weight:bold;"></th>
     <th></th>
   </tr>
+  <tr>
+    <td colspan="8" style="text-align:right;">
+      <button id="btnAgregarImpuesto" class="btn btn-sm btn-outline-primary">+ Agregar Impuesto</button>
+    </td>
+  </tr>
 </tfoot>
+
 
                           </table>
                      
@@ -436,6 +446,69 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 			table.row(rowIdx).data(rowData).invalidate(); // Actualiza fila
 			table.draw(false); // Redibuja sin recargar
 		});
+
+		let impuestosAdicionales = [];
+
+$('#btnAgregarImpuesto').on('click', function () {
+  const tipo = prompt("Nombre del impuesto (Ej. ISR, IEPS, Hospedaje):");
+  if (!tipo) return;
+
+  const porcentajeStr = prompt(`¿Qué porcentaje (%) aplica para ${tipo}?`, "0");
+  const porcentaje = parseFloat(porcentajeStr);
+
+  if (isNaN(porcentaje) || porcentaje <= 0) {
+    alert("Porcentaje no válido.");
+    return;
+  }
+
+  impuestosAdicionales.push({ tipo, porcentaje });
+  renderImpuestosAdicionales();
+  recalcularTotales();
+});
+
+function renderImpuestosAdicionales() {
+  const contenedor = $('#impuestos_adicionales_footer');
+  contenedor.empty();
+
+  impuestosAdicionales.forEach((imp, idx) => {
+    contenedor.append(`
+      <tr>
+        <th colspan="6" style="text-align:right">${imp.tipo} (${imp.porcentaje}%)</th>
+        <th class="impuesto-monto" data-idx="${idx}" style="text-align:right">-</th>
+        <th><button class="btn btn-danger btn-sm quitar-imp" data-idx="${idx}">X</button></th>
+      </tr>
+    `);
+  });
+}
+function recalcularTotales() {
+  const api = $('#requisicion').DataTable();
+  let subtotal = api.column(6, { page: 'current' }).data().reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
+  let iva = subtotal * 0.16;
+  let total = subtotal + iva;
+
+  // Calcular impuestos adicionales
+  impuestosAdicionales.forEach((imp, idx) => {
+    const monto = subtotal * (imp.porcentaje / 100);
+    total += monto;
+    $(`.impuesto-monto[data-idx="${idx}"]`).html(formatMoney(monto));
+  });
+
+  $('#subtotal').html(formatMoney(subtotal));
+  $('#iva').html(formatMoney(iva));
+  $('#total').html(formatMoney(total));
+}
+
+function formatMoney(val) {
+  return '$' + val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
+
+$('#requisicion').on('click', '.quitar-imp', function () {
+  const idx = $(this).data('idx');
+  impuestosAdicionales.splice(idx, 1);
+  renderImpuestosAdicionales();
+  recalcularTotales();
+});
+
 	})
 </script>
 
@@ -508,7 +581,11 @@ console.log(detalle);
 						solicita:solicita, 
 						notas:notas, 
 						recibe:recibe,
-						detalle: JSON.stringify(detalle)
+						detalle: JSON.stringify(detalle),
+						subtotal: subtotal,
+						iva: iva,
+						total: total,
+						impuestos: JSON.stringify(impuestosAdicionales)
 					},
 
                     success: function(response)
