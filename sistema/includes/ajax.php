@@ -1057,6 +1057,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->SMTPSecure = 'STARTTLS';
             $mail->Username   = 'ventas@transvivegdl.com.mx';
             $mail->Password   = 'oG3fFgAiT5XIdSG';
+            $mail->SMTPDebug = 2; // O usa 3 para más info, 4 para nivel máximo
+            $mail->Debugoutput = 'html'; // para que se vea bonito en el navegador
             $mail->setFrom('ventas@transvivegdl.com.mx', 'Ventas Transvive');
             $mail->addReplyTo('ventas@transvivegdl.com.mx', 'Encuesta Enviada');
             $mail->addAddress($correo, $nombre);
@@ -1082,7 +1084,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $sql_vaciar_clientes = "TRUNCATE TABLE clientes_encuestatemp";
             $stmt_vaciar_clientes = mysqli_prepare($conection, $sql_vaciar_clientes);
             mysqli_stmt_execute($stmt_vaciar_clientes);
-            
+
             echo json_encode(['status' => 'success', 'message' => 'ENCUESTA ENVIADA CORRECTAMENTE']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Error guardando en la BD']);
