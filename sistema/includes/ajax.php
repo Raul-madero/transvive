@@ -1079,6 +1079,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         mysqli_stmt_execute($stmt);
 
         if (mysqli_affected_rows($conection) > 0) {
+            $sql_vaciar_clientes = "TRUNCATE TABLE clientes_encuestatemp";
+            $stmt_vaciar_clientes = mysqli_prepare($conection, $sql_vaciar_clientes);
+            mysqli_stmt_execute($stmt_vaciar_clientes);
+            
             echo json_encode(['status' => 'success', 'message' => 'ENCUESTA ENVIADA CORRECTAMENTE']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Error guardando en la BD']);
