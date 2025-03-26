@@ -528,7 +528,8 @@ $(document).ready(function () {
         descripcion: $(row).find('.descripcion').val(),
         marca: $(row).find('.marca').val(),
         precio: parseFloat($(row).find('.precio').val()) || 0,
-        importe: this.data().cantidad * (parseFloat($(row).find('.precio').val()) || 0)
+        importe: this.data().cantidad * (parseFloat($(row).find('.precio').val()) || 0),
+		unidad_medida: this.data().unidad_medida
       });
     });
 
@@ -571,13 +572,10 @@ $(document).ready(function () {
       title: "Éxito!",
       text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
       icon: 'success'
-    }).then(resultado => {
-      if (resultado.value) {
+    }).then(() => {
         generarimpformulaPDF(info.folio);
         location.href = 'ordenes_compra23.php';
-      } else {
-        location.reload();
-      }
+      
     });
   } else {
     Swal.fire({
