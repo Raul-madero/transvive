@@ -228,9 +228,24 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
                            <tbody id="detalle_ordencompra">
                                <!---Contenido Ajax--->
                            </tbody>
-                           <tfoot id="detalle_totordencompra">
-                            <!-- Contenido Ajax -->    
-                           </tfoot>
+                           <tfoot>
+  <tr>
+    <th colspan="6" style="text-align:right">Subtotal:</th>
+    <th id="subtotal" style="text-align:right"></th>
+    <th></th>
+  </tr>
+  <tr>
+    <th colspan="6" style="text-align:right">IVA (16%):</th>
+    <th id="iva" style="text-align:right"></th>
+    <th></th>
+  </tr>
+  <tr>
+    <th colspan="6" style="text-align:right">Total:</th>
+    <th id="total" style="text-align:right; font-weight:bold;"></th>
+    <th></th>
+  </tr>
+</tfoot>
+
                           </table>
                      
                       </div>
@@ -369,6 +384,25 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 			"lengthChange": false,
 			"language": {
 				"emptyTable": "No hay datos disponibles en la tabla."
+			},
+			drawCallback: function(settings) {
+				let api = this.api();
+				let subtotal = api
+				.column(6, { page: 'current' }) // columna de importes
+				.data()
+				.reduce(function(a, b) {
+					return parseFloat(a) + parseFloat(b);
+				}, 0);
+
+				let iva = subtotal * 0.16;
+				let total = subtotal + iva;
+
+				// Formato moneda
+				const formatMoney = val => '$' + val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+				$('#subtotal').html(formatMoney(subtotal));
+				$('#iva').html(formatMoney(iva));
+				$('#total').html(formatMoney(total));
 			}
 		})
 	})
