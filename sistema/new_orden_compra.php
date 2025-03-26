@@ -331,8 +331,9 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 <script src="../dist/js/adminlte.min.js"></script>
 <!-- Select2 -->
 <script src="../plugins/select2/js/select2.full.min.js"></script>
-<!-- AdminLTE for demo purposes
-<script src="../dist/js/demo.js"></script> -->
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
   const proveedoresData = <?= json_encode($filasprov, JSON_UNESCAPED_UNICODE); ?>;
 </script>
