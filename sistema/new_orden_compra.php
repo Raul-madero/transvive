@@ -489,88 +489,88 @@ table.rows().every(function(rowIdx, tableLoop, rowLoop) {
 });
 
 console.log(detalle);
-    //     $.ajax({
-    //                 url: 'includes/ajax.php',
-    //                 type: "POST",
-    //                 async : true,
-    //                 data: {
-	// 					action:action, 
-	// 					folio:folio, 
-	// 					noreq:noreq, 
-	// 					fecha:fecha, 
-	// 					proveedor:proveedor, 
-	// 					contacto:contacto, 
-	// 					telefono:telefono, 
-	// 					correo:correo, 
-	// 					forma_pago:forma_pago, 
-	// 					metodo_pago:metodo_pago, 
-	// 					uso_cfdi:uso_cfdi, 
-	// 					solicita:solicita, 
-	// 					notas:notas, 
-	// 					recibe:recibe,
-	// 					detalle: JSON.stringify(detalle)
-	// 				},
+        $.ajax({
+                    url: 'includes/ajax.php',
+                    type: "POST",
+                    async : true,
+                    data: {
+						action:action, 
+						folio:folio, 
+						noreq:noreq, 
+						fecha:fecha, 
+						proveedor:proveedor, 
+						contacto:contacto, 
+						telefono:telefono, 
+						correo:correo, 
+						forma_pago:forma_pago, 
+						metodo_pago:metodo_pago, 
+						uso_cfdi:uso_cfdi, 
+						solicita:solicita, 
+						notas:notas, 
+						recibe:recibe,
+						detalle: JSON.stringify(detalle)
+					},
 
-    //                 success: function(response)
-    //                 {
-    //                   if(response != 'error')
-    //                     {
-    //                      console.log(response);
-    //                     var info = JSON.parse(response);
-    //                     console.log(info);
-    //                     $mensaje=(info.mensaje);
-    //                       if ($mensaje === undefined)
-    //                       {
-    //                         Swal
-    //                      .fire({
-    //                       title: "Exito!",
-    //                       text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
-    //                       icon: 'success',
+                    success: function(response)
+                    {
+                      if(response != 'error')
+                        {
+                         console.log(response);
+                        var info = JSON.parse(response);
+                        console.log(info);
+                        $mensaje=(info.mensaje);
+                          if ($mensaje === undefined)
+                          {
+                            Swal
+                         .fire({
+                          title: "Exito!",
+                          text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
+                          icon: 'success',
 
-    //                       //showCancelButton: true,
-    //                       //confirmButtonText: "Regresar",
-    //                       //cancelButtonText: "Salir",
+                          //showCancelButton: true,
+                          //confirmButtonText: "Regresar",
+                          //cancelButtonText: "Salir",
        
-    //                    })
-    //                     .then(resultado => {
-    //                    if (resultado.value) {
-    //                     generarimpformulaPDF(info.folio);
-    //                     location.href = 'ordenes_compra23.php';
+                       })
+                        .then(resultado => {
+                       if (resultado.value) {
+                        generarimpformulaPDF(info.folio);
+                        location.href = 'ordenes_compra23.php';
                        
-    //                     } else {
-    //                       // Dijeron que no
-    //                       location.reload();
-    //                      location.href = 'ordenes_compra23.php';
-    //                     }
-    //                     });
+                        } else {
+                          // Dijeron que no
+                          location.reload();
+                         location.href = 'ordenes_compra23.php';
+                        }
+                        });
 
 
-    //                      }else {  
+                         }else {  
                             
-    //                         //swal('Mensaje del sistema', $mensaje, 'warning');
-    //                         //location.reload();
-    //                         Swal.fire({
-    //                         icon: 'error',
-    //                         title: 'Oops...',
-    //                         text: $mensaje,
-    //                         })
-    //                     }
+                            //swal('Mensaje del sistema', $mensaje, 'warning');
+                            //location.reload();
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: $mensaje,
+                            })
+                        }
 
                                                         
     
-    //                     }else{
-    //                       Swal.fire({
-    //                         icon: 'info',
-    //                         title: '',
-    //                         text: 'Capture los datos requeridos',
-    //                         })
+                        }else{
+                          Swal.fire({
+                            icon: 'info',
+                            title: '',
+                            text: 'Capture los datos requeridos',
+                            })
         
-    //                     }
-    //                     //viewProcesar();
-    //              },
-    //              error: function(error) {
-    //              }
-    //            });
+                        }
+                        //viewProcesar();
+                 },
+                 error: function(error) {
+                 }
+               });
     });
 </script>
 </body>
