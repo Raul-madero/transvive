@@ -65,8 +65,6 @@ if($_REQUEST['action'] == 'fetch_users'){
         $sql.=" OR tipo_requisicion LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR area_solicitante LIKE '%".$requestData['search']['value']."%'  )";
         $sql.=" OR observaciones LIKE '%".$requestData['search']['value']."%'  )";
-       
-        
     }
 
     $result = mysqli_query($conection, $sql);
