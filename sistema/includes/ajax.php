@@ -5874,7 +5874,7 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = mysqli_prepare($conection, $query)) {
-        mysqli_stmt_bind_param($stmt, "iisssssssssssisissddisddddddd", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario, $codigo, $cantidad, $descripcion, $marca, $precio, $importe, $id, $unidad_medida, $subtotal, $iva, $isr, $ieps, $total, $ihospedaje);
+        mysqli_stmt_bind_param($stmt, "iisssssssssssisissddisdddddd", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario, $codigo, $cantidad, $descripcion, $marca, $precio, $importe, $id, $unidad_medida, $subtotal, $iva, $isr, $ieps, $total, $ihospedaje);
 
         
 
