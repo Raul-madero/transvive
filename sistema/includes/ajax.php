@@ -1054,7 +1054,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->Host       = 'smtp.office365.com';
             $mail->Port       = 587;
             $mail->SMTPAuth   = true;
-            $mail->SMTPSecure = 'tls';
+            $mail->SMTPSecure = 'STARTTLS';
             $mail->SMTPOptions = [
                 'ssl' => [
                     'verify_peer'       => false,
