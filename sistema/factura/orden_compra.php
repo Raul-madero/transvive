@@ -266,8 +266,13 @@ $pdf->Ln(5);
 include('../../conexion.php');
 $nooc = $_REQUEST['id'];
 
-$queryr = mysqli_query($conection,"SELECT * FROM detalle_ordencompra WHERE folio = $nooc");
-$resultr = mysqli_num_rows($queryr);
+if($nooc <= 1346) {
+    $queryr = mysqli_query($conection,"SELECT * FROM detalle_ordencompra WHERE folio = $nooc");
+    $resultr = mysqli_num_rows($queryr);
+}else {
+    $queryr = mysqli_query($conection,"SELECT cantidad, codigo, descripcion, marca, precio, importe FROM orden_compra WHERE no_orden = $nooc");
+    $resultr = mysqli_num_rows($queryr);
+}
 $pdf->SetFont('Arial','',8);
 $pdf->Cell(13,5,utf8_decode('Cantidad'),1,0,'C','T');
 $pdf->Cell(38,5,utf8_decode('Código'),1,0,'C','T');
