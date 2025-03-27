@@ -233,7 +233,7 @@ $pdf->SetFont('Arial','B',8);
 $pdf->Cell(119,5,utf8_decode($proveedor),1,0,'L');
 $pdf->Cell(20,5,'No. Orden:',1,0,'L', 'T');
 $pdf->SetFont('Arial','B',10);
-$pdf->Cell(25,5,$folio,1,1,'R');
+$pdf->Cell(25,5,'OC-'. $folio,1,1,'R');
 $pdf->SetFont('Arial','',8);
 $pdf->Cell(25,5,utf8_decode('Contacto:'),1,0,'L', 'T');
 $pdf->Cell(119,5,utf8_decode($contacto),1,0,'L');
