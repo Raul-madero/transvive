@@ -303,7 +303,7 @@ $subtotal = $row['cantidad'] * $row['precio'];
 $totsubtotal = $totsubtotal + $subtotal;
 $impuesto = (($row['cantidad'] * $row['precio']) * $row['impuesto'])/100;   
 $isr      = (($row['cantidad'] * $row['precio']) * ($row['impuesto_isr'] /100));
-$totiva = ($totiva + $impuesto) == 0 ? .16 : $totiva + $impuesto;
+$totiva = ($totiva + $impuesto) == 0 ? $subtotal * .16 : $totiva + $impuesto;
 $totalisr = $totalisr + $isr;
 $ieps     = $row['cantidad'] * $row['impuesto_ieps'];
 $totalieps = $totalieps + $ieps;
