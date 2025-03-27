@@ -529,17 +529,21 @@ $(document).ready(function () {
         marca: $(row).find('.marca').val(),
         precio: parseFloat($(row).find('.precio').val()) || 0,
         importe: this.data().cantidad * (parseFloat($(row).find('.precio').val()) || 0),
-		unidad_medida: this.data().unidad_medida
+		    unidad_medida: this.data().unidad_medida
       });
     });
-
+    let requisicion = $('#inputReq').val();
+    let odc = $('#inputFolio').val();
+    let noreq = requisicion.split("-")[1];
+    let folio = odc.split("-")[1];
+    
     $.ajax({
       url: 'includes/ajax.php',
       type: "POST",
       data: {
         action: 'AlmacenaOrdencompra',
-        folio: $('#inputFolio').val(),
-        noreq: $('#inputReq').val(),
+        folio: folio,
+        noreq: noreq,
         fecha: $('#inputFecha').val(),
         proveedor: $('#inputProveedor').val(),
         contacto: $('#inputContacto').val(),
