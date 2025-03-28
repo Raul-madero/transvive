@@ -808,7 +808,7 @@ $('#btn_salir').click(function(e){
  
        var idnq         = $('#inputId').val();
        var noqueja      = $('#inputNoqueja').val();
-       var fecha        = $('#inputFecha').val() ?? null;
+       var fecha        = $('#inputFecha').val() || null;
        var mes          = $('#inputMes').val();
        var cliente      = $('#inputCliente').val();
        var formato      = $('#inputFormato').val();
@@ -820,13 +820,13 @@ $('#btn_salir').click(function(e){
        var unidad       = $('#inputUnidad').val();
        var ruta         = $('#inputRuta').val();
        var parada       = $('#inputParada').val();
-       var dateincident = $('#inputFechainc').val() ?? null;
+       var dateincident = $('#inputFechainc').val() || null;
        var turno        = $('#inputTurno').val();
        var procede      = $('#inputProcede').val();
        var porkprocede  = $('#inputPorquep').val();
        var analisis     = $('#inputAnalisis').val(); 
        var accion       = $('#inputAccion').val(); 
-       var dateaccion   = $('#inputFechaccion').val() ?? null; 
+       var dateaccion   = $('#inputFechaccion').val() || null; 
        var respaccion   = $('#inputRespaccion').val(); 
        var notas        = $('#inputObserva').val(); 
        var tipoinc      = $('#inputTipoi').val(); 
@@ -834,7 +834,7 @@ $('#btn_salir').click(function(e){
        var causa        = $('#inputCausa').val(); 
        var afectacte    = $('#inputAfecta').val(); 
        var arearespons  = $('#inputArear').val(); 
-       var datecierre   = $('#inputFechacierre').val() ?? null; 
+       var datecierre   = $('#inputFechacierre').val() || null; 
 
 
        var action       = 'AlmacenaEditNc';
