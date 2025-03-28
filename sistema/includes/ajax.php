@@ -12191,8 +12191,8 @@ if ($_POST['action'] == 'AlmacenaEditNc') {
     //         echo json_encode(["status" => "error", "message" => "Error en el procedimiento: " . mysqli_stmt_error($stmt_call)]);
     //     }
 
-        mysqli_stmt_close($stmt_call);
-    }
+    //     mysqli_stmt_close($stmt_call);
+    // }
 
     // Cerrar conexión
     mysqli_close($conection);
