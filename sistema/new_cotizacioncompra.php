@@ -188,8 +188,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                             <div class="form-group row">
                                 <label for="unidad" class="col-md-4 col-form-label">No. Unidad</label>
-                                <div class="col-md-8 mb-4">
-                                    <select class="form-control select2bs4 mb-4" style="width: 100%; text-align: left" id="inputNounidad" name="inputNounidad">
+                                <div class="col-md-8">
+                                    <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputNounidad" name="inputNounidad">
                                         <option value="">- Seleccione -</option>
                                         <?php foreach ($filasunidad as $unidad): ?>
                                             <option 
@@ -205,14 +205,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="form-group row">
                                 <label for="tipoUnidad" class="col-md-4 col-form-label">Tipo unidad</label>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control mb-4" id="inputTipoUnidad" name="inputTipoUnidad" value="" readonly>
+                                    <input type="text" class="form-control" id="inputTipoUnidad" name="inputTipoUnidad" value="" readonly>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="descripcionUnidad" class="col-md-4 col-form-label">Descripción</label>
                                 <div class="col-md-8">
-                                    <input type="text" class="form-control mb-4" id="inputDescripcionUnidad" name="inputDescripcionUnidad" value="" readonly>
+                                    <input type="text" class="form-control" id="inputDescripcionUnidad" name="inputDescripcionUnidad" value="" readonly>
                                 </div>
                             </div>
 
@@ -220,7 +220,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <label for="inputProveedor" class="col-md-4 col-form-label">
                                     Proveedor:
                                 </label>
-                                <div class="col-md-8 mb-4">
+                                <div class="col-md-8">
                                     <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProveedor" name="inputProveedor">
                                         <option value="">- Seleccione -</option>
                                         <?php foreach ($filasprov as $op): //llenar las opciones del primer select ?>
