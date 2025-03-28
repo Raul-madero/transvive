@@ -212,9 +212,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         <option value="">- Seleccione -</option>
                                         <?php foreach ($filasunidad as $unidad): //llenar las opciones del primer select ?>
                                             <option 
-                                                value="<?= $unidad['id'] ?>"
+                                                value="<?= $unidad['no_unidad'] ?>"
                                                 data-descripcion="<?= htmlspecialchars($unidad['descripcion']) ?>">
-                                            ><?= $unidad['no_unidad'] ?></option>  
+                                            <?= $unidad['no_unidad'] ?></option>  
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -337,7 +337,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
         });
     </script>
-    
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const selectUnidad = document.getElementById('inputNounidad');
