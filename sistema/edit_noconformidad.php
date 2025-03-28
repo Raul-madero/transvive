@@ -574,7 +574,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <label for="inputAfecta" class="col-sm-2 col-form-label">Afecta al cliente</label>
                     <div class="col-sm-3">
                        <select class="form-control" style="width: 100%;" name="inputAfecta" id="inputAfecta">
-                        <option value="<?php echo $afecta;?>" readonly selected><?php echo $afecta;?></option>
                         <option value="SI">SI</option>
                         <option value="NO">NO</option>
                       </select>
