@@ -206,29 +206,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </div>
 
                             <div class="form-group row">
-                                <label for="unidad" class="col-md-4 col-form-label">No. Unidad</label>
-                                <div class="col-md-8">
-                                    <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputNounidad" name="inputNounidad">
-                                        <option value="">- Seleccione -</option>
-                                        <?php foreach ($filasunidad as $unidad): //llenar las opciones del primer select ?>
-                                            <option 
-                                                value="<?= $unidad['no_unidad'] ?>"
-                                                data-descripcion="<?= htmlspecialchars($unidad['descripcion']) ?>">
-                                            <?= $unidad['no_unidad'] ?></option>  
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
+    <label for="unidad" class="col-md-4 col-form-label">No. Unidad</label>
+    <div class="col-md-8">
+        <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputNounidad" name="inputNounidad">
+            <option value="">- Seleccione -</option>
+            <?php foreach ($filasunidad as $unidad): ?>
+                <option 
+                    value="<?= $unidad['no_unidad'] ?>"
+                    data-descripcion="<?= htmlspecialchars($unidad['descripcion']) ?>">
+                    <?= $unidad['no_unidad'] ?>
+                </option>  
+            <?php endforeach; ?>
+        </select>
+    </div>
 
-                                <label for="tipoUnidad" class="col-md-4 col-form-label">Tipo unidad</label>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" id="inputTipoUnidad" name="inputTipoUnidad" value="" readonly>
-                                </div>
+    <label for="tipoUnidad" class="col-md-4 col-form-label">Tipo unidad</label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="inputTipoUnidad" name="inputTipoUnidad" value="" readonly>
+    </div>
 
-                                <label for="tipoUnidad" class="col-md-4 col-form-label">descripcion</label>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" id="inputDescripcion" name="inputDescripcion" value="" readonly>
-                                </div>
-                            </div>
+    <label for="descripcionUnidad" class="col-md-4 col-form-label">Descripción</label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="inputDescripcion" name="inputDescripcion" value="" readonly>
+    </div>
+</div>
+
 
                             <div class="form-group row" >
                                 <label for="inputEmail3" class="col-sm-10 col-form-label" style="text-align:center; background-color: gainsboro;">Movimientos</label>
