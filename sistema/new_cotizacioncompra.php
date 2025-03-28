@@ -354,6 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     selectUnidad.addEventListener('change', function () {
+        console.log("Unidad seleccionada");
         const selectedOption = this.options[this.selectedIndex];
         const textoUnidad = selectedOption.text.trim();
         const letra = textoUnidad.charAt(0).toUpperCase();
