@@ -112,9 +112,10 @@ $this->Cell(-15,10,utf8_decode('Página ') . $this->PageNo(),0,0,'C');
 //Impresion 
 include('../../conexion.php');
 $idoentrada=1;
+$anio = date("Y");
 $pdf=new PDF();
 $pdf->AddPage('portrait','letter');
-$query = mysqli_query($conection,"SELECT * FROM newencuesta_clientes");
+$query = mysqli_query($conection,"SELECT * FROM newencuesta_clientes WHERE YEAR(fecha) = '$anio' AND id = '$idoentrada'") or die(mysqli_error($conection));
 $result = mysqli_num_rows($query);
 $x = 1;
 while ($x <= $result) {
