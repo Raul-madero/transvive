@@ -12123,6 +12123,13 @@ if ($_POST['action'] == 'AlmacenaEditNc') {
     $afecta_cte  = mysqli_real_escape_string($conection, $_POST['afectacte']);
     $area_resp   = mysqli_real_escape_string($conection, $_POST['arearespons']);
     $date_cierre = mysqli_real_escape_string($conection, $_POST['datecierre']) ?? NULL;
+
+    $date_nc     = !empty($_POST['fecha']) ? mysqli_real_escape_string($conection, $_POST['fecha']) : NULL;
+    $date_incid  = !empty($_POST['dateincident']) ? mysqli_real_escape_string($conection, $_POST['dateincident']) : NULL;
+    $date_accion = !empty($_POST['dateaccion']) ? mysqli_real_escape_string($conection, $_POST['dateaccion']) : NULL;
+    $date_cierre = !empty($_POST['datecierre']) ? mysqli_real_escape_string($conection, $_POST['datecierre']) : NULL;
+
+    
     
     // Convertir array a string (si existe)
     $resp_accion = !empty($_POST['respaccion']) && is_array($_POST['respaccion']) 
