@@ -41,7 +41,7 @@ $sqlumed = "select * from unidades_medida ORDER BY descripcion";
 $queryumed = mysqli_query($conection, $sqlumed);
 $filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
 
-$sqlunidad = "SELECT * FROM unidades WHERE estatus = 1 ORDER BY no_unudad";
+$sqlunidad = "SELECT * FROM unidades WHERE estatus = 1 ORDER BY no_unidad";
 $queryunidad = mysqli_query($conection, $sqlunidad);
 $filasunidad = mysqli_fetch_all($queryunidad, MYSQLI_ASSOC);
 
@@ -211,7 +211,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputNounidad" name="inputNounidad">
                                         <option value="">- Seleccione -</option>
                                         <?php foreach ($filasunidad as $unidad): //llenar las opciones del primer select ?>
-                                            <option value="<?= $unidad['id'] ?>" data-tipounidad=""><?= $unidad['no_unidad'] ?></option>  
+                                            <option 
+                                                value="<?= $unidad['id'] ?>"
+                                                data-descripcion="<?= htmlspecialchars($unidad['descripcion']) ?>">
+                                            ><?= $unidad['no_unidad'] ?></option>  
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -219,6 +222,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <label for="tipoUnidad" class="col-md-4 col-form-label">Tipo unidad</label>
                                 <div class="col-md-8">
                                     <input type="text" class="form-control" id="inputTipoUnidad" name="inputTipoUnidad" value="" readonly>
+                                </div>
+
+                                <label for="tipoUnidad" class="col-md-4 col-form-label">descripcion</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="inputTipoUnidad" name="inputDescripcion" value="" readonly>
                                 </div>
                             </div>
 
@@ -329,13 +337,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
         });
     </script>
-
+    
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const selectUnidad = document.getElementById('inputNounidad');
     const inputTipoUnidad = document.getElementById('inputTipoUnidad');
+    const inputDescripcion = document.getElementById('inputDescripcion');
 
-    // Mapea letras a tipos de unidad
     const tipoUnidadMap = {
         'T': 'Camioneta',
         'C': 'Camión',
@@ -345,10 +353,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     selectUnidad.addEventListener('change', function () {
         const selectedOption = this.options[this.selectedIndex];
-        const textoUnidad = selectedOption.text.trim(); // ejemplo: "T-01"
+        const textoUnidad = selectedOption.text.trim();
         const letra = textoUnidad.charAt(0).toUpperCase();
 
         inputTipoUnidad.value = tipoUnidadMap[letra] || '';
+        inputDescripcion.value = selectedOption.getAttribute('data-descripcion') || '';
     });
 });
 </script>
