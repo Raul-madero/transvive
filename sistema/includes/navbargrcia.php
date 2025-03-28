@@ -21,7 +21,7 @@
                <li><a href="viajes_especiales23.php" class="dropdown-item">Orden de Servicio Especial/Turístico</a></li>
                 <li class="dropdown-divider"></li>
                <li><a href="geo_viajes.php" class="dropdown-item">Geolocalizacion viajes</a></li>
-
+			   <li><a href="requisiciones23.php" class="dropdown-item">Requisición</a></li>
                <li class="dropdown-divider"></li>
 
               <li class="dropdown-submenu dropdown-hover">
