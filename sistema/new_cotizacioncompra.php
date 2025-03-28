@@ -36,7 +36,6 @@ $filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
 $sqlprodnm = "select id, codigo, codigo_interno, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
 $queryprodnm = mysqli_query($conection, $sqlprodnm);
 $filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
-var_dump($filasprodnm);
 
 //Seleccion de proveedores para llenado de requisicion
 $sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
