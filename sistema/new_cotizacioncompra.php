@@ -223,6 +223,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             <option value="<?= $op['no_prov'] ?>"><?= $op['nombre'] ?></option>  
                                         <?php endforeach; ?>
                                     </select>
+                                </div>
                             </div>
 
                             <div class="form-group row" >
