@@ -5879,6 +5879,18 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
         
 
         if (mysqli_stmt_execute($stmt)) {
+            $sql_estado_requisicion = "UPDATE requisiciones SET estado = 3 WHERE id = $noreq";
+            $resultado = mysqli_query($conection, $sql_estado_requisicion);
+            if ($resultado) {
+                // Verifica si se actualizó alguna fila
+                if (mysqli_affected_rows($conection) > 0) {
+                    echo "Requisición actualizada correctamente.";
+                } else {
+                    echo "No se encontró la requisición o ya tenía el estado 3.";
+                }
+            } else {
+                echo "Error al actualizar: " . mysqli_error($conection);
+            }
             echo json_encode(["status" => "success", "message" => "Orden de compra almacenada", "insert_id" => mysqli_insert_id($conection)]);
         } else {
             echo json_encode(["status" => "error", "message" => "Error en la consulta: " . mysqli_error($conection)]);
