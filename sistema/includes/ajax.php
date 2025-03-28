@@ -12129,7 +12129,7 @@ if ($_POST['action'] == 'AlmacenaEditNc') {
     $date_accion = !empty($_POST['dateaccion']) ? mysqli_real_escape_string($conection, $_POST['dateaccion']) : NULL;
     $date_cierre = !empty($_POST['datecierre']) ? mysqli_real_escape_string($conection, $_POST['datecierre']) : NULL;
 
-    
+
     
     // Convertir array a string (si existe)
     $resp_accion = !empty($_POST['respaccion']) && is_array($_POST['respaccion']) 
@@ -12173,23 +12173,23 @@ if ($_POST['action'] == 'AlmacenaEditNc') {
     }
 
     // Ejecutar el procedimiento almacenado (opcional)
-    $sql_call = "CALL procesar_editnc(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt_call = mysqli_prepare($conection, $sql_call);
+    // $sql_call = "CALL procesar_editnc(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // $stmt_call = mysqli_prepare($conection, $sql_call);
 
-    if ($stmt_call) {
-        mysqli_stmt_bind_param($stmt_call, "iisssssssssssssssssssssssssssi",
-            $id_nc, $no_queja, $date_nc, $mes_nc, $cliente_nc, $formato, $desc_nc, $motivo_nc, 
-            $resp_nc, $superv_nc, $operador_nc, $unidad_nc, $ruta_nc, $parada_nc, $date_incid, 
-            $turno_nc, $procede_nc, $porkprocede, $analisis_nc, $accion_nc, $date_accion, 
-            $resp_accion, $observa_nc, $tipo_incid, $estatus_nc, $causa_nc, $afecta_cte, 
-            $area_resp, $date_cierre, $usuario
-        );
+    // if ($stmt_call) {
+    //     mysqli_stmt_bind_param($stmt_call, "iisssssssssssssssssssssssssssi",
+    //         $id_nc, $no_queja, $date_nc, $mes_nc, $cliente_nc, $formato, $desc_nc, $motivo_nc, 
+    //         $resp_nc, $superv_nc, $operador_nc, $unidad_nc, $ruta_nc, $parada_nc, $date_incid, 
+    //         $turno_nc, $procede_nc, $porkprocede, $analisis_nc, $accion_nc, $date_accion, 
+    //         $resp_accion, $observa_nc, $tipo_incid, $estatus_nc, $causa_nc, $afecta_cte, 
+    //         $area_resp, $date_cierre, $usuario
+    //     );
 
-        if (mysqli_stmt_execute($stmt_call)) {
-            echo json_encode(["status" => "success", "message" => "Procedimiento ejecutado correctamente"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Error en el procedimiento: " . mysqli_stmt_error($stmt_call)]);
-        }
+    //     if (mysqli_stmt_execute($stmt_call)) {
+    //         echo json_encode(["status" => "success", "message" => "Procedimiento ejecutado correctamente"]);
+    //     } else {
+    //         echo json_encode(["status" => "error", "message" => "Error en el procedimiento: " . mysqli_stmt_error($stmt_call)]);
+    //     }
 
         mysqli_stmt_close($stmt_call);
     }
