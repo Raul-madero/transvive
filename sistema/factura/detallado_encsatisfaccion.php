@@ -111,10 +111,11 @@ $this->Cell(-15,10,utf8_decode('Página ') . $this->PageNo(),0,0,'C');
 }
 //Impresion 
 include('../../conexion.php');
+$anio = new DateTime('Y');
 $idoentrada=1;
 $pdf=new PDF();
 $pdf->AddPage('portrait','letter');
-$query = mysqli_query($conection,"SELECT * FROM encuesta_clientes");
+$query = mysqli_query($conection,"SELECT * FROM encuesta_clientes WHERE YEAR(fecha) = '$anio'");
 $result = mysqli_num_rows($query);
 $x = 1;
 while ($x <= $result) {
