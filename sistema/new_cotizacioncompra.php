@@ -464,7 +464,7 @@ $(document).ready(function () {
                                 <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
                                     <option value="">- Seleccione -</option>
                                     <?php foreach ($filasprodnm as $opnm): //llenar las opciones del primer select ?>
-                                    <option value="<?= $opnm['descripcion'] ?>"><?= $opm['codigo_interno'] . ' - ' . $opnm['descripcion'] ?></option>  
+                                    <option value="<?= $opnm['descripcion'] ?>"><?= $opm['codigo'] . ' - ' . $opnm['descripcion'] ?></option>  
                                     <?php endforeach; ?>
                                 </select>
                             </div>
