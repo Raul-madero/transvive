@@ -342,6 +342,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
 document.addEventListener('DOMContentLoaded', function () {
     const selectUnidad = document.getElementById('inputNounidad');
     const inputTipoUnidad = document.getElementById('inputTipoUnidad');
+
+    // Mapea letras a tipos de unidad
+    const tipoUnidadMap = {
+        'T': 'Camioneta',
+        'C': 'Camión',
+        'A': 'Automóvil',
+        'S': 'Sprinter'
+    };
+
+    selectUnidad.addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const textoUnidad = selectedOption.text.trim(); // ejemplo: "T-01"
+        const letra = textoUnidad.charAt(0).toUpperCase();
+
+        inputTipoUnidad.value = tipoUnidadMap[letra] || '';
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const selectUnidad = document.getElementById('inputNounidad');
+    const inputTipoUnidad = document.getElementById('inputTipoUnidad');
     const inputDescripcion = document.getElementById('inputDescripcion');
 
     const tipoUnidadMap = {
