@@ -79,15 +79,16 @@
             <li><a href="ordenes_compra23.php" class="dropdown-item">Orden de Compra</a></li>
             <li><a href="compras23.php" class="dropdown-item">Compra</a></li>
             <li class="dropdown-divider"></li>
-            <!--
+            
+          </ul>
+        </li>
+        <!--
                   <li><a href="pagos_proveedor.php" class="dropdown-item">Pago a Proveedor</a></li>
                   <li class="dropdown-divider"></li>
                   <li><a href="devolucion_compra.php" class="dropdown-item">Devolución sobre Compra</a></li>
                 -->
             <!--<li class="dropdown-divider"></li>
                   <li><a href="evaluacion_proveedores.php" class="dropdown-item">Evaluación de Proveedores</a></li>-->
-          </ul>
-        </li>
         <!--
                <li class="dropdown-submenu dropdown-hover">
                 <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Proveedores</a>
