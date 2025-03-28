@@ -13,14 +13,22 @@ if (!isset($_SESSION['idUser'])) {
     header('Location: ../index.php');
 }
 
-$sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados where estatus = 1 ORDER BY nombres";
-$queryoper = mysqli_query($conection, $sqloper);
-$filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
+//Seleccion de fecha
+date_default_timezone_set('America/Mexico_City');
+$fcha = date("Y-m-d");
 
+//Busqueda de folio para creacion de nueva requisicion
+$query_folio = mysqli_query($conection,"SELECT MAX(no_requisicion) AS folio FROM requisicion_compra");
+$result_folio = mysqli_num_rows($query_folio);
+$folioe = mysqli_fetch_array($query_folio);
+$nuevofolio=$folioe["folio"]+1;
+
+//Seleccionar quien recibe
 $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
 $queryrecb = mysqli_query($conection, $sqlrecb);
 $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
 
+//Seleccion de productos para llenado de requisicion
 $sqlprod   = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY codigo";
 $queryprod = mysqli_query($conection, $sqlprod);
 $filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
@@ -29,23 +37,27 @@ $sqlprodnm = "select id, codigo, descripcion, marca from refacciones where estat
 $queryprodnm = mysqli_query($conection, $sqlprodnm);
 $filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
 
+//Seleccion de proveedores para llenado de requisicion
 $sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
 $queryprov = mysqli_query($conection, $sqlprov);
 $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
 
+//Seleccion de orden de Mantenimiento
 $sqlsmant  = "select no_orden from solicitud_mantenimiento where estatus = 1";
 $querysmant = mysqli_query($conection, $sqlsmant);
 $filasmant = mysqli_fetch_all($querysmant, MYSQLI_ASSOC); 
 
+//Seleccion de unidades de medida
 $sqlumed = "select * from unidades_medida ORDER BY descripcion";
 $queryumed = mysqli_query($conection, $sqlumed);
 $filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
 
+//Seleccion de unidades
 $sqlunidad = "SELECT * FROM unidades WHERE estatus = 1 ORDER BY no_unidad";
 $queryunidad = mysqli_query($conection, $sqlunidad);
 $filasunidad = mysqli_fetch_all($queryunidad, MYSQLI_ASSOC);
 
-//mysqli_close($conection);
+mysqli_close($conection);
 ?>
 
 <!DOCTYPE html>
@@ -91,25 +103,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                     </div>
                 </section>
-                <center>
-
-                <?php
-                    
-                    include "../conexion.php";
-                    $query_folio = mysqli_query($conection,"SELECT MAX(no_requisicion) AS folio FROM requisicion_compra");
-                    $result_folio = mysqli_num_rows($query_folio);
-                    $folioe = mysqli_fetch_array($query_folio);
-                    $nuevofolio=$folioe["folio"]+1; 
-
-                    mysqli_close($conection);
-                ?>  
-                <?php
-                    date_default_timezone_set('America/Mexico_City');
-                    $fcha = date("Y-m-d");
-                ?>  
-
+                <center> 
                 <!-- Horizontal Form -->
-
                 <div class="col-md-9">
                     <div class="card card-secondary">
                         <div class="card-header">
@@ -152,7 +147,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </select>
                                 </div>
                             </div>
-              
 
                             <div class="form-group row" style="text-align:left;">
                                 <label for="inputSolicita" class="col-sm-3 col-form-label">Area Solicitante</label>
@@ -188,49 +182,48 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             }
                                         }
                                         ?>
-                                        <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly/>
-                                    <!-- <select style=" font-size: 14px;" name="inputSolicita" id="inputSolicita" required class="form-control custom-select" >
-                                        <option value="">--  Seleccione --</option>
-                                        <option value="Aseguramiento de Calidad">Aseguramiento de Calidad</option>
-                                        <option value="Administracion">Administracion</option>
-                                        <option value="Mantenimiento">Mantenimiento</option>
-                                        <option value="Recursos Humanos">Recursos Humanos</option>
-                                        <option value="Compras">Compras</option>
-                                        <option value="Ventas">Ventas</option>
-                                        <option value="Servicio">Servicio</option>
-                                        <option value="Sistemas">Sistemas</option>
-                                        <option value="Almacen">Almacen</option>
-                                        <option value="Direccion">Direccion</option>
-                                    </select> -->
+                                    <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly/>
                                 </div>
                             </div>
 
                             <div class="form-group row">
-    <label for="unidad" class="col-md-4 col-form-label">No. Unidad</label>
-    <div class="col-md-8 mb-4">
-        <select class="form-control select2bs4 mb-4" style="width: 100%; text-align: left" id="inputNounidad" name="inputNounidad">
-            <option value="">- Seleccione -</option>
-            <?php foreach ($filasunidad as $unidad): ?>
-                <option 
-                    value="<?= $unidad['no_unidad'] ?>"
-                    data-descripcion="<?= htmlspecialchars($unidad['descripcion']) ?>">
-                    <?= $unidad['no_unidad'] ?>
-                </option>  
-            <?php endforeach; ?>
-        </select>
-    </div>
+                                <label for="unidad" class="col-md-4 col-form-label">No. Unidad</label>
+                                <div class="col-md-8 mb-4">
+                                    <select class="form-control select2bs4 mb-4" style="width: 100%; text-align: left" id="inputNounidad" name="inputNounidad">
+                                        <option value="">- Seleccione -</option>
+                                        <?php foreach ($filasunidad as $unidad): ?>
+                                            <option 
+                                                value="<?= $unidad['no_unidad'] ?>"
+                                                data-descripcion="<?= htmlspecialchars($unidad['descripcion']) ?>">
+                                                <?= $unidad['no_unidad'] ?>
+                                            </option>  
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
-    <label for="tipoUnidad" class="col-md-4 col-form-label">Tipo unidad</label>
-    <div class="col-md-8">
-        <input type="text" class="form-control mb-4" id="inputTipoUnidad" name="inputTipoUnidad" value="" readonly>
-    </div>
+                                <label for="tipoUnidad" class="col-md-4 col-form-label">Tipo unidad</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control mb-4" id="inputTipoUnidad" name="inputTipoUnidad" value="" readonly>
+                                </div>
 
-    <label for="descripcionUnidad" class="col-md-4 col-form-label">Descripción</label>
-    <div class="col-md-8">
-        <input type="text" class="form-control mb-4" id="inputDescripcionUnidad" name="inputDescripcionUnidad" value="" readonly>
-    </div>
-</div>
+                                <label for="descripcionUnidad" class="col-md-4 col-form-label">Descripción</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control mb-4" id="inputDescripcionUnidad" name="inputDescripcionUnidad" value="" readonly>
+                                </div>
+                            </div>
 
+                            <div class="form-group row">
+                                <label for="inputProveedor" class="col-md-9 col-form-label">
+                                    Proveedor:
+                                </label>
+                                <div class="col-md-3 mb-4">
+                                    <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProveedor" name="inputProveedor">
+                                        <option value="">- Seleccione -</option>
+                                        <?php foreach ($filasprov as $op): //llenar las opciones del primer select ?>
+                                            <option value="<?= $op['no_prov'] ?>"><?= $op['nombre'] ?></option>  
+                                        <?php endforeach; ?>
+                                    </select>
+                            </div>
 
                             <div class="form-group row" >
                                 <label for="inputEmail3" class="col-sm-10 col-form-label" style="text-align:center; background-color: gainsboro;">Movimientos</label>
