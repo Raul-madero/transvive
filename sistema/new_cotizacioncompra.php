@@ -227,7 +227,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <label for="descripcionUnidad" class="col-md-4 col-form-label">Descripción</label>
     <div class="col-md-8">
-        <input type="text" class="form-control" id="inputDescripcion" name="inputDescripcion" value="" readonly>
+        <input type="text" class="form-control" id="inputDescripcionUnidad" name="inputDescripcionUnidad" value="" readonly>
     </div>
 </div>
 
@@ -344,7 +344,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 document.addEventListener('DOMContentLoaded', function () {
     const selectUnidad = document.getElementById('inputNounidad');
     const inputTipoUnidad = document.getElementById('inputTipoUnidad');
-    const inputDescripcion = document.getElementById('inputDescripcion');
+    const inputDescripcion = document.getElementById('inputDescripcionUnidad');
 
     const tipoUnidadMap = {
         'T': 'Camioneta',
