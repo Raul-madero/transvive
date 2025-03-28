@@ -213,10 +213,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </div>
 
                             <div class="form-group row">
-                                <label for="inputProveedor" class="col-md-9 col-form-label">
+                                <label for="inputProveedor" class="col-md-3 col-form-label">
                                     Proveedor:
                                 </label>
-                                <div class="col-md-3 mb-4">
+                                <div class="col-md-9 mb-4">
                                     <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProveedor" name="inputProveedor">
                                         <option value="">- Seleccione -</option>
                                         <?php foreach ($filasprov as $op): //llenar las opciones del primer select ?>
