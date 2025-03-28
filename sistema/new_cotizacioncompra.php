@@ -36,6 +36,7 @@ $filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
 $sqlprodnm = "select id, codigo, codigo_interno, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
 $queryprodnm = mysqli_query($conection, $sqlprodnm);
 $filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
+var_dump($filasprodnm);
 
 //Seleccion de proveedores para llenado de requisicion
 $sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
@@ -464,7 +465,7 @@ $(document).ready(function () {
                                 <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
                                     <option value="">- Seleccione -</option>
                                     <?php foreach ($filasprodnm as $opnm): //llenar las opciones del primer select ?>
-                                    <option value="<?= $opnm['descripcion'] ?>"><?php $opm['codigo'] . ' - ' . $opnm['descripcion'] ?></option>  
+                                    <option value="<?= $opnm['descripcion'] ?>"><?= $opm['codigo'] . ' - ' . $opnm['descripcion'] ?></option>  
                                     <?php endforeach; ?>
                                 </select>
                             </div>
