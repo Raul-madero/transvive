@@ -780,32 +780,32 @@ document.addEventListener('DOMContentLoaded', function () {
     </script> 
 
     <script>
-        $(document).ready(function () {
-            $("#inputNounidad").on('change', function () {            
-                var op = $(this).val();
-                var action = 'searchNounidad';
+        // $(document).ready(function () {
+        //     $("#inputNounidad").on('change', function () {            
+        //         var op = $(this).val();
+        //         var action = 'searchNounidad';
 
-                $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action,op:op},
-                    success: function(response)
-                    {
-                        // console.log(response);
-                        if(response == 0){
-                            //$('#idcliente').val('');
-                            $('#inputPlacas').val('');
-                        }else{
-                            var data = $.parseJSON(response);
-                            $('#inputPlacas').val(data.placas);
-                        }
-                    },
-                    error: function(error) {
-                    }
-                });
-            });
-        });
+        //         $.ajax({
+        //             url: 'includes/ajax.php',
+        //             type: "POST",
+        //             async : true,
+        //             data: {action:action,op:op},
+        //             success: function(response)
+        //             {
+        //                 // console.log(response);
+        //                 if(response == 0){
+        //                     //$('#idcliente').val('');
+        //                     $('#inputPlacas').val('');
+        //                 }else{
+        //                     var data = $.parseJSON(response);
+        //                     $('#inputPlacas').val(data.placas);
+        //                 }
+        //             },
+        //             error: function(error) {
+        //             }
+        //         });
+        //     });
+        // });
     </script>
 
 
