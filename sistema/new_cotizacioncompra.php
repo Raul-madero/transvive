@@ -341,7 +341,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function () {
     const selectUnidad = document.getElementById('inputNounidad');
     const inputTipoUnidad = document.getElementById('inputTipoUnidad');
     const inputDescripcion = document.getElementById('inputDescripcionUnidad');
@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
         'S': 'Sprinter'
     };
 
-    selectUnidad.addEventListener('change', function () {
+    $('#inputNounidad').on('change', function () {
         console.log("Unidad seleccionada");
         const selectedOption = this.options[this.selectedIndex];
         const textoUnidad = selectedOption.text.trim();
