@@ -41,6 +41,10 @@ $sqlumed = "select * from unidades_medida ORDER BY descripcion";
 $queryumed = mysqli_query($conection, $sqlumed);
 $filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
 
+$sqlunidad = "SELECT * FROM unidades WHERE estatus = 1 ORDER BY no_unudad";
+$queryunidad = mysqli_query($conection, $sqlunidad);
+$filasunidad = mysqli_fetch_all($queryunidad, MYSQLI_ASSOC);
+
 //mysqli_close($conection);
 ?>
 
@@ -201,6 +205,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <label for="unidad" class="col-md-4 col-form-label">No. Unidad</label>
+                                <div class="col-md-8">
+                                    <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputNounidad" name="inputNounidad">
+                                        <option value="">- Seleccione -</option>
+                                        <?php foreach ($filasunidad as $unidad): //llenar las opciones del primer select ?>
+                                            <option value="<?= $unidad['id'] ?>" data-tipounidad=""><?= $unidad['no_unidad'] ?></option>  
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <label for="tipoUnidad" class="col-md-4 col-form-label">Tipo unidad</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" id="inputTipoUnidad" name="inputTipoUnidad" value="" readonly>
+                                </div>
+                            </div>
+
                             <div class="form-group row" >
                                 <label for="inputEmail3" class="col-sm-10 col-form-label" style="text-align:center; background-color: gainsboro;">Movimientos</label>
                                 <div class="col-sm-2">
@@ -308,6 +329,30 @@ scratch. This page gets rid of all links and provides the needed markup only.
             });
         });
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const selectUnidad = document.getElementById('inputNounidad');
+    const inputTipoUnidad = document.getElementById('inputTipoUnidad');
+
+    // Mapea letras a tipos de unidad
+    const tipoUnidadMap = {
+        'T': 'Camioneta',
+        'C': 'Camión',
+        'A': 'Automóvil',
+        'S': 'Sprinter'
+    };
+
+    selectUnidad.addEventListener('change', function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const textoUnidad = selectedOption.text.trim(); // ejemplo: "T-01"
+        const letra = textoUnidad.charAt(0).toUpperCase();
+
+        inputTipoUnidad.value = tipoUnidadMap[letra] || '';
+    });
+});
+</script>
+
 
     <script>
         $('#guardar_tipoactividad').click(function(e){
