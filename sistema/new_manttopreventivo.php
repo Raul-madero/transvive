@@ -59,6 +59,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <style>
     .right{
     float: left;
+    }
   </style>
 </head>
 <body class="hold-transition layout-top-nav">
