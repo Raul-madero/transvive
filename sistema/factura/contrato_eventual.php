@@ -180,11 +180,28 @@ $result = mysqli_num_rows($query);
 $cotizacion = mysqli_fetch_assoc($query);
 //$encabezado = mysql_fetch_array($query1, $conexion);
 //Variables para encabezado
-    setlocale(LC_TIME, "es_MX.UTF-8");
+$meses = [
+    '01' => 'enero',
+    '02' => 'febrero',
+    '03' => 'marzo',
+    '04' => 'abril',
+    '05' => 'mayo',
+    '06' => 'junio',
+    '07' => 'julio',
+    '08' => 'agosto',
+    '09' => 'septiembre',
+    '10' => 'octubre',
+    '11' => 'noviembre',
+    '12' => 'diciembre',
+];
     $empleado       = $cotizacion['empleado'];
     $fecha_contrato = $cotizacion['fecha_contrato'];
     $fecha = new DateTime($fecha_contrato);
-    $fecha_formateada = strftime('%e de %B de %Y', $fecha->getTimestamp());
+    $dia = $fecha->format('d');
+    $mes = $meses[$fecha->format('m')];
+    $anio = $fecha->format('Y');
+    
+    $fecha_formateada = "$dia de $mes de $anio";
     $sexo           = $cotizacion['sexo'];
     $estadocivil    = $cotizacion['estado_civil'];
     $edad           = $cotizacion['edad'];
