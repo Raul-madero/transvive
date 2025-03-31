@@ -77,7 +77,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                     "UPDATE tempregistro_viajes op 
                      INNER JOIN (SELECT cliente, ruta, sueldo_camioneta AS sumu FROM rutas WHERE sueldo_camioneta > 0) i 
                      ON op.cliente = i.cliente 
-                     SET op.sueldo_vuelta = i.sumu WHERE op.ruta = i.ruta AND op.unidad = 'Camioneta'",
+                     SET op.sueldo_vuelta = i.sumu WHERE op.ruta = i.ruta AND op.unidad = 'Camioneta'"
                     // "UPDATE tempregistro_viajes op 
                     //  INNER JOIN (SELECT nombres, apellido_paterno, apellido_materno, sueldo AS sumu FROM empleados) i 
                     //  ON op.operador = CONCAT(i.nombres, ' ', i.apellido_paterno, ' ', i.apellido_materno) 
