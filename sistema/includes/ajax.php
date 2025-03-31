@@ -2473,7 +2473,6 @@ if($_POST['action'] == 'FindeViaje')
 // ***** Agrega participantes minutas //
     
     if($_POST['action'] == 'CargaRegistroViajes'){
-            
         $token         = md5($_SESSION['idUser']);
 
         $query_control = mysqli_query($conection,"CALL procesa_cargaviajes('$token')");
