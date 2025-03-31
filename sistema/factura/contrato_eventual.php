@@ -180,9 +180,11 @@ $result = mysqli_num_rows($query);
 $cotizacion = mysqli_fetch_assoc($query);
 //$encabezado = mysql_fetch_array($query1, $conexion);
 //Variables para encabezado
-    
+    setlocale(LC_TIME, "es_MX.UTF-8");
     $empleado       = $cotizacion['empleado'];
     $fecha_contrato = $cotizacion['fecha_contrato'];
+    $fecha = new DateTime($fecha_contrato);
+    $fecha_formateada = strftime('%e de %B de %Y', $fecha->getTimestamp());
     $sexo           = $cotizacion['sexo'];
     $estadocivil    = $cotizacion['estado_civil'];
     $edad           = $cotizacion['edad'];
@@ -222,7 +224,7 @@ $cotizacion = mysqli_fetch_assoc($query);
     $Diaactual = strtoupper($mesDesc4);
 
     $textoinicial=utf8_decode('<br />
-<div align="justify">CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO POR 30 DIAS A PARTIR DEL. <b>' . $fecha_contrato . ' AL ' . $mesMay .', </b> EN TERMINOS DE LO NORMADO POR EL ARTICULO 35 DE LA LEY FEDERAL DEL TRABAJO, QUE CELEBRAN POR UNA PARTE LA EMPRESA DENOMINADA <b>TRANSVIVE, S DE RL DE CV</b> REPRESENTADA EN ESTE ACTO POR SU APODERADO, EL C. <b>RAUL GUTIERREZ DE VELASCO ROMO,</b> A QUIEN EN LO SUCESIVO Y PARA EFECTO DEL PRESENTE CONTRATO SE LE DENOMINARÁ "LA EMPRESA", Y POR LA OTRA, Y POR SU PROPIO DERECHO, EL (LA) C. <b>' .$empleado. '</b> EN LO SUCESIVO SE LE DENOMINARÁ COMO "EL TRABAJADOR", DE CONFORMIDAD CON LAS SIGUIENTES DECLARACIONES Y CLAUSULAS.</div>');
+<div align="justify">CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO POR 30 DIAS A PARTIR DEL. <b>' . $fecha_formateada . ' AL ' . $mesMay .', </b> EN TERMINOS DE LO NORMADO POR EL ARTICULO 35 DE LA LEY FEDERAL DEL TRABAJO, QUE CELEBRAN POR UNA PARTE LA EMPRESA DENOMINADA <b>TRANSVIVE, S DE RL DE CV</b> REPRESENTADA EN ESTE ACTO POR SU APODERADO, EL C. <b>RAUL GUTIERREZ DE VELASCO ROMO,</b> A QUIEN EN LO SUCESIVO Y PARA EFECTO DEL PRESENTE CONTRATO SE LE DENOMINARÁ "LA EMPRESA", Y POR LA OTRA, Y POR SU PROPIO DERECHO, EL (LA) C. <b>' .$empleado. '</b> EN LO SUCESIVO SE LE DENOMINARÁ COMO "EL TRABAJADOR", DE CONFORMIDAD CON LAS SIGUIENTES DECLARACIONES Y CLAUSULAS.</div>');
     $texto1 = utf8_decode('<b>I.</b> Declara <b> "LA EMPRESA". </b>');
     $texto2 = utf8_decode('<b>a).- </b>Que es una sociedad debidamente constituida bajo la legislación mexicana vigente en el número de póliza 2,343 a cargo del Corredor Público número 2 de la Ciudad de Naucalpan, Estado de México el  Licenciado Roberto F. Ramírez Narezo, y que se encuentra debidamente registrada ante el Registro Público de Comercio.');
     $texto3 = utf8_decode('<b>b).- </b>Que cuenta con domicilio ubicado en <b>Calle. Hidalgo 30 Col. Los Gavilanes, Tlajomulco de Zúñiga, Jal.</b> Con registro federal de contribuyentes <b>TVI-190503-SA3</b>');
