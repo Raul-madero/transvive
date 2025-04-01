@@ -954,6 +954,7 @@ $(document).ready(function () {
 
     <script> 
        $(document).on('click', '.btnEditarCotizacion', function () {
+        console.log("Click en boton editar")
     const modal = $('#modalEditCotizacion');
 
     modal.find('#txt_id').val($(this).data('id'));
