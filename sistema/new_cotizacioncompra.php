@@ -366,6 +366,7 @@ $(document).ready(function () {
 
     <script>
         $('#guardar_tipoactividad').click(function(e){
+            $(this).prop('disabled', true)
             e.preventDefault();
 
             var folioVal         = $('#inputFolio').val();
@@ -451,7 +452,7 @@ $(document).ready(function () {
                             </div>
                         </div> 
 
-                        <div class="form-group row" hidden>
+                        <div class="form-group row" >
                             <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Codigo:</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="inputCodigo" name="inputCodigo">
