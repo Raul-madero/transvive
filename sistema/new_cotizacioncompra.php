@@ -959,6 +959,14 @@ $(document).ready(function () {
 
     <script> 
        $(document).on('click', '.btnEditarCotizacion', function () {
+        // Cierra otros modales abiertos (si los hay)
+$('.modal').modal('hide');
+
+// Espera un poquito y luego abre el nuevo modal
+setTimeout(function() {
+  $('#modal-edit').modal('show');
+}, 300);
+
     const modal = $('#modal-edit');
 
     // modal.find('#txt_id').val($(this).data('id'));
