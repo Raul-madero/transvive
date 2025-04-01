@@ -5116,7 +5116,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
                 if($result > 0){     
                 while ($data = mysqli_fetch_assoc($query_detalle_temppe)){
                     $subtotal = $data['cantidad'] * $data['precio'];
-                    //$iva      = (($data['cantidad'] * $data['precio']) * $data['impuesto'])/100;
+                    $iva      = (($data['cantidad'] * $data['precio']) * $data['impuesto'])/100;
                     $totsubtotal = $totsubtotal + $subtotal;
                     //$totiva = $totiva + $iva;
                     
@@ -5149,10 +5149,26 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
                                             </td>
                                         </tr>';
                     }
-                  
+                    $impuesto_total = $totsubtotal * 0.16; // 16% de IVA como ejemplo
+                    $total = $totsubtotal + $impuesto_total;
+
+                    $detalleTotalesPe = '
+                        <tr>
+                            <td colspan="6" class="text-right"><strong>Subtotal:</strong></td>
+                            <td class="text-right" colspan="2">'.number_format($totsubtotal, 2).'</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="text-right"><strong>Impuesto (IVA 16%):</strong></td>
+                            <td class="text-right" colspan="2">'.number_format($impuesto_total, 2).'</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="text-right"><strong>Total:</strong></td>
+                            <td class="text-right" colspan="2">'.number_format($total, 2).'</td>
+                        </tr>';
                   
                 $arrayData['detalle'] = $detalleTablaPe;
-
+                $arrayData['totales'] = $detalleTotalesPe;
+                
                     echo json_encode($arrayData,JSON_UNESCAPED_UNICODE);
 
                 
