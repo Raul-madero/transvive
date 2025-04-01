@@ -4980,7 +4980,7 @@ if ($_POST['action'] == 'AlmacenaEditProveedor') {
             if(!empty($_POST['op'])){
                 $nameprov = $_POST['op'];
 
-                $query = mysqli_query($conection,"SELECT id, codigo, descripcion, marca, costo, impuesto, impuesto_isr, impuesto_ieps, TRUNCATE(costo + (costo * (impuesto/100)),2) as precioiva, umedida FROM refacciones WHERE descripcion = '$nameprov' ");
+                $query = mysqli_query($conection,"SELECT id, codigo, descripcion, marca, costo, impuesto, impuesto_isr, impuesto_ieps, TRUNCATE(costo + (costo * (impuesto/100)),2) as precioiva, umedida FROM refacciones WHERE codigo = '$nameprov' ");
                 mysqli_close($conection);
                 $result = mysqli_num_rows($query);
 
