@@ -615,6 +615,37 @@ $(document).ready(function () {
         });
     </script> 
 
+<script>
+$(document).on('change', '.input-cot', function () {
+    const input = $(this);
+    const id = input.data('id');
+    const campo = input.data('field');
+    const valor = input.val();
+
+    $.ajax({
+        url: 'includes/ajax.php', // Asegúrate de apuntar al archivo correcto
+        type: 'POST',
+        data: {
+            action: 'ActualizarCampoCotizacion',
+            id: id,
+            campo: campo,
+            valor: valor
+        },
+        success: function (response) {
+            if (response.trim() === 'ok') {
+                console.log('Actualización exitosa');
+            } else {
+                alert('Error al guardar el cambio');
+            }
+        },
+        error: function () {
+            alert('Error de conexión con el servidor');
+        }
+    });
+});
+</script>
+
+
     <script> 
         function del_detalle_cotizacion(id, folio){
             var action = 'delDeattecotizacion';
