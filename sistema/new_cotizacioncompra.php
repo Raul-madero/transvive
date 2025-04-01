@@ -978,117 +978,120 @@ $(document).ready(function () {
     </script> 
 
     <!-- Modal - Update User details -->
-    <div class="modal fade" id="modalEditCotizacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Editar Movimiento</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="modal fade" id="modalEditCotizacion" tabindex="-1" role="dialog" aria-labelledby="modalEditCotizacionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditCotizacionLabel">Editar Movimiento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="formEditarCotizacion">
+
+          <!-- ID oculto -->
+          <input type="hidden" id="txt_id" name="txt_id">
+
+          <!-- Folio -->
+          <div class="form-group row">
+            <label for="txt_folioc" class="col-sm-3 col-form-label">Folio:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="txt_folioc" name="txt_folioc" readonly>
             </div>
+          </div>
 
-            <div class="modal-body">
-                <form id="formEditarCotizacion">
-                    <!-- ID (oculto pero visible para debug temporal) -->
-                    <input type="hidden" id="txt_id" name="txt_id">
-
-                    <!-- Folio -->
-                    <div class="form-group row">
-                        <label for="txt_folioc" class="col-sm-3 col-form-label">Folio:</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="txt_folioc" name="txt_folioc" readonly>
-                        </div>
-                    </div>
-
-                    <!-- Código -->
-                    <div class="form-group row">
-                        <label for="txt_codigo" class="col-sm-3 col-form-label">Código:</label>
-                        <div class="col-sm-9">
-                            <!-- <select class="form-control" id="txt_codigo" name="txt_codigo">
-                                <option value="">- Seleccione -</option>
-                                <?php foreach ($filasprod as $oppd): ?>
-                                    <option value="<?= $oppd['codigo'] ?>"><?= $oppd['codigo'] ?></option>
-                                <?php endforeach; ?>
-                            </select> -->
-                        </div>
-                    </div>
-
-                    <!-- Descripción -->
-                    <div class="form-group row">
-                        <label for="txt_descripcion" class="col-sm-3 col-form-label">Descripción:</label>
-                        <div class="col-sm-9">
-                            <!-- <select class="form-control" id="txt_descripcion" name="txt_descripcion">
-                                <option value="">- Seleccione -</option>
-                                <?php foreach ($filasprodnm as $opnm): ?>
-                                    <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['descripcion'] ?></option>
-                                <?php endforeach; ?>
-                            </select> -->
-                        </div>
-                    </div>
-
-                    <!-- Marca -->
-                    <div class="form-group row">
-                        <label for="txt_marca" class="col-sm-3 col-form-label">Marca:</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="txt_marca" name="txt_marca">
-                        </div>
-                    </div>
-
-                    <!-- Cantidad -->
-                    <div class="form-group row">
-                        <label for="txt_cantidad" class="col-sm-3 col-form-label">Cantidad:</label>
-                        <div class="col-sm-9">
-                            <input type="number" step="any" class="form-control" id="txt_cantidad" name="txt_cantidad">
-                        </div>
-                    </div>
-
-                    <!-- Precio -->
-                    <div class="form-group row">
-                        <label for="txt_precio" class="col-sm-3 col-form-label">Precio:</label>
-                        <div class="col-sm-9">
-                            <input type="number" step="any" class="form-control" id="txt_precio" name="txt_precio">
-                        </div>
-                    </div>
-
-                    <!-- Importe -->
-                    <div class="form-group row">
-                        <label for="txt_importe" class="col-sm-3 col-form-label">Importe:</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="txt_importe" name="txt_importe" readonly>
-                        </div>
-                    </div>
-
-                    <!-- E -->
-                    <div class="form-group row">
-                        <label for="txt_datoe" class="col-sm-3 col-form-label">E:</label>
-                        <div class="col-sm-9">
-                            <select class="form-control" id="txt_datoe" name="txt_datoe">
-                                <option value="SI">SI</option>
-                                <option value="NO">NO</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- OM -->
-                    <div class="form-group row">
-                        <label for="txt_datoom" class="col-sm-3 col-form-label">OM:</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="txt_datoom" name="txt_datoom">
-                        </div>
-                    </div>
-
-                    <!-- Puedes agregar aquí otros campos (ISR, IEPS, etc.) si los necesitas -->
-                </form>
+          <!-- Código -->
+          <div class="form-group row">
+            <label for="txt_codigo" class="col-sm-3 col-form-label">Código:</label>
+            <div class="col-sm-9">
+              <select class="form-control" id="txt_codigo" name="txt_codigo">
+                <option value="">- Seleccione -</option>
+                <?php foreach ($filasprod as $oppd): ?>
+                  <option value="<?= $oppd['codigo'] ?>"><?= $oppd['codigo'] ?></option>
+                <?php endforeach; ?>
+              </select>
             </div>
+          </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" id="actualiza_paradar"><i class="fa fa-save"></i>&nbsp;Guardar</button>
+          <!-- Descripción -->
+          <div class="form-group row">
+            <label for="txt_descripcion" class="col-sm-3 col-form-label">Descripción:</label>
+            <div class="col-sm-9">
+              <select class="form-control" id="txt_descripcion" name="txt_descripcion">
+                <option value="">- Seleccione -</option>
+                <?php foreach ($filasprodnm as $opnm): ?>
+                  <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['descripcion'] ?></option>
+                <?php endforeach; ?>
+              </select>
             </div>
-        </div>
+          </div>
+
+          <!-- Marca -->
+          <div class="form-group row">
+            <label for="txt_marca" class="col-sm-3 col-form-label">Marca:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="txt_marca" name="txt_marca">
+            </div>
+          </div>
+
+          <!-- Cantidad -->
+          <div class="form-group row">
+            <label for="txt_cantidad" class="col-sm-3 col-form-label">Cantidad:</label>
+            <div class="col-sm-9">
+              <input type="number" step="any" class="form-control" id="txt_cantidad" name="txt_cantidad">
+            </div>
+          </div>
+
+          <!-- Precio -->
+          <div class="form-group row">
+            <label for="txt_precio" class="col-sm-3 col-form-label">Precio:</label>
+            <div class="col-sm-9">
+              <input type="number" step="any" class="form-control" id="txt_precio" name="txt_precio">
+            </div>
+          </div>
+
+          <!-- Importe -->
+          <div class="form-group row">
+            <label for="txt_importe" class="col-sm-3 col-form-label">Importe:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="txt_importe" name="txt_importe" readonly>
+            </div>
+          </div>
+
+          <!-- E -->
+          <div class="form-group row">
+            <label for="txt_datoe" class="col-sm-3 col-form-label">E:</label>
+            <div class="col-sm-9">
+              <select class="form-control" id="txt_datoe" name="txt_datoe">
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- OM -->
+          <div class="form-group row">
+            <label for="txt_datoom" class="col-sm-3 col-form-label">OM:</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="txt_datoom" name="txt_datoom">
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success" id="actualiza_paradar"><i class="fa fa-save"></i> Guardar</button>
+      </div>
+
     </div>
+  </div>
 </div>
+
 
 
     <script>
