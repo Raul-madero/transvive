@@ -959,19 +959,18 @@ $(document).ready(function () {
 
     <script> 
        $(document).on('click', '.btnEditarCotizacion', function () {
-        console.log("Click en boton editar")
     const modal = $('#modal-edit');
 
-    modal.find('#txt_id').val($(this).data('id'));
-    modal.find('#txt_folioc').val($(this).data('nofol'));
-    modal.find('#txt_cantidad').val($(this).data('cantid'));
-    modal.find('#txt_codigo').val($(this).data('codig'));
-    modal.find('#txt_descripcion').val($(this).data('descrip'));
-    modal.find('#txt_marca').val($(this).data('marca'));
-    modal.find('#txt_precio').val($(this).data('precio'));
-    modal.find('#txt_importe').val($(this).data('importe'));
-    modal.find('#txt_datoe').val($(this).data('datoe'));
-    modal.find('#txt_datoom').val($(this).data('datoom'));
+    // modal.find('#txt_id').val($(this).data('id'));
+    // modal.find('#txt_folioc').val($(this).data('nofol'));
+    // modal.find('#txt_cantidad').val($(this).data('cantid'));
+    // modal.find('#txt_codigo').val($(this).data('codig'));
+    // modal.find('#txt_descripcion').val($(this).data('descrip'));
+    // modal.find('#txt_marca').val($(this).data('marca'));
+    // modal.find('#txt_precio').val($(this).data('precio'));
+    // modal.find('#txt_importe').val($(this).data('importe'));
+    // modal.find('#txt_datoe').val($(this).data('datoe'));
+    // modal.find('#txt_datoom').val($(this).data('datoom'));
 
     modal.modal('show');
 });
