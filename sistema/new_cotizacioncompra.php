@@ -860,7 +860,7 @@ $(document).ready(function () {
                     data: {action:action,op:op},
                     success: function(response)
                     {
-                    // console.log(response);
+                    console.log(response);
                         if(response == 0){
                             //$('#idcliente').val('');
                             $('#inputCodigo').val('');
