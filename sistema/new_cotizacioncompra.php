@@ -33,6 +33,7 @@ $sqlprod   = "select id, codigo, descripcion, marca from refacciones where estat
 $queryprod = mysqli_query($conection, $sqlprod);
 $filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
 
+//Seleccion de productos por descripcion
 $sqlprodnm = "select id, codigo, codigo_interno, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
 $queryprodnm = mysqli_query($conection, $sqlprodnm);
 $filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
@@ -61,10 +62,6 @@ mysqli_close($conection);
 ?>
 
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -92,7 +89,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-sm-6">
-          
                             </div>
                              <div class="col-sm-6 d-none d-sm-block">
                                 <ol class="breadcrumb float-sm-right">
@@ -455,7 +451,12 @@ $(document).ready(function () {
                         <div class="form-group row" >
                             <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Codigo:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="inputCodigo" name="inputCodigo">
+                                <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
+                                    <option value="">- Seleccione -</option>
+                                    <?php foreach ($filasprod as $prod): //llenar las opciones del primer select ?>
+                                    <option value="<?= $prod['codigo'] ?>"><?= $prod['codigo'] . ' - ' . $prod['codigo'] ?></option>  
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
 
