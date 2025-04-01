@@ -5043,13 +5043,17 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
             $totsubtotal += $subtotal;
 
             $detalleTablaPe .= '<tr>
-                <td align="right">'.number_format($data['cantidad'],2).'</td>
+                <td><input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.number_format($data['cantidad'], 2).'" data-id="'.$data['id'].'" data-field="cantidad"></td>
                 <td class="text-center">'.$data['codigo'].'</td>
-                <td class="text-center">'.$data['descripcion'].'</td>
+                <td>
+                    <input type="text" class="form-control form-control-sm input-cot" value="'.$data['descripcion'].'" data-id="'.$data['id'].'" data-field="descripcion">
+                </td>
                 <td class="text-center">'.$data['marca'].'</td>
                 <td class="text-center">'.$data['dato_e'].'</td>
                 <td class="text-center">'.$data['dato_om'].'</td>
-                <td class="text-center">'.$data['precio'].'</td>
+                   <td>
+                        <input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.$data['precio'].'" data-id="'.$data['id'].'" data-field="precio">
+                    </td>
                 <td align="center">
                     <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>
                 </td>
@@ -5161,6 +5165,27 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
         
             exit;
         }  
+
+        if ($_POST['action'] == 'ActualizarCampoCotizacion') {
+            $id    = intval($_POST['id']);
+            $campo = mysqli_real_escape_string($conection, $_POST['campo']);
+            $valor = mysqli_real_escape_string($conection, $_POST['valor']);
+        
+            // Solo permitimos editar estos campos
+            $permitidos = ['descripcion', 'cantidad', 'precio'];
+            if (!in_array($campo, $permitidos)) {
+                echo 'error';
+                exit;
+            }
+        
+            $sql = "UPDATE detalle_temp_cotizacioncompra SET $campo = '$valor' WHERE id = $id";
+            $query = mysqli_query($conection, $sql);
+        
+            echo $query ? 'ok' : 'error';
+            mysqli_close($conection);
+            exit;
+        }
+        
 
 
 // Edita Movimiento Cotizacion Compra
