@@ -5118,10 +5118,12 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
                     
                         $detalleTablaPe .= '<tr>
                                             <td align="right">'.number_format($data['cantidad'],2).'</td>
+                                            <td>'.$data['codigo'].'</td>
                                             <td>'.$data['descripcion'].'</td>
                                             <td>'.$data['marca'].'</td>
                                             <td>'.($data['dato_e']).'</td>
                                             <td>'.($data['dato_om']).'</td>
+                                            <td>'.$data['precio'].'</td>
                                             
                                             <td align="center"><a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>&nbsp;&nbsp;&nbsp;
                                             <a id="alumno" 
