@@ -5052,9 +5052,10 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
                 <td>'.$data['precio'].'</td>
                 <td align="center">
                     <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>&nbsp;&nbsp;&nbsp;
-                    <a id="alumno" 
+                    <a 
+                        href="#"
                         data-target="#modalEditCotizacion" 
-                        data-toggle="modal" 
+                        data-toggle="modal"
                         data-id="'.$data['id'].'"
                         data-nofol="'.$data['folio'].'" 
                         data-cantid="'.$data['cantidad'].'"
