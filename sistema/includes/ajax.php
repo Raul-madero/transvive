@@ -5002,8 +5002,6 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
         exit;
     }
 
-    require_once 'conexion.php'; // asegúrate de tener la conexión aquí
-
     $nofolio      = intval($_POST['folio']);
     $codigo       = mysqli_real_escape_string($conection, $_POST['codigo']);
     $descripcion  = mysqli_real_escape_string($conection, $_POST['descripcion']);
