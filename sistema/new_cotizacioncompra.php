@@ -1005,12 +1005,12 @@ $(document).ready(function () {
                     <div class="form-group row">
                         <label for="txt_codigo" class="col-sm-3 col-form-label">Código:</label>
                         <div class="col-sm-9">
-                            <select class="form-control" id="txt_codigo" name="txt_codigo">
+                            <!-- <select class="form-control" id="txt_codigo" name="txt_codigo">
                                 <option value="">- Seleccione -</option>
                                 <?php foreach ($filasprod as $oppd): ?>
                                     <option value="<?= $oppd['codigo'] ?>"><?= $oppd['codigo'] ?></option>
                                 <?php endforeach; ?>
-                            </select>
+                            </select> -->
                         </div>
                     </div>
 
@@ -1018,12 +1018,12 @@ $(document).ready(function () {
                     <div class="form-group row">
                         <label for="txt_descripcion" class="col-sm-3 col-form-label">Descripción:</label>
                         <div class="col-sm-9">
-                            <select class="form-control" id="txt_descripcion" name="txt_descripcion">
+                            <!-- <select class="form-control" id="txt_descripcion" name="txt_descripcion">
                                 <option value="">- Seleccione -</option>
                                 <?php foreach ($filasprodnm as $opnm): ?>
                                     <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['descripcion'] ?></option>
                                 <?php endforeach; ?>
-                            </select>
+                            </select> -->
                         </div>
                     </div>
 
