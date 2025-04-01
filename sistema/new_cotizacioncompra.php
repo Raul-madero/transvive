@@ -993,25 +993,25 @@ $(document).ready(function () {
                             </div>
                         </div>
                         
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-12" hidden>
                                 <div class="input-group">
                                     <span class="input-group-addon form-required"><i class="fa" style="color:#737FA7;"> ID:</i></span>
                                     <input name="txt_id" id="txt_id" type="text" class="form-control" disabled>
                                 </div>
                             </div>  
-                        </div>
+                        </div> -->
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-12">
                                 <div class="input-group" hidden>
                                     <span class="input-group-addon form-required"><i class="fa" style="color:#737FA7;"> Folio:</i>&nbsp;&nbsp;</span>
                                     <input type="text"  class="form-control" name="txt_folioc" id="txt_folioc" readonly>
                                 </div>
                             </div>  
-                        </div>
+                        </div> -->
 
-                        <div class="form-group row" hidden>
+                        <!-- <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Codigo:</label>
                             <div class="col-sm-10">
                                 <select class="form-control" style="width: 100%; text-align: left" id="txt_codigo" name="txt_codigo">
@@ -1021,7 +1021,7 @@ $(document).ready(function () {
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                        </div> 
+                        </div>  -->
 
                         <div class="row">
                             <div class="col-md-12">
@@ -1077,33 +1077,33 @@ $(document).ready(function () {
                             </div> 
                         </div>
 
-                        <div class="form-group row" hidden>
+                        <!-- <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Precio:</label>
                             <div class="col-sm-10">
                                 <input type="number" step="any" class="form-control" id="txt_precio" name="txt_precio" >
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="form-group row" hidden>
+                        <!-- <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Impuesto:</label>
                             <div class="col-sm-10">
                                 <input type="number" step="any" class="form-control" id="txt_impuesto" name="txt_impuesto" value="0.00">
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="form-group row" hidden>
+                        <!-- <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">ISR:</label>
                             <div class="col-sm-10">
                                 <input type="number" step="any" class="form-control" id="txt_impuestoisr" name="txt_impuestoisr" value="0.00">
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="form-group row" hidden>
+                        <!-- <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">IEPS:</label>
                             <div class="col-sm-10">
                                 <input type="number" step="any" class="form-control" id="txt_impuestoieps" name="txt_impuestoieps" value="0.00">
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row">
                             <div class="col-md-12">
@@ -1112,12 +1112,12 @@ $(document).ready(function () {
                             </div>
                         </div>
 
-                        <div class="form-group row" hidden>
+                        <!-- <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Importe:</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="txt_importe" name="txt_importe" readonly>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group row">
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">E:</label>
