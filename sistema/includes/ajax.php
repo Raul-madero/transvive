@@ -5016,7 +5016,7 @@ if ($_POST['action'] == 'AlmacenaEditProveedor') {
                 
                 $token        = md5($_SESSION['idUser']);
 
-                $query_detalle_mantto = mysqli_query($conection,"CALL add_temp_detallecotizacion($nofolio, '$codigo', '$descripcion', '$marca', $cantidad, $precio, $impuesto, $impuestoisr, $impuestoieps, $importe, '$datoe', '$datoom', '$token')");
+                $query_detalle_mantto = mysqli_query($conection,"INSERT INTO detalle_temp_cotizacioncompra(folio, codigo, descripcion, marca, cantidad, precio, impuesto, impuesto_isr, impuesto_ieps, importe, dato_e, dato_om, token) VALUES ($nofolio, '$codigo', '$descripcion', '$marca', $cantidad, $precio, $impuesto, $impuestoisr, $impuestoieps, $importe, '$datoe', '$datoom', '$token')");
                 $result = mysqli_num_rows($query_detalle_mantto);
 
                 $detalleTablaPe = '';
