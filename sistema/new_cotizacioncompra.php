@@ -86,6 +86,23 @@ mysqli_close($conection);
         <!-- Select2 -->
         <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
         <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+        <style>
+            #modalEditCotizacion .modal-content {
+  background-color: #fff;
+  color: #000;
+}
+
+#modalEditCotizacion .form-control {
+  color: #000;
+  background-color: #fff;
+}
+
+#modalEditCotizacion .modal-body {
+  min-height: 200px;
+  overflow-y: auto;
+  padding: 15px;
+}
+        </style>
     </head>
     <body class="hold-transition layout-top-nav">
         <div class="wrapper">        
