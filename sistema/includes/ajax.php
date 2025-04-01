@@ -5052,23 +5052,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
                 <td>'.$data['precio'].'</td>
                 <td align="center">
                     <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>&nbsp;&nbsp;&nbsp;
-                    <a 
-                        href="#"
-                        data-target="#modalEditCotizacion" 
-                        data-toggle="modal"
-                        data-id="'.$data['id'].'"
-                        data-nofol="'.$data['folio'].'" 
-                        data-cantid="'.$data['cantidad'].'"
-                        data-codig="'.$data['codigo'].'"
-                        data-descrip="'.$data['descripcion'].'"
-                        data-marca="'.$data['marca'].'"
-                        data-precio="'.$data['precio'].'"
-                        data-importe="'.$data['importe'].'"
-                        data-datoe="'.$data['dato_e'].'"
-                        data-datoom="'.$data['dato_om'].'"
-                        href="#" 
-                        class="sepV_a btnEditarCotizacion" 
-                        title="Cambiar Cantidad"><i class="fas fa-edit"></i></a>
+                    
                 </td>
             </tr>';
         }
@@ -5083,7 +5067,23 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
     exit;
 }
 
-
+// <a 
+//                         href="#"
+//                         data-target="#modalEditCotizacion" 
+//                         data-toggle="modal"
+//                         data-id="'.$data['id'].'"
+//                         data-nofol="'.$data['folio'].'" 
+//                         data-cantid="'.$data['cantidad'].'"
+//                         data-codig="'.$data['codigo'].'"
+//                         data-descrip="'.$data['descripcion'].'"
+//                         data-marca="'.$data['marca'].'"
+//                         data-precio="'.$data['precio'].'"
+//                         data-importe="'.$data['importe'].'"
+//                         data-datoe="'.$data['dato_e'].'"
+//                         data-datoom="'.$data['dato_om'].'"
+//                         href="#" 
+//                         class="sepV_a btnEditarCotizacion" 
+//                         title="Cambiar Cantidad"><i class="fas fa-edit"></i></a>
 // Elimina refacciones del detalle Temporal Mannto
 
         if($_POST['action'] == 'delDeattecotizacion'){
