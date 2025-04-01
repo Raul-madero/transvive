@@ -86,23 +86,6 @@ mysqli_close($conection);
         <!-- Select2 -->
         <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
         <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-        <style>
-            #modalEditCotizacion .modal-content {
-  background-color: #fff;
-  color: #000;
-}
-
-#modalEditCotizacion .form-control {
-  color: #000;
-  background-color: #fff;
-}
-
-#modalEditCotizacion .modal-body {
-  min-height: 200px;
-  overflow-y: auto;
-  padding: 15px;
-}
-        </style>
     </head>
     <body class="hold-transition layout-top-nav">
         <div class="wrapper">        
@@ -995,7 +978,134 @@ $(document).ready(function () {
     </script> 
 
     <!-- Modal - Update User details -->
-    <div class="modal fade" id="modalEditCotizacion" tabindex="-1" role="dialog" aria-labelledby="modalEditCotizacionLabel" aria-hidden="true">
+    <div class="modal fade" id="modalEditCotizacion" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Movimiento</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="col-md-12">
+                            <div class="form-group"> 
+                            </div>
+                        </div>
+
+                        <div class="form-group row" hidden>
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">No. de Folio:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="inputfoliodet" name="inputfoliodet" value="<?php echo $nuevofolio; ?>" readonly>
+                            </div>
+                        </div> 
+
+                        <div class="form-group row" >
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Codigo:</label>
+                            <div class="col-sm-9">
+                                <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
+                                    <option value="">- Seleccione -</option>
+                                    <?php foreach ($filasprod as $prod): //llenar las opciones del primer select ?>
+                                    <option value="<?= $prod['codigo'] ?>"><?= $prod['codigo'] ?></option>  
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Descripción:</label>
+                            <div class="col-sm-9">
+                                <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
+                                    <option value="">- Seleccione -</option>
+                                    <?php foreach ($filasprodnm as $opnm): //llenar las opciones del primer select ?>
+                                    <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['codigo_interno'] . ' - ' . $opnm['descripcion'] ?></option>  
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>  
+
+                        <div class="form-group row">
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Marca:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="inputMarca" name="inputMarca">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Cantidad:</label>
+                            <div class="col-sm-9">
+                                <input type="number" step="any" class="form-control" id="inputCantidad" name="inputCantidad" value="1">
+                            </div>
+                        </div>
+
+                        <div class="form-group row" >
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Precio:</label>
+                            <div class="col-sm-9">
+                            <input type="number" step="0.01" class="form-control" id="inputPrecio" name="inputPrecio" value="0" readonly>
+                            </div>
+                        </div>
+        
+                        <div class="form-group row">
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">IVA:</label>
+                            <div class="col-sm-9">
+                                <input type="number" step="any" class="form-control" id="inputImpuesto" name="inputImpuesto" value="0" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" hidden>
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">ISR:</label>
+                            <div class="col-sm-9">
+                                <input type="number" step="any" class="form-control" id="inputIsr" name="inputIsr" value="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group row" hidden>
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">IEPS:</label>
+                            <div class="col-sm-9">
+                                <input type="number" step="any" class="form-control" id="inputIeps" name="inputIeps" value="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group row" hidden>
+                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Importe:</label>
+                            <div class="col-sm-9">
+                                <input type="number" step="any" class="form-control" id="inputImporte" name="inputImporte" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">E:</label>
+                        <div class="col-sm-9">
+                            <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDatoe" name="inputDatoe">
+                                <option value="">- Seleccione -</option>
+                                <option value="SI">SI</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">OM:</label>
+                        <div class="col-sm-9">
+                            <select id="inputDatoom" name="inputDatoom" class="tokenizationSelect2 form-control select2bs4" >
+                                <option value="">- Seleccione -</option>
+                                <?php foreach ($filasmant as $opmt): //llenar las opciones del primer select ?>
+                                <option value="<?= $opmt['no_orden'] ?>"><?= $opmt['no_orden'] ?></option>  
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success pull-right" href="#" id="actualizaclientes"><i class="fa fa-save"></i>&nbsp;Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="modalEditCotizacionLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
 
