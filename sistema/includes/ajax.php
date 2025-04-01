@@ -5067,7 +5067,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
                         data-datoe="'.$data['dato_e'].'"
                         data-datoom="'.$data['dato_om'].'"
                         href="#" 
-                        class="sepV_a" 
+                        class="sepV_a btnEditarCotizacion" 
                         title="Cambiar Cantidad"><i class="fas fa-edit"></i></a>
                 </td>
             </tr>';
