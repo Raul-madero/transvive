@@ -601,7 +601,7 @@ $(document).ready(function () {
                         $('#inputPrecio').val('0.00');
                         $('#inputImpuesto').val('0.00')
                         $('#inputImporte').val('0.00');
-                        
+                        $(document).trigger('detalleActualizado');
 
                     }else{
                         console.log('no data');
@@ -614,6 +614,50 @@ $(document).ready(function () {
             });
         });
     </script> 
+<script>
+function recalcularTotales() {
+    let subtotal = 0;
+
+    // Recorremos todas las filas con inputs de cantidad y precio
+    $('#detalle_cotizacion tr').each(function () {
+        const row = $(this);
+        const cantidad = parseFloat(row.find('input[data-field="cantidad"]').val()) || 0;
+        const precio = parseFloat(row.find('input[data-field="precio"]').val()) || 0;
+
+        subtotal += cantidad * precio;
+    });
+
+    const iva = subtotal * 0.16; // 16% de impuesto
+    const total = subtotal + iva;
+
+    const htmlTotales = `
+        <tr>
+            <td colspan="6" class="text-right"><strong>Subtotal:</strong></td>
+            <td class="text-right" colspan="2">${subtotal.toFixed(2)}</td>
+        </tr>
+        <tr>
+            <td colspan="6" class="text-right"><strong>Impuesto (IVA 16%):</strong></td>
+            <td class="text-right" colspan="2">${iva.toFixed(2)}</td>
+        </tr>
+        <tr>
+            <td colspan="6" class="text-right"><strong>Total:</strong></td>
+            <td class="text-right" colspan="2">${total.toFixed(2)}</td>
+        </tr>
+    `;
+
+    $('table tfoot').html(htmlTotales);
+}
+
+// Ejecutar cada vez que cambian los inputs de cantidad o precio
+$(document).on('change', 'input[data-field="cantidad"], input[data-field="precio"]', function () {
+    recalcularTotales();
+});
+
+// También recalcular cuando se carga una nueva tabla vía AJAX
+$(document).on('detalleActualizado', function () {
+    recalcularTotales();
+});
+</script>
 
 <script>
 $(document).on('change', '.input-cot', function () {
