@@ -977,11 +977,11 @@ $(document).ready(function () {
     </script> 
 
     <!-- Modal - Update User details -->
-    <div class="modal fade" id="modal-edit" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="modal-edit" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Movimiento</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle2">Agregar Movimiento</h5>
                 </div>
                 <div class="modal-body">
                     <form>
@@ -1095,7 +1095,7 @@ $(document).ready(function () {
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success pull-right" href="#" id="actualizaclientes"><i class="fa fa-save"></i>&nbsp;Agregar</button>
+                        <button type="button" class="btn btn-success pull-right" href="#" id="actualizaclientes2"><i class="fa fa-save"></i>&nbsp;Agregar</button>
                     </div>
                 </form>
             </div>
@@ -1320,11 +1320,11 @@ $(document).ready(function () {
     </script> 
 
     <!-- Page specific script -->
-    <div class="modal fade" id="modalAddprod" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="modalAddprod" role="dialog" aria-labelledby="exampleModalCenterTitle3" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Agregar Refaccion/Articulo Nueva(o)</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle3">Agregar Refaccion/Articulo Nueva(o)</h5>
                 </div>
                 <div class="modal-body">
                     <form>
