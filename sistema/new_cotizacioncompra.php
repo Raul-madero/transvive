@@ -960,7 +960,7 @@ $(document).ready(function () {
     <script> 
        $(document).on('click', '.btnEditarCotizacion', function () {
         console.log("Click en boton editar")
-    const modal = $('#modalEditCotizacion');
+    const modal = $('#modal-edit');
 
     modal.find('#txt_id').val($(this).data('id'));
     modal.find('#txt_folioc').val($(this).data('nofol'));
@@ -978,7 +978,7 @@ $(document).ready(function () {
     </script> 
 
     <!-- Modal - Update User details -->
-    <div class="modal fade" id="modalEditCotizacion" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="modal-edit" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
