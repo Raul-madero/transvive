@@ -255,7 +255,7 @@ mysqli_close($conection);
                                     <tbody id="detalle_cotizacion">
                                     <!---Contenido Ajax--->
                                     </tbody>
-                                    <tfoot>
+                                    <tfoot id="detalle_totcotizacion">
                                     <!-- Contenido Ajax -->    
                                     </tfoot>
                                 </table>
