@@ -454,7 +454,7 @@ $(document).ready(function () {
                                 <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
                                     <option value="">- Seleccione -</option>
                                     <?php foreach ($filasprod as $prod): //llenar las opciones del primer select ?>
-                                    <option value="<?= $prod['codigo'] ?>"><?= $prod['codigo'] . ' - ' . $prod['codigo'] ?></option>  
+                                    <option value="<?= $prod['codigo'] ?>"><?= $prod['codigo'] ?></option>  
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -850,7 +850,7 @@ $(document).ready(function () {
 
     <script>
         $(document).ready(function () {
-            $("#inputDescripcion").on('change', function () {            
+            $("#inputCodigoProd").on('change', function () {            
                 var op = $(this).val();
                 var action = 'searchRefaccionesmovname';
                 $.ajax({
@@ -870,6 +870,7 @@ $(document).ready(function () {
                             var data = $.parseJSON(response);
                             //$('#idcliente').val(data.idusuario);
                             //$('#frazonsoc').val(data.razonsocial).change();
+                            $('#inputDescripcion').val(data.descripcion).change(); // Notify only Select2 of changes
                             $('#inputCodigo').val(data.codigo); // Notify only Select2 of changes
                             $('#inputMarca').val(data.marca);
                             $('#inputPrecio').val(data.costo);
