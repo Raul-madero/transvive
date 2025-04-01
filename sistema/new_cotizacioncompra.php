@@ -23,6 +23,11 @@ $result_folio = mysqli_num_rows($query_folio);
 $folioe = mysqli_fetch_array($query_folio);
 $nuevofolio=$folioe["folio"]+1;
 
+//Eliminar datos, si existen de detalle temp requisicion compra
+$sql = "DELETE FROM detalle_temp_cotizacioncompra WHERE folio = $nuevofolio";
+$query = mysqli_query($conection, $sql);
+$result = mysqli_affected_rows($conection);
+
 //Seleccionar quien recibe
 $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
 $queryrecb = mysqli_query($conection, $sqlrecb);
