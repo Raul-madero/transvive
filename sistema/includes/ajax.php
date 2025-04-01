@@ -5051,8 +5051,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
                 <td>'.$data['dato_om'].'</td>
                 <td>'.$data['precio'].'</td>
                 <td align="center">
-                    <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>&nbsp;&nbsp;&nbsp;
-                    
+                    <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>
                 </td>
             </tr>';
         }
@@ -5067,7 +5066,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
     exit;
 }
 
-// <a 
+// &nbsp;&nbsp;&nbsp;<a 
 //                         href="#"
 //                         data-target="#modalEditCotizacion" 
 //                         data-toggle="modal"
