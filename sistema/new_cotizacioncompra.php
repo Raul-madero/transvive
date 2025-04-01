@@ -953,31 +953,22 @@ $(document).ready(function () {
     </script>
 
     <script> 
-        $(document).ready(function (e) {
-            $('#modalEditCotizacion').on('show.bs.modal', function(e) {    
-                var noid      = $(e.relatedTarget).data().id;
-                var nofolio   = $(e.relatedTarget).data().nofol;
-                var cantidad  = $(e.relatedTarget).data().cantid;
-                var codigo  = $(e.relatedTarget).data().codig;
-                var descripc  = $(e.relatedTarget).data().descrip;
-                var marca     = $(e.relatedTarget).data().marca;
-                var precio    = $(e.relatedTarget).data().precio;
-                var importe  = $(e.relatedTarget).data().importe;
-                var dato_e    = $(e.relatedTarget).data().datoe;
-                var dato_om   = $(e.relatedTarget).data().datoom;
-    
-                $(e.currentTarget).find('#txt_id').val(noid);
-                $(e.currentTarget).find('#txt_folioc').val(nofolio);
-                $(e.currentTarget).find('#txt_cantidad').val(cantidad);
-                $(e.currentTarget).find('#txt_codigo').val(codigo);
-                $(e.currentTarget).find('#txt_descripcion').val(descripc);
-                $(e.currentTarget).find('#txt_marca').val(marca);
-                $(e.currentTarget).find('#txt_precio').val(precio);
-                $(e.currentTarget).find('#txt_importe').val(importe);
-                $(e.currentTarget).find('#txt_datoe').val(dato_e);
-                $(e.currentTarget).find('#txt_datoom').val(dato_om);
-            });
-        });
+       $(document).on('click', '.btnEditarCotizacion', function () {
+    const modal = $('#modalEditCotizacion');
+
+    modal.find('#txt_id').val($(this).data('id'));
+    modal.find('#txt_folioc').val($(this).data('nofol'));
+    modal.find('#txt_cantidad').val($(this).data('cantid'));
+    modal.find('#txt_codigo').val($(this).data('codig'));
+    modal.find('#txt_descripcion').val($(this).data('descrip'));
+    modal.find('#txt_marca').val($(this).data('marca'));
+    modal.find('#txt_precio').val($(this).data('precio'));
+    modal.find('#txt_importe').val($(this).data('importe'));
+    modal.find('#txt_datoe').val($(this).data('datoe'));
+    modal.find('#txt_datoom').val($(this).data('datoom'));
+
+    modal.modal('show');
+});
     </script> 
 
     <!-- Modal - Update User details -->
