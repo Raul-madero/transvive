@@ -986,24 +986,30 @@ $(document).ready(function () {
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="col-md-12">
-                            <div class="form-group"> 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group"> 
+                                </div>
                             </div>
                         </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12" hidden>
+                                <div class="input-group">
+                                    <span class="input-group-addon form-required"><i class="fa" style="color:#737FA7;"> ID:</i></span>
+                                    <input name="txt_id" id="txt_id" type="text" class="form-control" disabled>
+                                </div>
+                            </div>  
+                        </div>
 
-                        <div class="col-md-12" hidden>
-                            <div class="input-group">
-                                <span class="input-group-addon form-required"><i class="fa" style="color:#737FA7;"> ID:</i></span>
-                                <input name="txt_id" id="txt_id" type="text" class="form-control" disabled>
-                            </div>
-                        </div>  
-
-                        <div class="col-md-12">
-                            <div class="input-group" hidden>
-                                <span class="input-group-addon form-required"><i class="fa" style="color:#737FA7;"> Folio:</i>&nbsp;&nbsp;</span>
-                                <input type="text"  class="form-control" name="txt_folioc" id="txt_folioc" readonly>
-                            </div>
-                        </div>  
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group" hidden>
+                                    <span class="input-group-addon form-required"><i class="fa" style="color:#737FA7;"> Folio:</i>&nbsp;&nbsp;</span>
+                                    <input type="text"  class="form-control" name="txt_folioc" id="txt_folioc" readonly>
+                                </div>
+                            </div>  
+                        </div>
 
                         <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Codigo:</label>
@@ -1017,10 +1023,12 @@ $(document).ready(function () {
                             </div>
                         </div> 
 
-                        <div class="col-md-12">
-                            <div class="form-group"> 
-                            </div>
-                        </div>  
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group"> 
+                                </div>
+                            </div>  
+                        </div>
          
                         <div class="form-group row">
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Descripción:</label>
@@ -1034,10 +1042,12 @@ $(document).ready(function () {
                             </div>
                         </div>  
 
-                        <div class="col-md-12">
-                            <div class="form-group"> 
-                            </div>
-                        </div> 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group"> 
+                                </div>
+                            </div> 
+                        </div>
 
                         <div class="form-group row">
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Marca:</label>
@@ -1046,10 +1056,12 @@ $(document).ready(function () {
                             </div>
                         </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group"> 
-                            </div>
-                        </div> 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group"> 
+                                </div>
+                            </div> 
+                        </div>
 
                         <div class="form-group row">
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Cantidad:</label>
@@ -1058,10 +1070,12 @@ $(document).ready(function () {
                             </div>
                         </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group"> 
-                            </div>
-                        </div> 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group"> 
+                                </div>
+                            </div> 
+                        </div>
 
                         <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left; color:#737FA7;">Precio:</label>
@@ -1091,8 +1105,10 @@ $(document).ready(function () {
                             </div>
                         </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group"> 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group"> 
+                                </div>
                             </div>
                         </div>
 
@@ -1121,10 +1137,6 @@ $(document).ready(function () {
                         </div>
      
                     </form>
-                    <div class="col-md-12">
-                        <div class="form-group"> 
-                        </div>
-                    </div> 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
