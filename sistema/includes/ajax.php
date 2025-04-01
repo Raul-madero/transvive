@@ -5036,11 +5036,20 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
     $detalleTablaPe = '';
     $totsubtotal = 0;
     $arrayData = array();
+    $subtotal = 0;
+    $impuesto_total = 0;
+    $total = 0;
+    $iva = 0;
+    $impuesto_ieps = 0;
+    $impuesto_isr = 0;
 
     if ($query_result && mysqli_num_rows($query_result) > 0) {
         while ($data = mysqli_fetch_assoc($query_result)) {
             $subtotal = $data['cantidad'] * $data['precio'];
             $totsubtotal += $subtotal;
+            $iva += (($data['cantidad'] * $data['precio']) * $data['impuesto']) / 100;
+            $impuesto_isr += (($data['cantidad'] * $data['precio']) * $data['impuesto_isr']) / 100;
+            $impuesto_ieps += (($data['cantidad'] * $data['precio']) * $data['impuesto_ieps']) / 100;
 
             $detalleTablaPe .= '<tr>
                 <td><input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.number_format($data['cantidad'], 2).'" data-id="'.$data['id'].'" data-field="cantidad"></td>
@@ -5060,7 +5069,25 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
             </tr>';
         }
 
+        $total = $subtotal + $iva + $impuesto_isr + $impuesto_ieps;
+
+        $detalleTotalesPe = '
+            <tr>
+                <td colspan="6" class="text-right"><strong>Subtotal:</strong></td>
+                <td class="text-right" colspan="2">'.number_format($totsubtotal, 2).'</td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Impuesto (IVA 16%):</strong></td>
+                <td class="text-right" colspan="2">'.number_format($impuesto_total, 2).'</td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Total:</strong></td>
+                <td class="text-right" colspan="2">'.number_format($total, 2).'</td>
+            </tr>';
+
         $arrayData['detalle'] = $detalleTablaPe;
+        $arrayData['totales'] = $detalleTotalesPe;
+        
         echo json_encode($arrayData, JSON_UNESCAPED_UNICODE);
     } else {
         echo "error";
@@ -5168,7 +5195,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
                   
                 $arrayData['detalle'] = $detalleTablaPe;
                 $arrayData['totales'] = $detalleTotalesPe;
-                
+
                     echo json_encode($arrayData,JSON_UNESCAPED_UNICODE);
 
                 
