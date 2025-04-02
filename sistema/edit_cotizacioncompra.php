@@ -214,7 +214,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Area Solicitante</label>
                           <div class="col-sm-9">
-							<input type="text" class="form-control" id="inputArea" name="inputArea" value="<?php echo $area_solicita;?>" readonly>
+							<input type="text" class="form-control" id="inputAsolicita" name="inputAsolicita" value="<?php echo $area_solicita;?>" readonly>
 						   <!-- </div>
                           <select style=" font-size: 14px;" name="inputAsolicita" id="inputAsolicita" required class="form-control custom-select" >
                               <option value="<?php echo $area_solicita;?>"><?php echo $area_solicita;?></option>
