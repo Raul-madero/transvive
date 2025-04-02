@@ -210,8 +210,6 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                  <div class="form-group row" >
                     <label for="inputEmail3" class="col-sm-10 col-form-label" style="text-align:center; background-color: gainsboro;">Movimientos</label>
                     <div class="col-sm-2">
-                      <!-- <a href="#"  class="btn btn-success" data-toggle="modal" data-target="#modalEditcliente" style="color:white;" ><i class="fa fa-plus"></i></a> -->
-                      
                     </div>
                   </div>
 

@@ -698,6 +698,53 @@ $('#btn_salir').click(function(e){
 
     $('table tfoot').html(htmlTotales);
 }
+
+// Ejecutar cada vez que cambian los inputs de cantidad o precio
+$(document).on('change', 'input[data-field="cantidad"], input[data-field="precio"]', function () {
+    recalcularTotales();
+});
+
+// También recalcular cuando se carga una nueva tabla vía AJAX
+$(document).on('detalleActualizado', function () {
+    recalcularTotales();
+});
+	</script>
+
+	<script>
+		 $(document).ready(function () {
+            $("#inputCodigoProd").on('change', function () {            
+                var op = $(this).val();
+                var action = 'searchRefaccionesmovname';
+                $.ajax({
+                    url: 'includes/ajax.php',
+                    type: "POST",
+                    async : true,
+                    data: {action:action,op:op},
+                    success: function(response)
+                    {
+                    console.log(response);
+                        if(response == 0){
+                            $('#inputCodigoProd').val('');
+                            $('#inputMarca').val('');
+                            $('#inputPrecio').val('0.00');
+                        }else{
+                            var data = $.parseJSON(response);
+                            //$('#idcliente').val(data.idusuario);
+                            //$('#frazonsoc').val(data.razonsocial).change();
+                            $('#inputDescripcion').val(data.descripcion).change(); // Notify only Select2 of changes
+                            $('#inputCodigoProd').val(data.codigo); // Notify only Select2 of changes
+                            $('#inputMarca').val(data.marca);
+                            $('#inputPrecio').val(data.costo);
+                            $('#inputImpuesto').val(data.impuesto);
+                            $('#inputIsr').val(data.impuesto_isr);
+                            $('#inputIeps').val(data.impuesto_ieps);
+                        }
+                    },
+                    error: function(error) {
+                    }
+                });
+            });
+        });
 	</script>
 
      <script> 
