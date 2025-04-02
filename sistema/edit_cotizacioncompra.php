@@ -399,7 +399,6 @@ $('#btn_salir').click(function(e){
 <script>
    $('#guardar_tipoactividad').click(function(e) {
     e.preventDefault();
-
     var folio         = $('#inputFolio').val();
     var fecha         = $('#inputFecha').val();
     var fecha_req     = $('#inputFecharequiere').val();
@@ -584,8 +583,6 @@ $('#btn_salir').click(function(e){
            </div>
         </div>
         
-
-    
       <div class="modal-footer">
         <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-success pull-right" href="#" id="actualizaclientes"><i class="fa fa-save"></i>&nbsp;Agregar</button>
