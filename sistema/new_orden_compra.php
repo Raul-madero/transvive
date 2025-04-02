@@ -595,14 +595,16 @@ $(document).ready(function () {
 </script>
 
 <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
   const tabla = $('#productos').DataTable();
 
-  $('#productos tbody').on('click', '.eliminar-producto', function (e) {
+  $('#requisicion tbody').on('click', '.eliminar-producto', function (e) {
     e.preventDefault();
-    tabla.row($(this).parents('tr')).remove().draw();
+    const fila = $(this).closest('tr');
+    tabla.row(fila).remove().draw();
   });
 });
+
 
 </script>
 </body>
