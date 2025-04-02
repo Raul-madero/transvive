@@ -618,6 +618,7 @@ $(document).ready(function () {
       text: info.message || 'Ocurrió un error al guardar la orden.'
     });
   }
+  window.location.href = 'requisiciones23.php';
 }
 
     });
