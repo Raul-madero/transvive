@@ -5956,7 +5956,7 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
                 $sql_det = "INSERT INTO detalle_ordencompra (folio, cantidad, codigo, descripcion, unidad_medida, marca, precio, impuesto, importe)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt_det = mysqli_prepare($conection, $sql_det);
-                mysqli_stmt_bind_param($stmt_det, "iissssddd", $folio, $cantidad, $codigo, $descripcion, $unidad_medida, $marca, $precio, $impuesto, $importe);
+                mysqli_stmt_bind_param($stmt_det, "idssssddd", $folio, $cantidad, $codigo, $descripcion, $unidad_medida, $marca, $precio, $impuesto, $importe);
                 mysqli_stmt_execute($stmt_det);
                 mysqli_stmt_close($stmt_det);
             }
