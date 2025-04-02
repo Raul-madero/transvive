@@ -360,7 +360,7 @@ if ($pedido['fecha_fin'] > '2000-01-01') {
         </thead>
         <tbody>
              <tr>
-                <td style="text-align: center; font-weight: bold;"><?php echo 'ITZURI ARRIAGA PAZ' ?></td>
+                <td style="text-align: center; font-weight: bold;"><?php echo 'BRENDA FERNANDA BECERRA HIGUERA' ?></td>
                 <td style="text-align: center;"><?php echo '' ?></td>
                 <td style="text-align: center; font-weight: bold;"><?php echo $pedido['atencionde']; ?></td>
                 

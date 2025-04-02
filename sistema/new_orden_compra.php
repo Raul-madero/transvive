@@ -251,7 +251,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
   </tr>
   <tr>
     <td colspan="8" style="text-align:right;">
-      <button id="btnAgregarImpuesto" class="btn btn-sm btn-outline-primary">+ Agregar Impuesto</button>
+      <button type="button" id="btnAgregarImpuesto" class="btn btn-sm btn-outline-primary">+ Agregar Impuesto</button>
     </td>
   </tr>
 </tfoot>
@@ -514,7 +514,8 @@ $(document).ready(function () {
   });
 
   // Agregar impuestos dinámicos
-  $('#btnAgregarImpuesto').on('click', function () {
+  $('#btnAgregarImpuesto').on('click', function (e) {
+    e.preventDefault();
     const tipo = prompt("Nombre del impuesto (Ej. ISR, IEPS, Hospedaje):");
     if (!tipo) return;
 
