@@ -5956,7 +5956,7 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
 
         $query = "INSERT INTO detalle_ordencompra (folio, cantidad, codigo, descripcion, unidad_medida, marca, precio, impuesto, importe) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         if ($stmt_detalle = mysqli_prepare($conection, $query)) {
-            mysqli_stmt_bind_param($stmt_detalle, "isssssd", $folio, $cantidad, $codigo, $descripcion, $unidad_medida, $marca, $precio, $impuesto, $importe);
+            mysqli_stmt_bind_param($stmt_detalle, "iisssssd", $folio, $cantidad, $codigo, $descripcion, $unidad_medida, $marca, $precio, $impuesto, $importe);
         } else {
             echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta de detalles"]);
             exit;
@@ -5972,7 +5972,7 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
         } else {
             echo json_encode(["status" => "error", "message" => "Error al ejecutar la inserción de detalles: " . mysqli_error($conection)]);
         }
-        
+
         if (mysqli_stmt_execute($stmt)) {
             $sql_estado_requisicion = "UPDATE requisicion_compra SET estatus = 3 WHERE no_requisicion = $noreq";
             $resultado = mysqli_query($conection, $sql_estado_requisicion);
