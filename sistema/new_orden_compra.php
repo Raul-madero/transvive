@@ -242,8 +242,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
     <th></th>
   </tr>
 
-  <!-- Aquí irán impuestos dinámicos -->
-  <tr id="impuestos_adicionales_footer"></tr>
+  <!-- marcador-impuestos -->
 
   <tr>
     <th colspan="6" style="text-align:right">Total:</th>
@@ -256,6 +255,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
     </td>
   </tr>
 </tfoot>
+
 
 
                           </table>
@@ -511,22 +511,17 @@ $(document).ready(function () {
   });
 
   // Agregar impuestos dinámicos
-  $('#btnAgregarImpuesto').on('click', function () {
-    const tipo = prompt("Nombre del impuesto (Ej. ISR, IEPS, Hospedaje):");
-    if (!tipo) return;
-
-    const porcentajeStr = prompt(`¿Qué porcentaje (%) aplica para ${tipo}?`, "0");
-    const porcentaje = parseFloat(porcentajeStr);
-
-    if (isNaN(porcentaje) || porcentaje <= 0) {
-      alert("Porcentaje no válido.");
-      return;
-    }
-
-    impuestosAdicionales.push({ tipo, porcentaje });
-    renderImpuestosAdicionales();
-    recalcularTotales();
-  });
+  $('#btnAgregarImpuesto').click(function () {
+  const nuevoImpuesto = `
+    <tr class="impuesto-adicional">
+      <th colspan="6" style="text-align:right">IEPS (8%):</th>
+      <th class="valor-impuesto" style="text-align:right">$0.00</th>
+      <th></th>
+    </tr>
+  `;
+  // Inserta antes de la fila Total
+  $('#total').closest('tr').before(nuevoImpuesto);
+});
 
   // Eliminar impuesto adicional
   $('#requisicion').on('click', '.quitar-imp', function () {
