@@ -5957,7 +5957,7 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
         
 
         if (mysqli_stmt_execute($stmt)) {
-            $sql_estado_requisicion = "UPDATE requisicion_compra SET estado = 3 WHERE no_req = $noreq";
+            $sql_estado_requisicion = "UPDATE requisicion_compra SET estado = 3 WHERE no_requisicion = $noreq";
             $resultado = mysqli_query($conection, $sql_estado_requisicion);
             if ($resultado) {
                 // Verifica si se actualizó alguna fila
