@@ -243,7 +243,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
   </tr>
 
   <!-- Aquí irán impuestos dinámicos -->
-  <tr id="impuestos_adicionales_footer"></tr>
+  <tbody id="impuestos_adicionales_footer"></tbody>
 
   <tr>
     <th colspan="6" style="text-align:right">Total:</th>
