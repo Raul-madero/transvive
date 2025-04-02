@@ -333,6 +333,34 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+$('#btn_salir').click(function(e){
+        e.preventDefault();
+        Swal
+    .fire({
+        title: "DESEA SALIR!",
+        text: "",
+        icon: 'info',
+
+        showCancelButton: true,
+        confirmButtonText: "Regresar",
+        cancelButtonText: "Salir",
+    })
+     .then(resultado => {
+        if (resultado.value) {
+             console.log("Alerta cerrada");
+        } else {
+            location.href = 'requisiciones23.php';
+                        
+        }
+    });
+
+   
+
+    });
+    </script>
+
+<script>
   const proveedoresData = <?= json_encode($filasprov, JSON_UNESCAPED_UNICODE); ?>;
 </script>
 <script>
