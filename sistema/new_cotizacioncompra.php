@@ -685,10 +685,6 @@ $(document).on('change', '.input-cot', function () {
         }
     });
 });
-</script>
-
-
-    <script> 
         function del_detalle_cotizacion(id, folio){
             var action = 'delDeattecotizacion';
             var id_det = id;
