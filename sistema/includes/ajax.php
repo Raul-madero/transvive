@@ -5899,15 +5899,15 @@ if($_POST['action'] == 'ActualizaMovordencompra'){
 
 //Almacena Orden de compra
 if ($_POST['action'] == 'AlmacenaOrdencompra') {
-
     if (empty($_POST['fecha']) || empty($_POST['proveedor'])) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
         exit;
     }
 
-    $folio        = intval($_POST['folio']); // Asegurar que sea número
+    // Recibir datos generales
+    $folio        = intval($_POST['folio']);
     $noreq        = intval($_POST['noreq']);
-    $fecha        = $_POST['fecha']; // Suponiendo que viene en formato YYYY-MM-DD
+    $fecha        = $_POST['fecha'];
     $proveedor    = intval($_POST['proveedor']);
     $contacto     = trim($_POST['contacto']);
     $telefono     = trim($_POST['telefono']);
@@ -5918,91 +5918,85 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
     $solicita     = trim($_POST['solicita']);
     $notas        = trim($_POST['notas']);
     $recibe       = trim($_POST['recibe']);
-    $usuario      = intval($_SESSION['idUser']); // Verifica que sea numérico
-    $subtotal    = floatval($_POST['subtotal']);
-    $iva         = floatval($_POST['iva']) ?? 0;
-    $isr         = floatval($_POST['isr']) ?? 0;
-    $ieps        = floatval($_POST['ieps']) ?? 0;;
-    $total       = floatval($_POST['total']);
-    $ihospedaje  = floatval($_POST['ihospedaje']) ?? 0;;
-    $detalle = json_decode($_POST['detalle'], true); // Decodificar el JSON
-    foreach ($detalle as $item) {
-        $id = $item['id'];
-        $codigo = $item['codigo'];
-        $cantidad = $item['cantidad'];
-        $unidad_medida = $item['unidad_medida'];
-        $descripcion = $item['descripcion'];
-        $marca = $item['marca'];
-        $precio = $item['precio'];
-        $importe = $item['importe'];
-        // Insertar o actualizar como necesites
-    }
+    $usuario      = intval($_SESSION['idUser']);
+
+    $subtotal     = floatval($_POST['subtotal']);
+    $iva          = floatval($_POST['iva']) ?? 0;
+    $isr          = floatval($_POST['isr']) ?? 0;
+    $ieps         = floatval($_POST['ieps']) ?? 0;
+    $total        = floatval($_POST['total']);
+    $ihospedaje   = floatval($_POST['ihospedaje']) ?? 0;
+
+    $detalle = json_decode($_POST['detalle'], true);
     $impuestos = json_decode($_POST['impuestos'], true);
-    foreach ($impuestos as $impuesto) {
-        $nombre = $impuesto['nombre'];
-        $importe = $impuesto['importe'];
-        // Insertar o actualizar como necesites
-    }
-// Recorrerlos si necesitas guardarlos uno por uno
 
-
-    // Generar una consulta segura con Prepared Statements
+    // 1. Insertar la orden principal
     $query = "INSERT INTO orden_compra 
         (no_orden, no_requisicion, fecha, proveedor, contacto, telefono, correo, forma_pago, metodo_pago, uso_cfdi, area_solicitante, observaciones, recibe, usuario_id, subtotal, iva, isr, ieps, total, ihospedaje) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = mysqli_prepare($conection, $query)) {
         mysqli_stmt_bind_param($stmt, "iisssssssssssidddddd", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario, $subtotal, $iva, $isr, $ieps, $total, $ihospedaje);
-
-        $query = "INSERT INTO detalle_ordencompra (folio, cantidad, codigo, descripcion, unidad_medida, marca, precio, impuesto, importe) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        if ($stmt_detalle = mysqli_prepare($conection, $query)) {
-            mysqli_stmt_bind_param($stmt_detalle, "iisssssd", $folio, $cantidad, $codigo, $descripcion, $unidad_medida, $marca, $precio, $impuesto, $importe);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta de detalles"]);
-            exit;
-        }
-        // Ejecutar la consulta
-        if( mysqli_stmt_execute($stmt_detalle)) {
-            // Aquí puedes manejar la respuesta de la inserción de detalles
-            if (mysqli_affected_rows($conection) > 0) {
-                // Detalles insertados correctamente
-            } else {
-                echo json_encode(["status" => "error", "message" => "No se insertaron detalles en la orden de compra"]);
-            }
-        } else {
-            echo json_encode(["status" => "error", "message" => "Error al ejecutar la inserción de detalles: " . mysqli_error($conection)]);
-        }
-
+        
         if (mysqli_stmt_execute($stmt)) {
-            $sql_estado_requisicion = "UPDATE requisicion_compra SET estatus = 3 WHERE no_requisicion = $noreq";
-            $resultado = mysqli_query($conection, $sql_estado_requisicion);
-            if ($resultado) {
-                // Verifica si se actualizó alguna fila
-                if (mysqli_affected_rows($conection) > 0) {
-                    echo "Requisición actualizada correctamente.";
-                } else {
-                    echo "No se encontró la requisición o ya tenía el estado 3.";
-                }
-            } else {
-                echo "Error al actualizar: " . mysqli_error($conection);
+            $id_orden = mysqli_insert_id($conection);
+
+            // 2. Insertar cada producto en detalle_ordencompra
+            foreach ($detalle as $item) {
+                $id = $item['id'];
+                $codigo = $item['codigo'];
+                $cantidad = $item['cantidad'];
+                $unidad_medida = $item['unidad_medida'];
+                $descripcion = $item['descripcion'];
+                $marca = $item['marca'];
+                $precio = $item['precio'];
+                $importe = $item['importe'];
+                $impuesto = 0; // Puedes calcularlo si lo necesitas
+
+                $sql_det = "INSERT INTO detalle_ordencompra (folio, cantidad, codigo, descripcion, unidad_medida, marca, precio, impuesto, importe)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $stmt_det = mysqli_prepare($conection, $sql_det);
+                mysqli_stmt_bind_param($stmt_det, "iissssddd", $folio, $cantidad, $codigo, $descripcion, $unidad_medida, $marca, $precio, $impuesto, $importe);
+                mysqli_stmt_execute($stmt_det);
+                mysqli_stmt_close($stmt_det);
             }
-            echo json_encode(["status" => "success", "message" => "Orden de compra almacenada", "insert_id" => mysqli_insert_id($conection)]);
+
+            // 3. Insertar impuestos adicionales (si quieres guardarlos)
+            // foreach ($impuestos as $imp) {
+            //     $nombre = $imp['tipo'];
+            //     $porcentaje = floatval($imp['porcentaje']);
+            //     $monto = $subtotal * ($porcentaje / 100);
+
+            //     $sql_imp = "INSERT INTO orden_compra_impuestos (orden_id, tipo, porcentaje, monto) VALUES (?, ?, ?, ?)";
+            //     $stmt_imp = mysqli_prepare($conection, $sql_imp);
+            //     mysqli_stmt_bind_param($stmt_imp, "isdd", $id_orden, $nombre, $porcentaje, $monto);
+            //     mysqli_stmt_execute($stmt_imp);
+            //     mysqli_stmt_close($stmt_imp);
+            // }
+
+            // 4. Actualizar estado de la requisición
+            $sql_estado = "UPDATE requisicion_compra SET estatus = 3 WHERE no_requisicion = $noreq";
+            mysqli_query($conection, $sql_estado);
+
+            echo json_encode([
+                "status" => "success",
+                "message" => "Orden de compra almacenada correctamente",
+                "folio" => $folio,
+                "insert_id" => $id_orden
+            ]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Error en la consulta: " . mysqli_error($conection)]);
+            echo json_encode(["status" => "error", "message" => "Error al guardar la orden: " . mysqli_error($conection)]);
         }
 
         mysqli_stmt_close($stmt);
     } else {
-        if (!$stmt) {
-            echo json_encode(["status" => "error", "message" => "Error en prepare(): " . mysqli_error($conection)]);
-            exit;
-        }
-        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta"]);
+        echo json_encode(["status" => "error", "message" => "Error en prepare(): " . mysqli_error($conection)]);
     }
 
     mysqli_close($conection);
     exit;
 }
+
 
 //****************************//
         //Cancelar orden de compra
