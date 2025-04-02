@@ -596,15 +596,17 @@ $(document).ready(function () {
 
 <script>
   $(document).ready(function () {
-  const tabla = $('#productos').DataTable();
+    const tabla = $('#requisicion').DataTable();
 
-  $('#requisicion tbody').on('click', '.eliminar-producto', function (e) {
-    e.preventDefault();
-    const fila = $(this).closest('tr');
-    tabla.row(fila).remove().draw();
+    $('#requisicion').on('click', '.eliminar-producto', function (e) {
+      e.preventDefault();
+      const fila = $(this).closest('tr');
+
+      if (confirm('¿Deseas eliminar este producto?')) {
+        tabla.row(fila).remove().draw();
+      }
+    });
   });
-});
-
 
 </script>
 </body>
