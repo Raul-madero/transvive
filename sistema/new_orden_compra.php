@@ -402,17 +402,20 @@ function formatMoney(val) {
 }
 
 function renderImpuestosAdicionales() {
-  const contenedor = $('#impuestos_adicionales_footer');
-  contenedor.empty();
+  // Elimina filas anteriores
+  $('.fila-impuesto-adicional').remove();
 
   impuestosAdicionales.forEach((imp, idx) => {
-    contenedor.append(`
-      <tr>
+    const fila = `
+      <tr class="fila-impuesto-adicional">
         <th colspan="6" style="text-align:right">${imp.tipo} (${imp.porcentaje}%)</th>
         <th class="impuesto-monto" data-idx="${idx}" style="text-align:right">-</th>
         <th><button class="btn btn-danger btn-sm quitar-imp" data-idx="${idx}">X</button></th>
       </tr>
-    `);
+    `;
+
+    // Inserta antes de la fila del Total
+    $('#total').closest('tr').before(fila);
   });
 }
 
