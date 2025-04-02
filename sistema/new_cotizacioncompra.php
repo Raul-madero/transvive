@@ -696,18 +696,20 @@ $(document).on('change', '.input-cot', function () {
                 async : true,
                 data: {action:action, id_det:id_det, folio_det:folio_det},
 
-                success: function(response)
-                {
-                    if(response != 'error')
-                    {
-                        console.log(response);
-                        var info = JSON.parse(response);
-                        $('#detalle_cotizacion').html(info.detalle);
-                        recalcularTotales();
-                    }else{
-                        $('#detalle_cotizacion').html('');       
-                    }
-                },
+                success: function(response) {
+    if(response != 'error') {
+        var info = JSON.parse(response);
+        $('#detalle_cotizacion').html(info.detalle);
+
+        // Esperar un momento para asegurar que el DOM se actualizó
+        setTimeout(() => recalcularTotales(), 10);
+        // O usa el evento si prefieres:
+        // $(document).trigger('detalleActualizado');
+    } else {
+        $('#detalle_cotizacion').html('');
+    }
+},
+
                 error: function(error) {
                 }
             });
