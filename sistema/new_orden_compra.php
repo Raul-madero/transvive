@@ -455,7 +455,7 @@ $(document).ready(function () {
       {
         data: null,
         orderable: false,
-        render: row => `<button type="button" class="btn btn-danger btn-sm eliminar-producto" data-id="${row.id}">Eliminar</button>`
+        render: row => `<button type="button" class="btn btn-danger btn-sm eliminar-producto">Eliminar</button>`
       }
     ],
     paging: false,
