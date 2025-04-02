@@ -707,6 +707,7 @@ $(document).on('change', '.input-cot', function () {
                         console.log(response);
                         var info = JSON.parse(response);
                         $('#detalle_cotizacion').html(info.detalle);
+                        recalcularTotales();
                     }else{
                         $('#detalle_cotizacion').html('');       
                     }
