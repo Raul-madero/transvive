@@ -244,6 +244,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <table class="table table-bordered table-hover">
                           <thead>
                             <tr>
+							<th style="width:10%; background-color:#e9ecef; text-align: center;" >Cantidad</th>
 								<th style="width:10%; background-color:#e9ecef; text-align: center;" >Codigo</th>
 								<th style="width:35%; background-color:#e9ecef; text-align: center;">Descripción</th>
 								<th style="width:15%; background-color:#e9ecef; text-align: center;" >Marca</th>
