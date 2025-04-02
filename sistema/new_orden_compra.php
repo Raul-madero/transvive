@@ -455,7 +455,7 @@ $(document).ready(function () {
       {
         data: null,
         orderable: false,
-        render: row => `<button class="btn btn-danger btn-sm eliminar" data-id="${row.id}">Eliminar</button>`
+        render: row => `<button class="btn btn-danger btn-sm eliminar-producto" data-id="${row.id}">Eliminar</button>`
       }
     ],
     paging: false,
@@ -589,6 +589,17 @@ $(document).ready(function () {
 }
 
     });
+  });
+});
+
+</script>
+
+<script>
+  $(document).ready(function() {
+  const tabla = $('#productos').DataTable();
+
+  $('#productos tbody').on('click', '.eliminar-producto', function () {
+    tabla.row($(this).parents('tr')).remove().draw();
   });
 });
 
