@@ -9066,14 +9066,21 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmpreventivo')
                     while ($data = mysqli_fetch_assoc($query_editf)){
                 
                         $detalleTablaDetFor .= '<tr>
-                                            <td>'.$data['cantidad'].'</td>
-                                            <td>'.$data['descripcion'].'</td>
-                                            <td>'.$data['marca'].'</td>
-                                            <td>'.$data['dato_e'].'</td>
-                                            <td>'.$data['dato_om'].'</td>
-                                            <td align="center"><a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>
-                                            </td>
-                                        </tr>';
+                <td><input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.number_format($data['cantidad'], 2).'" data-id="'.$data['id'].'" data-field="cantidad"></td>
+                <td class="text-center">'.$data['codigo'].'</td>
+                <td>
+                    <input type="text" class="form-control form-control-sm input-cot" value="'.$data['descripcion'].'" data-id="'.$data['id'].'" data-field="descripcion">
+                </td>
+                <td class="text-center">'.$data['marca'].'</td>
+                <td class="text-center">'.$data['dato_e'].'</td>
+                <td class="text-center">'.$data['dato_om'].'</td>
+                   <td>
+                        <input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.$data['precio'].'" data-id="'.$data['id'].'" data-field="precio">
+                    </td>
+                <td align="center">
+                    <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>';
                     }
 
                     //$impuesto = round($subtotal, 2);

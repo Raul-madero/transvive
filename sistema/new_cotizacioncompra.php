@@ -2,7 +2,6 @@
 include "../conexion.php";
 session_start();
 $User=$_SESSION['user'];
-// var_dump($User);
 $rol=$_SESSION['rol'];
 $sql = "select * from rol where idrol =$rol ";
 $query = mysqli_query($conection, $sql);
