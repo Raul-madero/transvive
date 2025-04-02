@@ -5932,11 +5932,11 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
 
     // 1. Insertar la orden principal
     $query = "INSERT INTO orden_compra 
-        (no_orden, no_requisicion, fecha, proveedor, contacto, telefono, correo, forma_pago, metodo_pago, uso_cfdi, area_solicitante, observaciones, recibe, usuario_id, subtotal, iva, isr, ieps, total, ihospedaje) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        (no_orden, no_requisicion, fecha, proveedor, contacto, telefono, correo, forma_pago, metodo_pago, uso_cfdi, area_solicitante, observaciones, recibe, usuario_id, subtotal, impuesto, total) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = mysqli_prepare($conection, $query)) {
-        mysqli_stmt_bind_param($stmt, "iisssssssssssidddddd", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario, $subtotal, $iva, $isr, $ieps, $total, $ihospedaje);
+        mysqli_stmt_bind_param($stmt, "iisssssssssssiddd", $folio, $noreq, $fecha, $proveedor, $contacto, $telefono, $correo, $formapago, $metodopago, $usocfdi, $solicita, $notas, $recibe, $usuario, $subtotal, $impuesto, $total);
         
         if (mysqli_stmt_execute($stmt)) {
             $id_orden = mysqli_insert_id($conection);
