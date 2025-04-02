@@ -557,7 +557,6 @@ $(document).ready(function () {
             </div>
         </div>
     </div>
-
     <script>
         $('#actualizaclientes').click(function(e){
             e.preventDefault();
