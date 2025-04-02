@@ -9275,7 +9275,7 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmpreventivo')
 
 // Almacena Requisición de Compra
 if (isset($_POST['action']) && $_POST['action'] == 'AlmacenaEditRequerimiento') {
-    if (empty(trim($_POST['fecha'])) || empty(trim($_POST['tipo']))) {
+    if (empty(trim($_POST['fecha'])) || empty(trim($_POST['tipo'])) || empty(trim($_POST['areasolicita']))) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
         exit;
     }
