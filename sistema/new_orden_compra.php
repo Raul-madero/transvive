@@ -598,7 +598,8 @@ $(document).ready(function () {
   $(document).ready(function() {
   const tabla = $('#productos').DataTable();
 
-  $('#productos tbody').on('click', '.eliminar-producto', function () {
+  $('#productos tbody').on('click', '.eliminar-producto', function (e) {
+    e.preventDefault();
     tabla.row($(this).parents('tr')).remove().draw();
   });
 });
