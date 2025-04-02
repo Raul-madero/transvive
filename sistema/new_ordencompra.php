@@ -12,10 +12,10 @@ if (!isset($_SESSION['idUser'])) {
   	header('Location: ../index.php');
 }
 
-if(!isset($_REQUEST['req'])) {
- 	header('Location: new_cotizacioncompra.php');
-}
-$requisicion = $_REQUEST['req'];
+// if(!isset($_REQUEST['req'])) {
+//  	header('Location: new_cotizacioncompra.php');
+// }
+// $requisicion = $_REQUEST['req'];
 
 $sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados where estatus = 1 ORDER BY nombres";
 $queryoper = mysqli_query($conection, $sqloper);
