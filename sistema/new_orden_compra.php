@@ -503,15 +503,21 @@ $(document).ready(function () {
 
   // Escucha cambios en precio para actualizar importe
   $('#requisicion tbody').on('input', '.precio', function () {
-    const rowIdx = $(this).data('index');
-    const precio = parseFloat($(this).val()) || 0;
-    const rowData = table.row(rowIdx).data();
+  const rowIdx = $(this).data('index');
+  const precio = parseFloat($(this).val()) || 0;
+  const rowData = table.row(rowIdx).data();
 
-    rowData.precio = precio;
-    rowData.importe = rowData.cantidad * precio;
-    table.row(rowIdx).data(rowData).invalidate();
-    table.draw(false);
-  });
+  rowData.precio = precio;
+  rowData.importe = rowData.cantidad * precio;
+  table.row(rowIdx).data(rowData); // No llamar a draw()
+
+  // Solo actualiza la celda del importe directamente
+  const cell = table.cell(rowIdx, 6).node(); // Columna 6 es "importe"
+  $(cell).html($.fn.dataTable.render.number(',', '.', 2, '$').display(rowData.importe));
+
+  recalcularTotales();
+});
+
 
   // Agregar impuestos dinámicos
   $('#btnAgregarImpuesto').on('click', function (e) {
