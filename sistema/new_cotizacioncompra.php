@@ -540,12 +540,8 @@ $(document).ready(function () {
                     <div class="form-group row">
                         <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">OM:</label>
                         <div class="col-sm-9">
-                            <select id="inputDatoom" name="inputDatoom" class="tokenizationSelect2 form-control select2bs4" >
-                                <option value="">- Seleccione -</option>
-                                <?php foreach ($filasmant as $opmt): //llenar las opciones del primer select ?>
-                                <option value="<?= $opmt['no_orden'] ?>"><?= $opmt['no_orden'] ?></option>  
-                                <?php endforeach; ?>
-                            </select>
+                            <input type="text" name="inputDatoom" id="inputDatoom" class="form-control" value="">
+                           
                         </div>
                     </div>
 
