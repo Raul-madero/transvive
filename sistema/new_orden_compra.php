@@ -477,7 +477,7 @@ $(document).ready(function () {
       },
       {
         data: "precio",
-        render: (data, type, row, meta) => `<input type="number" step="0.01" class="form-control form-control-sm precio" data-index="${meta.row}" value="${data}">`
+        render: (data, type, row, meta) => `<input type="number" step="0.01" class="form-control form-control-sm precio">`
       },
       {
         data: "importe",
@@ -508,14 +508,15 @@ $(document).ready(function () {
   const row = table.row(tr);
   const rowData = row.data();
 
-  const precio = parseFloat($input.val()) || 0;
-  rowData.precio = precio;
-  rowData.importe = rowData.cantidad * precio;
+  const nuevoPrecio = parseFloat($input.val()) || 0;
+  rowData.precio = nuevoPrecio;
+  rowData.importe = rowData.cantidad * nuevoPrecio;
 
-  // Actualiza la celda de importe sin redibujar toda la tabla
-  row.invalidate(); // opcional, para asegurar que se cachea el nuevo data
-  const cell = row.cell(tr.find('td:eq(6)')).node(); // columna 6 = importe
-  $(cell).html($.fn.dataTable.render.number(',', '.', 2, '$').display(rowData.importe));
+  // Actualiza el campo de importe directamente en el DOM
+  $(tr).find('td').eq(6).html($.fn.dataTable.render.number(',', '.', 2, '$').display(rowData.importe));
+
+  // Actualiza los datos de la fila sin redibujar la tabla
+  row.data(rowData); // no uses invalidate() ni draw()
 
   recalcularTotales();
 });
