@@ -314,9 +314,6 @@ $('#btn_salir').click(function(e){
         showCancelButton: true,
         confirmButtonText: "Regresar",
         cancelButtonText: "Salir",
-       
-
-       
     })
      .then(resultado => {
         if (resultado.value) {

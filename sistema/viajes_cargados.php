@@ -215,8 +215,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <a href="index.php"><button type="submit" class="btn btn-secondary" id="#">Cerrar</button></a>
               </div>
 
-        
-
               <div class="col-md-12">
               <div class="card">      
               <!-- /.card-header -->
