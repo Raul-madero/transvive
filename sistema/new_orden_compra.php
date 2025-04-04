@@ -48,7 +48,7 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 $sqlrecb = "
     SELECT nombre 
     FROM usuario 
-    WHERE rol = 10 AND estatus = 1 
+    WHERE estatus = 1 
     ORDER BY nombre
 ";
 
@@ -129,17 +129,17 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">No. Requisición</label>
                     <div class="col-sm-2">
-                      <input type="text" class="form-control" name="inputReq" value="<?php echo 'REQ-' . $requisicion; ?>" readonly>
+                      <input type="text" class="form-control" name="inputReq" id="inputReq" value="<?php echo 'REQ-' . $requisicion; ?>" readonly>
                     </div>
 
                     <label class="col-sm-2 col-form-label text-right">Fecha</label>
                     <div class="col-sm-2">
-                      <input type="date" class="form-control" name="inputFecha" value="<?php echo $fcha; ?>">
+                      <input type="date" class="form-control" name="inputFecha" id="inputFecha" value="<?php echo $fcha; ?>">
                     </div>
 
                     <label class="col-sm-2 col-form-label">No. Orden</label>
                     <div class="col-sm-2">
-                      <input class="form-control" name="inputFolio" value="<?php echo 'OC-' . $nuevofolio; ?>" readonly style="text-align: right; font-weight: bold; color: #F05B0E">
+                      <input class="form-control" name="inputFolio" id="inputFolio" value="<?php echo 'OC-' . $nuevofolio; ?>" readonly style="text-align: right; font-weight: bold; color: #F05B0E">
                     </div>
                   </div>
 
@@ -147,7 +147,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Proveedor</label>
                     <div class="col-sm-4">
-                      <select class="form-control select2bs4" name="inputProveedor">
+                      <select class="form-control select2bs4" name="inputProveedor" id="inputProveedor" required>
                         <option value="">- Seleccione -</option>
                         <?php foreach ($filasprov as $oppv): ?>
                           <option value="<?= $oppv['id'] ?>"><?= $oppv['nombre'] ?></option>
@@ -157,7 +157,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 
                     <label class="col-sm-2 col-form-label">Contacto</label>
                     <div class="col-sm-4">
-                      <input type="text" class="form-control" name="inputContacto">
+                      <input type="text" class="form-control" name="inputContacto" id="inputContacto" readonly>
                     </div>
                   </div>
 
@@ -165,12 +165,12 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Teléfono</label>
                     <div class="col-sm-4">
-                      <input type="text" class="form-control" name="inputTelefono">
+                      <input type="text" class="form-control" name="inputTelefono" id="inputTelefono" readonly>
                     </div>
 
                     <label class="col-sm-2 col-form-label">Correo</label>
                     <div class="col-sm-4">
-                      <input type="text" class="form-control" name="inputCorreo">
+                      <input type="text" class="form-control" name="inputCorreo" id="inputCorreo" readonly>
                     </div>
                   </div>
 
@@ -178,7 +178,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Forma de Pago</label>
                     <div class="col-sm-4">
-                      <select class="form-control custom-select" name="inputFormapago" required>
+                      <select class="form-control custom-select" name="inputFormapago" id="inputFormapago" required>
 					  		<option value="">--  Seleccione --</option>
 							<option value="01 Efectivo">01 Efectivo</option>
 							<option value="02 Cheque nominativo">02 Cheque nominativo</option>
@@ -195,7 +195,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 
                     <label class="col-sm-2 col-form-label">Método de Pago</label>
                     <div class="col-sm-4">
-                      <select class="form-control custom-select" name="inputMetodopago" required>
+                      <select class="form-control custom-select" name="inputMetodopago" id="inputMetodopago" required>
 					  	<option value="">--  Seleccione --</option>
 						<option value="PUE Pago de Una Sola Exhibicion">PUE - Pago de Una Sola Exhibición</option>
 						<option value="PPD Pago en Parcialidades o Diferidos">PPD - Pago en Parcialidades o Diferidos</option>
@@ -207,7 +207,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Uso de CFDI</label>
                     <div class="col-sm-4">
-                      <select class="form-control custom-select" name="inputUsocfdi" required>
+                      <select class="form-control custom-select" name="inputUsocfdi" id="inputUsocfdi" required>
 					  	<option value="">-- Seleccione --</option>
 						<option value="G01 - Adquisición de mercancias">G01 - Adquisición de mercancías</option>
 						<option value="G02 - Devoluciones, descuentos o bonificaciones">G02 - Devoluciones, descuentos o bonificaciones</option>
@@ -228,7 +228,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 
                     <label class="col-sm-2 col-form-label">Área Solicitante</label>
                     <div class="col-sm-4">
-                      <select class="form-control custom-select" name="inputSolicita" required>
+                      <select class="form-control custom-select" name="inputSolicita" id="inputSolicita" required>
 					  		<option value="">--  Seleccione --</option>
 							<option value="Aseguramiento de Calidad">Aseguramiento de Calidad</option>
 							<option value="Administracion">Administracion</option>
@@ -296,7 +296,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Observaciones</label>
                     <div class="col-sm-10">
-                      <textarea class="form-control" name="inputNotas" rows="1"></textarea>
+                      <textarea class="form-control" name="inputNotas" id="inputNotas" rows="1"></textarea>
                     </div>
                   </div>
 
@@ -304,7 +304,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Recibe</label>
                     <div class="col-sm-10">
-                      <select class="form-control" name="inputRecibe">
+                      <select class="form-control" name="inputRecibe" id="inputRecibe" required>
                         <?php foreach ($filasrecb as $oprc): ?>
                           <option value="<?= $oprc['nombre'] ?>"><?= $oprc['nombre'] ?></option>
                         <?php endforeach; ?>
@@ -405,12 +405,27 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 
     // Llenar datos del proveedor
     $('#inputProveedor').on('change', function () {
-      const proveedor = proveedoresData.find(p => p.id == this.value);
-      const campos = ['Contacto', 'Telefono', 'Correo', 'Formapago', 'Metodopago', 'Usocfdi'];
-      campos.forEach(campo => {
-        $(`#input${campo}`).val(proveedor ? proveedor[campo.toLowerCase()] || '' : '');
-      });
-    });
+		const proveedorId = this.value;
+		const proveedor = proveedoresData.find(p => p.id == proveedorId); // Busca el proveedor por ID
+
+		console.log(proveedor); // Asegúrate de que `proveedor` no sea `undefined`
+
+		// Asegúrate de que proveedor exista antes de intentar acceder a sus propiedades
+		if (proveedor) {
+			const campos = ['Contacto', 'Telefono', 'Correo']; // Asegúrate de incluir todos los campos
+			campos.forEach(campo => {
+			// Asigna los valores correspondientes a los campos
+			$(`#input${campo}`).val(proveedor[campo.toLowerCase()]); // Usa el valor del proveedor si existe, o vacío si no
+			});
+		} else {
+			// Si no se encuentra el proveedor, limpia los campos
+			const campos = ['Contacto', 'Telefono', 'Correo'];
+			campos.forEach(campo => {
+			$(`#input${campo}`).val('');
+			});
+		}
+	});
+
 
     // Inicializar tabla requisición
     const table = $('#requisicion').DataTable({
@@ -586,7 +601,6 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
               text: "ORDEN DE COMPRA ALMACENADA CORRECTAMENTE",
               icon: 'success'
             }).then(() => {
-              generarimpformulaPDF(info.folio);
               window.location.href = 'ordenes_compra23.php';
             });
           } else {
