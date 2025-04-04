@@ -49,3 +49,4 @@ $RECYCLE.BIN/
 ./idx/*
 .idx
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode
+certs/
