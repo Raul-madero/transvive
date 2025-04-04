@@ -433,8 +433,10 @@ $(document).ready(function () {
         {
           orderable: false,
           render: function (data, type, full) {
-            let actions = `
-              <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
+            let actions = ""
+            if (full.estatus == 1) {
+            actions = 
+              `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
                 <i class="far fa-edit"></i>
               </a> |
               <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
@@ -447,13 +449,24 @@ $(document).ready(function () {
                 <i class="fa fa-trash"></i>
               </a>
             `;
-
-            // Solo si estatus == 2 se muestra el botón de nueva orden
-            if (full.estatus == 2) {
-              actions += ` |
+            }else if (full.estatus == 2) {
+              actions = `
+                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                  <i class="fa fa-print" style="font-size:1.3em;"></i>
+                </a> |
                 <a href="new_orden_compra.php?req=${full.Folio}" class="text-success">
                   <i class="fa fa-clipboard"></i>
-                </a>`;
+                </a> |
+              <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)">
+                <i class="fa fa-ban"></i>
+              </a> 
+              `;
+            } else {
+              actions = `
+                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                  <i class="fa fa-print" style="font-size:1.3em;"></i>
+                </a>
+              `;
             }
 
             return actions;

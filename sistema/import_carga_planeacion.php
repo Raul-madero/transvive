@@ -110,5 +110,4 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
 } else {
     echo "<script> alert('No se cargó ningún archivo.'); </script>";
 }
-
 ?>

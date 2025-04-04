@@ -52,20 +52,9 @@ $where = " WHERE p.tipo_viaje <> 'Especial' ";
     ? $where .= " AND p.id = '$gender' " 
     : "";
 
-// Ordenamiento
-// if (!empty($requestData['order'])) {
-//     $orderColumn = $columns[$requestData['order'][0]['column']]; 
-//     $orderDir = $requestData['order'][0]['dir']; 
-//     $sql .= " ORDER BY $orderColumn $orderDir"; 
-// }
-// Datos con paginación
-// $sql = "SELECT $columns FROM $table $where LIMIT $start, $length"; 
-// $result = $conection->query($sql);
-
 if( !empty($requestData['search']['value']) ) {
     $where .= " AND ( p.id LIKE '%".$requestData['search']['value']."%' OR p.cliente LIKE '%".$requestData['search']['value']."%' OR p.operador LIKE '%".$requestData['search']['value']."%' OR p.semana LIKE '%".$requestData['search']['value']."%' OR sp.nombres LIKE '%".$requestData['search']['value']."%' OR sp.apellido_paterno LIKE '%" . $requestData['search']['value'] . "%' OR sp.apellido_materno LIKE '%".$requestData['search']['value']."%' OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
 };
-
 
 $orderColumn = $columnsOrder[$requestData['order'][1]['column']] ?? 'id';
 $orderDir = $requestData['order'][0]['dir'] === 'desc' ? 'DESC' : 'ASC';
