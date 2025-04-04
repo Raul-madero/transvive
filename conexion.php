@@ -20,7 +20,6 @@
 // $user2 = "avnadmin";
 // $database2 = "transvive";
 // $port2 = 12088;
-
 $host = "localhost:3306";
 // $port = "$_ENV['BD_PORT']";
 $user = "rmadero";
