@@ -210,7 +210,7 @@ session_start();
       <div class="tab-pane" id="control-sidebar-home-tab"></div>
     </div>
   </aside>
-
+  
   <div class="control-sidebar-bg"></div>
 </div>
 
@@ -235,9 +235,13 @@ session_start();
 <!-- Bootstrap Datepicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
 
-   <?php
+<!-- Sweet alert 2 (para alertas) -->
+<script src="js/sweetalert2.all.min.js"></script>   
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+
+<?php
       if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3) {
-   ?>
+        ?>
  
     <script type="text/javascript">
 
@@ -692,8 +696,6 @@ $(document).ready(function () {
 
 </script>
     
-<script src="js/sweetalert2.all.min.js"></script>   
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
 
 <script>
 function actualizarLaPagina(){
