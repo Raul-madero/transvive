@@ -185,7 +185,6 @@ session_start();
                   <th class="text-center">Tipo</th>
                   <th class="text-center">Área Solicitante</th>
                   <th class="text-center">Monto</th>
-                  <th class="text-center">Material</th>
                   <th class="text-center">Observaciones</th>
                   <th class="text-center">Estatus</th>
                   <th class="text-center">Acción</th>
