@@ -5323,20 +5323,44 @@ if($_POST['action'] == 'ActualizaMovcotizacion'){
 if ($_POST['action'] == 'AlmacenaRequerimiento') {
     require '../PHPMailer/PHPMailerAutoload.php'; // PHPMailer
 
+    // Verificación de campos obligatorios
     if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita'])) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
         exit;
     }
 
     // Validación y saneamiento de entradas
-    $folio        = intval($_POST['folio']);
-    $fecha        = trim($_POST['fecha']);
-    $fecha_req    = trim($_POST['fecha_req']);
-    $tipo         = trim($_POST['tipo']);
-    $areasolicita = trim($_POST['areasolicita']);
-    $monto_aut    = floatval($_POST['montoaut']);
-    $notas        = trim($_POST['notas']);
-    $usuario      = intval($_SESSION['idUser']);
+    $folio        = isset($_POST['folio']) ? intval($_POST['folio']) : 0;
+    $fecha        = isset($_POST['fecha']) ? trim($_POST['fecha']) : '';
+    $fecha_req    = isset($_POST['fecha_req']) ? trim($_POST['fecha_req']) : '';
+    $tipo         = isset($_POST['tipo']) ? trim($_POST['tipo']) : '';
+    $areasolicita = isset($_POST['areasolicita']) ? trim($_POST['areasolicita']) : '';
+    $monto_aut    = isset($_POST['montoaut']) ? floatval($_POST['montoaut']) : 0.0;
+    $notas        = isset($_POST['notas']) ? trim($_POST['notas']) : '';
+    $usuario      = isset($_SESSION['idUser']) ? intval($_SESSION['idUser']) : 0;
+
+    // Validación de datos requeridos
+    if ($folio === 0 || $fecha === '' || $tipo === '' || $areasolicita === '') {
+        echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
+        exit;
+    }
+
+    // Comprobación si el folio ya existe en la base de datos
+    $sql = "SELECT COUNT(*) as numreg FROM requisicion_compra WHERE no_requisicion = $folio";
+    $query = mysqli_query($conection, $sql);
+
+    if (!$query) {
+        // Manejo de error si la consulta falla
+        echo json_encode(["status" => "error", "message" => "Error en la consulta de base de datos"]);
+        exit;
+    }
+
+    $data = mysqli_fetch_assoc($query);
+
+    // Si el folio ya existe, incrementar
+    if ($data['numreg'] > 0) {
+        $folio++; // Incrementa el folio en 1 si ya existe
+    }
 
     // Consulta para insertar en requisicion_compra
     $query = "INSERT INTO requisicion_compra 
@@ -5351,7 +5375,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                 // Insertar los detalles de la requisición desde la tabla temporal
                 $query_detalle = "INSERT INTO detalle_requisicioncompra 
                     (folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token) 
-                    SELECT folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token 
+                    SELECT $folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token 
                     FROM detalle_temp_cotizacioncompra WHERE folio = ?";
 
                 if ($stmt_detalle = mysqli_prepare($conection, $query_detalle)) {

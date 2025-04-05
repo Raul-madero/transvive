@@ -349,7 +349,8 @@ $(document).ready(function () {
         'T': 'Camioneta',
         'C': 'Camión',
         'A': 'Automóvil',
-        'S': 'Sprinter'
+        'S': 'Sprinter',
+        'J': 'JAC'
     };
 
     $('#inputNounidad').on('change', function () {
