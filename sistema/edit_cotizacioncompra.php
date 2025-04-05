@@ -509,7 +509,7 @@ $('#btn_salir').click(function(e){
                         <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">No. de Folio:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="inputfoliodet" name="inputfoliodet" value="<?php echo $nuevofolio; ?>" readonly>
+                                <input type="text" class="form-control" id="inputfoliodet" name="inputfoliodet" value="<?php echo $noreq; ?>" readonly>
                             </div>
                         </div> 
 
@@ -626,69 +626,61 @@ $('#btn_salir').click(function(e){
 
 
 <script>
-   $('#actualizaclientes').click(function(e){
-        e.preventDefault();
+    $('#actualizaclientes').click(function(e){
+            e.preventDefault();
+            let req = $('#inputfoliodet').val();
+            console.log(req);
+            var folio        = parseInt(req.replace('REQ-', ''), 10);
+            console.log(folio);
+            var codigo       = $('#inputCodigoProd').val();
+            var descripcion  = $('#inputDescripcion').val();
+            var marca        = $('#inputMarca').val();
+            var cantidad     = $('#inputCantidad').val();
+            var precio       = $('#inputPrecio').val();
+            var impuesto     = $('#inputImpuesto').val();
+            var impuestoisr  = $('#inputIsr').val();
+            var impuestoieps = $('#inputIeps').val();
+            var importe      = $('#inputImporte').val();
+            var datoe        = $('#inputDatoe').val();
+            var datoom       = $('#inputDatoom').val();        
 
-        var folio        = $('#inputfoliodet').val();
-        var codigo       = $('#inputCodigo').val();
-        var descripcion  = $('#inputDescripcion').val();
-        var marca        = $('#inputMarca').val();
-        var cantidad     = $('#inputCantidad').val();
-        var precio       = $('#inputPrecio').val();
-        var impuesto     = $('#inputImpuesto').val();
-        var impuestoisr  = $('#inputImpuestoisr').val();
-        var impuestoieps = $('#inputImpuestoieps').val();
-        var importe      = $('#inputImporte').val();
-        var datoe        = $('#inputDatoe').val();
-        var datoom       = $('#inputDatoom').val();        
+            var action       = 'AddDetalleEditcotizacion';
 
-       var action        = 'AddDetalleEditcotizacion';
+            $.ajax({
+                url: 'includes/ajax.php',
+                type: "POST",
+                async : true,
+                data: {action:action, folio:folio, codigo:codigo, descripcion:descripcion, marca:marca, cantidad:cantidad, precio:precio, impuesto:impuesto, impuestoisr:impuestoisr, impuestoieps:impuestoieps, importe:importe, datoe:datoe, datoom:datoom},
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, folio:folio, codigo:codigo, descripcion:descripcion, marca:marca, cantidad:cantidad, precio:precio, impuesto:impuesto, impuestoisr:impuestoisr, impuestoieps:impuestoieps, importe:importe, datoe:datoe, datoom:datoom},
-
-                    success: function(response)
+                success: function(response)
+                {
+                    if(response != 'error')
                     {
-                      if(response != 'error')
-                        {
-                             //console.log(response);
-                            var info = JSON.parse(response);
-                            //$('#modalFactura').modal('hide');
-                            $('#detalle_cotizacion').html(info.detalle);
-                            $('#detalle_totcotizacion').html(info.totales);
-                            
-                           
-                            //alert('Cliente Agregado');
+                        var info = JSON.parse(response);
+                        console.log(info);
+                        $('#detalle_cotizacion').html(info.detalle);
+                        $('#detalle_totcotizacion').html(info.totales);
 
-                            $('#modalEditcliente').modal('hide');
-                            $('#inputCodigo').val('');
-                            $('#inputDescripcion').val(null).trigger('change');
-                            //$('#inputDescripcion').val('');
-                            $('#inputMarca').val('');
-                            $('#inputCantidad').val('0');
-                            $('#inputPrecio').val('0.00');
-                            $('#inputImpuesto').val('0.00')
-                            $('#inputImporte').val('0.00');
-                            //$('#inputDatoe').val('');
-                           // $('#inputDatoom').val('');
-                            //location.reload(true);
-                            
-    
-                        }else{
-                           alert('faltan datos');
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
+                        $('#modalEditcliente').modal('hide');
+                        $('#inputCodigoProd').val('');
+                        $('#inputDescripcion').val(null).trigger('change');
+                        $('#inputMarca').val('');
+                        $('#inputCantidad').val('0');
+                        $('#inputPrecio').val('0.00');
+                        $('#inputImpuesto').val('0.00')
+                        $('#inputImporte').val('0.00');
+                        $(document).trigger('detalleActualizado');
 
-               });
-
-    });
-
+                    }else{
+                        console.log('no data');
+                        alert('faltan datos');
+                    }
+                    //viewProcesar();
+                },
+                error: function(error) {
+                }
+            });
+        });
     </script> 
 
 	<script>
