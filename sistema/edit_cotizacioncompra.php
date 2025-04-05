@@ -238,7 +238,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <label for="inputEmail3" class="col-sm-10 col-form-label" style="text-align:center; background-color: gainsboro;">Movimientos</label>
                     <div class="col-sm-2">
                       <a href="#"  class="btn btn-success" data-toggle="modal" data-target="#modalEditcliente" style="color:white;" ><i class="fa fa-plus"></i></a>
-                      <a href="#"  class="btn btn-primary" data-toggle="modal" data-target="#modalAddprod" style="color:white;" ><i class="fa fa-plus"></i><i class="fa fa-wrench"></i></a>  
+                      <!-- <a href="#"  class="btn btn-primary" data-toggle="modal" data-target="#modalAddprod" style="color:white;" ><i class="fa fa-plus"></i><i class="fa fa-wrench"></i></a>   -->
                     </div>
                   </div>
 
@@ -322,17 +322,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php include('includes/footer.php') ?>
 </div>
 <!-- ./wrapper -->
-
 <!-- REQUIRED SCRIPTS -->
 
 <!-- jQuery -->
 <script src="../plugins/jquery/jquery.min.js"></script>
+
 <!-- Bootstrap 4 -->
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 <!-- AdminLTE App -->
 <script src="../dist/js/adminlte.min.js"></script>
-<!-- Select2 -->
+
+<!-- Select2 JS -->
 <script src="../plugins/select2/js/select2.full.min.js"></script>
+
+<!-- Bootstrap 4 CSS (opcional, si lo necesitas por separado) -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 Bootstrap 4 Theme -->
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap4-theme@1.0.0/dist/select2-bootstrap4.min.css" rel="stylesheet" />
+
+<!-- Inicialización de Select2 con Bootstrap 4 -->
+<script>
+  $(document).ready(function() {
+    console.log("Verificando si el select existe:", $('.select2bs4').length);
+    // Asegúrate de que Select2 se inicialice correctamente
+    console.log("Iniciando Select2...");  // Esto es para verificar si el script se ejecuta
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    });
+    console.log("Select2 inicializado correctamente.");
+  });
+</script>
+
 <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
  
@@ -360,7 +385,7 @@ $('#btn_salir').click(function(e){
         if (resultado.value) {
             // Hicieron click en "Sí"
              //*location.href = 'lista_ncplantasa.php';
-             console.log("Alerta cerrada");
+            //  console.log("Alerta cerrada");
         } else {
             // Dijeron que no
             //*location.reload();
@@ -488,27 +513,30 @@ $('#btn_salir').click(function(e){
                             </div>
                         </div> 
 
-                        <div class="form-group row" >
-                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Codigo:</label>
-                            <div class="col-sm-9">
-                                <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
-                                    <option value="">- Seleccione -</option>
-                                    <?php foreach ($filasprod as $prod): //llenar las opciones del primer select ?>
-                                    <option value="<?= $prod['codigo'] ?>"><?= $prod['codigo'] ?></option>  
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
+                        <div class="form-group row">
+                          <label for="inputCodigoProd" class="col-sm-3 col-form-label" style="text-align: left;">Código:</label>
+                          <div class="col-sm-9">
+                            <select class="form-control" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
+                              <option value="">- Seleccione -</option>
+                              <?php foreach ($filasprod as $prod): ?>
+                                <option value="<?= $prod['codigo'] ?>"><?= $prod['codigo'] ?></option>  
+                              <?php endforeach; ?>
+                            </select>
+                          </div>
                         </div>
+
+
 
                         <div class="form-group row">
                             <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Descripción:</label>
                             <div class="col-sm-9">
-                                <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
+                              <input type="text" class="form-control" id="inputDescripcion" name="inputDescripcion" readonly>
+                                <!-- <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
                                     <option value="">- Seleccione -</option>
                                     <?php foreach ($filasprodnm as $opnm): //llenar las opciones del primer select ?>
                                     <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['codigo_interno'] . ' - ' . $opnm['descripcion'] ?></option>  
                                     <?php endforeach; ?>
-                                </select>
+                                </select> -->
                             </div>
                         </div>  
 
@@ -628,7 +656,6 @@ $('#btn_salir').click(function(e){
                         {
                              //console.log(response);
                             var info = JSON.parse(response);
-                            console.log(info);
                             //$('#modalFactura').modal('hide');
                             $('#detalle_cotizacion').html(info.detalle);
                             $('#detalle_totcotizacion').html(info.totales);
@@ -651,7 +678,6 @@ $('#btn_salir').click(function(e){
                             
     
                         }else{
-                           console.log('no data');
                            alert('faltan datos');
                         }
                         //viewProcesar();
@@ -722,7 +748,7 @@ $(document).on('detalleActualizado', function () {
                     data: {action:action,op:op},
                     success: function(response)
                     {
-                    console.log(response);
+                    // console.log(response);
                         if(response == 0){
                             $('#inputCodigoProd').val('');
                             $('#inputMarca').val('');
@@ -763,7 +789,7 @@ $(document).on('detalleActualizado', function () {
         {
                       if(response != 'error')
                         {
-                            console.log(response);
+                            // console.log(response);
                             var info = JSON.parse(response);
                             $('#detalle_cotizacion').html(info.detalle);
 
@@ -780,138 +806,136 @@ $(document).on('detalleActualizado', function () {
 
     </script> 
 <script>
-  $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
+  // $(document).ready(function () {
 
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
+  //   //Initialize Select2 Elements
+  //   $('.select2bs4').select2({
+  //     theme: 'bootstrap4'
+  //   })
+  // })
+  //   //Datemask dd/mm/yyyy
+  //   $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+  //   //Datemask2 mm/dd/yyyy
+  //   $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+  //   //Money Euro
+  //   $('[data-mask]').inputmask()
 
-    //Datemask dd/mm/yyyy
-    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-    //Datemask2 mm/dd/yyyy
-    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-    //Money Euro
-    $('[data-mask]').inputmask()
+  //   //Date picker
+  //   $('#reservationdate').datetimepicker({
+  //       format: 'L'
+  //   });
 
-    //Date picker
-    $('#reservationdate').datetimepicker({
-        format: 'L'
-    });
+  //   //Date and time picker
+  //   $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
 
-    //Date and time picker
-    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+  //   //Date range picker
+  //   $('#reservation').daterangepicker()
+  //   //Date range picker with time picker
+  //   $('#reservationtime').daterangepicker({
+  //     timePicker: true,
+  //     timePickerIncrement: 30,
+  //     locale: {
+  //       format: 'MM/DD/YYYY hh:mm A'
+  //     }
+  //   })
+  //   //Date range as a button
+  //   $('#daterange-btn').daterangepicker(
+  //     {
+  //       ranges   : {
+  //         'Today'       : [moment(), moment()],
+  //         'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+  //         'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+  //         'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+  //         'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+  //         'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+  //       },
+  //       startDate: moment().subtract(29, 'days'),
+  //       endDate  : moment()
+  //     },
+  //     function (start, end) {
+  //       $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+  //     }
+  //   )
 
-    //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-    //Date range as a button
-    $('#daterange-btn').daterangepicker(
-      {
-        ranges   : {
-          'Today'       : [moment(), moment()],
-          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        startDate: moment().subtract(29, 'days'),
-        endDate  : moment()
-      },
-      function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-      }
-    )
+  //   //Timepicker
+  //   $('#timepicker').datetimepicker({
+  //     format: 'LT'
+  //   })
 
-    //Timepicker
-    $('#timepicker').datetimepicker({
-      format: 'LT'
-    })
+  //   //Bootstrap Duallistbox
+  //   $('.duallistbox').bootstrapDualListbox()
 
-    //Bootstrap Duallistbox
-    $('.duallistbox').bootstrapDualListbox()
+  //   //Colorpicker
+  //   $('.my-colorpicker1').colorpicker()
+  //   //color picker with addon
+  //   $('.my-colorpicker2').colorpicker()
 
-    //Colorpicker
-    $('.my-colorpicker1').colorpicker()
-    //color picker with addon
-    $('.my-colorpicker2').colorpicker()
+  //   $('.my-colorpicker2').on('colorpickerChange', function(event) {
+  //     $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+  //   })
 
-    $('.my-colorpicker2').on('colorpickerChange', function(event) {
-      $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-    })
+  //   $("input[data-bootstrap-switch]").each(function(){
+  //     $(this).bootstrapSwitch('state', $(this).prop('checked'));
+  //   })
 
-    $("input[data-bootstrap-switch]").each(function(){
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    })
+  // })
+  // // BS-Stepper Init
+  // document.addEventListener('DOMContentLoaded', function () {
+  //   window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+  // })
 
-  })
-  // BS-Stepper Init
-  document.addEventListener('DOMContentLoaded', function () {
-    window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-  })
+  // // DropzoneJS Demo Code Start
+  // Dropzone.autoDiscover = false
 
-  // DropzoneJS Demo Code Start
-  Dropzone.autoDiscover = false
+  // // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+  // var previewNode = document.querySelector("#template")
+  // previewNode.id = ""
+  // var previewTemplate = previewNode.parentNode.innerHTML
+  // previewNode.parentNode.removeChild(previewNode)
 
-  // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-  var previewNode = document.querySelector("#template")
-  previewNode.id = ""
-  var previewTemplate = previewNode.parentNode.innerHTML
-  previewNode.parentNode.removeChild(previewNode)
+  // var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+  //   url: "/target-url", // Set the url
+  //   thumbnailWidth: 80,
+  //   thumbnailHeight: 80,
+  //   parallelUploads: 20,
+  //   previewTemplate: previewTemplate,
+  //   autoQueue: false, // Make sure the files aren't queued until manually added
+  //   previewsContainer: "#previews", // Define the container to display the previews
+  //   clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+  // })
 
-  var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/target-url", // Set the url
-    thumbnailWidth: 80,
-    thumbnailHeight: 80,
-    parallelUploads: 20,
-    previewTemplate: previewTemplate,
-    autoQueue: false, // Make sure the files aren't queued until manually added
-    previewsContainer: "#previews", // Define the container to display the previews
-    clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-  })
+  // myDropzone.on("addedfile", function(file) {
+  //   // Hookup the start button
+  //   file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) }
+  // })
 
-  myDropzone.on("addedfile", function(file) {
-    // Hookup the start button
-    file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) }
-  })
+  // // Update the total progress bar
+  // myDropzone.on("totaluploadprogress", function(progress) {
+  //   document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+  // })
 
-  // Update the total progress bar
-  myDropzone.on("totaluploadprogress", function(progress) {
-    document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-  })
+  // myDropzone.on("sending", function(file) {
+  //   // Show the total progress bar when upload starts
+  //   document.querySelector("#total-progress").style.opacity = "1"
+  //   // And disable the start button
+  //   file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+  // })
 
-  myDropzone.on("sending", function(file) {
-    // Show the total progress bar when upload starts
-    document.querySelector("#total-progress").style.opacity = "1"
-    // And disable the start button
-    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-  })
+  // // Hide the total progress bar when nothing's uploading anymore
+  // myDropzone.on("queuecomplete", function(progress) {
+  //   document.querySelector("#total-progress").style.opacity = "0"
+  // })
 
-  // Hide the total progress bar when nothing's uploading anymore
-  myDropzone.on("queuecomplete", function(progress) {
-    document.querySelector("#total-progress").style.opacity = "0"
-  })
-
-  // Setup the buttons for all transfers
-  // The "add files" button doesn't need to be setup because the config
-  // `clickable` has already been specified.
-  document.querySelector("#actions .start").onclick = function() {
-    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-  }
-  document.querySelector("#actions .cancel").onclick = function() {
-    myDropzone.removeAllFiles(true)
-  }
-  // DropzoneJS Demo Code End
+  // // Setup the buttons for all transfers
+  // // The "add files" button doesn't need to be setup because the config
+  // // `clickable` has already been specified.
+  // document.querySelector("#actions .start").onclick = function() {
+  //   myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+  // }
+  // document.querySelector("#actions .cancel").onclick = function() {
+  //   myDropzone.removeAllFiles(true)
+  // }
+  // // DropzoneJS Demo Code End
 </script> 
 
 <script>
@@ -993,45 +1017,45 @@ $(document).on('detalleActualizado', function () {
 </script>
 
 <script>
-    $(document).ready(function () {
-        $("#inputDescripcion").on('change', function () {            
-            var op = $(this).val();
-             var action = 'searchRefaccionesmovname';
+    // // $(document).ready(function () {
+    //     $("#inputDescripcion").on('change', function () {            
+    //         var op = $(this).val();
+    //          var action = 'searchRefaccionesmovname';
 
-        $.ajax({
-            url: 'includes/ajax.php',
-            type: "POST",
-            async : true,
-            data: {action:action,op:op},
-            success: function(response)
-            {
-                // console.log(response);
-                if(response == 0){
-                    //$('#idcliente').val('');
-                    $('#inputCodigo').val('');
-                    $('#inputMarca').val('');
-                    $('#inputPrecio').val('0.00');
+    //     $.ajax({
+    //         url: 'includes/ajax.php',
+    //         type: "POST",
+    //         async : true,
+    //         data: {action:action,op:op},
+    //         success: function(response)
+    //         {
+    //             // console.log(response);
+    //             if(response == 0){
+    //                 //$('#idcliente').val('');
+    //                 $('#inputCodigo').val('');
+    //                 $('#inputMarca').val('');
+    //                 $('#inputPrecio').val('0.00');
                   
-                }else{
-                    var data = $.parseJSON(response);
-                    //$('#idcliente').val(data.idusuario);
-                    //$('#frazonsoc').val(data.razonsocial).change();
-                    $('#inputCodigo').val(data.codigo); // Notify only Select2 of changes
-                    $('#inputMarca').val(data.marca);
-                    $('#inputPrecio').val(data.costo);
-                    $('#inputImpuesto').val(data.impuesto);
-                    $('#inputImpuestoisr').val(data.impuesto_isr);
-                    $('#inputImpuestoieps').val(data.impuesto_ieps);
+    //             }else{
+    //                 var data = $.parseJSON(response);
+    //                 //$('#idcliente').val(data.idusuario);
+    //                 //$('#frazonsoc').val(data.razonsocial).change();
+    //                 $('#inputCodigo').val(data.codigo); // Notify only Select2 of changes
+    //                 $('#inputMarca').val(data.marca);
+    //                 $('#inputPrecio').val(data.costo);
+    //                 $('#inputImpuesto').val(data.impuesto);
+    //                 $('#inputImpuestoisr').val(data.impuesto_isr);
+    //                 $('#inputImpuestoieps').val(data.impuesto_ieps);
                    
-                }
-            },
-            error: function(error) {
+    //             }
+    //         },
+    //         error: function(error) {
 
-            }
+    //         }
 
-        });
-        });
-    });
+    //     });
+    //     });
+    // });
 </script>
 
 <script>
@@ -1299,7 +1323,7 @@ $(document).ready(function(){
                         {
                             //console.log(response);
                             var info = JSON.parse(response);
-                            console.log(info);
+                            // console.log(info);
                             //$('#modalFactura').modal('hide');
                             $('#detalle_cotizacion').html(info.detalle);
                             $('#detalle_totcotizacion').html(info.totales);
@@ -1307,7 +1331,7 @@ $(document).ready(function(){
                             $('#modalEditCotizacion').modal('hide');
     
                         }else{
-                           console.log('no data');
+                          //  console.log('no data');
                            alert('faltan datos');
                         }
                         //viewProcesar();
@@ -1402,7 +1426,7 @@ $(document).ready(function(){
                 $('#detalle_cotizacion').html(info.detalle);
                 $('#detalle_totcotizacion').html(info.totales);
 
-               console.log(response);                           
+              //  console.log(response);                           
            
             //viewProcesarCot();        
         },
@@ -1509,7 +1533,7 @@ $(document).ready(function(){
                         {
                              //console.log(response);
                             var info = JSON.parse(response);
-                            console.log(info);
+                            // console.log(info);
                             //$('#modalFactura').modal('hide');
                             $('#inputDescripcion').html(info.detalle); 
                            // $('.inputDescripcion select').html(info.detalle);
@@ -1518,7 +1542,7 @@ $(document).ready(function(){
                             
     
                         }else{
-                           console.log('no data');
+                          //  console.log('no data');
                            alert('faltan datos');
                         }
                         //viewProcesar();
