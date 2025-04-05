@@ -454,7 +454,7 @@ $(document).ready(function () {
                         </div> 
 
                         <div class="form-group row" >
-                            <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Codigo:</label>
+                            <label for="inputName2 " class="col-sm-3 col-form-label" style="text-align: left;">Codigo:</label>
                             <div class="col-sm-9">
                                 <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
                                     <option value="">- Seleccione -</option>
@@ -468,12 +468,13 @@ $(document).ready(function () {
                         <div class="form-group row">
                             <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Descripción:</label>
                             <div class="col-sm-9">
-                                <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
+                                <input type="text" class="form-control" id="inputDescripcion" name="inputDescripcion" readonly>
+                                <!-- <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
                                     <option value="">- Seleccione -</option>
                                     <?php foreach ($filasprodnm as $opnm): //llenar las opciones del primer select ?>
                                     <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['codigo_interno'] . ' - ' . $opnm['descripcion'] ?></option>  
                                     <?php endforeach; ?>
-                                </select>
+                                </select> -->
                             </div>
                         </div>  
 
