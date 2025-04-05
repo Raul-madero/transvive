@@ -9114,88 +9114,136 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmpreventivo')
         }
 
 // Agregar Detalle a la Requisicion
-        if($_POST['action'] == 'AddDetalleEditcotizacion'){
-            if(empty($_POST['folio']) )
-            {
-                echo 'error';
-            }else{
-                $nofolio      = $_POST['folio'];
-                $codigo       = $_POST['codigo'];
-                $descripcion  = $_POST['descripcion'];
-                $marca        = $_POST['marca'];
-                $cantidad     = $_POST['cantidad'];
-                $precio       = $_POST['precio'];
-                $impuesto     = $_POST['impuesto'];
-                $impuestoisr  = $_POST['impuestoisr'];
-                $impuestoieps = $_POST['impuestoieps'];
-                $importe      = $_POST['importe'];
-                $datoe        = $_POST['datoe'];
-                $datoom       = $_POST['datoom'];
-                
-                $token        = md5($_SESSION['idUser']);
+if ($_POST['action'] == 'AddDetalleEditcotizacion') {
+    if (empty($_POST['folio'])) {
+        echo 'error';
+    } else {
+        // Obtener los valores del POST
+        $nofolio      = $_POST['folio'];
+        $codigo       = $_POST['codigo'];
+        $descripcion  = $_POST['descripcion'];
+        $marca        = $_POST['marca'];
+        $cantidad     = $_POST['cantidad'];
+        $precio       = $_POST['precio'];
+        $impuesto     = $_POST['impuesto'];
+        $impuestoisr  = $_POST['impuestoisr'];
+        $impuestoieps = $_POST['impuestoieps'];
+        $importe      = $_POST['importe'];
+        $datoe        = $_POST['datoe'];
+        $datoom       = $_POST['datoom'];
+        // Generar el token
+        $token = md5($_SESSION['idUser']);
 
-                $query_detalle_mantto = mysqli_query($conection,"CALL add_detalleEditcotizacion($nofolio, '$codigo', '$descripcion', '$marca', $cantidad, $precio, $impuesto, $impuestoisr, $impuestoieps, $importe, '$datoe', '$datoom', '$token')");
-                $result = mysqli_num_rows($query_detalle_mantto);
+        // Preparar la consulta para insertar los datos
+        $query_detalle_mantto = $conection->prepare("INSERT INTO detalle_requisicioncompra(folio, codigo, descripcion, marca, cantidad, precio, impuesto, impuesto_isr, impuesto_ieps, importe, dato_e, dato_om, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-                $detalleTablaPe = '';
-                $detalleTotalesPe = '';
-                $subtotal    = 0;
-                $totsubtotal = 0;
-                $iva         = 0;
-                $totiva      = 0;
-                $total       = 0;
-                        
-                $arrayData = array();
+        // Enlazar los parámetros
+        $query_detalle_mantto->bind_param(
+            'issdiiiddssss', // Especificamos el tipo de los parámetros
+            $nofolio,        // entero
+            $codigo,         // cadena
+            $descripcion,    // cadena
+            $marca,          // cadena
+            $cantidad,       // entero
+            $precio,         // entero
+            $impuesto,       // número con decimales
+            $impuestoisr,    // número con decimales
+            $impuestoieps,   // número con decimales
+            $importe,        // número con decimales
+            $datoe,          // cadena
+            $datoom,         // cadena
+            $token           // cadena
+        );
 
-                if($result > 0){     
-                while ($data = mysqli_fetch_assoc($query_detalle_mantto)){
+        // Ejecutar la consulta
+        $result = $query_detalle_mantto->execute();
+
+        // Verificar si la inserción fue exitosa
+        if ($result) {
+            // Seleccionar los detalles de la cotización
+            $sql = "SELECT * FROM detalle_requisicioncompra WHERE folio = ?";
+            $query_detalle_mantto = $conection->prepare($sql);
+            $query_detalle_mantto->bind_param('i', $nofolio); // Enlazar el folio como parámetro
+            $query_detalle_mantto->execute();
+            $result = $query_detalle_mantto->get_result(); // Obtener el resultado de la consulta
+
+            $detalleTablaPe = '';
+            $detalleTotalesPe = '';
+            $subtotal = 0;
+            $totsubtotal = 0;
+            $iva = 0;
+            $totiva = 0;
+            $total = 0;
+            $impuesto_isr = 0;
+            $totimpuesto_isr = 0;
+            $impuesto_ieps = 0;
+            $totimpuesto_ieps = 0;
+            
+            $arrayData = array();
+
+            // Si hay resultados, generar la tabla de detalles
+            if ($result->num_rows > 0) {
+                while ($data = $result->fetch_assoc()) {
                     $subtotal = $data['cantidad'] * $data['precio'];
-                    //$iva      = ($data['cantidad'] * $data['precio']);
-                    $totsubtotal = $totsubtotal + $subtotal;
-                    //$totiva = $totiva + $iva;
-                    
+            $totsubtotal += $subtotal;
+            $iva = $subtotal * ($data['impuesto'] / 100);
+            $totiva += $iva;
+            $impuesto_isr = $subtotal * ($data['impuesto_isr'] / 100);
+            $totimpuesto_isr += $impuesto_isr;
+            $impuesto_ieps = $subtotal * ($data['impuesto_ieps'] / 100);
+            $totimpuesto_ieps += $impuesto_ieps;
 
-
-                        $detalleTablaPe .= '<tr>
-                                            <td align="right">'.number_format($data['cantidad'],2).'</td>
-                                            <td>'.$data['descripcion'].'</td>
-                                            <td>'.$data['marca'].'</td>
-                                            <td>'.$data['dato_e'].'</td>
-                                            <td>'.$data['dato_om'].'</td>
-                                            <td align="center"><a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>&nbsp;&nbsp;&nbsp;
-                                            <a id="alumno" 
-                                                data-target="#modalEditCotizacion" 
-                                                data-toggle="modal" 
-                                                data-id="'.$data['id'].'"
-                                                data-nofol="'.$data['folio'].'" 
-                                                data-cantid="'.$data['cantidad'].'"
-                                                data-codig="'.$data['codigo'].'"
-                                                data-descrip="'.$data['descripcion'].'"
-                                                data-marca="'.$data['marca'].'"
-                                                data-precio="'.$data['precio'].'"
-                                                data-importe="'.$data['importe'].'"
-                                                data-datoe="'.$data['dato_e'].'"
-                                                data-datoom="'.$data['dato_om'].'"
-                                                href="#" 
-                                                class="sepV_a" 
-                                                title="Cambiar Cantidad"><i class="fas fa-edit"></i></a>
-                                            </td>
-                                        </tr>';
-                    }
-                   
-                  
-                $arrayData['detalle'] = $detalleTablaPe;
-           
-                echo json_encode($arrayData,JSON_UNESCAPED_UNICODE);
-
-                
-                mysqli_close($conection);   
-            }else{
-                echo "error";
-            }   
+            $detalleTablaPe .= '<tr>
+                <td><input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.number_format($data['cantidad'], 2).'" data-id="'.$data['id'].'" data-field="cantidad"></td>
+                <td class="text-center">'.$data['codigo'].'</td>
+                <td>
+                    <input type="text" class="form-control form-control-sm input-cot" value="'.$data['descripcion'].'" data-id="'.$data['id'].'" data-field="descripcion">
+                </td>
+                <td class="text-center">'.$data['marca'].'</td>
+                <td class="text-center">'.$data['dato_e'].'</td>
+                <td class="text-center">'.$data['dato_om'].'</td>
+                   <td>
+                        <input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.$data['precio'].'" data-id="'.$data['id'].'" data-field="precio">
+                    </td>
+                <td align="center">
+                    <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_cotizacion('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>';
         }
-            exit;   
-        } 
+
+        $total = $totsubtotal + $totiva + $totimpuesto_isr + $totimpuesto_ieps;
+
+        $detalleTotalesPe = '
+            <tr>
+                <td colspan="6" class="text-right"><strong>Subtotal:</strong></td>
+                <td class="text-right" colspan="2">'.number_format($totsubtotal, 2).'</td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Impuesto (IVA 16%):</strong></td>
+                <td class="text-right" colspan="2">'.number_format($totiva, 2).'</td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><strong>Total:</strong></td>
+                <td class="text-right" colspan="2">'.number_format($total, 2).'</td>
+            </tr>';
+
+        $arrayData['detalle'] = $detalleTablaPe;
+        $arrayData['totales'] = $detalleTotalesPe;
+                echo json_encode($arrayData, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo "error";
+            }
+        } else {
+            echo "error";
+        }
+
+        // Cerrar la conexión
+        $query_detalle_mantto->close();
+        mysqli_close($conection);
+    }
+    exit;
+}
+
 
 // Elimina refacciones del detalle Temporal Mannto
 
