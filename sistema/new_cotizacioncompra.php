@@ -473,7 +473,7 @@ $(document).ready(function () {
                                 <select id="selectdescripcion" class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
                                     <option value="">- Seleccione -</option>
                                     <?php foreach ($filasprodnm as $opnm): //llenar las opciones del primer select ?>
-                                    <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['codigo'] . ' - ' . $opnm['descripcion'] ?></option>  
+                                    <option value="<?= $opnm['codigo'] ?>"><?= $opnm['codigo'] . ' - ' . $opnm['descripcion'] ?></option>  
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -717,7 +717,7 @@ $(document).on('change', '.input-cot', function () {
 
     <script>
         $(document).ready(function () {
-            $("#inputCodigoProd").on('change', function () {            
+            $("#selectdescripcion").on('change', function () {            
                 var op = $(this).val();
                 var action = 'searchRefaccionesmovname';
                 $.ajax({
@@ -729,14 +729,14 @@ $(document).on('change', '.input-cot', function () {
                     {
                     console.log(response);
                         if(response == 0){
-                            // $('#inputCodigoProd').val('');
+                            $('#selectdescripcion').val('');
                             $('#inputMarca').val('');
                             $('#inputPrecio').val('0.00');
                         }else{
                             var data = $.parseJSON(response);
                             //$('#idcliente').val(data.idusuario);
                             //$('#frazonsoc').val(data.razonsocial).change();
-                            $('#inputDescripcion').val(data.descripcion).change(); // Notify only Select2 of changes
+                            // $('#inputDescripcion').val(data.descripcion).change(); // Notify only Select2 of changes
                             // $('#inputCodigoProd').val(data.codigo); // Notify only Select2 of changes
                             $('#inputMarca').val(data.marca);
                             $('#inputPrecio').val(data.costo);
