@@ -560,7 +560,7 @@ $(document).ready(function () {
             e.preventDefault();
 
             var folio        = $('#inputfoliodet').val();
-            var codigo       = $('#inputCodigoProd').val();
+            // var codigo       = $('#inputCodigoProd').val();
             var descripcion  = $('#inputDescripcion').val();
             var marca        = $('#inputMarca').val();
             var cantidad     = $('#inputCantidad').val();
@@ -590,7 +590,7 @@ $(document).ready(function () {
                         $('#detalle_totcotizacion').html(info.totales);
 
                         $('#modalEditcliente').modal('hide');
-                        $('#inputCodigoProd').val('');
+                        // $('#inputCodigoProd').val('');
                         $('#inputDescripcion').val(null).trigger('change');
                         $('#inputMarca').val('');
                         $('#inputCantidad').val('0');
@@ -729,7 +729,7 @@ $(document).on('change', '.input-cot', function () {
                     {
                     console.log(response);
                         if(response == 0){
-                            $('#inputCodigoProd').val('');
+                            // $('#inputCodigoProd').val('');
                             $('#inputMarca').val('');
                             $('#inputPrecio').val('0.00');
                         }else{
@@ -737,7 +737,7 @@ $(document).on('change', '.input-cot', function () {
                             //$('#idcliente').val(data.idusuario);
                             //$('#frazonsoc').val(data.razonsocial).change();
                             $('#inputDescripcion').val(data.descripcion).change(); // Notify only Select2 of changes
-                            $('#inputCodigoProd').val(data.codigo); // Notify only Select2 of changes
+                            // $('#inputCodigoProd').val(data.codigo); // Notify only Select2 of changes
                             $('#inputMarca').val(data.marca);
                             $('#inputPrecio').val(data.costo);
                             $('#inputImpuesto').val(data.impuesto);
