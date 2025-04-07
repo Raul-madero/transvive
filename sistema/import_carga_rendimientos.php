@@ -1,6 +1,6 @@
 <?php
-include "../conexion.php";
 session_start();
+include "../conexion.php";
 
 // Verificamos si se subió el archivo
 if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
