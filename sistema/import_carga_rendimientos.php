@@ -11,6 +11,8 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
         $linea = 0;
         $actualizados = 0;
         $no_actualizados = 0;
+        $actualizados2 = 0;
+        $no_actualizados2 = 0;
 
         while (($data = fgetcsv($handle, 1000, ",", '"', "\\")) !== false) {
             $linea++;
@@ -28,10 +30,19 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
                     $stmt = $conection->prepare("UPDATE carga_combustible SET rendimiento_estandar = ? WHERE nounidad = ? AND MONTH(fecha) = MONTH(CURRENT_DATE()) AND YEAR(fecha) = YEAR(CURRENT_DATE())");
                     $stmt->bind_param("ds", $rendimiento, $no_unidad);
 
+                    $stmt2 = $conection->prepare("UPDATE unidades SET rendimiento_estandar = ? WHERE no_unidad = ? AND MONTH(fecha) = MONTH(CURRENT_DATE()) AND YEAR(fecha) = YEAR(CURRENT_DATE())");
+                    $stmt2->bind_param("ds", $rendimiento, $no_unidad);
+
                     if ($stmt->execute() && $stmt->affected_rows > 0) {
                         $actualizados++;
                     } else {
                         $no_actualizados++;
+                    }
+
+                    if ($stmt2->execute() && $stmt2->affected_rows > 0) {
+                        $actualizados2++;
+                    } else {
+                        $no_actualizados2++;
                     }
 
                     $stmt->close();
@@ -42,7 +53,8 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
         fclose($handle);
 
         echo "<script>
-            alert('Proceso terminado. Registros actualizados: $actualizados. Sin cambios: $no_actualizados.');
+            alert('Proceso terminado. Registros actualizados carga: $actualizados. Sin cambios: $no_actualizados.
+            Registros actualizados unidades: $actualizados2. Sin cambios: $no_actualizados2.');
             window.location.href = 'index.php';
         </script>";
     } else {
