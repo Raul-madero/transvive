@@ -11929,32 +11929,33 @@ if($_POST['action'] == 'AddProdnuevo')
 
 
     // BORRA REQUISICION
-    if($_POST['action'] == 'Borrarequisicion')
-    {
-      if(!empty($_POST['noreqi']) )
-      {
-        $noreqi     = $_POST['noreqi'];
-        $areareqi   = $_POST['areareqi'];
-
-        $usuario     = $_SESSION['idUser'];
-
-        $query_procesar = mysqli_query($conection,"CALL borra_requisicion($noreqi, '$areareqi', $usuario )");
-        $result_detalle = mysqli_num_rows($query_procesar);
-
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-             mysqli_close($conection);
-        }else{
-            echo "error";
+    if ($_POST['action'] == 'Borrarequisicion') {
+        if (!empty($_POST['noreqi']) && !empty($_POST['areareqi'])) {
+            require_once "../conexion.php"; // Asegúrate de incluir tu conexión
+    
+            $noreqi    = intval($_POST['noreqi']);  // Sanear variable
+            $areareqi  = $_POST['areareqi'];        // No se usa en este código, pero se mantiene por si acaso
+            $usuario   = $_SESSION['idUser'];
+    
+            // Primero eliminar los detalles (si hay relación FK)
+            $query_detalle = mysqli_query($conection, "DELETE FROM detalle_requisicion WHERE no_requisicion = $noreqi");
+            $deleted_detalle = mysqli_affected_rows($conection);
+    
+            // Luego eliminar la requisición
+            $query_requi = mysqli_query($conection, "DELETE FROM requisicion_compra WHERE no_requisicion = $noreqi");
+            $deleted_requi = mysqli_affected_rows($conection);
+    
+            mysqli_close($conection);
+    
+            if ($deleted_requi > 0) {
+                echo json_encode(['status' => 'success', 'deleted' => $deleted_requi], JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'No se eliminó la requisición'], JSON_UNESCAPED_UNICODE);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Datos incompletos'], JSON_UNESCAPED_UNICODE);
         }
-       
-     }else{
-        echo 'error';
-     }
-    }
-
+    }    
 
     // CANCELA REQUISICION
     if($_POST['action'] == 'Cancelarequisicion')

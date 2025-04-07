@@ -914,7 +914,7 @@ function actualizarLaPagina(){
         <div class="modal-footer">
           <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-danger" id="borrarequisicion">
-            <i class="fa fa-trash"></i>&nbsp;Borrar
+            <i class="fa fa-trash" id="borrarequisicion"></i>&nbsp;Borrar
           </button>
         </div>
       </form>
