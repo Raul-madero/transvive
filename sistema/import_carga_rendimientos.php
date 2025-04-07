@@ -16,7 +16,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
 
         while (($data = fgetcsv($handle, 1000, ",", '"', "\\")) !== false) {
             $linea++;
-
             // Si tiene encabezado, lo saltamos
             if ($linea == 1 && !is_numeric($data[1])) {
                 continue;
