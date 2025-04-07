@@ -31,6 +31,10 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
                     $stmt->bind_param("ds", $rendimiento, $no_unidad);
 
                     $stmt2 = $conection->prepare("UPDATE unidades SET rendimiento_estandar = ? WHERE no_unidad = ?");
+                    if ($stmt2 === false) {
+                        die('Error en la preparación de la consulta: ' . htmlspecialchars($conection->error));
+                    }
+                    // Verificamos si la consulta se preparó correctamente
                     $stmt2->bind_param("ds", $rendimiento, $no_unidad);
 
                     if ($stmt->execute() && $stmt->affected_rows > 0) {
