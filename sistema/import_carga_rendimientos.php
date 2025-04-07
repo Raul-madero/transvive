@@ -1,6 +1,6 @@
 <?php
-session_start();
 include "../conexion.php";
+session_start();
 
 // Verificamos si se subió el archivo
 if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
@@ -29,23 +29,10 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
                     $stmt = $conection->prepare("UPDATE carga_combustible SET rendimiento_estandar = ? WHERE nounidad = ? AND MONTH(fecha) = MONTH(CURRENT_DATE()) AND YEAR(fecha) = YEAR(CURRENT_DATE())");
                     $stmt->bind_param("ds", $rendimiento, $no_unidad);
 
-                    $stmt2 = $conection->prepare("UPDATE unidades SET rendimiendo_estandar = ? WHERE no_unidad = ?");
-                    if ($stmt2 === false) {
-                        die('Error en la preparación de la consulta: ' . htmlspecialchars($conection->error));
-                    }
-                    // Verificamos si la consulta se preparó correctamente
-                    $stmt2->bind_param("ds", $rendimiento, $no_unidad);
-
                     if ($stmt->execute() && $stmt->affected_rows > 0) {
                         $actualizados++;
                     } else {
                         $no_actualizados++;
-                    }
-
-                    if ($stmt2->execute() && $stmt2->affected_rows > 0) {
-                        $actualizados2++;
-                    } else {
-                        $no_actualizados2++;
                     }
 
                     $stmt->close();
