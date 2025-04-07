@@ -30,7 +30,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
                     $stmt = $conection->prepare("UPDATE carga_combustible SET rendimiento_estandar = ? WHERE nounidad = ? AND MONTH(fecha) = MONTH(CURRENT_DATE()) AND YEAR(fecha) = YEAR(CURRENT_DATE())");
                     $stmt->bind_param("ds", $rendimiento, $no_unidad);
 
-                    $stmt2 = $conection->prepare("UPDATE unidades SET rendimiento_estandar = ? WHERE no_unidad = ?");
+                    $stmt2 = $conection->prepare("UPDATE unidades SET rendimiendo_estandar = ? WHERE no_unidad = ?");
                     if ($stmt2 === false) {
                         die('Error en la preparación de la consulta: ' . htmlspecialchars($conection->error));
                     }
