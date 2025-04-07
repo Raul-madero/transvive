@@ -454,17 +454,18 @@ $(document).ready(function () {
                             </div>
                         </div> 
 
-                        <!-- <div class="form-group row" >
+                        <div class="form-group row" hidden>
                             <label for="inputName2 " class="col-sm-3 col-form-label" style="text-align: left;">Codigo:</label>
                             <div class="col-sm-9">
-                                <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
+                                <input type="text" class="form-control" id="inputCodigo" name="inputCodigo" readonly>
+                                <!-- <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
                                     <option value="">- Seleccione -</option>
                                     <?php foreach ($filasprod as $prod): //llenar las opciones del primer select ?>
                                     <option value="<?= $prod['codigo'] ?>"><?= $prod['codigo'] ?></option>  
                                     <?php endforeach; ?>
-                                </select>
+                                </select> -->
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="form-group row">
                             <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Descripción:</label>
@@ -560,7 +561,7 @@ $(document).ready(function () {
             e.preventDefault();
 
             var folio        = $('#inputfoliodet').val();
-            // var codigo       = $('#inputCodigoProd').val();
+            var codigo       = $('#inputCodigo').val();
             var descripcion  = $('#inputDescripcion').val();
             var marca        = $('#inputMarca').val();
             var cantidad     = $('#inputCantidad').val();
@@ -578,7 +579,7 @@ $(document).ready(function () {
                 url: 'includes/ajax.php',
                 type: "POST",
                 async : true,
-                data: {action:action, folio:folio, codigo:codigo, descripcion:descripcion, marca:marca, cantidad:cantidad, precio:precio, impuesto:impuesto, impuestoisr:impuestoisr, impuestoieps:impuestoieps, importe:importe, datoe:datoe, datoom:datoom},
+                data: {action:action, folio:folio, codigo:descripcion, descripcion:codigo, marca:marca, cantidad:cantidad, precio:precio, impuesto:impuesto, impuestoisr:impuestoisr, impuestoieps:impuestoieps, importe:importe, datoe:datoe, datoom:datoom},
 
                 success: function(response)
                 {
@@ -590,7 +591,7 @@ $(document).ready(function () {
                         $('#detalle_totcotizacion').html(info.totales);
 
                         $('#modalEditcliente').modal('hide');
-                        // $('#inputCodigoProd').val('');
+                        $('#inputCodigo').val('');
                         $('#inputDescripcion').val(null).trigger('change');
                         $('#inputMarca').val('');
                         $('#inputCantidad').val('0');
@@ -737,7 +738,7 @@ $(document).on('change', '.input-cot', function () {
                             //$('#idcliente').val(data.idusuario);
                             //$('#frazonsoc').val(data.razonsocial).change();
                             // $('#inputDescripcion').val(data.descripcion).change(); // Notify only Select2 of changes
-                            // $('#inputCodigoProd').val(data.codigo); // Notify only Select2 of changes
+                            $('#inputCodigo').val(data.codigo); 
                             $('#inputMarca').val(data.marca);
                             $('#inputPrecio').val(data.costo);
                             $('#inputImpuesto').val(data.impuesto);
