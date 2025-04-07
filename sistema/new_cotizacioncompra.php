@@ -454,7 +454,7 @@ $(document).ready(function () {
                             </div>
                         </div> 
 
-                        <div class="form-group row" >
+                        <!-- <div class="form-group row" >
                             <label for="inputName2 " class="col-sm-3 col-form-label" style="text-align: left;">Codigo:</label>
                             <div class="col-sm-9">
                                 <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputCodigoProd" name="inputCodigoProd">
@@ -464,18 +464,18 @@ $(document).ready(function () {
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group row">
                             <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Descripción:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="inputDescripcion" name="inputDescripcion" readonly>
-                                <!-- <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
+                                <!-- <input type="text" class="form-control" id="inputDescripcion" name="inputDescripcion" readonly> -->
+                                <select id="selectdescripcion" class="form-control select2bs4" style="width: 100%; text-align: left" id="inputDescripcion" name="inputDescripcion">
                                     <option value="">- Seleccione -</option>
                                     <?php foreach ($filasprodnm as $opnm): //llenar las opciones del primer select ?>
-                                    <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['codigo_interno'] . ' - ' . $opnm['descripcion'] ?></option>  
+                                    <option value="<?= $opnm['descripcion'] ?>"><?= $opnm['codigo'] . ' - ' . $opnm['descripcion'] ?></option>  
                                     <?php endforeach; ?>
-                                </select> -->
+                                </select>
                             </div>
                         </div>  
 
@@ -775,6 +775,28 @@ $(document).on('change', '.input-cot', function () {
             });
         });
     </script> 
+
+<script>
+  $(document).ready(function () {
+    $('.select2bs4').select2({
+      theme: 'bootstrap4',
+      placeholder: 'Seleccione una opción',
+      allowClear: true
+    });
+  });
+
+  $('#modalEditcliente').on('shown.bs.modal', function () {
+  $('#selectdescripcion').select2({
+    theme: 'bootstrap4',
+    dropdownParent: $('#modalEditcliente'),
+    placeholder: 'Selecciona motivo',
+    allowClear: true
+  });
+});
+</script>
+
+
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function(){
