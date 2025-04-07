@@ -11931,7 +11931,6 @@ if($_POST['action'] == 'AddProdnuevo')
     // BORRA REQUISICION
     if ($_POST['action'] == 'Borrarequisicion') {
         if (!empty($_POST['noreqi']) && !empty($_POST['areareqi'])) {
-            require_once "../conexion.php"; // Asegúrate de incluir tu conexión
     
             $noreqi    = intval($_POST['noreqi']);  // Sanear variable
             $areareqi  = $_POST['areareqi'];        // No se usa en este código, pero se mantiene por si acaso
