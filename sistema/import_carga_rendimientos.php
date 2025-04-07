@@ -25,7 +25,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
                 $rendimiento = trim($data[1]);
 
                 if (!empty($no_unidad) && is_numeric($rendimiento)) {
-                    $stmt = $conection->prepare("UPDATE carga_combustible SET rendimiento_estandar = ? WHERE no_unidad = ? AND MONTH(fecha) = MONTH(CURRENT_DATE()) AND YEAR(fecha) = YEAR(CURRENT_DATE())");
+                    $stmt = $conection->prepare("UPDATE carga_combustible SET rendimiento_estandar = ? WHERE nounidad = ? AND MONTH(fecha) = MONTH(CURRENT_DATE()) AND YEAR(fecha) = YEAR(CURRENT_DATE())");
                     $stmt->bind_param("ds", $rendimiento, $no_unidad);
 
                     if ($stmt->execute() && $stmt->affected_rows > 0) {
