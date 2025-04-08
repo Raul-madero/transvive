@@ -11,6 +11,8 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
         $linea = 0;
         $actualizados = 0;
         $no_actualizados = 0;
+        $actualizados2 = 0;
+        $no_actualizados2 = 0;
 
         while (($data = fgetcsv($handle, 1000, ",", '"', "\\")) !== false) {
             $linea++;
@@ -35,6 +37,19 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
                     }
 
                     $stmt->close();
+
+                    $stmt2 = $conection->prepare("UPDATE unidades SET rendimiento_estandar = ? WHERE no_unidad = ?");
+                    $stmt2->bind_param("ds", $rendimiento, $no_unidad);
+
+                    if ($stmt2->execute() && $stmt2->affected_rows > 0) {
+                        // Actualización exitosa
+                        $actualizados2++;
+                    } else {
+                        // No se pudo actualizar la tabla unidades
+                        $no_actualizados2++;
+                    }
+
+                    $stmt2->close();
                 }
             }
         }
@@ -42,7 +57,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
         fclose($handle);
 
         echo "<script>
-            alert('Proceso terminado. Registros actualizados: $actualizados. Sin cambios: $no_actualizados.');
+            alert('Proceso terminado. Registros actualizados en cargas: $actualizados. Sin cambios: $no_actualizados. Registros actualizados en unidades: $actualizados2. Sin cambios: $no_actualizados2.');
             window.location.href = 'index.php';
         </script>";
     } else {
