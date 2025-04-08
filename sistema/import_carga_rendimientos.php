@@ -38,7 +38,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] == 0) {
 
                     $stmt->close();
 
-                    $stmt2 = $conection->prepare("UPDATE unidades SET rendimiento_estandar = ? WHERE no_unidad = ?");
+                    $stmt2 = $conection->prepare("UPDATE unidades SET rendimiendo_estandar = ? WHERE no_unidad = ?");
                     $stmt2->bind_param("ds", $rendimiento, $no_unidad);
 
                     if ($stmt2->execute() && $stmt2->affected_rows > 0) {
