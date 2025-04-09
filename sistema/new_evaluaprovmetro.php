@@ -625,7 +625,7 @@ $('#btn_salir').click(function(e){
       // Calcular la suma
       var sum = num1 + num2 + num3 ;
       let tipo = $('#inputTipo').val();
-      if (tipo == "SELECCION") {
+      if (tipo === "SELECCIÓN") {
         let sumtotal = sum;
       }else {
         var sumtotal = sum /2;
