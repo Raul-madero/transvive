@@ -277,6 +277,7 @@ if ($entrada['estatus'] == 0){
     $pdf->SetFillColor(255,255,255);
     $pdf->Multicell(189,5,utf8_decode($entrada['motivo_cancela']),1,1, 'L');
 }
+
 if(!empty($firma_auto)){
     if ($entrada['estatus'] == 0){
         $pdf->Ln(5);

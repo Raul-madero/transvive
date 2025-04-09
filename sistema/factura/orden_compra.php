@@ -311,7 +311,7 @@ $totalieps = $totalieps + $ieps;
 $pdf->SetFont('Arial','',6.8);
 $pdf->Cell(13,5,number_format($row['cantidad'],2),1,0,'R');
 $pdf->Cell(38,5,utf8_decode($row['codigo']),1,0,'L');
-$pdf->Cell(85,5,utf8_decode($row['descripcion']),1,0,'L');
+$pdf->MultiCell(85,5,utf8_decode($row['descripcion']),1,0,'L');
 $pdf->Cell(23,5,utf8_decode($row['marca']),1,0,'L');
 $pdf->Cell(15,5,number_format($row['precio'],2),1,0,'R');
 $pdf->Cell(15,5,number_format($row['importe'],2),1,1,'R');
