@@ -310,32 +310,54 @@ $totalieps = $totalieps + $ieps;
 
 $pdf->SetFont('Arial','',6.8);
 
-// Calcular altura de la celda de descripción
+// Prepara los textos
 $descripcion = utf8_decode($row['descripcion']);
-$width_desc = 85;
+$marca = utf8_decode($row['marca']);
+
+// Configura anchos y altura base
 $height_line = 5;
-$nb_lines = ceil($pdf->GetStringWidth($descripcion) / $width_desc);
-$line_height = $height_line * $nb_lines;
-if ($line_height < 5) $line_height = 5; // mínimo
+$widths = [
+    'cantidad' => 13,
+    'codigo' => 38,
+    'descripcion' => 85,
+    'marca' => 23,
+    'precio' => 15,
+    'importe' => 15
+];
+
+// Calcular número de líneas que ocuparán descripción y marca
+$nb_lines_desc = $pdf->GetStringWidth($descripcion) / $widths['descripcion'];
+$nb_lines_marca = $pdf->GetStringWidth($marca) / $widths['marca'];
+
+// Obtener número máximo de líneas necesarias
+$max_lines = ceil(max($nb_lines_desc, $nb_lines_marca));
+$line_height = max($height_line * $max_lines, $height_line);
 
 // Guardar posición actual
 $x = $pdf->GetX();
 $y = $pdf->GetY();
 
 // Cantidad
-$pdf->Cell(13, $line_height, number_format($row['cantidad'],2), 1, 0, 'R');
+$pdf->Cell($widths['cantidad'], $line_height, number_format($row['cantidad'],2), 1, 0, 'R');
 // Código
-$pdf->Cell(38, $line_height, utf8_decode($row['codigo']), 1, 0, 'L');
-// Descripción (usar MultiCell pero dentro de una celda "encerrada")
-$pdf->MultiCell($width_desc, $height_line, $descripcion, 1, 'L');
-// Restaurar posición para las siguientes celdas
-$pdf->SetXY($x + 13 + 38 + $width_desc, $y);
-// Marca
-$pdf->Cell(23, $line_height, utf8_decode($row['marca']), 1, 0, 'L');
-// Precio
-$pdf->Cell(15, $line_height, number_format($row['precio'],2), 1, 0, 'R');
-// Importe
-$pdf->Cell(15, $line_height, number_format($row['importe'],2), 1, 1, 'R'); // salto de línea final
+$pdf->Cell($widths['codigo'], $line_height, utf8_decode($row['codigo']), 1, 0, 'L');
+
+// Descripción
+$pdf->SetXY($x + $widths['cantidad'] + $widths['codigo'], $y);
+$pdf->MultiCell($widths['descripcion'], $height_line, $descripcion, 1, 'L');
+
+// Marca (necesitamos nueva posición porque MultiCell bajó el cursor)
+$x2 = $x + $widths['cantidad'] + $widths['codigo'] + $widths['descripcion'];
+$pdf->SetXY($x2, $y);
+$pdf->MultiCell($widths['marca'], $height_line, $marca, 1, 'L');
+
+// Después de marca, posicionamos para imprimir Precio e Importe
+// Nos movemos al punto más a la derecha (después de marca), misma línea
+$max_x = $x + array_sum($widths) - $widths['precio'] - $widths['importe'];
+$pdf->SetXY($max_x, $y);
+$pdf->Cell($widths['precio'], $line_height, number_format($row['precio'],2), 1, 0, 'R');
+$pdf->Cell($widths['importe'], $line_height, number_format($row['importe'],2), 1, 1, 'R');
+
 
 }
 $pdf->SetFont('Arial','',6.8);
