@@ -446,7 +446,7 @@ $(document).ready(function () {
                             <div class="form-group"> 
                             </div>
                         </div>
-
+                        
                         <div class="form-group row" hidden>
                             <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">No. de Folio:</label>
                             <div class="col-sm-9">
