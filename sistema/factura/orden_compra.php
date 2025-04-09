@@ -309,12 +309,34 @@ $ieps     = $row['cantidad'] * $row['impuesto_ieps'];
 $totalieps = $totalieps + $ieps;
 
 $pdf->SetFont('Arial','',6.8);
-$pdf->Cell(13,5,number_format($row['cantidad'],2),1,0,'R');
-$pdf->Cell(38,5,utf8_decode($row['codigo']),1,0,'L');
-$pdf->MultiCell(85,5,utf8_decode($row['descripcion']),1,0,'L');
-$pdf->Cell(23,5,utf8_decode($row['marca']),1,0,'L');
-$pdf->Cell(15,5,number_format($row['precio'],2),1,0,'R');
-$pdf->Cell(15,5,number_format($row['importe'],2),1,1,'R');
+
+// Calcular altura de la celda de descripción
+$descripcion = utf8_decode($row['descripcion']);
+$width_desc = 85;
+$height_line = 5;
+$nb_lines = ceil($pdf->GetStringWidth($descripcion) / $width_desc);
+$line_height = $height_line * $nb_lines;
+if ($line_height < 5) $line_height = 5; // mínimo
+
+// Guardar posición actual
+$x = $pdf->GetX();
+$y = $pdf->GetY();
+
+// Cantidad
+$pdf->Cell(13, $line_height, number_format($row['cantidad'],2), 1, 0, 'R');
+// Código
+$pdf->Cell(38, $line_height, utf8_decode($row['codigo']), 1, 0, 'L');
+// Descripción (usar MultiCell pero dentro de una celda "encerrada")
+$pdf->MultiCell($width_desc, $height_line, $descripcion, 1, 'L');
+// Restaurar posición para las siguientes celdas
+$pdf->SetXY($x + 13 + 38 + $width_desc, $y);
+// Marca
+$pdf->Cell(23, $line_height, utf8_decode($row['marca']), 1, 0, 'L');
+// Precio
+$pdf->Cell(15, $line_height, number_format($row['precio'],2), 1, 0, 'R');
+// Importe
+$pdf->Cell(15, $line_height, number_format($row['importe'],2), 1, 1, 'R'); // salto de línea final
+
 }
 $pdf->SetFont('Arial','',6.8);
 $pdf->Cell(13,5,utf8_decode(''),1,0,'R');
