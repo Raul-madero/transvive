@@ -623,12 +623,12 @@ $('#btn_salir').click(function(e){
       var num6 = parseFloat(input6) || 0;
     */
       // Calcular la suma
-      var sum = num1 + num2 + num3 ;
+      var sum = num1 + num2 + num3;
       let tipo = $('#inputTipo').val();
-      if (tipo === "SELECCIÓN") {
-        let sumtotal = sum;
-      }else {
-        var sumtotal = sum /2;
+      if(tipo == 'SELECCIÓN'){
+        var sumtotal = sum;
+      }else{
+        var sumtotal = sum / 2;
       }
 
       if (sumtotal >= 80 ) {
