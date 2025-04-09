@@ -759,7 +759,6 @@ $('#btn_salir').click(function(e){
         
 
        var action       = 'AddDetalleEditOrdencompra';
-
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",

@@ -574,11 +574,11 @@ $('#btn_salir').click(function(e){
        var proveedor     = $('#inputProveedor').val();
        var producto      = $('#inputProducto').val();
        var consulta      = $('#inputConsulta').val();
-       var fecha_h1      = $('#inputFechah1').val();
+       var fecha_h1      = $('#inputFechah1').val() ? $('#inputFechah1').val() : new Date().toISOString().slice(0, 10);
        var historial_h1  = $('#historial1').val();
-       var fecha_h2      = $('#inputFechah2').val();
+       var fecha_h2      = $('#inputFechah2').val() ? $('#inputFechah2').val() : new Date().toISOString().slice(0, 10);
        var historial_h2  = $('#historial2').val();
-       var fecha_h3      = $('#inputFechah3').val();
+       var fecha_h3      = $('#inputFechah3').val() ? $('#inputFechah3').val() : new Date().toISOString().slice(0, 10);
        var historial_h3  = $('#historial3').val();
        var tot_compras   = $('#califcompras').val();
        var tot_calidad   = $('#califcalidad').val();
