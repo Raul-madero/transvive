@@ -204,12 +204,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Producto y/o Servicio</label>
                     <div class="col-sm-9">
-                      <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProducto" name="inputProducto">
+                      <input type="text" class="form-control" id="inputProducto" name="inputProducto" placeholder="Descripción del producto o servicio">
+                      <!-- <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProducto" name="inputProducto">
                       <option value="">- Seleccione -</option>
                        <?php foreach ($filasprod as $opps): //llenar las opciones del primer select ?>
                        <option value="<?= $opps['codigo'] ?>"><?= $opps['descripcion'] ?></option>  
                        <?php endforeach; ?>
-                    </select>
+                    </select> -->
                     </div>
                   </div>
 
