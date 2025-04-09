@@ -160,7 +160,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
      <div class="col-md-9">
      <div class="card card-secondary">
               <div class="card-header">
-                <h3 class="card-title">Alta de Evaluaciónde Proveedores (Servicios)</h3>
+                <h3 class="card-title">Evaluaciónde Proveedores (Servicios)</h3>
               </div>
               <div class="card-body">
               <div class="card-header p-2">
