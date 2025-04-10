@@ -16,16 +16,25 @@ if (!isset($_SESSION['idUser'])) {
 date_default_timezone_set('America/Mexico_City');
 $fcha = date("Y-m-d");
 
-//Busqueda de folio para creacion de nueva requisicion
-$query_folio = mysqli_query($conection,"SELECT MAX(no_requisicion) AS folio FROM requisicion_compra");
-$result_folio = mysqli_num_rows($query_folio);
-$folioe = mysqli_fetch_array($query_folio);
-$nuevofolio=$folioe["folio"]+1;
+if(empty($_REQUEST['id'])){
+    header('Location: requisiciones23.php');
+    mysqli_close($conection);
+}
 
-//Eliminar datos, si existen de detalle temp requisicion compra
-$sql = "DELETE FROM detalle_temp_cotizacioncompra WHERE folio = $nuevofolio";
+$noreq = $_REQUEST['id'];
+$sql = "SELECT * FROM requisiciones WHERE id_requisicion = $noreq";
 $query = mysqli_query($conection, $sql);
-$result = mysqli_affected_rows($conection);
+
+while($data = mysqli_fetch_array($query)) {
+    $id = $data['id'];
+    $noreq = $data['no_requisicion'];
+    $fecha = $data['fecha'];
+    $fecha_req = $data['fecha_requiere'];
+    $tipo = $data['tipo_requisicion'];
+    $areasolicita = $data['area_solicitante'];
+    $notas_req = $data['observaciones'];
+}
+
 
 //Seleccionar quien recibe
 $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
