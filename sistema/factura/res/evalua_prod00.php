@@ -21,7 +21,7 @@ include('../../conexion.php');
        
 </style>
  <?php
-    $query = mysqli_query($conection,"SELECT ep.ideval, ep.fecha_eval, ep.tipo_evaluacion, ep.cveproveedor, pv.nombre, ep.producto, ep.consulta, ep.tiempo_respuesta, ep.documentacion, ep.credito, ep.precios_competitivos, ep.respuesta_emergencias, ep.servicio_domicilio, ep.condicion_empaque, ep.rechazos, ep.identificacion, ep.fecha_hist1, ep.historia1, ep.fecha_hist2, ep.historia2, ep.fecha_hist3, ep.historia3, ep.calificacion_calidad, ep.calificacion_compras, ep.calificacion_total, ep.resultado, ep.acciones FROM evaluaciones_metro ep inner join proveedores pv ON ep.cveproveedor = pv.no_prov  WHERE ep.ideval = $noeval");
+    $query = mysqli_query($conection,"SELECT ep.ideval, ep.fecha_eval, ep.tipo_evaluacion, ep.cveproveedor, pv.nombre, ep.producto, ep.consulta, ep.tiempo_respuesta, ep.documentacion, ep.credito, ep.precios_competitivos, ep.respuesta_emergencias, ep.servicio_domicilio, ep.condicion_empaque, ep.rechazos, ep.identificacion, ep.fecha_hist1, ep.historia1, ep.fecha_hist2, ep.historia2, ep.fecha_hist3, ep.historia3, ep.calificacion_calidad, ep.calificacion_compras, ep.calificacion_total, ep.resultado, ep.acciones FROM evaluaciones_productos ep inner join proveedores pv ON ep.cveproveedor = pv.no_prov  WHERE ep.ideval = $noeval");
 $result = mysqli_num_rows($query);
 $pedido = mysqli_fetch_assoc($query);
 
