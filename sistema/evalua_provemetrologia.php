@@ -475,7 +475,7 @@ $(document).on('click', '#delete_cliente', function(e){
 
         var nfolio       = $('#form_pass_folio').val();
         var nempresa     = $('#form_pass_empresa').val();
-        console.log(nfolio, empresa)
+        console.log(nfolio, nempresa)
        var action       = 'EliminaEvaluametro';
 
         $.ajax({
