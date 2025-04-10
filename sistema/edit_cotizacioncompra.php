@@ -37,7 +37,7 @@ session_start();
       $notas_req     = $data['observaciones'];
       $area_solicita = $data['area_solicitante'];
       $cantidad      = $data['cant_autorizada'];
-      $name_recibe   = $data['recibe'];
+      // $name_recibe   = $data['recibe'];
       
     }
   }
@@ -259,7 +259,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                            <tbody id="detalle_cotizacion">
                                <!---Contenido Ajax--->
                            </tbody>
-                           <tfoot>
+                           <tfoot id="detalle_totcotizacion">
                             <!-- Contenido Ajax -->    
                            </tfoot>
                           </table>
@@ -714,7 +714,7 @@ $('#btn_salir').click(function(e){
         </tr>
     `;
 
-    $('table tfoot').html(htmlTotales);
+    $('#detalle_totcotizacion').html(htmlTotales);
 }
 
 // Ejecutar cada vez que cambian los inputs de cantidad o precio

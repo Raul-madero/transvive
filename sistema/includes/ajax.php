@@ -5001,7 +5001,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
         echo 'error';
         exit;
     }
-
+    // var_dump($_POST);
     $nofolio      = intval($_POST['folio']);
     $codigo       = mysqli_real_escape_string($conection, $_POST['codigo']);
     $descripcion  = mysqli_real_escape_string($conection, $_POST['descripcion']);
