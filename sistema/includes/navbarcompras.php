@@ -212,6 +212,19 @@
               <!--<li><a href="encuesta_satisfaccion.php" class="dropdown-item">Satisfaccion de Clientes </a></li>-->
               <!--<li><a href="#" class="dropdown-item">Calidad </a></li>-->
               <li><a href="../../transvive_eambientel/" target="_blank" class="dropdown-item">Encuesta Ambiente Laboral</a></li>
+              <li class="dropdown-submenu dropdown-hover">
+          <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">ISO 9000</a>
+          <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+
+            <li><a href="evalua_proveproductos.php" class="dropdown-item">Evaluación Proveedores (Productos) </a></li>
+            <li><a href="evalua_provemetrologia.php" class="dropdown-item">Evaluación Proveedores (Metrología)</a></li>
+            <li><a href="evalua_proveservicios.php" class="dropdown-item">Evaluación de Proveedores (Servicios)</a></li>
+
+            <li class="dropdown-divider"></li>
+
+          </ul>
+        </li>
               <!--<li><a href="#" class="dropdown-item">Nominas</a></li>-->
 
               <!-- End Level two -->

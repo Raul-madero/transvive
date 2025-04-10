@@ -471,10 +471,11 @@ $(document).on('click', '#delete_cliente', function(e){
 <script>
    $('#actualizaclientes').click(function(e){
         e.preventDefault();
+        console.log("Click en eliminar...")
 
         var nfolio       = $('#form_pass_folio').val();
         var nempresa     = $('#form_pass_empresa').val();
-
+        console.log(nfolio, empresa)
        var action       = 'EliminaEvaluametro';
 
         $.ajax({
