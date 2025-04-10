@@ -1,6 +1,7 @@
 <?php
 session_start();
 $noeval = $_REQUEST['id'];
+echo $noeval;
 setlocale(LC_ALL, 'spanish');
 //Consulta sql encabezado
 include('../../conexion.php');
