@@ -1,7 +1,6 @@
 <?php
 session_start();
 $noeval = $_REQUEST['id'];
-echo $noeval;
 setlocale(LC_ALL, 'spanish');
 //Consulta sql encabezado
 include('../../conexion.php');
@@ -22,7 +21,7 @@ include('../../conexion.php');
        
 </style>
  <?php
-    $query = mysqli_query($conection,"SELECT ep.ideval, ep.fecha_eval, ep.tipo_evaluacion, ep.cveproveedor, pv.nombre, ep.producto, ep.consulta, ep.tiempo_respuesta, ep.documentacion, ep.credito, ep.precios_competitivos, ep.calidad_servicio, ep.fecha_hist1, ep.historia1, ep.fecha_hist2, ep.historia2, ep.fecha_hist3, ep.historia3, ep.calificacion_calidad, ep.calificacion_compras, ep.calificacion_total, ep.resultado, ep.acciones FROM evaluaciones_productos ep inner join proveedores pv ON ep.cveproveedor = pv.no_prov  WHERE ep.ideval = $noeval");
+    $query = mysqli_query($conection,"SELECT ep.ideval, ep.fecha_eval, ep.tipo_evaluacion, ep.cveproveedor, pv.nombre, ep.producto, ep.consulta, ep.tiempo_respuesta, ep.documentacion, ep.credito, ep.precios_competitivos, ep.respuesta_emergencias, ep.servicio_domicilio, ep.condicion_empaque, ep.rechazos, ep.identificacion, ep.fecha_hist1, ep.historia1, ep.fecha_hist2, ep.historia2, ep.fecha_hist3, ep.historia3, ep.calificacion_calidad, ep.calificacion_compras, ep.calificacion_total, ep.resultado, ep.acciones FROM evaluaciones_metro ep inner join proveedores pv ON ep.cveproveedor = pv.no_prov  WHERE ep.ideval = $noeval");
 $result = mysqli_num_rows($query);
 $pedido = mysqli_fetch_assoc($query);
 
@@ -142,34 +141,34 @@ if ($pedido ['tipo_evaluacion'] == 'SELECCIÓN') {
 <tr>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 1</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; PRECIO</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; DOCUMENTACIÓN</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 30</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['precios_competitivos']; ?></td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['documentacion']; ?></td>
   <td rowspan="4" colspan="1" style="border: solid .5px; width: 30%; font-size: 10pt;" align="center">&nbsp; <?php echo ' &nbsp;'.$pedido['consulta']; ?></td>
   <br>
 </tr>
 <tr>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 2</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; DOCUMENTACIÓN</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 10</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['documentacion']; ?></td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; CRÉDITO</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 15</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['credito']; ?></td>
   <br>
 </tr>
 <tr>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 3</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; CRÉDITO</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 10</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['credito']; ?></td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; PRECIO COMPETITIVO</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 35</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['documentacion']; ?></td>
   <br>
 </tr>
 <tr>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 4</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; TIEMPO DE RESPUESTA</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 50</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['tiempo_respuesta']; ?></td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; SERVICIO A DOMICILIO</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 20</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['servicio_domicilio']; ?></td>
   <br>
 </tr>
 <?php
@@ -178,9 +177,9 @@ if ($pedido ['tipo_evaluacion'] == 'SELECCIÓN') {
 <tr>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 1</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; PRECIO</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 20</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['precios_competitivos']; ?></td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; TIEMPO DE ENTREGA</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 25</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['tiempo_respuesta']; ?></td>
   <td rowspan="6" colspan="1" style="border: solid .5px; width: 30%; font-size: 10pt;" align="center">&nbsp; <?php echo ' &nbsp;'.$pedido['consulta']; ?></td>
   <br>
 </tr>
@@ -196,27 +195,34 @@ if ($pedido ['tipo_evaluacion'] == 'SELECCIÓN') {
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 3</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; CRÉDITO</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 10</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 5</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['credito']; ?></td>
   <br>
 </tr>
 <tr>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 4</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; TIEMPO DE RESPUESTA</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; PRECIO COMPETITIVO</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 30</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['tiempo_respuesta']; ?></td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['precios_competitivos']; ?></td>
   <br>
 </tr>
 <tr>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 5</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; CALIDAD DEL SERVICIO (EVIDENCIA)</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 30</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; REPUESTA EMERGENCIAS</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 20</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['respuesta_emergencias']; ?></td>
+  <br>
+</tr>
+<tr>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 6</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; SERVICIO A DOMICILIO</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 10</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['servicio_domicilio']; ?></td>
   <br>
 </tr>
-
 <?php  
 }
 ?>
@@ -224,7 +230,43 @@ if ($pedido ['tipo_evaluacion'] == 'SELECCIÓN') {
 </table>
 <br>
 <br>
+<table  align="center" cellspacing="0" style="width: 100%; text-align: center; font-size: 14px">
+<tr>
+  <td rowspan="1" colspan="1" style="background: #DCDFDF; border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; No.</td>
+  <td rowspan="1" colspan="1" style="background: #DCDFDF; border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; Área</td>
+  <td rowspan="1" colspan="1" style="background: #DCDFDF; border: solid .5px; width: 25%; font-size: 10pt;" align="center">&nbsp; Criterios</td>
+  <td rowspan="1" colspan="1" style="background: #DCDFDF; border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; Parámetro</td>
+  <td rowspan="1" colspan="1" style="background: #DCDFDF; border: solid .5px; width: 10%; font-size: 10pt;" align="center">&nbsp; Calif.</td>
+  <td rowspan="1" colspan="1" style="background: #DCDFDF; border: solid .5px; width: 30%; font-size: 10pt;" align="center">&nbsp; Para Consultar dudas con:</td>
+  <br>
+</tr>
+<tr>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 1</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; CALIDAD</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">CONDICIONES DE EMPAQUE</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 10</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['condicion_empaque']; ?></td>
+  <td rowspan="3" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['consulta']; ?></td>
 
+  <br>
+</tr>
+<tr>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 2</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; CALIDAD</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">RECHAZOS</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 40</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['rechazos']; ?></td>
+  <br>
+</tr>
+<tr>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 5%; font-size: 10pt;" align="center">&nbsp; 3</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; CALIDAD</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">IDENTIFICACIÓN (nombre de producto, marca y proveedor)</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 50</td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['identificacion']; ?></td>
+  <br>
+</tr>
+</table>
 <br>
 <br>
 <table  align="center" cellspacing="0" style="width: 100%; text-align: center; font-size: 14px">
@@ -250,8 +292,8 @@ if ($pedido ['tipo_evaluacion'] == 'SELECCIÓN') {
   <td td class="full-border" rowspan="1" colspan="1" style="width: 10%; font-size: 9pt;" align="center"><?php echo ' &nbsp;'.$chist_2; ?></td>
   <td td class="full-border" rowspan="1" colspan="1" style="width: 10%; font-size: 9pt;" align="center"><?php echo ' &nbsp;'.$chist_3; ?></td>
   <td td class="full-border" rowspan="1" colspan="1" style=" border-left: 0px; border-top: 0px; border-bottom: 0px; width: 5%; font-size: 10pt;" align="center">&nbsp;</td>
-  <td td class="full-border" rowspan="1" colspan="1" style=" width: 15%; font-size: 9pt;" align="left"></td>
-  <td td class="full-border" rowspan="1" colspan="1" style=" width: 10%; font-size: 9pt;" align="center"> </td>
+  <td td class="full-border" rowspan="1" colspan="1" style=" width: 15%; font-size: 9pt;" align="left">Calidad</td>
+  <td td class="full-border" rowspan="1" colspan="1" style=" width: 10%; font-size: 9pt;" align="center"><?php echo ' &nbsp;'.$pedido['calificacion_calidad']; ?> </td>
   <br>
 </tr>
 <tr>
