@@ -38,7 +38,6 @@ session_start();
       $area_solicita = $data['area_solicitante'];
       $cantidad      = $data['cant_autorizada'];
       // $name_recibe   = $data['recibe'];
-      
     }
   }
 

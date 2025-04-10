@@ -13481,7 +13481,7 @@ if($_POST['action'] == 'AlmacenaEditEvaluametro')
 
 // Elimina Evaluacion Metrologia
 
-if($_POST['action'] == 'EliminaEvaluaproducto')
+if($_POST['action'] == 'EliminaEvaluametro')
 {
 
         $nfolio   = $_POST['nfolio'];

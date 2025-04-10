@@ -33,6 +33,7 @@ while($data = mysqli_fetch_array($query)) {
     $tipo = $data['tipo_requisicion'];
     $areasolicita = $data['area_solicitante'];
     $notas_req = $data['observaciones'];
+    $cantidad = $data['cant_autorizada'];
 }
 
 
