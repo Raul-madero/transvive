@@ -35,7 +35,7 @@ $gender = isset($_POST['gender']) ? $_POST['gender'] : null;
 
 
 // Consultas SQL
-$columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, 
+$columns = 'p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, 
     CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno) as name, us.nombre AS jefeo, p.ruta ';
 $table = ' registro_viajes p 
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto 
@@ -56,7 +56,7 @@ if( !empty($requestData['search']['value']) ) {
     $where .= " AND ( p.id LIKE '%".$requestData['search']['value']."%' OR p.cliente LIKE '%".$requestData['search']['value']."%' OR p.operador LIKE '%".$requestData['search']['value']."%' OR p.semana LIKE '%".$requestData['search']['value']."%' OR sp.nombres LIKE '%".$requestData['search']['value']."%' OR sp.apellido_paterno LIKE '%" . $requestData['search']['value'] . "%' OR sp.apellido_materno LIKE '%".$requestData['search']['value']."%' OR p.fecha LIKE '%".$requestData['search']['value']."%' )";
 };
 
-$orderColumn = $columnsOrder[$requestData['order'][1]['column']] ?? 'id';
+$orderColumn = $columnsOrder[$requestData['order'][0]['column']] ?? 'p.id';
 $orderDir = $requestData['order'][0]['dir'] === 'desc' ? 'DESC' : 'ASC';
 
 // Conteo total
@@ -64,6 +64,7 @@ $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
 $sql = "SELECT $columns FROM $table $where ORDER BY $orderColumn $orderDir LIMIT $start, $length";
+echo $sql; // Debugging: Ver la consulta SQL generada
 $result = $conection->query($sql);
 if (!$result) {
     echo json_encode(["error" => $conection->error]);
