@@ -51,16 +51,6 @@ $sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
 $queryprov = mysqli_query($conection, $sqlprov);
 $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
 
-//Seleccion de orden de Mantenimiento
-$sqlsmant  = "select no_orden from solicitud_mantenimiento where estatus = 1";
-$querysmant = mysqli_query($conection, $sqlsmant);
-$filasmant = mysqli_fetch_all($querysmant, MYSQLI_ASSOC); 
-
-//Seleccion de unidades de medida
-$sqlumed = "select * from unidades_medida ORDER BY descripcion";
-$queryumed = mysqli_query($conection, $sqlumed);
-$filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
-
 //Seleccion de unidades
 $sqlunidad = "SELECT * FROM unidades WHERE estatus = 1 ORDER BY no_unidad";
 $queryunidad = mysqli_query($conection, $sqlunidad);
@@ -354,7 +344,8 @@ $(document).ready(function () {
         'C': 'Camión',
         'A': 'Automóvil',
         'S': 'Sprinter',
-        'J': 'JAC'
+        'J': 'JAC',
+        'P': 'Premium'
     };
 
     $('#inputNounidad').on('change', function () {
