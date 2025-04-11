@@ -753,20 +753,6 @@ $(document).on('change', '.input-cot', function () {
         });
     </script>
 
-    <script type="text/javascript">
-        function generarimpformulaPDF(folio){
-            var ancho = 1000;
-            var alto = 800;
-            //calcular posicion x,y para centrar la ventana
-
-            var x = parseInt((window.screen.width/2) - (ancho / 2));
-            var y = parseInt((window.screen.height/2) - (alto / 2));
-
-            $url = 'factura/requisicion.php?id='+ folio;
-            window.open($url,"requisicion","left="+x+",top="+y+",height="+alto+",width="+ancho+",scrollbar=si,location=no,resizable=si,menubar=no");
-        }
-    </script> 
-
     <script>
         $(document).ready(function(){
             $(".tokenizationSelect2").select2({

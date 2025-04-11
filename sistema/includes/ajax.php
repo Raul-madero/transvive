@@ -9118,7 +9118,6 @@ if($_POST['action'] == 'AlmacenaEditSolicitudmpreventivo')
                 </td>
             </tr>';
                     }
-
                     //$impuesto = round($subtotal, 2);
                
 
