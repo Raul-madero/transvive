@@ -22,7 +22,7 @@ if(empty($_REQUEST['id'])){
 }
 
 $noreq = $_REQUEST['id'];
-$sql = "SELECT * FROM requisiciones WHERE id_requisicion = $noreq";
+$sql = "SELECT * FROM requisicion_compra WHERE id = $noreq";
 $query = mysqli_query($conection, $sql);
 
 while($data = mysqli_fetch_array($query)) {
@@ -35,12 +35,6 @@ while($data = mysqli_fetch_array($query)) {
     $notas_req = $data['observaciones'];
     $cantidad = $data['cant_autorizada'];
 }
-
-
-//Seleccionar quien recibe
-$sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
-$queryrecb = mysqli_query($conection, $sqlrecb);
-$filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
 
 //Seleccion de productos para llenado de requisicion
 $sqlprod   = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY codigo";
@@ -138,22 +132,22 @@ mysqli_close($conection);
 
                                 <label for="inputEmail3" class="col-sm-2 col-form-label">Folio</label>
                                 <div class="col-sm-3">
-                                    <input style="text-align:right; font-weight: bold; color: #F05B0E" type="text" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo "REQ-" . $nuevofolio;?>" readonly>
+                                    <input style="text-align:right; font-weight: bold; color: #F05B0E" type="text" class="form-control" id="inputFolio" name="inputFolio" value="<?php echo "REQ-" . $noreq;?>" readonly>
                                 </div>
                             </div>
 
                             <div class="form-group row" style="text-align:left;">
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha en la que se requiere</label>
                                 <div class="col-sm-4">
-                                    <input type="date" class="form-control" id="inputFecharequiere" name="inputFecharequiere">
+                                    <input type="date" class="form-control" id="inputFecharequiere" name="inputFecharequiere" value="<?php echo $fecha_req;?>">
                                 </div>
 
                                 <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo</label>
                                 <div class="col-sm-3">
                                     <select class="form-control" style="width: 100%; text-align: left" id="inputTipo" name="inputTipo">
                                         <option value="">- Seleccione -</option>
-                                        <option value="Normal">Normal</option>
-                                        <option value="Urgente">Urgente</option>
+                                        <option value="Normal" <?php echo( $tipo === "Normal" )? "selected" : "" ?> >Normal</option>
+                                        <option value="Urgente" <?php echo( $tipo === "Urgente" )? "selected" : "" ?> >Urgente</option>
                                     </select>
                                 </div>
                             </div>
