@@ -2,6 +2,7 @@
 
 include "../conexion.php";
 session_start();
+var_dump($_SESSION);
   $User=$_SESSION['user'];
   $rol=$_SESSION['rol'];
   $idUser = $_SESSION['idUser'];
