@@ -91,41 +91,7 @@ session_start();
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <?php
-       if ($_SESSION['rol'] == 4) {
-        include('includes/navbarsup.php');
-      }else {
-        if ($_SESSION['rol'] == 6) {
-          include('includes/navbaroperac.php');
-        }else {
-          if ($_SESSION['rol'] == 8) {
-            include('includes/navbarjefeoper.php');
-          }else {
-            if ($_SESSION['rol'] == 9) {
-              include('includes/navbargrcia.php');
-            }else {
-              if ($_SESSION['rol'] == 15) {
-                include('includes/navbarmonitorista.php');
-              }else {
-                if ($_SESSION['rol'] == 14) {
-                  include('includes/navbarcalidad.php');
-                }else {
-                  if ($_SESSION['rol'] == 10) {
-                    include('includes/navbaralmacen.php');
-                  }else {
-                    if ($_SESSION['rol'] == 7) {
-                      include('includes/navbarmantto.php');
-                    }else {
-                      include('includes/navbar.php'); 
-                    }  
-                  }  
-                } 
-
-              }  
-            }
-          }  
-        }
-      } ?>
+      <?php include('inludes/generalnavbar.php')?>
       <?php include('includes/nav.php') ?> 
 
     </div>
@@ -331,12 +297,12 @@ session_start();
             { "data" : "trabsolicitado", "width": "12%" },
             { "data" : "estatusped", "width": "8%", "orderable":false },
               
-          <?php if ($rol == 10 || $User == 'Jose A' ) { ?>
+          <?php if ($rol == 10 || $idUser == 32 ) { ?>
             {
                     "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a>';
-    }       
- } 
+                    return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a>';
+                }       
+            } 
 
          <?php }else { ?>
           {
