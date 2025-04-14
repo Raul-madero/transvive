@@ -32,7 +32,20 @@ if ($_REQUEST['action'] == 'fetch_users') {
     // Filtrado de búsqueda
     if (!empty($requestData['search']['value'])) {
         $search_value = $requestData['search']['value'];
-        $sql .= " AND (nombre LIKE '%$search_value%' OR p.area_solicitante LIKE '%$search_value% ' OR p.contacto LIKE '%$search_value%' OR p.observaciones LIKE '%$search_value%' OR p.no_orden LIKE '%$search_value%' OR p.estatus LIKE '%$search_value%')";
+        $estatus_mapping = [
+            'Cancelada' => 0,
+            'Activa' => 1,
+            'Cerrada' => 2,
+            'Iniciada' => 4,
+            'Terminada' => 5
+        ];
+
+        $estatus_value = array_key_exists($search_value, $estatus_mapping) ? $estatus_mapping[$search_value] : null;
+        
+        $sql .= " AND (nombre LIKE '%$search_value%' OR p.area_solicitante LIKE '%$search_value% ' OR p.contacto LIKE '%$search_value%' OR p.observaciones LIKE '%$search_value%' OR p.no_orden LIKE '%$search_value%')";
+        if ($estatus_value !== null) {
+            $sql .= " OR p.estatus = $estatus_value";
+        }
     }
 
     // Obtención de datos totales filtrados
