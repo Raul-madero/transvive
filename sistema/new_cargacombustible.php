@@ -3,6 +3,7 @@ include "../conexion.php";
 session_start();
   $User=$_SESSION['user'];
   $rol=$_SESSION['rol'];
+  $iduser=$_SESSION['idUser'];
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_assoc($query); 
@@ -416,12 +417,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             let fechaActual = new Date();
             fechaActual.setHours(0, 0, 0, 0); // Eliminar la hora para comparar solo fechas
 
-            // Calcular la fecha límite (hace 2 días)
+            // Calcular la fecha límite (hace 6 días)
             let fechaLimite = new Date();
             fechaLimite.setDate(fechaActual.getDate() - 6); // Restar 6 días
 
             // Comparar la fecha ingresada con la fecha límite
-            if (fechaIngresada >= fechaLimite && fechaIngresada <= fechaActual) {
+            if (fechaIngresada >= fechaLimite && fechaIngresada <= fechaActual || <?php echo $iduser ?> == 32) {
                 return true;
             } else {
                 return false;
