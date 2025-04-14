@@ -62,12 +62,27 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     if (!empty($requestData['search']['value'])) {
         $search = $requestData['search']['value'];
+
+        $estatus_mapping = [
+            'Cancelada' => 0,
+            'Activa' => 1,
+            'Autorizada' => 2,
+            'Procesada' => 4,
+            'Facturada' => 5
+        ];
+
+        $estatus_value = array_key_exists($search, $estatus_mapping) ? $estatus_mapping[$search] : null;
+
         $sql .= " AND (
             no_requisicion LIKE '%$search%' OR
             tipo_requisicion LIKE '%$search%' OR
             area_solicitante LIKE '%$search%' OR
             observaciones LIKE '%$search%'
         )";
+
+        if ($estatus_value !== null) {
+            $sql .= " OR estatus = $estatus_value";
+        }
     }
     
 

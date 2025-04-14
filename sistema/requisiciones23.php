@@ -152,15 +152,6 @@ session_start();
                                     <input type="text" readonly name="final_date" id="final_date" class="form-control datepicker" placeholder="A Fecha">
                                 </div>
                                 <div class="form-group mr-3">
-                                    <select class="form-control" name="gender" id="gender">
-                                        <option value="">Estatus</option>
-                                        <option value="Activa">Activa</option>
-                                        <option value="Autorizada">Autorizada</option>
-                                        <option value="Procesada">Procesada</option>
-                                        <option value="Cancelada">Cancelada</option>
-                                    </select>
-                                </div>
-                                <div class="form-group mr-3">
                                     <button type="submit" name="filter" id="filter" class="btn btn-success">
                                         <i class="fa fa-filter"></i> Filtro
                                     </button>
