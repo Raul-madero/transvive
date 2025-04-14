@@ -5048,17 +5048,19 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
 
     if ($query_result && mysqli_num_rows($query_result) > 0) {
         while ($data = mysqli_fetch_assoc($query_result)) {
-            $subtotal = $data['cantidad'] * $data['precio'];
+            // var_dump($data);
+            $cantidad = ($data['cantidad'] > 0) ? $data['cantidad'] : 1;
+            $subtotal = $cantidad * $data['precio'];
             $totsubtotal += $subtotal;
-            $iva = $subtotal * ($data['impuesto'] / 100);
+            $iva = round($totsubtotal * ($data['impuesto'] / 100), 2);
+            // echo $iva;
             $totiva += $iva;
             $impuesto_isr = $subtotal * ($data['impuesto_isr'] / 100);
             $totimpuesto_isr += $impuesto_isr;
             $impuesto_ieps = $subtotal * ($data['impuesto_ieps'] / 100);
             $totimpuesto_ieps += $impuesto_ieps;
-
             $detalleTablaPe .= '<tr>
-                <td><input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.number_format($data['cantidad'], 2).'" data-id="'.$data['id'].'" data-field="cantidad"></td>
+                <td><input type="number" step="any" class="form-control form-control-sm text-right input-cot" value="'.number_format($cantidad, 2).'" data-id="'.$data['id'].'" data-field="cantidad"></td>
                 <td class="text-center">'.$data['codigo'].'</td>
                 <td>
                     <input type="text" class="form-control form-control-sm input-cot" value="'.$data['descripcion'].'" data-id="'.$data['id'].'" data-field="descripcion">
@@ -5076,6 +5078,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
         }
 
         $total = $totsubtotal + $totiva + $totimpuesto_isr + $totimpuesto_ieps;
+        // echo $totsubtotal . " - " . $totiva . " - " . $totimpuesto_isr . " - " . $totimpuesto_ieps . " - " . $total;   
         $detalleTotalesPe = '
             <tr>
                 <td colspan="6" class="text-right"><strong>Subtotal:</strong></td>
@@ -5083,7 +5086,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
             </tr>
             <tr>
                 <td colspan="6" class="text-right"><strong>Impuesto (IVA 16%):</strong></td>
-                <td class="text-right" colspan="2" >'.number_format($totiva, 2).'</td>
+                <td class="text-right" colspan="2">'.number_format($totiva, 2).'</td>
             </tr>
             <tr>
                 <td colspan="6" class="text-right"><strong>Total:</strong></td>

@@ -624,7 +624,7 @@ function recalcularTotales() {
         subtotal += cantidad * precio;
     });
 
-    const iva = parseFloat($('tfoot tr').eq(1).find('td').eq(1).text()) || 0; // Obtener el IVA del segundo campo de la fila de totales
+    const iva = subtotal * 0.16; // 16% de impuesto
     const total = subtotal + iva;
 
     const htmlTotales = `
