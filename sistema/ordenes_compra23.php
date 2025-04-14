@@ -151,10 +151,6 @@ session_start();
                         <input type='text' readonly name='final_date' id='final_date' class="datepicker" placeholder='A Fecha'>
                     </td>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                    <td>
-                        <input type='text' name='gender' id='gender' placeholder="Folio">
-                    </td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 
                     <td>
                         <button class="btn btn-success btn-block" type="submit" name="filter" id="filter" >

@@ -5076,7 +5076,6 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
         }
 
         $total = $totsubtotal + $totiva + $totimpuesto_isr + $totimpuesto_ieps;
-
         $detalleTotalesPe = '
             <tr>
                 <td colspan="6" class="text-right"><strong>Subtotal:</strong></td>
@@ -5084,7 +5083,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
             </tr>
             <tr>
                 <td colspan="6" class="text-right"><strong>Impuesto (IVA 16%):</strong></td>
-                <td class="text-right" colspan="2">'.number_format($totiva, 2).'</td>
+                <td class="text-right" colspan="2" >'.number_format($totiva, 2).'</td>
             </tr>
             <tr>
                 <td colspan="6" class="text-right"><strong>Total:</strong></td>
