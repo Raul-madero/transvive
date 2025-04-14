@@ -44,29 +44,29 @@ session_start();
    <!-- Select2 -->
   <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-    
-       
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">
-
   
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-
-   
-<!------ Include the above in your HEAD tag ---------->
-
-    <script src="./js/jquery.dataTables.min.js"></script>
-    <script src="./js/dataTables.bootstrap4.min.js"></script>
-    
+  
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">
+  
+  
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+  
+  
+  <!------ Include the above in your HEAD tag ---------->
+  
+  <script src="./js/jquery.dataTables.min.js"></script>
+  <script src="./js/dataTables.bootstrap4.min.js"></script>
+  
+  <script src="./js/require.min.js"></script>
         
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     
-    <script src="./js/require.min.js"></script>
     <script>
       requirejs.config({
           baseUrl: '.'
@@ -92,40 +92,7 @@ session_start();
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <?php
-       if ($_SESSION['rol'] == 4) {
-        include('includes/navbarsup.php');
-      }else {
-       if ($_SESSION['rol'] == 5) {
-          include('includes/navbarrhuman.php');
-         }else {
-            if ($_SESSION['rol'] == 6) {
-                include('includes/navbaroperac.php');
-              }else {
-                if ($_SESSION['rol'] == 7) {
-                    include('includes/navbarmantto.php');
-                  }else { 
-                     if ($_SESSION['rol'] == 8) {
-                        include('includes/navbarjefeoper.php');
-                      }else { 
-                        if ($_SESSION['rol'] == 9) {
-                          include('includes/navbargrcia.php');
-                        }else {
-                          if ($_SESSION['rol'] == 15) {
-                            include('includes/navbarmonitorista.php');
-                          }else {
-                            if ($_SESSION['rol'] == 10) {
-                              include('includes/navbaralmacen.php');
-                            }else {
-                              include('includes/navbar.php');
-                            }  
-                          }  
-                        }  
-                      }  
-                  }
-              }  
-      } 
-      } ?>
+      <?php include("includes/generalnavbar.php"); ?>
       <?php include('includes/nav.php') ?> 
 
     </div>
