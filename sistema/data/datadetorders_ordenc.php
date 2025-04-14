@@ -32,7 +32,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     // Filtrado de búsqueda
     if (!empty($requestData['search']['value'])) {
         $search_value = $requestData['search']['value'];
-        $sql .= " AND (nombre LIKE '%$search_value%' OR area_solicitante LIKE '%$search_value%')";
+        $sql .= " AND (nombre LIKE '%$search_value%' OR p.area_solicitante LIKE '%$search_value% ' OR p.contacto LIKE '%$search_value%' OR p.observaciones LIKE '%$search_value%' OR p.no_orden LIKE '%$search_value%')";
     }
 
     // Obtención de datos totales filtrados
