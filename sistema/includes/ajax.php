@@ -1982,7 +1982,6 @@ if($_POST['action'] == 'AlmacenaSolicitudmantto')
 
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
-
         $query_procesar = mysqli_query($conection,"CALL procesar_solicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$trabajo_sol', '$notasgen', $usuario)");
         $result_detalle = mysqli_num_rows($query_procesar);
         
@@ -2645,50 +2644,50 @@ if ($_POST['action'] == 'AlmacenaRuta') {
             } 
 
 // Agregar Detalle al mantenimiento
-        if($_POST['action'] == 'AddDetallemantto'){
-            if(empty($_POST['folio']) )
-            {
-                echo 'error';
-            }else{
-                $nofolio     = $_POST['folio'];
-                $cantidad    = $_POST['cantidad'];
-                $descripcion = $_POST['descripcion'];
-                
-                $token       = md5($_SESSION['idUser']);
+if ($_POST['action'] == 'AddDetallemantto') {
+    if (empty($_POST['folio']) || empty($_POST['cantidad']) || empty($_POST['descripcion'])) {
+        echo 'error';
+    } else {
 
-                $query_detalle_mantto = mysqli_query($conection,"CALL add_temp_detallemantto($nofolio, $cantidad, '$descripcion', '$token')");
-                $result = mysqli_num_rows($query_detalle_mantto);
+        $nofolio     = intval($_POST['folio']);
+        $cantidad    = intval($_POST['cantidad']);
+        $descripcion = mysqli_real_escape_string($conection, $_POST['descripcion']);
+        $token       = md5($_SESSION['idUser']);
 
-                $detalleTablaPe = '';
-                        
-                $arrayData = array();
+        // Insertar el nuevo detalle
+        $query_detalle_mantto = mysqli_query($conection, "INSERT INTO detalle_mantto(folio, cantidad, descripcion, token) VALUES ($nofolio, $cantidad, '$descripcion', '$token')");
 
-                if($result > 0){     
-                while ($data = mysqli_fetch_assoc($query_detalle_mantto)){
+        if ($query_detalle_mantto) {
+            // Obtener los detalles insertados con ese token (si aplica a la sesión)
+            $query = mysqli_query($conection, "SELECT * FROM detalle_mantto WHERE token = '$token'");
 
-                        $detalleTablaPe .= '<tr>
-                                            <td>'.$data['cantidad'].'</td>
-                                            <td>'.$data['descripcion'].'</td>
-                                            
-                                            <td align="center"><a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_mantto('.$data['id'].','.$data['folio'].');"><i class="far fa-trash-alt"></i></a>
-                                            </td>
-                                        </tr>';
-                    }
+            $detalleTablaPe = '';
+            $arrayData = array();
 
-                  
-                $arrayData['detalle'] = $detalleTablaPe;
-           
+            while ($data = mysqli_fetch_assoc($query)) {
+                $detalleTablaPe .= '<tr>
+                    <td>' . $data['cantidad'] . '</td>
+                    <td>' . $data['descripcion'] . '</td>
+                    <td align="center">
+                        <a class="link_delete" href="#" onclick="event.preventDefault(); del_detalle_mantto(' . $data['id'] . ',' . $data['folio'] . ');">
+                            <i class="far fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>';
+            }
 
-                    echo json_encode($arrayData,JSON_UNESCAPED_UNICODE);
+            $arrayData['detalle'] = $detalleTablaPe;
 
-                
-                mysqli_close($conection);   
-            }else{
-                echo "error";
-            }   
+            echo json_encode($arrayData, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo 'error';
         }
-            exit;   
-        } 
+
+        mysqli_close($conection);
+    }
+    exit;
+}
+
 
 // Elimina refacciones del detalle Temporal Mannto
 
@@ -2940,65 +2939,88 @@ if($_POST['action'] == 'deleteCargac')
 
 //*
         //Almacena Edicion Solicitud Mantenimiento
-if($_POST['action'] == 'AlmacenaEditSolicitudmantto')
-{
-    // var_dump($_POST);
-    if(empty($_POST['fecha']) || empty($_POST['nounidad']) || empty($_POST['operador']) || empty($_POST['solicita']) || empty($_POST['tipotrabajo']) || empty($_POST['programado']) || empty($_POST['trabajosolic']) || empty($_POST['trabajohecho']) || empty($_POST['causas']) )
-    {
-       echo 'error';
-    }else{
+        if ($_POST['action'] == 'AlmacenaEditSolicitudmantto') {
+            if (
+                empty($_POST['fecha']) || empty($_POST['nounidad']) || empty($_POST['operador']) || 
+                empty($_POST['solicita']) || empty($_POST['tipotrabajo']) || empty($_POST['programado']) || 
+                empty($_POST['trabajosolic']) || empty($_POST['trabajohecho']) || empty($_POST['causas'])
+            ) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Faltan datos obligatorios'
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
         
-        $folio        = (isset($_POST['folio']) && !empty($_POST['folio'])) ? $_POST['folio'] : null;
-        $fecha        = (isset($_POST['fecha']) && !empty($_POST['fecha'])) ? $_POST['fecha'] : '0000-00-00';
-        $nounidad     = (isset($_POST['nounidad']) && !empty($_POST['nounidad'])) ? $_POST['nounidad'] : null;
-        $tipo_unidad  = (isset($_POST['tipo_unidad']) && !empty($_POST['tipo_unidad'])) ? $_POST['tipo_unidad'] : null;
-        $operador     = (isset($_POST['operador']) && !empty($_POST['operador'])) ? $_POST['operador'] : null;
-        $solicita     = (isset($_POST['solicita']) && !empty($_POST['solicita'])) ? $_POST['solicita'] : null;
-        $tipo_trab    = (isset($_POST['tipotrabajo']) && !empty($_POST['tipotrabajo'])) ? $_POST['tipotrabajo'] : null;
-        $kmneumatico  = (isset($_POST['kmneumatico']) && !empty($_POST['kmneumatico'])) ? $_POST['kmneumatico'] : null;
-        $tipo_mantto  = (isset($_POST['tipomantto']) && !empty($_POST['tipomantto'])) ? $_POST['tipomantto'] : null;
-        $programado   = (isset($_POST['programado']) && !empty($_POST['programado'])) ? $_POST['programado'] : null;
-        $trabajo_sol  = (isset($_POST['trabajosolic']) && !empty($_POST['trabajosolic'])) ? $_POST['trabajosolic'] : null;
-        $trabajohecho = (isset($_POST['trabajohecho']) && !empty($_POST['trabajohecho'])) ? $_POST['trabajohecho'] : null;
-        $costos_desc  = (isset($_POST['costosdesc']) && !empty($_POST['costodesc'])) ? $_POST['costodesc'] : null;
-        $fechaini     = (isset($_POST['fechaini']) && !empty($_POST['fechaini'])) ? $_POST['fechaini'] : '0000-00-00';
-        $fechafin     = (isset($_POST['fechafin']) && !empty($_POST['fechafin'])) ? $_POST['fechafin'] : '0000-00-00';
-        $notas        = (isset($_POST['notas']) && !empty($_POST['notas'])) ? $_POST['notas'] : null;
-        $notas_genera = (isset($_POST['notas_genera']) && !empty($_POST['notas_genera'])) ? $_POST['notas_genera'] : null;
-        $causas       = (isset($_POST['causas']) && !empty($_POST['causas'])) ? $_POST['causas'] : null;
-        // echo "Valor de usuario: " . $_POST['usuario'];
-        $usuario     = (isset($_POST['usuario']) && !empty($_POST['usuario'])) ? intval($_POST['usuario']) : null;
-
-        $sql_editar_orden = "CALL procesar_editsolicitudmantto($folio, '$fecha', '$nounidad', '$tipo_unidad', '$operador', '$solicita', '$tipo_trab', '$kmneumatico', '$tipo_mantto', '$programado', '$trabajo_sol', '$trabajohecho', '$costos_desc', '$fechaini', '$fechafin', '$notas', '$notas_genera', '$causas', $usuario)";
-        // echo $sql_editar_orden;
-
-        $query_procesar = mysqli_query($conection, $sql_editar_orden);
-        if(!$query_procesar) {
-            die("Error en la consulta: " . mysqli_error($conection));
-        }
-
-        $result_detalle = mysqli_affected_rows($conection);
+            // Escapamos los valores
+            $folio        = mysqli_real_escape_string($conection, $_POST['folio']);
+            $fecha        = mysqli_real_escape_string($conection, $_POST['fecha']);
+            $nounidad     = mysqli_real_escape_string($conection, $_POST['nounidad']);
+            $tipo_unidad  = mysqli_real_escape_string($conection, $_POST['tipo_unidad']);
+            $operador     = mysqli_real_escape_string($conection, $_POST['operador']);
+            $solicita     = mysqli_real_escape_string($conection, $_POST['solicita']);
+            $tipo_trab    = mysqli_real_escape_string($conection, $_POST['tipotrabajo']);
+            $kmneumatico  = mysqli_real_escape_string($conection, $_POST['kmneumatico']);
+            $tipo_mantto  = mysqli_real_escape_string($conection, $_POST['tipomantto']);
+            $programado   = mysqli_real_escape_string($conection, $_POST['programado']);
+            $trabajo_sol  = mysqli_real_escape_string($conection, $_POST['trabajosolic']);
+            $trabajohecho = mysqli_real_escape_string($conection, $_POST['trabajohecho']);
+            $costos_desc  = mysqli_real_escape_string($conection, $_POST['costosdesc'] ?? '');
+            $fechaini     = mysqli_real_escape_string($conection, $_POST['fechaini']);
+            $fechafin     = mysqli_real_escape_string($conection, $_POST['fechafin']);
+            $notas        = mysqli_real_escape_string($conection, $_POST['notas']);
+            $notas_genera = mysqli_real_escape_string($conection, $_POST['notas_genera']);
+            $causas       = mysqli_real_escape_string($conection, $_POST['causas']);
+            $usuario      = intval($_POST['usuario']);
         
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            $response = array(
-                'status' => 'success',
-                'data' => $data
-            );
-            echo json_encode($response,JSON_UNESCAPED_UNICODE);
-        }else{
-            $response = array(
-                'status' => 'error',
-                'message' => 'Error al procesar la solicitud'
-            );
-            echo json_encode($response, JSON_UNESCAPED_UNICODE);
+            $sql_editar_orden = "UPDATE solicitud_mantenimiento SET 
+                fecha = '$fecha',
+                unidad = '$nounidad',
+                tipo_unidad = '$tipo_unidad',
+                solicita = '$solicita',
+                tipo_trabajo = '$tipo_trab',
+                km_neumatico = '$kmneumatico',
+                tipo_mantenimiento = '$tipo_mantto',
+                programado = '$programado',
+                trabajo_solicitado = '$trabajo_sol',
+                trabajo_hecho = '$trabajohecho',
+                costo_descuento = '$costos_desc',
+                fecha_inicial = '$fechaini',
+                fecha_termino = '$fechafin',
+                notas = '$notas',
+                notas_genera = '$notas_genera',
+                causas_servicio = '$causas',
+                edit_id = $usuario 
+                WHERE no_orden = $folio";
+        
+            $query_procesar = mysqli_query($conection, $sql_editar_orden);
+        
+            if (!$query_procesar) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Error en la consulta: ' . mysqli_error($conection)
+                ]);
+                exit;
+            }
+        
+            $result_detalle = mysqli_affected_rows($conection);
+        
+            if ($result_detalle > 0) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Solicitud actualizada correctamente'
+                ], JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'No se realizaron cambios'
+                ], JSON_UNESCAPED_UNICODE);
+            }
+        
+            mysqli_close($conection);
+            exit;
         }
-    
-    mysqli_close($conection);
-  }
-   
-    exit;
-}  
+        
 
 // borrar Viaje
         if($_POST['action'] == 'infoBorraViaje')
