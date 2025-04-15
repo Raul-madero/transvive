@@ -64,7 +64,7 @@ $count_sql = "SELECT COUNT(*) AS total FROM $table $where";
 $totalData = $conection->query($count_sql)->fetch_assoc()['total'] ?? 0;
 
 $sql = "SELECT $columns FROM $table $where ORDER BY $orderColumn $orderDir LIMIT $start, $length";
-echo $sql; // Debugging: Ver la consulta SQL generada
+// echo $sql; // Debugging: Ver la consulta SQL generada
 $result = $conection->query($sql);
 if (!$result) {
     echo json_encode(["error" => $conection->error]);
