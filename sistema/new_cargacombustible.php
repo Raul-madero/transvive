@@ -422,7 +422,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             fechaLimite.setDate(fechaActual.getDate() - 6); // Restar 6 días
 
             // Comparar la fecha ingresada con la fecha límite
-            if (fechaIngresada >= fechaLimite && fechaIngresada <= fechaActual || <?php echo $iduser ?> == 32) {
+            if ((fechaIngresada >= fechaLimite && fechaIngresada <= fechaActual) || (<?php echo $iduser ?> == 32)) {
                 return true;
             } else {
                 return false;

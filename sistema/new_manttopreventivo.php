@@ -59,6 +59,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <style>
     .right{
     float: left;
+    }
   </style>
 </head>
 <body class="hold-transition layout-top-nav">
@@ -663,7 +664,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
          
        var action       = 'AlmacenaSolicitudmpreventivo';
-
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",
