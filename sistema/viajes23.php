@@ -159,40 +159,47 @@ mysqli_close($conection);
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>TRANSVIVE | ERP</title>
-	<link rel="icon" href="../images/favicon.ico" type="image/x-icon"/>
-	<link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
-	<!-- Google Font: Source Sans Pro -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-	<!-- Font Awesome Icons -->
-	<link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
-	<!-- Theme style -->
-	<link rel="stylesheet" href="../dist/css/adminlte.min.css">
-	<!-- Ekko Lightbox -->
-	<link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
-	<!-- overlayScrollbars -->
-	<link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-	<!-- Select2 -->
-	<link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
-	<link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="./css/buttons.dataTables.min.css">
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
-	<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-	<!------ Include the above in your HEAD tag ---------->
-	<script src="./js/jquery.dataTables.min.js"></script>
-	<script src="./js/dataTables.bootstrap4.min.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
-	<script src="./js/require.min.js"></script>
-	<script>
+	<!-- Favicon -->
+<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+<!-- jQuery UI (datepicker) -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-x..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- AdminLTE -->
+<link rel="stylesheet" href="../dist/css/adminlte.min.css">
+
+<!-- Plugins -->
+<link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
+<link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+<link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css">
+
+<!-- jQuery + jQuery UI -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/i18n/jquery.ui.datepicker-es.min.js"></script>
+
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- RequireJS (si lo sigues usando) -->
+<!-- <script src="./js/require.min.js"></script> -->
+<!-- <script>
 	requirejs.config({
 		baseUrl: '.'
 	});
-	</script>
-	<!-- Dashboard Core -->
+</script> -->
+
 </head>
 <body class="hold-transition layout-top-nav">
 	<div class="wrapper">
@@ -506,163 +513,153 @@ mysqli_close($conection);
 <!-- Bootstrap 3.3.7 -->
 
 
-<!-- AdminLTE App -->
-<script src="../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<!--<script src="../dist/js/demo.js"></script>-->
-<!-- page script -->
+<!-- Bootstrap Bundle -->
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
+<!-- AdminLTE -->
+<script src="../dist/js/adminlte.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+<!-- DataTables + Extensions -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- DataTables Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<!-- Bootstrap Datepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
 
     <?php
     //Administrador, Operaciones, Calidad, Gerencia, RR.HH
       if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 14 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 5){
     ?>
 <script>
-	$(document).ready(function () {
-    	// Inicializa la tabla
-    	const table = initializeDataTable();
-    	// Listener para el botón de filtro
-    	$("#filter").on("click", function () {
-			let initial_date = $("#initial_date").val();
-			let final_date = $("#final_date").val();
-			let gender = $("#gender").val();
-
-			if (validateFilter(initial_date, final_date)) {
-				// Actualiza el URL del DataTable con nuevos parámetros
-				table.ajax.url("data/datadetorders2.php").load(null, false); // Omitimos parámetros aquí
-			
-
-				// Actualiza la configuración Ajax del DataTable
-				table.settings()[0].ajax.data = {
-					action: "fetch_users",
-					initial_date: initial_date,
-					final_date: final_date,
-					gender: gender
-				};
-
-				// Recarga la tabla
-				table.state.clear(); //Limpia el estado de almacenado
-				table.ajax.reload(null, false); // No reinicia la paginación
-    		}
-		});
-
-
-    	// Configura el DatePicker
-    	$(".datepicker").datepicker({
-        	language: 'es',
-        	dateFormat: "yy-mm-dd",
-        	changeYear: true
-    	});
+$(document).ready(function () {
+	// Inicializa datepickers
+	$(".datepicker").datepicker({
+		dateFormat: "yy-mm-dd",
+		changeMonth: true,
+		changeYear: true,
+		language: 'es'
 	});
-	// Función para inicializar el DataTable
-	function initializeDataTable() {
-    	return $('#fetch_generated_wills').DataTable({
-        	order: [[1, "desc"]],
-        	dom: 'Bfrtip',
-        	processing: true,
-        	serverSide: true,
-        	stateSave: true,
-        	responsive: true,
-        	lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-        	deferRender: true,
-        	ajax: {
-            	url: "data/datadetorders2.php",
 
-            	type: "POST",
-            	dataType: "json",
-            	data: function (d) {
-                	// Datos enviados por el cliente
-                	d.action = "fetch_users";
-                	d.initial_date = $("#initial_date").val() || "";
-                	d.final_date = $("#final_date").val() || "";
-                	d.gender = $("#gender").val() || "";
-					console.log(d); //DEpuracion
-            	},
-            	dataSrc: function (json) {
-                	// Validar que el JSON sea correcto
-                	if (!json || !json.records) {
-                    	console.error("Invalid JSON:", json);
-                    	return [];
-                	}
-                	return json.records;
-            	},
-           	 	error: function (xhr, error, code) {
-                	console.error("Error en AJAX:", xhr.responseText);
-                	alert("Ocurrió un error al procesar la solicitud.");
-            	}
-        	},
-        	columns: [
-            	{ data: "pedidono", width: "10px", className: "text-right" },
-            	{ data: "fecha", width: "60px" },
-            	{ data: "horainicio", width: "50px", className: "text-center"},
-            	{ data: "horafin", width: "50px", className: "text-center"},
-            	{ data: "nosemana", width: "80px"},
-            	{ data: "razonsocial", width: "100px" },
-            	{ data: "rutacte", width: "40px" },
-            	{ data: "conductor", width: "100px" },
-            	{ data: "tipounidad", width: "80px"},
-            	{ data: "nounidad", width: "30px" },
-            	{ data: "supervisor", width: "50px" },
-            	{ data: "jefeopera", width: "50px" },
-            	{ data: "estatusped", width: "30px" },
-            	{
-                	render: function (data, type, full) {
-                    	return `<center>
-                        	<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
-                            	<i class="fa fa-edit" style="color:white; font-size: 1.2em"></i>
-                        	</a> | 
-                        	<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
-                            	<i class="fas fa-times-circle"></i>
-                        	</a>
-                    	</center>`;
-                	}
-            	}
-        	],
-        	buttons: [
-            	'copyHtml5',
-            	'excelHtml5',
-            	'csvHtml5',
-            	{
-                	extend: 'colvis',
-                	postfixButtons: ['colvisRestore'],
-                	columns: '0,1,2,3,4,5,6,7,8,9,10,11,12,13'
-            	}
-        	]
-    	});
+	// Inicializa DataTable
+	const table = initializeDataTable();
+
+	// Filtro
+	$("#filter").on("click", function () {
+		const initial_date = $("#initial_date").val();
+		const final_date = $("#final_date").val();
+		const gender = $("#gender").val();
+
+		if (!validateFilter(initial_date, final_date)) return;
+
+		// Limpia estado y recarga con nueva data
+		table.state.clear();
+		table.ajax.reload(null, false);
+	});
+});
+
+// Inicializar DataTable
+function initializeDataTable() {
+	return $('#fetch_generated_wills').DataTable({
+		order: [[1, "desc"]],
+		dom: 'Bfrtip',
+		processing: true,
+		serverSide: true,
+		stateSave: true,
+		responsive: true,
+		deferRender: true,
+		lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
+		ajax: {
+			url: "data/datadetorders2.php",
+			type: "POST",
+			dataType: "json",
+			data: function (d) {
+				d.action = "fetch_users";
+				d.initial_date = $("#initial_date").val() || "";
+				d.final_date = $("#final_date").val() || "";
+				d.gender = $("#gender").val() || "";
+			},
+			dataSrc: function (json) {
+				if (!json || !json.records) {
+					console.error("Respuesta inválida del servidor:", json);
+					return [];
+				}
+				return json.records;
+			},
+			error: function (xhr, error, code) {
+				console.error("Error AJAX:", xhr.responseText);
+				alert("Ocurrió un error al procesar la solicitud.");
+			}
+		},
+		columns: [
+			{ data: "pedidono", className: "text-right", width: "10px" },
+			{ data: "fecha", width: "60px" },
+			{ data: "horainicio", className: "text-center", width: "50px" },
+			{ data: "horafin", className: "text-center", width: "50px" },
+			{ data: "nosemana", width: "80px" },
+			{ data: "razonsocial", width: "100px" },
+			{ data: "rutacte", width: "40px" },
+			{ data: "conductor", width: "100px" },
+			{ data: "tipounidad", width: "80px" },
+			{ data: "nounidad", width: "30px" },
+			{ data: "supervisor", width: "50px" },
+			{ data: "jefeopera", width: "50px" },
+			{ data: "estatusped", width: "30px" },
+			{
+				data: null,
+				orderable: false,
+				render: function (data, type, full) {
+					return `
+						<center>
+							<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
+								<i class="fa fa-edit text-white" style="font-size: 1.2em"></i>
+							</a> | 
+							<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
+								<i class="fas fa-times-circle"></i>
+							</a>
+						</center>`;
+				}
+			}
+		],
+		buttons: [
+			'copyHtml5',
+			'excelHtml5',
+			'csvHtml5',
+			// {
+			// 	extend: 'colvis',
+			// 	postfixButtons: ['colvisRestore']
+			// }
+		]
+	});
+}
+
+// Validación de fechas
+function validateFilter(initial_date, final_date) {
+	const $log = $("#error_log");
+	if (!initial_date || !final_date) {
+		$log.html("⚠️ Debes seleccionar una fecha inicial y final.");
+		return false;
 	}
-	// Función para validar el filtro
-	function validateFilter(initial_date, final_date) {
-    	if (initial_date === '' && final_date === '') {
-        	$("#error_log").html("Warning: You must select both (start and end) date.");
-        		return false;
-    	}
 
-    	if (initial_date !== '' && final_date !== '') {
-        	let date1 = new Date(initial_date);
-        	let date2 = new Date(final_date);
+	const start = new Date(initial_date);
+	const end = new Date(final_date);
 
-        	if (date1 > date2) {
-            	$("#error_log").html("Warning: End date should be greater than start date.");
-            	return false;
-        	}
-    	}
-
-    	$("#error_log").html("");
-    	return true;
+	if (start > end) {
+		$log.html("⚠️ La fecha final no puede ser menor que la inicial.");
+		return false;
 	}
 
-
+	$log.html("");
+	return true;
+}
 </script>
 
  <?php }else {
