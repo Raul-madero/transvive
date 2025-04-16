@@ -2659,7 +2659,7 @@ if ($_POST['action'] == 'AddDetallemantto') {
 
         if ($query_detalle_mantto) {
             // Obtener los detalles insertados con ese token (si aplica a la sesión)
-            $query = mysqli_query($conection, "SELECT * FROM detalle_mantto WHERE token = '$token'");
+            $query = mysqli_query($conection, "SELECT * FROM detalle_mantto WHERE folio = '$nofolio'");
 
             $detalleTablaPe = '';
             $arrayData = array();
