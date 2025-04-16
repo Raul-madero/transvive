@@ -485,15 +485,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
         return;
        }
 
-       if (fechaini === "" || fechafin === "") {
-        fechaini = null;
-        fechafin = null;
+       if (fechaini === "") {
+        fechaini = "null";
         // Swal.fire({
         //   icon: 'error',
         //   title: 'Oops...',
         //   text: 'Las fechas de inicio y culminacion no pueden estar vacías!'
         // })
         // return;
+       }
+       if (fechafin === "") {
+        fechafin = "null";
        }
        var action       = 'AlmacenaEditSolicitudmantto';
        

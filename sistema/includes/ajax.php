@@ -2966,13 +2966,16 @@ if($_POST['action'] == 'deleteCargac')
             $trabajo_sol  = mysqli_real_escape_string($conection, $_POST['trabajosolic']);
             $trabajohecho = mysqli_real_escape_string($conection, $_POST['trabajohecho']);
             $costos_desc  = mysqli_real_escape_string($conection, $_POST['costosdesc'] ?? '');
-            $fechaini     = !empty( mysqli_real_escape_string($conection, $_POST['fechaini'])) ? mysqli_real_escape_string($conection, $_POST['fechaini']) : NULL;
-            $fechafin     = !empty( mysqli_real_escape_string($conection, $_POST['fechafin'])) ? mysqli_real_escape_string($conection, $_POST['fechaini']) : NULL;
+            $fechaini     = !empty(mysqli_real_escape_string($conection, $_POST['fechaini'])) ? mysqli_real_escape_string($conection, $_POST['fechaini']) : NULL;
+            $fechafin     = mysqli_real_escape_string($conection, $_POST['fechafin']);
             $notas        = mysqli_real_escape_string($conection, $_POST['notas']);
             $notas_genera = mysqli_real_escape_string($conection, $_POST['notas_genera']);
             $causas       = mysqli_real_escape_string($conection, $_POST['causas']);
             $usuario      = intval($_POST['usuario']);
-            $estatus = $fechafin ? 1 : 2;
+            $estatus = ($fechafin === "null") ? 1 : 2;
+
+            $fechafin = ($fechafin === "null") ? NULL : $fechafin;
+            $fechaini = ($fechaini === "null") ? NULL : $fechaini;
 
             $sql_editar_orden = "UPDATE solicitud_mantenimiento SET 
                 fecha = ?,
@@ -3000,7 +3003,7 @@ if($_POST['action'] == 'deleteCargac')
                     $fecha, $nounidad, $tipo_unidad, $solicita, $tipo_trab, $kmneumatico, 
                     $tipo_mantto, $programado, $trabajo_sol, $trabajohecho, $costos_desc,
                     $fechaini, $fechafin, $notas, $notas_genera, $causas, $usuario, $estatus, $folio);
-        
+
                 if(!mysqli_stmt_execute($stmt)) {
                     echo json_encode([
                         'status' => 'error',
