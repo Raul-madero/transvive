@@ -2972,7 +2972,8 @@ if($_POST['action'] == 'deleteCargac')
             $notas_genera = mysqli_real_escape_string($conection, $_POST['notas_genera']);
             $causas       = mysqli_real_escape_string($conection, $_POST['causas']);
             $usuario      = intval($_POST['usuario']);
-        
+            $estatus = $fechafin ? 1 : 2;
+
             $sql_editar_orden = "UPDATE solicitud_mantenimiento SET 
                 fecha = ?,
                 unidad = ?,
@@ -2990,14 +2991,15 @@ if($_POST['action'] == 'deleteCargac')
                 notas = ?,
                 notas_genera = ?,
                 causas_servicio = ?,
-                edit_id = ? 
+                edit_id = ?,
+                estatus = ? 
                 WHERE no_orden = ?";
 
                 $stmt = mysqli_prepare($conection, $sql_editar_orden);
-                mysqli_stmt_bind_param($stmt, "ssssssssssdsssssii", 
+                mysqli_stmt_bind_param($stmt, "ssssssssssdsssssiii", 
                     $fecha, $nounidad, $tipo_unidad, $solicita, $tipo_trab, $kmneumatico, 
                     $tipo_mantto, $programado, $trabajo_sol, $trabajohecho, $costos_desc,
-                    $fechaini, $fechafin, $notas, $notas_genera, $causas, $usuario, $folio);
+                    $fechaini, $fechafin, $notas, $notas_genera, $causas, $usuario, $estatus, $folio);
         
                 if(!mysqli_stmt_execute($stmt)) {
                     echo json_encode([
