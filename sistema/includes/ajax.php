@@ -2943,7 +2943,7 @@ if($_POST['action'] == 'deleteCargac')
             if (
                 empty($_POST['fecha']) || empty($_POST['nounidad']) || empty($_POST['operador']) || 
                 empty($_POST['solicita']) || empty($_POST['tipotrabajo']) || empty($_POST['programado']) || 
-                empty($_POST['trabajosolic']) || empty($_POST['trabajohecho']) || empty($_POST['causas'])
+                empty($_POST['trabajosolic']) || empty($_POST['trabajohecho'])
             ) {
                 echo json_encode([
                     'status' => 'error',
@@ -2966,42 +2966,45 @@ if($_POST['action'] == 'deleteCargac')
             $trabajo_sol  = mysqli_real_escape_string($conection, $_POST['trabajosolic']);
             $trabajohecho = mysqli_real_escape_string($conection, $_POST['trabajohecho']);
             $costos_desc  = mysqli_real_escape_string($conection, $_POST['costosdesc'] ?? '');
-            $fechaini     = mysqli_real_escape_string($conection, $_POST['fechaini']);
-            $fechafin     = mysqli_real_escape_string($conection, $_POST['fechafin']);
+            $fechaini     = !empty( mysqli_real_escape_string($conection, $_POST['fechaini'])) ? mysqli_real_escape_string($conection, $_POST['fechaini']) : NULL;
+            $fechafin     = !empty( mysqli_real_escape_string($conection, $_POST['fechafin'])) ? mysqli_real_escape_string($conection, $_POST['fechaini']) : NULL;
             $notas        = mysqli_real_escape_string($conection, $_POST['notas']);
             $notas_genera = mysqli_real_escape_string($conection, $_POST['notas_genera']);
             $causas       = mysqli_real_escape_string($conection, $_POST['causas']);
             $usuario      = intval($_POST['usuario']);
         
             $sql_editar_orden = "UPDATE solicitud_mantenimiento SET 
-                fecha = '$fecha',
-                unidad = '$nounidad',
-                tipo_unidad = '$tipo_unidad',
-                solicita = '$solicita',
-                tipo_trabajo = '$tipo_trab',
-                km_neumatico = '$kmneumatico',
-                tipo_mantenimiento = '$tipo_mantto',
-                programado = '$programado',
-                trabajo_solicitado = '$trabajo_sol',
-                trabajo_hecho = '$trabajohecho',
-                costo_descuento = '$costos_desc',
-                fecha_inicial = '$fechaini',
-                fecha_termino = '$fechafin',
-                notas = '$notas',
-                notas_genera = '$notas_genera',
-                causas_servicio = '$causas',
-                edit_id = $usuario 
-                WHERE no_orden = $folio";
+                fecha = ?,
+                unidad = ?,
+                tipo_unidad = ?,
+                solicita = ?,
+                tipo_trabajo = ?,
+                km_neumatico = ?,
+                tipo_mantenimiento = ?,
+                programado = ?,
+                trabajo_solicitado = ?,
+                trabajo_hecho = ?,
+                costo_descuento = ?,
+                fecha_inicial = ?,
+                fecha_termino = ?,
+                notas = ?,
+                notas_genera = ?,
+                causas_servicio = ?,
+                edit_id = ? 
+                WHERE no_orden = ?";
+
+                $stmt = mysqli_prepare($conection, $sql_editar_orden);
+                mysqli_stmt_bind_param($stmt, "ssssssssssdsssssii", 
+                    $fecha, $nounidad, $tipo_unidad, $solicita, $tipo_trab, $kmneumatico, 
+                    $tipo_mantto, $programado, $trabajo_sol, $trabajohecho, $costos_desc,
+                    $fechaini, $fechafin, $notas, $notas_genera, $causas, $usuario, $folio);
         
-            $query_procesar = mysqli_query($conection, $sql_editar_orden);
-        
-            if (!$query_procesar) {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Error en la consulta: ' . mysqli_error($conection)
-                ]);
-                exit;
-            }
+                if(!mysqli_stmt_execute($stmt)) {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Error al actualizar la solicitud: ' . mysqli_error($conection)
+                    ], JSON_UNESCAPED_UNICODE);
+                }
         
             $result_detalle = mysqli_affected_rows($conection);
         

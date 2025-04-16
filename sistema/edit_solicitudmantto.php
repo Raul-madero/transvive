@@ -475,13 +475,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
        var notas_genera  = $('#inputNotasgen').val();
        var causas        = $('#inputCausas').val();
        let idUsuario       = "<?php echo $id_usuario; ?>";
-       if (fechaini === "" || fechafin === "") {
+
+       if (tipomantto === "CORRECTIVO" && causas.trim() === "") {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: 'Las fechas de inicio y culminacion no pueden estar vacías!'
+          text: 'Las causas del servicio no pueden estar vacías!'
         })
         return;
+       }
+
+       if (fechaini === "" || fechafin === "") {
+        fechaini = null;
+        fechafin = null;
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Oops...',
+        //   text: 'Las fechas de inicio y culminacion no pueden estar vacías!'
+        // })
+        // return;
        }
        var action       = 'AlmacenaEditSolicitudmantto';
        
