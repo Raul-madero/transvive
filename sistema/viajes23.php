@@ -722,8 +722,8 @@ function validateFilter(initial_date, final_date) {
                 'excelHtml5',
                 'csvHtml5',
                 {
-                    extend: 'colvis',
-                    postfixButtons: [ 'colvisRestore' ],
+                   // extend: 'colvis',
+                    //postfixButtons: [ 'colvisRestore' ],
                     columns: '0,1,2,3,4,5,6'
                 }
             ],
@@ -834,8 +834,8 @@ buttons: [
   'excelHtml5',
   'csvHtml5',     
   {
-	  extend: 'colvis',
-	  postfixButtons: [ 'colvisRestore' ],
+	//   extend: 'colvis',
+	//   postfixButtons: [ 'colvisRestore' ],
 	  columns: '0,1,2,3,4,5,6'
   }
 ],
