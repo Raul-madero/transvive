@@ -17,13 +17,13 @@ if ($_REQUEST['action'] == 'fetch_users') {
     $gender_filter = !empty($gender) ? " AND p.no_orden = $gender " : "";
 
     // Columnas de la consulta
-    $columns = ' p.id, p.no_orden, p.fecha, p.proveedor, p.area_solicitante, p.contacto, p.telefono, p.total, p.observaciones, p.estatus, pv.nombre ';
+    $columns = ' p.id, p.no_orden, p.no_requisicion, p.fecha, p.proveedor, p.area_solicitante, p.contacto, p.telefono, p.total, p.observaciones, p.estatus, pv.nombre ';
     $table = ' orden_compra p INNER JOIN proveedores pv ON p.proveedor = pv.id ';
     $where = " WHERE p.id > 0 $date_range $gender_filter ";
 
     // Orden de columnas
     $columns_order = array(
-        'id', 'no_orden', 'fecha', 'proveedor', 'area_solicitante', 'contacto', 'telefono', 'nombre', 'estatus'
+        'id', 'no_orden', 'no_requisicion', 'fecha', 'proveedor', 'area_solicitante', 'contacto', 'telefono', 'nombre', 'estatus'
     );
 
     // Construcción de la consulta SQL
@@ -42,7 +42,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
 
         $estatus_value = array_key_exists($search_value, $estatus_mapping) ? $estatus_mapping[$search_value] : null;
         
-        $sql .= " AND (nombre LIKE '%$search_value%' OR p.area_solicitante LIKE '%$search_value% ' OR p.contacto LIKE '%$search_value%' OR p.observaciones LIKE '%$search_value%' OR p.no_orden LIKE '%$search_value%')";
+        $sql .= " AND (nombre LIKE '%$search_value%' OR p.area_solicitante LIKE '%$search_value% ' OR p.contacto LIKE '%$search_value%' OR p.observaciones LIKE '%$search_value%' OR p.no_orden LIKE '%$search_value%' OR p.no_requisicion LIKE '%$search_value%')";
         if ($estatus_value !== null) {
             $sql .= " OR p.estatus = $estatus_value";
         }
@@ -80,6 +80,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
         $data[] = [
             'counter' => ++$start,
             'pedidono' => $row['id'],
+            'requisicion' => $row['no_requisicion'],
             'Folio' => $row['no_orden'],
             'nopedido' => '<a style="text-decoration:none" href="factura/pedidonw.php?id='.$row['id'].'" target="_blank">'.$row['id'].'</a>',
             'fechaa' => date('d/m/Y', strtotime($row['fecha'])),

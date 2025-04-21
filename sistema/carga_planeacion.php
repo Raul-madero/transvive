@@ -115,7 +115,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="form-group row" style="text-align:right;">
                         <div class="offset-sm-2 col-sm-10">
                           <button type="button" class="btn btn-secondary" id="btn_salir">Cancelar</button>
-                          <button type="submit" class="btn btn-success">Importar Datos</button>
+                          <button type="submit" class="btn btn-success" id="btn_importar">Importar Datos</button>
                          
                         </div>
                       </div>
@@ -164,6 +164,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <script src="js/sweetalert2.all.min.js"></script>   
 <!-- Page specific script -->
+
+<script>
+  $(document).ready(function() {
+    $('#addproduct').on('submit', function() {
+      $('#btn_importar').prop('disabled', true).text('Importando...'); //Se deshabilita el boton para prevenir una doble carga
+      $('#btn_salir').prop('disabled', true); //Se deshabilita el boton salir para prevenir que se cancele la carga
+    })
+  })
+</script>
 <script>
   $(function () {
     //Initialize Select2 Elements
