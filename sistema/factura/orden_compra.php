@@ -299,6 +299,7 @@ for ($i = 1; $i < $filas; $i++) {
 
 
 while ($row = mysqli_fetch_assoc($queryr)){
+    var_dump($row);
 $subtotal = $row['cantidad'] * $row['precio']; 
 $totsubtotal = $totsubtotal + $subtotal;
 $impuesto = (($row['cantidad'] * $row['precio']) * $row['impuesto'])/100;   
