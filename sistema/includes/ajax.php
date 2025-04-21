@@ -5107,7 +5107,7 @@ if ($_POST['action'] == 'AddDetallecotizacion') {
             </tr>';
         }
 
-        $total = $totsubtotal + $totiva + $totimpuesto_isr + $totimpuesto_ieps;
+        $total = $totsubtotal + $totiva - $totimpuesto_isr + $totimpuesto_ieps;
         // echo $totsubtotal . " - " . $totiva . " - " . $totimpuesto_isr . " - " . $totimpuesto_ieps . " - " . $total;   
         $detalleTotalesPe = '
             <tr>
