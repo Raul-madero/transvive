@@ -299,8 +299,7 @@ for ($i = 1; $i < $filas; $i++) {
 
 
 while ($row = mysqli_fetch_assoc($queryr)){
-    var_dump($row);
-$subtotal = $row['cantidad'] * $row['precio']; 
+$subtotal = ($row['cantidad']) * $row['precio']; 
 $totsubtotal = $totsubtotal + $subtotal;
 $impuesto = (($row['cantidad'] * $row['precio']) * $row['impuesto'])/100;   
 $isr      = (($row['cantidad'] * $row['precio']) * ($row['impuesto_isr'] /100));
@@ -308,6 +307,8 @@ $totiva = ($totiva + $impuesto) == 0 ? $subtotal * .16 : $totiva + $impuesto;
 $totalisr = $totalisr + $isr;
 $ieps     = $row['cantidad'] * $row['impuesto_ieps'];
 $totalieps = $totalieps + $ieps;
+
+echo $subtotal . ' - ' . $totsubtotal . ' - ' . $impuesto . ' - ' . $totiva . ' - ' . $totalisr . ' - ' . $totalieps;
 
 $pdf->SetFont('Arial','',6.8);
 
