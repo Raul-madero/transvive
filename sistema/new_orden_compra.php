@@ -379,7 +379,12 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 
     impuestosAdicionales.forEach((imp, idx) => {
       const monto = subtotal * (imp.porcentaje / 100);
-      total += monto;
+      if(imp === 'ISR') {
+        total -= monto; // ISR se resta del total
+      }else {
+        total += monto; // Otros impuestos se suman al total
+      }
+
       $(`.impuesto-monto[data-idx="${idx}"]`).html(formatMoney(monto));
     });
 
