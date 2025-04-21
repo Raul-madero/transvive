@@ -308,8 +308,6 @@ $totalisr = $totalisr + $isr;
 $ieps     = $row['cantidad'] * $row['impuesto_ieps'];
 $totalieps = $totalieps + $ieps;
 
-echo $subtotal . ' - ' . $totsubtotal . ' - ' . $impuesto . ' - ' . $totiva . ' - ' . $totalisr . ' - ' . $totalieps;
-
 $pdf->SetFont('Arial','',6.8);
 
 // Prepara los textos
