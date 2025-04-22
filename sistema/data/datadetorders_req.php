@@ -20,9 +20,12 @@ if($_REQUEST['action'] == 'fetch_users'){
         $date_range = "";
     }
 
-    if($gender != ""){
-        if ($gender == "Activa") {
-         $gender = 1;   
+        $gender_input = strtolower(trim($gender));
+
+        $activa_variants = ["activa", "activo", "activ@", "activas", "activos"];
+
+        if (in_array($gender_input, $activa_variants)) {
+            $gender = 1;   
         }else {
             if ($gender == "Autorizada") {
               $gender = 2;
