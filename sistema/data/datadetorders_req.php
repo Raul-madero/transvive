@@ -2,11 +2,9 @@
 session_start();
 include '../../conexion.php';
 
-
 global $conection;
 
-if($_REQUEST['action'] == 'fetch_users'){
-
+if ($_REQUEST['action'] == 'fetch_users') {
     $requestData = $_REQUEST;
     $start = $_REQUEST['start'];
 
@@ -14,39 +12,35 @@ if($_REQUEST['action'] == 'fetch_users'){
     $final_date = $_REQUEST['final_date'] ?? "";
     $gender = $_REQUEST['gender'] ?? "";
 
-    if(!empty($initial_date) && !empty($final_date)){
-        $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    }else{
-        $date_range = "";
+    $date_range = "";
+    if (!empty($initial_date) && !empty($final_date)) {
+        $date_range = " AND p.fecha BETWEEN '$initial_date' AND '$final_date' ";
     }
 
-    if($gender != ""){
+    $estatus_filter = "";
+    if ($gender != "") {
         $gender_input = strtolower(trim($gender));
-
-        $activa_variants = ["activa", "activo", "activ@", "activas", "activos"];
-
-        if (in_array($gender_input, $activa_variants)) {
-            $gender = 1;
-        }else {
-            if ($gender == "Autorizada") {
-              $gender = 2;
-            }else {
-                if ($gender == "Procesada") {
-                    $gender = 3;
-                }else {
-                    if ($gender == "Cancelada") {
-                        $gender = 0;
-                    }
-                }
-            }
+        $estatus_variants = [
+            'cancelada' => 0,
+            'cancelado' => 0,
+            'activa' => 1,
+            'activo' => 1,
+            'autorizada' => 2,
+            'autorizado' => 2,
+            'procesada' => 3,
+            'procesado' => 3,
+            'iniciado' => 4,
+            'terminado' => 5,
+        ];
+        $gender_value = $estatus_variants[$gender_input] ?? null;
+        if ($gender_value !== null) {
+            $estatus_filter = " AND p.estatus = $gender_value ";
         }
-
-        $gender = " AND p.estatus = $gender ";
     }
 
     $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus ';
-    $table = ' requisicion_compra p ' ;
-    $where = " WHERE p.id > 0 ".$date_range.$gender ;
+    $table = ' requisicion_compra p ';
+    $where = " WHERE p.id > 0 $date_range $estatus_filter";
 
     $columns_order = array(
         0 => 'id',
@@ -58,7 +52,7 @@ if($_REQUEST['action'] == 'fetch_users'){
         6 => 'estatus'
     );
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+    $sql = "SELECT $columns FROM $table $where";
 
     $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
@@ -66,99 +60,99 @@ if($_REQUEST['action'] == 'fetch_users'){
 
     if (!empty($requestData['search']['value'])) {
         $search = $requestData['search']['value'];
+        $search_lower = strtolower(trim($search));
 
         $estatus_mapping = [
-            'Cancelada' => 0,
-            'Activa' => 1,
-            'Autorizada' => 2,
-            'Procesada' => 4,
-            'Facturada' => 5
+            'cancelada' => 0,
+            'cancelado' => 0,
+            'activa' => 1,
+            'activo' => 1,
+            'autorizada' => 2,
+            'autorizado' => 2,
+            'procesada' => 3,
+            'procesado' => 3,
+            'iniciado' => 4,
+            'terminado' => 5,
         ];
 
-        $estatus_value = array_key_exists($search, $estatus_mapping) ? $estatus_mapping[$search] : null;
+        $estatus_value = $estatus_mapping[$search_lower] ?? null;
 
         $sql .= " AND (
-            no_requisicion LIKE '%$search%' OR
-            tipo_requisicion LIKE '%$search%' OR
-            area_solicitante LIKE '%$search%' OR
-            observaciones LIKE '%$search%'
+            LOWER(no_requisicion) LIKE '%$search_lower%' OR
+            LOWER(tipo_requisicion) LIKE '%$search_lower%' OR
+            LOWER(area_solicitante) LIKE '%$search_lower%' OR
+            LOWER(observaciones) LIKE '%$search_lower%'
         )";
 
         if ($estatus_value !== null) {
             $sql .= " OR estatus = $estatus_value";
         }
     }
-    
 
     $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
-    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
+    $sql .= " ORDER BY " . $columns_order[$requestData['order'][0]['column']] . " " . $requestData['order'][0]['dir'];
 
-    if($requestData['length'] != "-1"){
-        $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
+    if ($requestData['length'] != "-1") {
+        $sql .= " LIMIT " . $requestData['start'] . "," . $requestData['length'];
     }
 
     $result = mysqli_query($conection, $sql);
     $data = array();
-    $counter = $start;
-
     $count = $start;
-    while($row = mysqli_fetch_array($result)){
-        if ($row['estatus'] == 1){
-        $Estatusnew = '<span class="label label-primary">Activa</span>'; 
-    }else{
-        if ($row['estatus'] == 2){
-           $Estatusnew = '<span class="label label-success">Autorizada</span>';
-        }else{
-            if ($row['estatus'] == 3) {
-              $Estatusnew = '<span class="label label-danger">Procesada</span>';
-            }else {
-                if ($row['estatus'] == 4) {
-                 $Estatusnew = '<span class="label label-primary">Iniciado</span>';
-                }else {
-                 if ($row['estatus'] == 5) {
-                  $Estatusnew = '<span class="label label-info">Terminado</span>';
-                 }else {
-                  $Estatusnew = '<span class="label label-success">Cancelada</span>';
-                 } 
-                }     
+
+    while ($row = mysqli_fetch_array($result)) {
+        switch ($row['estatus']) {
+            case 1:
+                $Estatusnew = '<span class="label label-primary">Activa</span>';
+                break;
+            case 2:
+                $Estatusnew = '<span class="label label-success">Autorizada</span>';
+                break;
+            case 3:
+                $Estatusnew = '<span class="label label-danger">Procesada</span>';
+                break;
+            case 4:
+                $Estatusnew = '<span class="label label-primary">Iniciado</span>';
+                break;
+            case 5:
+                $Estatusnew = '<span class="label label-info">Terminado</span>';
+                break;
+            default:
+                $Estatusnew = '<span class="label label-success">Cancelada</span>';
+                break;
         }
-    }
-    }
 
         $count++;
         $nestedData = array();
 
         $nestedData['counter'] = $count;
-        $nestedData['pedidono'] =  $row["id"];
+        $nestedData['pedidono'] = $row["id"];
         $nestedData['Folio'] = $row["no_requisicion"];
         $nestedData['estatus'] = $row['estatus'];
-        $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id='.($row["id"]).'" target="_blank">'.($row["id"]).'</a>';
-        $time = strtotime($row["fecha"]);
-        $nestedData['fechaa'] = date('d/m/Y', $time);
-        $time2 = strtotime($row["fecha_requiere"]);
-        $nestedData['fecha_req'] = date('d/m/Y', $time2);
+        $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id=' . $row["id"] . '" target="_blank">' . $row["id"] . '</a>';
+        $nestedData['fechaa'] = date('d/m/Y', strtotime($row["fecha"]));
+        $nestedData['fecha_req'] = date('d/m/Y', strtotime($row["fecha_requiere"]));
         $nestedData['tipor'] = $row["tipo_requisicion"];
         $nestedData['arear'] = $row['area_solicitante'];
         $nestedData['monto'] = $row['cant_autorizada'];
-        $nestedData['notas'] = $row['observaciones'];      
+        $nestedData['notas'] = $row['observaciones'];
         $nestedData['Datenew'] = $row["fecha"];
-
         $nestedData['estatusped'] = $Estatusnew;
 
         $data[] = $nestedData;
     }
+
     header('Content-Type: application/json; charset=utf-8');
     $json_data = array(
-        "draw"            => intval( $requestData['draw'] ),
-        "recordsTotal"    => intval( $totalData),
-        "recordsFiltered" => intval( $totalFiltered ),
+        "draw"            => intval($requestData['draw']),
+        "recordsTotal"    => intval($totalData),
+        "recordsFiltered" => intval($totalFiltered),
         "records"         => $data
     );
 
     echo json_encode($json_data);
 }
-
 ?>
