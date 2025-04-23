@@ -128,7 +128,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 </head>
 <body class="hold-transition layout-top-nav">
-<div class="wrapper">
+<scr class="wrapper">
 
  
  <!-- Navbar -->
@@ -1358,6 +1358,50 @@ $(document).ready(function(){
 </div> 
 
 <script>
+$(document).ready(function () {
+        $("#txt_codigo").on('change', function () {            
+            var op = $(this).val();
+             var action = 'searchRefaccionesmov';
+
+        $.ajax({
+            url: 'includes/ajax.php',
+            type: "POST",
+            async : true,
+            data: {action:action,op:op},
+            success: function(response)
+            {
+                // console.log(response);
+                if(response == 0){
+                    //$('#idcliente').val('');
+                    $('#txt_descripcion').val('');
+                    $('#txt_marca').val('');
+                    $('#txt_umedida').val('');
+                    $('#txt_precio').val('0.00')
+                    $('#txt_impuesto').val('0.00')
+                  
+                }else{
+                    var data = $.parseJSON(response);
+                    //$('#idcliente').val(data.idusuario);
+                    //$('#frazonsoc').val(data.razonsocial).change();
+                    $('#txt_descripcion').val(data.descripcion).change(); // Notify only Select2 of changes
+                    $('#txt_marca').val(data.marca);
+                    $('#txt_umedida').val(data.umedida);
+                    $('#txt_precio').val(data.costo);
+                    $('#txt_impuesto').val(data.impuesto);
+                 
+                   
+                }
+            },
+            error: function(error) {
+
+            }
+
+        });
+        });
+    });
+  </script>
+
+<script>
    $('#actualiza_paradar').click(function(e){
         e.preventDefault();
 
@@ -1437,7 +1481,7 @@ $(document).ready(function(){
                     var data = $.parseJSON(response);
                     //$('#idcliente').val(data.idusuario);
                     //$('#frazonsoc').val(data.razonsocial).change();
-                    $('#txt_descripcion').val(data.descripcion).change(); // Notify only Select2 of changes
+                    // $('#txt_descripcion').val(data.descripcion).change(); // Notify only Select2 of changes
                     $('#txt_marca').val(data.marca);
                     $('#txt_precio').val(data.costo);
                     $('#txt_impuesto').val(data.impuesto);
