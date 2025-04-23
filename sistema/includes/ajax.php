@@ -5554,7 +5554,6 @@ if ($_POST['action'] == 'AddDetalleOrdencompra') {
     } else {
         echo json_encode(["status" => "error", "message" => "Error en la consulta: " . mysqli_error($conection)]);
     }
-
     mysqli_close($conection);
     exit;
 }               
