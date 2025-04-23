@@ -40,7 +40,7 @@ session_start();
       $forma_pago    = $data['forma_pago'];
       $metodo_pago   = $data['metodo_pago'];
       $uso_cfdi      = $data['uso_cfdi'];
-      $datos_entrega = $data['datos_entrega'];
+      // $datos_entrega = $data['datos_entrega'];
       $notas         = $data['observaciones'];
       $area_solicita = $data['area_solicitante'];
       $recibe        = $data['recibe'];
@@ -141,40 +141,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <?php
-       if ($_SESSION['rol'] == 4) {
-        include('includes/navbarsup.php');
-      }else {
-       if ($_SESSION['rol'] == 5) {
-          include('includes/navbarrhuman.php');
-         }else {
-            if ($_SESSION['rol'] == 6) {
-                include('includes/navbaroperac.php');
-              }else {
-                if ($_SESSION['rol'] == 7) {
-                    include('includes/navbarmantto.php');
-                  }else { 
-                     if ($_SESSION['rol'] == 8) {
-                        include('includes/navbarjefeoper.php');
-                      }else { 
-                        if ($_SESSION['rol'] == 9) {
-                          include('includes/navbargrcia.php');
-                        }else {
-                          if ($_SESSION['rol'] == 15) {
-                            include('includes/navbarmonitorista.php');
-                          }else {
-                            if ($_SESSION['rol'] == 16) {
-                              include('includes/navbarcompras.php');
-                            }else {
-                              include('includes/navbar.php');
-                            }  
-                          }  
-                        }  
-                      }  
-                  }
-              }  
-      } 
-      } ?>
+      <?php include('includes/generalnavbar.php') ?>
       <?php include('includes/nav.php') ?> 
 
     </div>
@@ -1094,46 +1061,46 @@ $('#btn_salir').click(function(e){
 </script>
 
 <script>
-    $(document).ready(function () {
-        $("#inputDescripcion").on('change', function () {            
-            var op = $(this).val();
-             var action = 'searchRefaccionesmovname';
+    // $(document).ready(function () {
+    //     $("#inputDescripcion").on('change', function () {            
+    //         var op = $(this).val();
+    //          var action = 'searchRefaccionesmovname';
 
-        $.ajax({
-            url: 'includes/ajax.php',
-            type: "POST",
-            async : true,
-            data: {action:action,op:op},
-            success: function(response)
-            {
-                // console.log(response);
-                if(response == 0){
-                    //$('#idcliente').val('');
-                    $('#inputCodigo').val('');
-                    $('#inputUmedida').val('');
-                    $('#inputMarca').val('');
-                    $('#inputPrecio').val('0.00');
+    //     $.ajax({
+    //         url: 'includes/ajax.php',
+    //         type: "POST",
+    //         async : true,
+    //         data: {action:action,op:op},
+    //         success: function(response)
+    //         {
+    //             // console.log(response);
+    //             if(response == 0){
+    //                 //$('#idcliente').val('');
+    //                 $('#inputCodigo').val('');
+    //                 $('#inputUmedida').val('');
+    //                 $('#inputMarca').val('');
+    //                 $('#inputPrecio').val('0.00');
                   
-                }else{
-                    var data = $.parseJSON(response);
-                    //$('#idcliente').val(data.idusuario);
-                    //$('#frazonsoc').val(data.razonsocial).change();
-                    $('#inputCodigo').val(data.codigo); // Notify only Select2 of changes
-                    $('#inputMarca').val(data.marca);
-                    $('#inputUmedida').val(data.umedida);
-                    $('#inputPrecio').val(data.costo);
-                    $('#inputImpuesto').val(data.impuesto);
+    //             }else{
+    //                 var data = $.parseJSON(response);
+    //                 //$('#idcliente').val(data.idusuario);
+    //                 //$('#frazonsoc').val(data.razonsocial).change();
+    //                 $('#inputCodigo').val(data.codigo); // Notify only Select2 of changes
+    //                 $('#inputMarca').val(data.marca);
+    //                 $('#inputUmedida').val(data.umedida);
+    //                 $('#inputPrecio').val(data.costo);
+    //                 $('#inputImpuesto').val(data.impuesto);
                  
                    
-                }
-            },
-            error: function(error) {
+    //             }
+    //         },
+    //         error: function(error) {
 
-            }
+    //         }
 
-        });
-        });
-    });
+    //     });
+    //     });
+    // });
 </script>
 
 <script>
@@ -1383,7 +1350,7 @@ $(document).ready(function () {
                     var data = $.parseJSON(response);
                     //$('#idcliente').val(data.idusuario);
                     //$('#frazonsoc').val(data.razonsocial).change();
-                    $('#txt_descripcion').val(data.descripcion).change(); // Notify only Select2 of changes
+                    // $('#txt_descripcion').val(data.descripcion).change(); // Notify only Select2 of changes
                     $('#txt_marca').val(data.marca);
                     $('#txt_umedida').val(data.umedida);
                     $('#txt_precio').val(data.costo);
@@ -1502,49 +1469,49 @@ $(document).ready(function () {
 </script>
 
 <script>
-    $(document).ready(function () {
-        $("#txt_descripcion").on('change', function () {            
-            var op = $(this).val();
-             var action = 'searchRefaccionesmovname';
+    // $(document).ready(function () {
+    //     $("#txt_descripcion").on('change', function () {            
+    //         var op = $(this).val();
+    //          var action = 'searchRefaccionesmovname';
 
-        $.ajax({
-            url: 'includes/ajax.php',
-            type: "POST",
-            async : true,
-            data: {action:action,op:op},
-            success: function(response)
-            {
-                // console.log(response);
-                if(response == 0){
-                    //$('#idcliente').val('');
-                    $('#txt_codigo').val('');
-                    $('#txt_marca').val('');
-                    $('#txt_precio').val('0.00');
-                    $('#txt_impuesto').val('0.00');
-                    $('#txt_umedida').val('');
+    //     $.ajax({
+    //         url: 'includes/ajax.php',
+    //         type: "POST",
+    //         async : true,
+    //         data: {action:action,op:op},
+    //         success: function(response)
+    //         {
+    //             // console.log(response);
+    //             if(response == 0){
+    //                 //$('#idcliente').val('');
+    //                 $('#txt_codigo').val('');
+    //                 $('#txt_marca').val('');
+    //                 $('#txt_precio').val('0.00');
+    //                 $('#txt_impuesto').val('0.00');
+    //                 $('#txt_umedida').val('');
                   
-                }else{
-                    var data = $.parseJSON(response);
-                    //$('#idcliente').val(data.idusuario);
-                    //$('#frazonsoc').val(data.razonsocial).change();
-                    $('#txt_codigo').val(data.codigo); // Notify only Select2 of changes
-                    $('#txt_marca').val(data.marca);
-                    $('#txt_precio').val(data.costo);
-                    $('#txt_impuesto').val(data.impuesto);
-                    $('#txt_umedida').val(data.umedida);
-                    $('#txt_cantidad').val('0');
-                    $('#txt_importe').val('0.00');
+    //             }else{
+    //                 var data = $.parseJSON(response);
+    //                 //$('#idcliente').val(data.idusuario);
+    //                 //$('#frazonsoc').val(data.razonsocial).change();
+    //                 $('#txt_codigo').val(data.codigo); // Notify only Select2 of changes
+    //                 $('#txt_marca').val(data.marca);
+    //                 $('#txt_precio').val(data.costo);
+    //                 $('#txt_impuesto').val(data.impuesto);
+    //                 $('#txt_umedida').val(data.umedida);
+    //                 $('#txt_cantidad').val('0');
+    //                 $('#txt_importe').val('0.00');
                  
                    
-                }
-            },
-            error: function(error) {
+    //             }
+    //         },
+    //         error: function(error) {
 
-            }
+    //         }
 
-        });
-        });
-    });
+    //     });
+    //     });
+    // });
 </script>     
 
 <script>
