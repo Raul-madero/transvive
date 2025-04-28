@@ -380,7 +380,7 @@ $pdf->Cell(159,5,'',0,0,'R');
 $pdf->Cell(15,5,utf8_decode('(+) IVA:'),1,0,'R');
 $pdf->Cell(15,5,number_format($totiva,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('(-) ISR:'),1,0,'R');
+$pdf->Cell(15,5,utf8_decode('(-) Retencion:'),1,0,'R');
 $pdf->Cell(15,5,number_format($totalisr,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
 $pdf->Cell(15,5,utf8_decode('Total:'),1,0,'R');
