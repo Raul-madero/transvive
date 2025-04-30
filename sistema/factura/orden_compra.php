@@ -52,7 +52,7 @@ $entrada = mysqli_fetch_assoc($query);
     //$contenido = 'Certificado '.$certificado.' Almacen '.$almacen;
    
 
-       $subtitulo1=utf8_decode('ORDEN DE COMPRA');
+       $subtitulo1='ORDEN DE COMPRA';
 
    
    
@@ -70,16 +70,16 @@ $this->SetFont('Arial','',10);
 $this->Cell(50,15,'',1,0,'r');
 $this->SetFillColor(231,233,238);
 $this->SetTextcolor(6,22,54);
-$this->Cell(15,15,utf8_decode('Título'),1,0,'C','T');
+$this->Cell(15,15,'Título',1,0,'C','T');
 $this->Cell(75,10,$subtitulo1,1,0,'C');
-$this->Cell(19,10,utf8_decode('Código'),'T,R',0,'C','T');
+$this->Cell(19,10,'Código','T,R',0,'C','T');
 $this->SetFont('Arial','',8);
 $this->Cell(30,10,'FO-TV-CO-02','T,R',1,'C');
 $this->SetFont('Arial','',10);
 $this->Cell(65,10,'',0,0,'r');
-$this->Cell(15,5,utf8_decode('Área'),1,0,'C','T');
-$this->Cell(60,5,utf8_decode('Compras'),1,0,'C');
-$this->Cell(19,5,utf8_decode(''),'B,R',0,'C','T');
+$this->Cell(15,5,'Área',1,0,'C','T');
+$this->Cell(60,5,'Compras',1,0,'C');
+$this->Cell(19,5,'','B,R',0,'C','T');
 $this->SetFont('Arial','',8);
 $this->Cell(30,5,'','B,R',0,'C');
 
@@ -125,58 +125,58 @@ $this->SetTextcolor(0,0,0);
 $this->SetFont('Arial','I',8);
 /*
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(45,5,utf8_decode(''),0,0,'C');
+$this->Cell(45,5,''),0,0,'C');
 $this->Cell(20,5,'',0,0,'L');
-$this->Cell(45,5,utf8_decode(''),0,0,'C');
+$this->Cell(45,5,''),0,0,'C');
 $this->Cell(20,5,'',0,0,'L');
-$this->Cell(45,5,utf8_decode(''),0,1,'C');
+$this->Cell(45,5,''),0,1,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Elabora'),0,0,'C');
+$this->Cell(52,5,'Elabora'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Revisa'),0,0,'C');
+$this->Cell(52,5,'Revisa'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Autoriza'),0,1,'C');
+$this->Cell(52,5,'Autoriza'),0,1,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Ma. Guadalupe Balcárcel'),0,0,'C');
+$this->Cell(52,5,'Ma. Guadalupe Balcárcel'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Karina López Salazar'),0,0,'C');
+$this->Cell(52,5,'Karina López Salazar'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Angelina Durán Garibay'),0,1,'C');
+$this->Cell(52,5,'Angelina Durán Garibay'),0,1,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Compras'),0,0,'C');
+$this->Cell(52,5,'Compras'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Aseguramiento de Calidad'),0,0,'C');
+$this->Cell(52,5,'Aseguramiento de Calidad'),0,0,'C');
 $this->Cell(10,5,'',0,0,'L');
-$this->Cell(52,5,utf8_decode('Administración SGC'),0,1,'C');
+$this->Cell(52,5,'Administración SGC'),0,1,'C');
 */
-//$this->Cell(0,10,utf8_decode('Transvive ERP'),0,0,'C');
+//$this->Cell(0,10,'Transvive ERP'),0,0,'C');
 if ($entrada['estatus'] == 0) {
 $this->SetFont('Arial','',7);
-$this->cell(189,5,utf8_decode('Motivo cancelación:'),1,1, 'L', 'T');
+$this->cell(189,5,'Motivo cancelación:',1,1, 'L', 'T');
 $this->SetFillColor(255,255,255);
-$this->cell(189,5,utf8_decode($motivo),1,1, 'L');
+$this->cell(189,5,$motivo,1,1, 'L');
 $this->SetFillColor(231,233,238);
-$this->cell(25,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
-$this->cell(40,5,utf8_decode($solicita),1,0, 'L');
-$this->cell(15,5,utf8_decode('Fecha:'),1,0, 'L', 'T');
+$this->cell(25,5,'Area Solicitante:',1,0, 'L', 'T');
+$this->cell(40,5,$solicita,1,0, 'L');
+$this->cell(15,5,'Fecha:',1,0, 'L', 'T');
 $this->cell(19,5,$newDateReq,1,0, 'C');
-$this->cell(15,5,utf8_decode('Recibe:'),1,0, 'L', 'T');
-$this->cell(75,5,utf8_decode($recibe),1,0, 'L');
+$this->cell(15,5,'Recibe:',1,0, 'L', 'T');
+$this->cell(75,5,$recibe,1,0, 'L');
 }else {
 $this->SetFont('Arial','',7);
-$this->cell(189,5,utf8_decode('Observaciones:'),1,1, 'L', 'T');
+$this->cell(189,5,'Observaciones:',1,1, 'L', 'T');
 $this->SetFillColor(255,255,255);
-$this->cell(189,5,utf8_decode($notas),1,1, 'L');
+$this->cell(189,5,$notas,1,1, 'L');
 $this->SetFillColor(231,233,238);
-$this->cell(25,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
-$this->cell(40,5,utf8_decode($solicita),1,0, 'L');
-$this->cell(15,5,utf8_decode('Fecha:'),1,0, 'L', 'T');
+$this->cell(25,5,'Area Solicitante:',1,0, 'L', 'T');
+$this->cell(40,5,$solicita,1,0, 'L');
+$this->cell(15,5,'Fecha:',1,0, 'L', 'T');
 $this->cell(19,5,$newDateReq,1,0, 'C');
-$this->cell(15,5,utf8_decode('Recibe:'),1,0, 'L', 'T');
-$this->cell(75,5,utf8_decode($recibe),1,0, 'L');
-//$this->cell(15,5,utf8_decode('Fecha:'),1,0, 'L', 'T');
+$this->cell(15,5,'Recibe:',1,0, 'L', 'T');
+$this->cell(75,5,$recibe,1,0, 'L');
+//$this->cell(15,5,'Fecha:'),1,0, 'L', 'T');
 //$this->cell(20,5,'',1,1, 'L');
-//$this->Cell(-15,10,utf8_decode('Página ') . $this->PageNo(),0,0,'C');
+//$this->Cell(-15,10,'Página ') . $this->PageNo(),0,0,'C');
 }
 }
 }
@@ -228,35 +228,35 @@ $pdf->Image("img/anulado.png",12,74,168,123,"png",0,'C');
 $pdf->SetTextcolor(0,0,0);
 $pdf->SetFont('Arial','',8);
 $pdf->SetTextcolor(0,0,0);
-$pdf->Cell(25,5,utf8_decode('Proveedor'),1,0,'L', 'T');
+$pdf->Cell(25,5,'Proveedor',1,0,'L', 'T');
 $pdf->SetFont('Arial','B',8);
-$pdf->Cell(119,5,utf8_decode($proveedor),1,0,'L');
+$pdf->Cell(119,5,$proveedor,1,0,'L');
 $pdf->Cell(20,5,'No. Orden:',1,0,'L', 'T');
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(25,5,'OC-'. $folio,1,1,'R');
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(25,5,utf8_decode('Contacto:'),1,0,'L', 'T');
-$pdf->Cell(119,5,utf8_decode($contacto),1,0,'L');
-$pdf->Cell(20,5,utf8_decode('Fecha:'),1,0,'L', 'T');
+$pdf->Cell(25,5,'Contacto:',1,0,'L', 'T');
+$pdf->Cell(119,5,$contacto,1,0,'L');
+$pdf->Cell(20,5,'Fecha:',1,0,'L', 'T');
 $pdf->Cell(25,5,$newDate,1,1,'C');
-$pdf->Cell(25,5,utf8_decode('Teléfono:'),1,0,'L', 'T');
+$pdf->Cell(25,5,'Teléfono:',1,0,'L', 'T');
 $pdf->Cell(55,5,$telefono,1,0,'L');
-$pdf->Cell(30,5,utf8_decode('Correo:'),1,0,'L', 'T');
+$pdf->Cell(30,5,'Correo:',1,0,'L', 'T');
 $pdf->Cell(79,5,$correo,1,1,'C');
-$pdf->Cell(50,5,utf8_decode('Datos de Facturación:'),1,0,'C', 'T');
-$pdf->Cell(30,5,utf8_decode('Forma de Pago:'),1,0,'L', 'T');
-$pdf->Cell(64,5,utf8_decode($formapago),1,0,'L');
-$pdf->Cell(45,5,utf8_decode('Datos de Entrega:'),1,1,'C', 'T');
-$pdf->Cell(50,5,utf8_decode('Transvive S. de R.L. de C.V.'),1,0,'C');
-$pdf->Cell(30,5,utf8_decode('Metodo de Pago:'),1,0,'L', 'T');
-$pdf->Cell(64,5,utf8_decode($metodopago),1,0,'L');
-$pdf->Cell(45,5,utf8_decode('Hidalgo No. 30'),1,1,'C');
-$pdf->Cell(50,5,utf8_decode('TVI-190503-SA3'),1,0,'C');
-$pdf->Cell(30,5,utf8_decode('Uso de CFDI:'),1,0,'L', 'T');
-$pdf->Cell(64,5,utf8_decode($usocfdi),1,0,'L');
-$pdf->Cell(45,5,utf8_decode('C.P. 45640 Col. Los Gavilanes'),1,1,'C');
-$pdf->Cell(144,5,utf8_decode(''),1,0,'C');
-$pdf->Cell(45,5,utf8_decode('Tlajomulco de Zuñiga, Jal.'),1,1,'C');
+$pdf->Cell(50,5,'Datos de Facturación:',1,0,'C', 'T');
+$pdf->Cell(30,5,'Forma de Pago:',1,0,'L', 'T');
+$pdf->Cell(64,5,$formapago,1,0,'L');
+$pdf->Cell(45,5,'Datos de Entrega:',1,1,'C', 'T');
+$pdf->Cell(50,5,'Transvive S. de R.L. de C.V.',1,0,'C');
+$pdf->Cell(30,5,'Metodo de Pago:',1,0,'L', 'T');
+$pdf->Cell(64,5,$metodopago,1,0,'L');
+$pdf->Cell(45,5,'Hidalgo No. 30',1,1,'C');
+$pdf->Cell(50,5,'TVI-190503-SA3',1,0,'C');
+$pdf->Cell(30,5,'Uso de CFDI:',1,0,'L', 'T');
+$pdf->Cell(64,5,$usocfdi,1,0,'L');
+$pdf->Cell(45,5,'C.P. 45640 Col. Los Gavilanes',1,1,'C');
+$pdf->Cell(144,5,'',1,0,'C');
+$pdf->Cell(45,5,'Tlajomulco de Zuñiga, Jal.',1,1,'C');
 
 
 
@@ -274,12 +274,12 @@ $nooc = $_REQUEST['id'];
 //     $resultr = mysqli_num_rows($queryr);
 // }
 $pdf->SetFont('Arial','',8);
-$pdf->Cell(13,5,utf8_decode('Cantidad'),1,0,'C','T');
-$pdf->Cell(38,5,utf8_decode('Código'),1,0,'C','T');
-$pdf->Cell(85,5,utf8_decode('Descripcion'),1,0,'C','T');
-$pdf->Cell(23,5,utf8_decode('Marca'),1,0,'C','T');
-$pdf->Cell(15,5,utf8_decode('Precio'),1,0,'C','T');
-$pdf->Cell(15,5,utf8_decode('Importe'),1,1,'C','T');
+$pdf->Cell(13,5,'Cantidad',1,0,'C','T');
+$pdf->Cell(38,5,'Código',1,0,'C','T');
+$pdf->Cell(85,5,'Descripcion',1,0,'C','T');
+$pdf->Cell(23,5,'Marca',1,0,'C','T');
+$pdf->Cell(15,5,'Precio',1,0,'C','T');
+$pdf->Cell(15,5,'Importe',1,1,'C','T');
 
 $subtotal    = 0;
 $totsubtotal = 0;
@@ -311,8 +311,8 @@ $totalieps = $totalieps + $ieps;
 $pdf->SetFont('Arial','',6.8);
 
 // Prepara los textos
-$descripcion = utf8_decode($row['descripcion']);
-$marca = utf8_decode($row['marca']);
+$descripcion = $row['descripcion'];
+$marca = $row['marca'];
 
 // Configura anchos y altura base
 $height_line = 5;
@@ -340,7 +340,7 @@ $y = $pdf->GetY();
 // Cantidad
 $pdf->Cell($widths['cantidad'], $line_height, number_format($row['cantidad'],2), 1, 0, 'R');
 // Código
-$pdf->Cell($widths['codigo'], $line_height, utf8_decode($row['codigo']), 1, 0, 'L');
+$pdf->Cell($widths['codigo'], $line_height, $row['codigo'], 1, 0, 'L');
 
 // Descripción
 $pdf->SetXY($x + $widths['cantidad'] + $widths['codigo'], $y);
@@ -361,12 +361,12 @@ $pdf->Cell($widths['importe'], $line_height, number_format($row['importe'],2), 1
 
 }
 $pdf->SetFont('Arial','',6.8);
-$pdf->Cell(13,5,utf8_decode(''),1,0,'R');
-$pdf->Cell(38,5,utf8_decode(''),1,0,'L');
-$pdf->Cell(85,5,utf8_decode(''),1,0,'L');
-$pdf->Cell(23,5,utf8_decode(''),1,0,'L');
-$pdf->Cell(15,5,utf8_decode(''),1,0,'R');
-$pdf->Cell(15,5,utf8_decode(''),1,1,'R');
+$pdf->Cell(13,5,'',1,0,'R');
+$pdf->Cell(38,5,'',1,0,'L');
+$pdf->Cell(85,5,'',1,0,'L');
+$pdf->Cell(23,5,'',1,0,'L');
+$pdf->Cell(15,5,'',1,0,'R');
+$pdf->Cell(15,5,'',1,1,'R');
 }
 
 
@@ -374,44 +374,44 @@ if ($totalisr > 0) {
 $total = ($totsubtotal + $totiva) - $totalisr ;
 $pdf->SetFont('Arial','B',7);
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('Subtotal:'),1,0,'R');
+$pdf->Cell(15,5,'Subtotal:',1,0,'R');
 $pdf->Cell(15,5,number_format($totsubtotal,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('(+) IVA:'),1,0,'R');
+$pdf->Cell(15,5,'(+) IVA:',1,0,'R');
 $pdf->Cell(15,5,number_format($totiva,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('(-) Retencion:'),1,0,'R');
+$pdf->Cell(15,5,'(-) Retencion:',1,0,'R');
 $pdf->Cell(15,5,number_format($totalisr,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('Total:'),1,0,'R');
+$pdf->Cell(15,5,'Total:',1,0,'R');
 $pdf->Cell(15,5,number_format($total,2),1,1,'R');    
 }else {
 if ($totalieps > 0) {
 $total = ($totsubtotal + $totalieps) + $totiva;
 $pdf->SetFont('Arial','B',7);
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('Subtotal:'),1,0,'R');
+$pdf->Cell(15,5,'Subtotal:',1,0,'R');
 $pdf->Cell(15,5,number_format($totsubtotal,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('(+) IEPS:'),1,0,'R');
+$pdf->Cell(15,5,'(+) IEPS:',1,0,'R');
 $pdf->Cell(15,5,number_format($totalieps,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('(+) IVA:'),1,0,'R');
+$pdf->Cell(15,5,'(+) IVA:',1,0,'R');
 $pdf->Cell(15,5,number_format($totiva,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('Total:'),1,0,'R');
+$pdf->Cell(15,5,'Total:',1,0,'R');
 $pdf->Cell(15,5,number_format($total,2),1,1,'R');
 }else {
 $total = $totsubtotal + $totiva;
 $pdf->SetFont('Arial','B',7);
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('Subtotal:'),1,0,'R');
+$pdf->Cell(15,5,'Subtotal:',1,0,'R');
 $pdf->Cell(15,5,number_format($totsubtotal,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('IVA:'),1,0,'R');
+$pdf->Cell(15,5,'IVA:',1,0,'R');
 $pdf->Cell(15,5,number_format($totiva,2),1,1,'R');
 $pdf->Cell(159,5,'',0,0,'R');
-$pdf->Cell(15,5,utf8_decode('Total:'),1,0,'R');
+$pdf->Cell(15,5,'Total:',1,0,'R');
 $pdf->Cell(15,5,number_format($total,2),1,1,'R');
 }
 }
@@ -420,17 +420,17 @@ $pdf->Cell(15,5,number_format($total,2),1,1,'R');
 $pdf->SetY(-50);
 $pdf->Ln(5);
 $pdf->SetFont('Arial','',7);
-$pdf->cell(165,5,utf8_decode('Observaciones:'),1,1, 'L', 'T');
+$pdf->cell(165,5,'Observaciones:'),1,1, 'L', 'T');
 $pdf->SetFillColor(255,255,255);
-$pdf->Multicell(165,5,utf8_decode($notas),1,1, 'L');
+$pdf->Multicell(165,5,$notas),1,1, 'L');
 $pdf->SetFillColor(231,233,238);
-$pdf->cell(30,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
-$pdf->cell(70,5,utf8_decode($solicita),1,0, 'L');
-$pdf->cell(30,5,utf8_decode('Fecha:'),1,0, 'L', 'T');
+$pdf->cell(30,5,'Area Solicitante:'),1,0, 'L', 'T');
+$pdf->cell(70,5,$solicita),1,0, 'L');
+$pdf->cell(30,5,'Fecha:'),1,0, 'L', 'T');
 $pdf->cell(35,5,$newDate,1,1, 'C');
-$pdf->cell(30,5,utf8_decode('Recibe:'),1,0, 'L', 'T');
-$pdf->cell(70,5,utf8_decode($recibe),1,0, 'L');
-$pdf->cell(30,5,utf8_decode('Fecha:'),1,0, 'L', 'T');
+$pdf->cell(30,5,'Recibe:'),1,0, 'L', 'T');
+$pdf->cell(70,5,$recibe),1,0, 'L');
+$pdf->cell(30,5,'Fecha:'),1,0, 'L', 'T');
 $pdf->cell(35,5,'',1,1, 'L');
 
 */

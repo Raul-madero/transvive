@@ -13590,40 +13590,58 @@ if($_POST['action'] == 'AlmacenaEditEvaluaservicio')
        echo 'error';
     }else{
 
-        $ideval      = $_POST['id_eval'];
-        $tipo_eval   = $_POST['tipo_eval'];
-        $fecha       = $_POST['fecha'];
-        $proveedor   = $_POST['proveedor'];
-        $producto    = $_POST['producto'];
-        $consulta    = $_POST['consulta'];
-        $fecha_h1    = $_POST['fecha_h1'];
-        $historial1  = $_POST['historial_h1'];
-        $fecha_h2    = $_POST['fecha_h2'];
-        $historial2  = $_POST['historial_h2'];
-        $fecha_h3    = $_POST['fecha_h3'];
-        $historial3  = $_POST['historial_h3'];
-        $tot_compras = $_POST['tot_compras'];
-        $calif_total = $_POST['calif_total'];
-        $estatusc    = $_POST['estatusc'];
-        $acciones    = $_POST['acciones'];
-        $precios     = $_POST['precios'];
-        $documenta   = $_POST['documenta'];
-        $credito     = $_POST['credito'];
-        $tiempo_res  = $_POST['tiempo_res'];
-        $calidads    = $_POST['calidads'];
+        $ideval      = $_POST['id_eval'] ?? "";
+        $tipo_eval   = $_POST['tipo_eval'] ?? "";
+        $fecha       = $_POST['fecha'] ?? "";
+        $proveedor   = $_POST['proveedor'] ?? "";
+        $producto    = $_POST['producto'] ?? "";
+        $consulta    = $_POST['consulta'] ?? "";
+        // $fecha_h1    = $_POST['fecha_h1'] ?? NULL;
+        $historial1  = $_POST['historial_h1'] ?? "";
+        // $fecha_h2    = $_POST['fecha_h2'] ?? NULL;
+        $historial2  = $_POST['historial_h2'] ?? "";
+        // $fecha_h3    = $_POST['fecha_h3'] ?? NULL;
+        $historial3  = $_POST['historial_h3'] ?? "";
+        $tot_compras = $_POST['tot_compras'] ?? "";
+        $calif_total = $_POST['calif_total'] ?? "";
+        $estatusc    = $_POST['estatusc'] ?? "";
+        $acciones    = $_POST['acciones'] ?? "";
+        $precios     = $_POST['precios'] ?? "";
+        $documenta   = $_POST['documenta'] ?? "";
+        $credito     = $_POST['credito'] ?? "";
+        $tiempo_res  = $_POST['tiempo_res'] ?? "";
+        $calidads    = $_POST['calidads'] ?? "";
 
+        function fecha_o_null($key) {
+            return (!empty($_POST[$key]) && strtotime($_POST[$key])) ? "'" . $_POST[$key] . "'" : "NULL";
+        }
+        
+        $fecha_h1 = fecha_o_null('fecha_h1');
+        $fecha_h2 = fecha_o_null('fecha_h2');
+        $fecha_h3 = fecha_o_null('fecha_h3');
+        
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_editevalservicio($ideval, '$tipo_eval', '$fecha', $proveedor, '$producto', '$consulta', '$fecha_h1', $historial1, '$fecha_h2', $historial2, '$fecha_h3', $historial3, $tot_compras, 0, $calif_total, '$estatusc', '$acciones', $precios, $documenta, $credito, $tiempo_res, $calidads, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
+        $sql = "UPDATE evaluaciones_servicios SET tipo_evaluacion = '$tipo_eval', fecha_eval = '$fecha', cveproveedor = $proveedor, producto = '$producto', consulta = '$consulta', precios_competitivos = '$precios', fecha_hist1 = $fecha_h1, historia1 = $historial1, fecha_hist2 = $fecha_h2, historia2 = $historial2, fecha_hist3 = $fecha_h3, historia3 = $historial3, calificacion_compras = $tot_compras, calificacion_total = $calif_total, resultado = '$estatusc', acciones = '$acciones', documentacion = $documenta, credito = $credito, tiempo_respuesta = $tiempo_res, calidad_servicio = $calidads WHERE ideval = $ideval";
+
+        // echo $sql;
+
+        $query_procesar = mysqli_query($conection,$sql);
         
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
-        }
+        $query_procesar = mysqli_query($conection, $sql);
+
+if ($query_procesar) {
+    echo json_encode([
+        'mensaje' => 'actualizado',
+        'ideval'  => $ideval
+    ], JSON_UNESCAPED_UNICODE);
+} else {
+    echo json_encode([
+        'mensaje' => 'Error al actualizar: ' . mysqli_error($conection)
+    ]);
+}
+
     
     mysqli_close($conection);
   }

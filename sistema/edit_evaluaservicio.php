@@ -1,4 +1,4 @@
- ? $('#inputFecha1') : new Date().tostring().slice(0, 10)<?php
+<?php
 include "../conexion.php";
 session_start();
   $User=$_SESSION['user'];
@@ -435,21 +435,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <td>CALIDAD</td>
   <td>CONDICIONES DE EMPAQUE</td>
   <td>1 - 10</td>
-  <td><input type="number" class="form-control" id="input11" name="input11" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="<?php echo $empaque;?>" <?php echo $activocal;?>></td>
+  <td><input type="number" class="form-control" id="input11" name="input11" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="" <?php echo $activocal;?>></td>
 </tr>
 <tr>
   <td>2. </td>
   <td>CALIDAD</td>
   <td>RECHAZO</td>
   <td>1 - 40</td>
-  <td><input type="number" class="form-control" id="input12" name="input12" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="<?php echo $rechazo;?>" <?php echo $activocal;?>></td>
+  <td><input type="number" class="form-control" id="input12" name="input12" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="" <?php echo $activocal;?>></td>
 </tr>
 <tr>
   <td>3. </td>
   <td>CALIDAD</td>
   <td>IDENTIFICACIÓN (nombre de producto, marca y proveedor)</td>
   <td>1 - 50</td>
-  <td><input type="number" class="form-control" id="input13" name="input13" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="<?php echo $identifica;?>" <?php echo $activocal;?>></td>
+  <td><input type="number" class="form-control" id="input13" name="input13" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="" <?php echo $activocal;?>></td>
 </tr>
 
     </tbody>
@@ -658,11 +658,11 @@ $('#btn_salir').click(function(e){
        var proveedor     = $('#inputProveedor').val();
        var producto      = $('#inputProducto').val();
        var consulta      = $('#inputConsulta').val();
-       var fecha_h1      = $('#inputFechah1').val() ? $('#inputFecha1').val() : new Date().tostring().slice(0, 10);
+       var fecha_h1      = $('#inputFechah1').val() ? $('#inputFecha1').val() : null;
        var historial_h1  = $('#historial1').val();
-       var fecha_h2      = $('#inputFechah2').val() ? $('#inputFecha2').val() : new Date().tostring().slice(0, 10);
+       var fecha_h2      = $('#inputFechah2').val() ? $('#inputFecha2').val() : null;
        var historial_h2  = $('#historial2').val();
-       var fecha_h3      = $('#inputFechah3').val() ? $('#inputFecha3').val() : new Date().tostring().slice(0, 10);
+       var fecha_h3      = $('#inputFechah3').val() ? $('#inputFecha3').val() : null;
        var historial_h3  = $('#historial3').val();
        var tot_compras   = $('#califcompras').val();
        var calif_total   = $('#califtotal').val();
@@ -692,63 +692,40 @@ $('#btn_salir').click(function(e){
                     async : true,
                     data: {action:action, id_eval:id_eval, tipo_eval, fecha:fecha, proveedor:proveedor, producto:producto, consulta:consulta, fecha_h1:fecha_h1, historial_h1:historial_h1, fecha_h2:fecha_h2, historial_h2:historial_h2, fecha_h3:fecha_h3, historial_h3:historial_h3, tot_compras:tot_compras, calif_total:calif_total, estatusc:estatusc, acciones:acciones, precios:precios,documenta:documenta, credito:credito, tiempo_res:tiempo_res, calidads:calidads },
 
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "EVALUACION DE SERVICIO EDITADA CORRECTAMENTE",
-                          icon: 'success',
+                    success: function(response) {
+                      console.log("Respuesta bruta:", response);
 
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //generarimpformulaPDF(info.folio);
-                        location.href = 'evalua_proveservicios.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'evalua_proveservicios.php';
-                        }
-                        });
+                      try {
+                          var info = JSON.parse(response);
+                          console.log("JSON decodificado:", info);
 
+                          if (info.mensaje === 'actualizado') {
+                              Swal.fire({
+                                  title: "¡Éxito!",
+                                  text: "EVALUACIÓN DE SERVICIO EDITADA CORRECTAMENTE",
+                                  icon: 'success',
+                                  confirmButtonText: "Aceptar"
+                              }).then(() => {
+                                  location.href = 'evalua_proveservicios.php';
+                              });
+                          } else {
+                              Swal.fire({
+                                  icon: 'error',
+                                  title: 'Error del sistema',
+                                  text: info.mensaje || 'Ocurrió un error desconocido al guardar.'
+                              });
+                          }
 
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
+                      } catch (e) {
+                          console.error("Error al parsear JSON:", e);
                           Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
+                              icon: 'error',
+                              title: 'Error inesperado',
+                              text: 'No se pudo procesar la respuesta del servidor.'
+                          });
+                      }
+                  },
+
                  error: function(error) {
                  }
 
@@ -763,136 +740,10 @@ $('#btn_salir').click(function(e){
 <script>
   $(function () {
     //Initialize Select2 Elements
-    $('.select2').select2()
-
-    //Initialize Select2 Elements
     $('.select2bs4').select2({
       theme: 'bootstrap4'
     })
-
-    //Datemask dd/mm/yyyy
-    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-    //Datemask2 mm/dd/yyyy
-    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-    //Money Euro
-    $('[data-mask]').inputmask()
-
-    //Date picker
-    $('#reservationdate').datetimepicker({
-        format: 'L'
-    });
-
-    //Date and time picker
-    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-    //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-    //Date range as a button
-    $('#daterange-btn').daterangepicker(
-      {
-        ranges   : {
-          'Today'       : [moment(), moment()],
-          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        startDate: moment().subtract(29, 'days'),
-        endDate  : moment()
-      },
-      function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-      }
-    )
-
-    //Timepicker
-    $('#timepicker').datetimepicker({
-      format: 'LT'
-    })
-
-    //Bootstrap Duallistbox
-    $('.duallistbox').bootstrapDualListbox()
-
-    //Colorpicker
-    $('.my-colorpicker1').colorpicker()
-    //color picker with addon
-    $('.my-colorpicker2').colorpicker()
-
-    $('.my-colorpicker2').on('colorpickerChange', function(event) {
-      $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-    })
-
-    $("input[data-bootstrap-switch]").each(function(){
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    })
-
   })
-  // BS-Stepper Init
-  document.addEventListener('DOMContentLoaded', function () {
-    window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-  })
-
-  // DropzoneJS Demo Code Start
-  Dropzone.autoDiscover = false
-
-  // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-  var previewNode = document.querySelector("#template")
-  previewNode.id = ""
-  var previewTemplate = previewNode.parentNode.innerHTML
-  previewNode.parentNode.removeChild(previewNode)
-
-  var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/target-url", // Set the url
-    thumbnailWidth: 80,
-    thumbnailHeight: 80,
-    parallelUploads: 20,
-    previewTemplate: previewTemplate,
-    autoQueue: false, // Make sure the files aren't queued until manually added
-    previewsContainer: "#previews", // Define the container to display the previews
-    clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-  })
-
-  myDropzone.on("addedfile", function(file) {
-    // Hookup the start button
-    file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) }
-  })
-
-  // Update the total progress bar
-  myDropzone.on("totaluploadprogress", function(progress) {
-    document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-  })
-
-  myDropzone.on("sending", function(file) {
-    // Show the total progress bar when upload starts
-    document.querySelector("#total-progress").style.opacity = "1"
-    // And disable the start button
-    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-  })
-
-  // Hide the total progress bar when nothing's uploading anymore
-  myDropzone.on("queuecomplete", function(progress) {
-    document.querySelector("#total-progress").style.opacity = "0"
-  })
-
-  // Setup the buttons for all transfers
-  // The "add files" button doesn't need to be setup because the config
-  // `clickable` has already been specified.
-  document.querySelector("#actions .start").onclick = function() {
-    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-  }
-  document.querySelector("#actions .cancel").onclick = function() {
-    myDropzone.removeAllFiles(true)
-  }
-  // DropzoneJS Demo Code End
 </script> 
 
 

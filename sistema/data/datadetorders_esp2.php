@@ -51,7 +51,6 @@ if (!empty($requestData['search']['value'])) {
                 OR sp.apellido_materno LIKE '%$searchValue%' 
                 OR p.fecha LIKE '%$searchValue%')";
 }
-
 $orderColumn = $_POST['order_column'];
 $orderDir = $_POST['order_dir'];
 
