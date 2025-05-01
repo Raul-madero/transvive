@@ -1,529 +1,295 @@
 <?php
-
 include "../conexion.php";
 session_start();
-$User=$_SESSION['user'];
-$rol=$_SESSION['rol'];
-$idUser = $_SESSION['idUser'];
-$sql = "select * from rol where idrol =$rol ";
-$query = mysqli_query($conection, $sql);
-$filas = mysqli_fetch_assoc($query); 
 
-$namerol = $filas['rol'];
-
+// Verifica sesión activa
 if (!isset($_SESSION['idUser'])) {
-	header('Location: ../index.php');
+    header('Location: ../index.php');
+    exit;
 }
 
-$sql01= mysqli_query($conection,"SELECT * FROM registro_viajes WHERE estatus= 1 ORDER BY fecha DESC");
-mysqli_close($conection);
-$result_sql01 = mysqli_num_rows($sql01);
+// Variables de sesión
+$User = $_SESSION['user'];
+$rol = $_SESSION['rol'];
+$idUser = $_SESSION['idUser'];
 
-  while ($data = mysqli_fetch_array($sql01)){
-	$abiertos   = 0;
-  }
+// Obtener nombre del rol
+$query = mysqli_query($conection, "SELECT rol FROM rol WHERE idrol = $rol");
+$filas = mysqli_fetch_assoc($query);
+$namerol = $filas['rol'] ?? '';
+
+// Zona horaria y fechas
 date_default_timezone_set('America/Mexico_City');
-
 $fechaActual = date("Y-m-d");
-$fcha1 = date("Y-m-d",strtotime ( '-1 day' , strtotime ( $fechaActual ) ) );
-$newDate = date("d-m-Y", strtotime($fcha1));  
+$fcha1 = date("Y-m-d", strtotime('-1 day', strtotime($fechaActual)));
+$newDate = date("d-m-Y", strtotime($fcha1));
 
-
-$fcha = date("Y-m-d"); 
 $diafcha = date("w");
 $diasrest = 6 - $diafcha;
-$fchaini = date("Y-m-d",strtotime($fcha."- $diafcha days")); 
-$fchafin = date("Y-m-d",strtotime($fcha."+ $diasrest days")); 
-include "../conexion.php";
+$fchaini = date("Y-m-d", strtotime($fechaActual . "- $diafcha days"));
+$fchafin = date("Y-m-d", strtotime($fechaActual . "+ $diasrest days"));
 
-$sql= mysqli_query($conection,"SELECT semana, dia_inicial, dia_final FROM semanas40 WHERE dia_inicial <= '$fechaActual' AND dia_final >= '$fechaActual'");
-$result = mysqli_num_rows($sql);
-
-
-while ($data = mysqli_fetch_array($sql)){
-	$diainicial  = $data['dia_inicial'];
-	$diafinal    = $data['dia_final'];
-	//$user   = $_SESSION['idUser'];
-}
+// Obtener semana actual
+$sql = mysqli_query($conection, "SELECT semana, dia_inicial, dia_final FROM semanas40 WHERE dia_inicial <= '$fechaActual' AND dia_final >= '$fechaActual'");
+$dataSemana = mysqli_fetch_assoc($sql);
+$diainicial = $dataSemana['dia_inicial'];
+$diafinal = $dataSemana['dia_final'];
 mysqli_close($conection);
 
+// Contadores
+$tareahoy = 0;
+$tareasem = 0;
+
+// === Tareas de hoy ===
+include "../conexion.php";
 if ($rol == 1) {
-	include "../conexion.php";
-  $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and (tipo_viaje <> 'Especial' OR tipo_viaje <> 'Especial Turistico') ");
-  $data = mysqli_fetch_array($sql02);
-  $tareahoy   = $data['viajeshoy'];
-  mysqli_close($conection);
-}else {  
-  include "../conexion.php";
-  $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') and usuario_id = $idUser");
-  $data = mysqli_fetch_array($sql02);
-  $tareahoy   = $data['viajeshoy'];
-  mysqli_close($conection);
-} 
-
-if ($rol == 1) {  
-
-    include "../conexion.php";
-    $sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') ");
-    $data = mysqli_fetch_array($sql03);
-    $tareasem   = $data['totalsem'];
-    mysqli_close($conection);
-}else {
-	Include "../conexion.php";
-	$sql03= mysqli_query($conection,"SELECT count(*) as totalsem FROM registro_viajes WHERE estatus= 1 and fecha between '$diainicial' and '$diafinal' and (tipo_viaje = 'Especial' or tipo_viaje <> 'Especial Turistico') and usuario_id = $rol ");
-	$result_sql03 = mysqli_num_rows($sql03);
-	$data = mysqli_fetch_array($sql03);
-	$tareasem   = $data['totalsem'];
-	mysqli_close($conection);
+    $query = "SELECT COUNT(*) as viajeshoy FROM registro_viajes WHERE estatus = 1 AND fecha = '$fechaActual' AND tipo_viaje NOT IN ('Especial', 'Especial Turistico')";
+} else {
+    $query = "SELECT COUNT(*) as viajeshoy FROM registro_viajes WHERE estatus = 1 AND fecha = '$fechaActual' AND tipo_viaje IN ('Especial', 'Especial Turistico') AND usuario_id = $idUser";
 }
-// include "../conexion.php";
-// $sql04= mysqli_query($conection,"SELECT *  FROM registro_viajes WHERE estatus = 1 and fecha < '$fchaini' and (tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter' or tipo_viaje = 'Semidomiciliadas')");
-// $result_sql04 = mysqli_num_rows($sql04);
-// while ($data = mysqli_fetch_array($sql04)){
-// 	$tarearetraso   = 0;
-// } 
-// mysqli_close($conection);
+$result = mysqli_query($conection, $query);
+$tareahoy = mysqli_fetch_assoc($result)['viajeshoy'] ?? 0;
+mysqli_close($conection);
 
+// === Tareas de la semana ===
 include "../conexion.php";
-$sqlviajes= mysqli_query($conection,"SELECT count(tipo_viaje) as normales from registro_viajes WHERE (tipo_viaje != 'Especial' or tipo_viaje != 'Especial Turistico')  and fecha = '$fcha1' and planeado = 1");
-$result_sqlviajes = mysqli_num_rows($sqlviajes);
-while ($datav = mysqli_fetch_array($sqlviajes)){
-	$normales   = $datav['normales'];
-	//$especiales   = 0;
-} 
+if ($rol == 1) {
+    $query = "SELECT COUNT(*) as totalsem FROM registro_viajes WHERE estatus = 1 AND fecha BETWEEN '$diainicial' AND '$diafinal' AND tipo_viaje IN ('Especial', 'Especial Turistico')";
+} else {
+    $query = "SELECT COUNT(*) as totalsem FROM registro_viajes WHERE estatus = 1 AND fecha BETWEEN '$diainicial' AND '$diafinal' AND tipo_viaje IN ('Especial', 'Especial Turistico') AND usuario_id = $idUser";
+}
+$result = mysqli_query($conection, $query);
+$tareasem = mysqli_fetch_assoc($result)['totalsem'] ?? 0;
 mysqli_close($conection);
 
-include "../conexion.php";
-$sqlviajesreg= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_normales from registro_viajes WHERE (tipo_viaje != 'Normal' or tipo_viaje != 'Especial Turistico') and fecha = '$fcha1' and valor_vuelta >0 and planeado = 1");
-$result_sqlviajesreg = mysqli_num_rows($sqlviajesreg);
-while ($datareg = mysqli_fetch_array($sqlviajesreg)){
-	$normalesreg   = $datareg['viajes_normales'];
-	//$especiales   = $datav['viajes_especiales'];
-} 
-mysqli_close($conection);
+// === Estadísticas adicionales ===
+function fetch_value($sql) {
+    include "../conexion.php";
+    $result = mysqli_query($conection, $sql);
+    $data = mysqli_fetch_assoc($result);
+    mysqli_close($conection);
+    return $data ? array_values($data)[0] : 0;
+}
 
-include "../conexion.php";
-$sqlviajespec= mysqli_query($conection,"SELECT sum(valor_vuelta) as especiales from registro_viajes WHERE (tipo_viaje = 'Especial' or tipo_viaje = 'Especial Turistico') and fecha = '$fcha1' ");
-$result_sqlviajespec = mysqli_num_rows($sqlviajespec);
-while ($datavs = mysqli_fetch_array($sqlviajespec)){
-	$especiales   = $datavs['especiales'];
-	//$especiales   = 0;
-} 
-mysqli_close($conection);
+$normales = fetch_value("SELECT COUNT(tipo_viaje) FROM registro_viajes WHERE tipo_viaje NOT IN ('Especial', 'Especial Turistico') AND fecha = '$fcha1' AND planeado = 1");
+$normalesreg = fetch_value("SELECT SUM(valor_vuelta) FROM registro_viajes WHERE tipo_viaje NOT IN ('Normal', 'Especial Turistico') AND fecha = '$fcha1' AND valor_vuelta > 0 AND planeado = 1");
+$especiales = fetch_value("SELECT SUM(valor_vuelta) FROM registro_viajes WHERE tipo_viaje IN ('Especial', 'Especial Turistico') AND fecha = '$fcha1'");
+$especialesreg = fetch_value("SELECT SUM(valor_vuelta) FROM registro_viajes WHERE tipo_viaje LIKE '%Especial%' AND fecha = '$fcha1' AND valor_vuelta > 0");
+$planeados = fetch_value("SELECT SUM(valor_vuelta) FROM registro_viajes WHERE fecha = '$fcha1' AND tipo_viaje NOT IN ('Especial', 'Especial Turistico') AND planeado = 1");
+$extras = fetch_value("SELECT SUM(valor_vuelta) FROM registro_viajes WHERE tipo_viaje NOT IN ('Especial', 'Especial Turistico') AND fecha = '$fcha1' AND planeado = 0 AND valor_vuelta > 0");
+$cancelados = fetch_value("SELECT COUNT(valor_vuelta) FROM registro_viajes WHERE tipo_viaje NOT IN ('Especial', 'Especial Turistico') AND fecha = '$fcha1' AND estatus = 3");
 
-include "../conexion.php";
-$sqlviajesregesp= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_especiales from registro_viajes WHERE tipo_viaje LIKE '%Especial%' and fecha = '$fcha1' and valor_vuelta >0");
-$result_sqlviajesregesp = mysqli_num_rows($sqlviajesregesp);
-while ($dataregesp = mysqli_fetch_array($sqlviajesregesp)){
-	$especialesreg   = $dataregesp['viajes_especiales'];
-	//$especiales   = $datav['viajes_especiales'];  
-} 
-mysqli_close($conection);
-
- include "../conexion.php";
-$sqlviajesplan= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_planeados FROM registro_viajes WHERE fecha= '$fcha1' and (tipo_viaje !='Especial' or tipo_viaje != 'Especial Turistico') and planeado = 1 ");
-$result_sqlviajesplan = mysqli_num_rows($sqlviajesplan);
-while ($dataplan = mysqli_fetch_array($sqlviajesplan)){
-	$planeados   = $dataplan['viajes_planeados'];
-	//$especiales   = $datav['viajes_especiales'];
-} 
-mysqli_close($conection);
-
- include "../conexion.php";
-$sqlviajesextra= mysqli_query($conection,"SELECT sum(valor_vuelta) as viajes_extras from registro_viajes WHERE (tipo_viaje != 'Especial' or tipo_viaje != 'Especial Turistico') and fecha = '$fcha1' and planeado = 0 and valor_vuelta > 0");
-$result_sqlviajesextra = mysqli_num_rows($sqlviajesextra);
-while ($dataextra = mysqli_fetch_array($sqlviajesextra)){
-	$extras   = $dataextra['viajes_extras'];
-	//$especiales   = $datav['viajes_especiales'];
-} 
-mysqli_close($conection);
-
- include "../conexion.php";
-$sqlviajescanc= mysqli_query($conection,"SELECT count(valor_vuelta) as viajes_cancelados from registro_viajes WHERE (tipo_viaje != 'Especial' or tipo_viaje != 'Especial Turistico') and fecha = '$fcha1' and estatus = 3 ");
-$result_sqlviajescanc = mysqli_num_rows($sqlviajescanc);
-while ($datacanc = mysqli_fetch_array($sqlviajescanc)){
-	$cancelados   = $datacanc['viajes_cancelados'];
-	//$especiales   = $datav['viajes_especiales'];
-} 
-mysqli_close($conection);
-
-//*include "../conexion.php";
-//*$sqledo = "select estado from estados ORDER BY estado";
-//*$queryedo = mysqli_query($conection, $sqledo);
-//*$filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); 
+// Las variables que puedes usar ahora:
+// $tareahoy, $tareasem, $normales, $normalesreg, $especiales, $especialesreg, $planeados, $extras, $cancelados
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>TRANSVIVE | ERP</title>
+
 	<!-- Favicon -->
-<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
 
-<!-- Google Fonts -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+	<!-- Google Fonts -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-<!-- jQuery UI (datepicker) -->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+	<!-- Bootstrap (datepicker) -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-x..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<!-- AdminLTE -->
-<link rel="stylesheet" href="../dist/css/adminlte.min.css">
+	<!-- Iconos: Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-x..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<!-- Plugins -->
-<link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
-<link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-<link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
-<link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+	<!-- Estilos base: AdminLTE + Plugins -->
+	<link rel="stylesheet" href="../dist/css/adminlte.min.css">
+	<link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+	<link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
 
-<!-- DataTables -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css">
+	<!-- Select2 (mejorar inputs) -->
+	<link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
+	<link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
-<!-- jQuery + jQuery UI -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/i18n/jquery.ui.datepicker-es.min.js"></script>
+	<!-- DataTables (tablas interactivas) -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css">
 
-<!-- SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<!-- jQuery y jQuery UI -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-<!-- RequireJS (si lo sigues usando) -->
-<!-- <script src="./js/require.min.js"></script> -->
-<!-- <script>
-	requirejs.config({
-		baseUrl: '.'
-	});
-</script> -->
+	<!-- SweetAlert2 -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+	<!-- RequireJS (si se usa) -->
+	<!-- 
+	<script src="./js/require.min.js"></script>
+	<script>
+		requirejs.config({ baseUrl: '.' });
+	</script>
+	-->
 </head>
+
 <body class="hold-transition layout-top-nav">
-	<div class="wrapper">
-	<!-- Navbar -->
-		<nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
-			<div class="container">
-			<a href="salir.php" class="navbar-brand">
-				<span class="brand-text font-weight-light"><img src="../images/logo_easy.png" alt="TRANSVIVE CRM"></span>
-			</a>
-			<button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<?php include('includes/generalnavbar.php');
-			?>
-			
-			<?php include('includes/nav.php') ?> 
+<div class="wrapper">
 
-			</div>
-		</nav>
-		<!-- Left side column. contains the logo and sidebar -->
-	
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+        <div class="container">
+            <a href="salir.php" class="navbar-brand">
+                <span class="brand-text font-weight-light">
+                    <img src="../images/logo_easy.png" alt="TRANSVIVE CRM">
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-	<!-- Content Wrapper. Contains page content -->
-	<div class="content-wrapper">
-		<section class="content-header">
-		<div class="container-fluid">
-			<div class="row">
-			<div class="col-sm-6">
-			<h4 class="m-0"> Registro de Viajes <small></small></h4>
-			</div>
-			<div class="col-sm-6 d-none d-sm-block">
-			<ol class="breadcrumb float-sm-right">
-				<?php
-				//Si es administrador, Gerente o Jefe de operaciones
-				if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8) {
+            <?php include('includes/generalnavbar.php'); ?>
+            <?php include('includes/nav.php'); ?>
+        </div>
+    </nav>
 
-				?> 
-				<li class="breadcrumb-item"><a href="new_viaje.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;',2);?>Nuevo</a></li>
-				<?php }   ?>
-				<li class="breadcrumb-item"><a href="#">Home</a></li>
-				<li class="breadcrumb-item"><a href="#">Layout</a></li>
-				<li class="breadcrumb-item active">Navegacion</li>
-				</ol>
-			</div>
-			</div>
-		</div>
-		</section>
-		<!-- Main content -->
-		<div class="content-wrapper">
-		<!-- Content Header (Page header) -->
-	
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Encabezado -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4 class="m-0">Registro de Viajes</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-		<!-- Main content -->
-		<section class="content">
-		<div class="row">
-				<div class="col-md-2">
-			<a href="#" class="btn btn-primary btn-block mb-3">Viajes</a>
+        <!-- Contenido principal -->
+        <section class="content">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-2">
+                    <a href="#" class="btn btn-primary btn-block mb-3">Viajes</a>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><?= $newDate; ?></h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" id="refresh">
+                                    <i class="fa fa-refresh" style="font-size:24px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="nav nav-pills flex-column">
+                                <li class="nav-item"><a href="#" class="nav-link">Planeados <span class="badge bg-warning float-right"><?= $normales; ?></span></a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Registrados <span class="badge bg-secondary float-right"><?= $normalesreg; ?></span></a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">No Planeados <span class="badge bg-success float-right"><?= $extras; ?></span></a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Cancelados <span class="badge bg-danger float-right"><?= $cancelados; ?></span></a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Especiales <span class="badge bg-warning float-right"><?= $especiales; ?></span></a></li>
+                                <li class="nav-item"><a href="#" class="nav-link">Especiales Reg. <span class="badge bg-secondary float-right"><?= $especialesreg; ?></span></a></li>
+                                <li class="nav-item text-center">
+                                    <a href="#" class="btn btn-secondary btn-sm mt-2" data-toggle="modal" data-target="#modalEditPeriodo2">Detalle del Día</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-			<div class="card">
-				<div class="card-header">
-				<h3 class="card-title"><?php echo $newDate;?></h3>
+                <!-- Contenido central -->
+                <div class="col-md-10">
+                    <div class="card card-primary card-outline">
+                        <div class="card-header">
+                            <h3 class="card-title">Viajes</h3>
+                            <?php if (in_array($_SESSION['rol'], [1, 9, 8])): ?>
+                                <a href="new_viaje.php" class="btn btn-success btn-sm ml-2">Crea Nuevo <i class="fas fa-plus"></i></a>
+                            <?php endif; ?>
+                            <a href="factura/viajes_excel.php" class="btn btn-secondary btn-sm ml-2">Excel <i class="fas fa-file-excel"></i></a>
+                            <a href="factura/viajes_exceltodos.php" class="btn btn-secondary btn-sm ml-2">Excel Todos <i class="fas fa-file-excel"></i></a>
+                        </div>
 
-				<div class="card-tools">
-					<button type="button" class="btn btn-tool" id="refresh">
-					<i class="fa fa-refresh" style="font-size:24px;"></i>
-					</button>
-				</div>
-				</div>
-				<div class="card-body p-0">
-				<ul class="nav nav-pills flex-column">
-					<!--<li class="nav-item active">
-					<a href="tareas.php" class="nav-link">
-						Tareas Abiertas
-						<span class="badge bg-primary float-right">0</span>
-					</a>
-					</li>-->
-					<li class="nav-item">
-					<a href="#" class="nav-link">
-						Planeados
-						<span class="badge bg-warning float-right"><?php echo $normales;?></span>
-					</a>
-					<a href="#" class="nav-link">
-						Registrados
-						<span class="badge bg-secondary float-right"><?php echo $normalesreg;?></span>
-					</a>
-					
-					<a href="#" class="nav-link">
-						No Planeados
-						<span class="badge bg-success float-right"><?php echo $extras;?></span>
-					</a>
+                        <div class="card-body">
+                            <?php if (in_array($_SESSION['rol'], [1, 9, 5])): ?>
+                                <!-- Filtros de fecha -->
+                                <form id="filtro-form" class="form-inline mb-3">
+                                    <input type="text" readonly name="initial_date" id="initial_date" class="form-control datepicker mr-2" placeholder="De Fecha">
+                                    <input type="text" readonly name="final_date" id="final_date" class="form-control datepicker mr-2" placeholder="A Fecha">
+                                    <button type="submit" class="btn btn-success mr-2" id="filter"><i class="fa fa-filter"></i> Filtro</button>
+                                    <button type="button" class="btn btn-info" onClick="actualizarLaPagina()"><i class="fa fa-refresh"></i></button>
+                                </form>
 
-					<a href="#" class="nav-link">
-						Cancelados
-						<span class="badge bg-danger float-right"><?php echo $cancelados;?></span>
-					</a>
+                                <!-- Tabla principal -->
+                                <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th><th>Fecha</th><th>Hora Inicio</th><th>Hora Llegada</th><th>Semana</th>
+                                            <th>Cliente</th><th>Ruta</th><th>Operador</th><th>Tipo Unidad</th><th>No. Eco.</th>
+                                            <th>Supervisor</th><th>Jefe Operaciones</th><th>Estatus</th><th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                </table>
 
-					<a href="#" class="nav-link"></a>
-					</li>
-					
-					<li class="nav-item">
-					<a href="#" class="nav-link">
-					Especiales
-					<span class="badge bg-warning float-right"><?php echo $especiales;?></span>
-					</a>
-					<a href="#" class="nav-link">
-						Especiales Reg.
-						<span class="badge bg-secondary float-right"><?php echo $especialesreg;?></span>
-					</a>
-					<a href="#" class="nav-link"></a>
-					</li>
-					<li class="nav-item">
-					<a href="#" class="nav-link"></a>
-					<center>
-						<a href="#"  class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#modalEditPeriodo2"> Detalle del Día</a>
-					</center>
-						<a href="#" class="nav-link"></a>
-					</li>
-					<!--<li class="nav-item">
-					<a href="#" class="nav-link">
-						<i class="far fa-trash-alt"></i> Mas...
-					</a>
-					</li>-->
-				</ul>
-				</div>
-				<!-- /.card-body -->
-			</div>
-			<!-- /.card -->
-			
-			<!-- /.card -->
-			</div>
-			<div class="col-md-10">
-			<div class="card card-primary card-outline">
-				<div class="card-header">
-				<h3 class="card-title">Viajes</h3>&nbsp;&nbsp;&nbsp;
-				<?php
-				//Si es Administrador, Gerente o Jefe de Operaciones
-				if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 8 ) {
+                            <?php elseif ($_SESSION['rol'] == 4): ?>
+                                <!-- Vista para Supervisores -->
+                                <table id="fetch_generated_wills" class="table table-bordered table-hover nowrap" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th><th>Fecha</th><th>Hora Inicio</th><th>Hora Llegada</th><th>Semana</th>
+                                            <th>Cliente</th><th>Operador</th><th>Tipo Unidad</th><th>No. Eco.</th><th>Estatus</th><th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                </table>
 
-				?> 
-					<a href="new_viaje.php"><button class="btn btn-success btn-sm">Crea Nuevo <i class="icon-plus icon-white"></i></button></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<?php }   ?>   
-					<a href="factura/viajes_excel.php"><button class="btn btn-secondary btn-sm">Excel &nbsp;<i class="fas fa-file-excel"></i></button></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<a href="factura/viajes_exceltodos.php"><button class="btn btn-secondary btn-sm">Excel Todos&nbsp; <i class="fas fa-file-excel"></i></button></a>
-				</div>
+                            <?php elseif ($_SESSION['rol'] == 8): ?>
+                                <!-- Vista para Jefe de Operaciones -->
+                                <table id="fetch_generated_willss" class="table table-hover table-striped table-bordered" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th><th>Fecha</th><th>Hora Inicio</th><th>Hora Llegada</th><th>Semana</th>
+                                            <th>Cliente</th><th>Ruta</th><th>Operador</th><th>Tipo Unidad</th><th>No. Eco.</th>
+                                            <th>Supervisor</th><th>Jefe Operaciones</th><th>Estatus</th><th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-md-10 -->
+            </div>
+            <!-- /.row -->
+        </section>
+    </div>
+    <!-- /.content-wrapper -->
 
-				
-				<div class="col-md-12">
-				<div class="card">      
-				<!-- /.card-header -->
-				<div class="card-body">
-				<?php 
-				//Administrador, Gerencia y RR.HH
-					if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 5){
-				?>
-				<table>
-					<tr>
-						<td>
-							<input type='text' readonly name='initial_date' id='initial_date' class="datepicker" placeholder='De Fecha'>
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td>
-							<input type='text' readonly name='final_date' id='final_date' class="datepicker" placeholder='A Fecha'>
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<!-- <td>
-							<input type='text' name='gender' id='gender' placeholder="ID a buscar">
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
+    <!-- Footer -->
+    <footer class="main-footer">
+        <?php include "includes/footer.php"; ?>
+    </footer>
 
-						<td>
-							<button class="btn btn-success btn-block" type="submit" name="filter" id="filter" >
-					<i class="fa fa-filter"></i> Filtro
-				</button>
-						</td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td>
-							<button class="btn btn-info btn-block" onClick="actualizarLaPagina()" >
-					<i class="fa fa-refresh"></i> 
-				</button>
-						</td>
-					</tr>
-				</table>   
-			
-				<br>
-			
-				<table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-				<thead>
-				<tr>
-					<th>ID</th>
-					<th>Fecha</th>
-					<th>Hora Inicio</th>
-					<th>Hora Llegada</th>
-					<th>Semana</th>
-					<th>Cliente</th>
-					<th>Ruta</th>
-					<th>Operador</th>
-					<th>Tipo Unidad</th>
-					<th>No. Eco.</th>
-					<th>Supervisor</th>
-					<th>Jefe Operaciones</th>
-					<th>Estatus</th>
-					<th>Accion</th>
-				</tr>
-				</thead>
-			</table>
-			<?php }else {
-				//Supervisor
-				if($_SESSION['rol'] == 4  ){
-			?>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <div class="tab-content">
+            <div class="tab-pane" id="control-sidebar-home-tab"></div>
+        </div>
+    </aside>
 
-		<table id="fetch_generated_wills" class="table table-bordered table-hover nowrap" style="width:100%">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Fecha</th>
-					<th>Hora Inicio</th>
-					<th>Hora Llegada</th>
-					<th>Semana</th>
-					<th>Cliente</th>
-					<th>Operador</th>
-					<th>Tipo Unidad</th>
-					<th>No. Eco.</th>
-					<th>Estatus</th>
-					<th>Acciones</th>
-				</tr>
-			</thead>
-		</table>
-	<?php }else {
-	//Jefe de Operaciones
-	if ($_SESSION['rol'] == 8) {
-	?>
-	
-				<br>
-			
-				<table id="fetch_generated_willss" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-				<thead>
-				<tr>
-					<th style="text-align: center; font-size: 12px;">ID</th>
-					<th style="text-align: center; font-size: 12px;">Fecha</th>
-					<th style="text-align: center; font-size: 12px;">Hora Inicio</th>
-					<th style="text-align: center; font-size: 12px;">Hora Llegada</th>
-					<th style="text-align: center; font-size: 12px;">Semana</th>
-					<th style="text-align: center; font-size: 12px;">Cliente</th>
-					<th style="text-align: center; font-size: 12px;">Ruta</th>
-					<th style="text-align: center; font-size: 12px;">Operador</th>
-					<th style="text-align: center; font-size: 12px;">Tipo Unidad</th>
-					<th style="text-align: center; font-size: 12px;">No. Eco.</th>
-					<th style="text-align: center; font-size: 12px;">Supervisor</th>
-					<th style="text-align: center; font-size: 12px;">Jefe Operaciones</th>
-					<th style="text-align: center; font-size: 12px;">Estatus</th>
-					<th style="text-align: center; font-size: 12px;">Accion</th>
-				</tr>
-				</thead>
-			</table>
-			<?php  
-	}
-	}} ?>
-		</div>
-				<!-- /.box-body -->
-			</div>
-			<!-- /.box -->
-			</div>
-			<!-- /.col -->
-		</div>
-		<!-- /.row -->
-		</section>
-		<!-- /.content -->
-	</div>
-	<!-- /.content-wrapper -->
-	<footer class="main-footer">
-		<?php include "includes/footer.php"; ?>
-	</footer>
-
-	<!-- Control Sidebar -->
-	<aside class="control-sidebar control-sidebar-dark">
-		<!-- Create the tabs -->
-		<ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-		
-		
-		</ul>
-		<!-- Tab panes -->
-		<div class="tab-content">
-		<!-- Home tab content -->
-		<div class="tab-pane" id="control-sidebar-home-tab">
-			
-		
-			<!-- /.control-sidebar-menu -->
-
-		</div>
-		<!-- /.tab-pane -->
-		<!-- Stats tab content -->
-		
-		<!-- /.tab-pane -->
-		</div>
-	</aside>
-	<!-- /.control-sidebar -->
-	<!-- Add the sidebar's background. This div must be placed
-		immediately after the control sidebar -->
-	<div class="control-sidebar-bg"></div>
-	</div>
-<!-- ./wrapper -->
-
-<!-- jQuery 3 -->
-
-<!-- Bootstrap 3.3.7 -->
-
-<!-- SlimScroll -->
-
-<!-- Bootstrap 3.3.7 -->
-
-
-<!-- Bootstrap Bundle -->
+    <!-- Fondo de sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- /.wrapper -->
+<!-- Bootstrap (Bundle incluye Popper) -->
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- AdminLTE -->
 <script src="../dist/js/adminlte.min.js"></script>
 
-<!-- DataTables + Extensions -->
+<!-- DataTables Core + Bootstrap4 integration -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 
-<!-- DataTables Buttons -->
+<!-- DataTables Buttons (exportaciones) -->
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -534,43 +300,39 @@ mysqli_close($conection);
 
 <!-- Bootstrap Datepicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.es.min.js"></script>
 
-    <?php
-    //Administrador, Operaciones, Calidad, Gerencia, RR.HH
-      if($_SESSION['rol'] == 1 || $_SESSION['rol'] == 6 || $_SESSION['rol'] == 14 || $_SESSION['rol'] == 9 || $_SESSION['rol'] == 5){
-    ?>
+
+<?php
+// ROL: Admin, Operaciones, Calidad, Gerencia, RRHH
+if (in_array($_SESSION['rol'], [1, 5, 6, 9, 14])): ?>
 <script>
 $(document).ready(function () {
-	// Inicializa datepickers
-	$(".datepicker").datepicker({
-		dateFormat: "yy-mm-dd",
-		changeMonth: true,
-		changeYear: true,
-		language: 'es'
-	});
+	$('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        language: 'es',
+        autoclose: true,
+        todayHighlight: true,
+        orientation: 'bottom auto'
+    });
 
-	// Inicializa DataTable
-	const table = initializeDataTable();
+	const table = initDataTable();
 
-	// Filtro
-	$("#filter").on("click", function () {
+	$("#filter").on("click", function (e) {
+		e.preventDefault();
 		const initial_date = $("#initial_date").val();
 		const final_date = $("#final_date").val();
-		const gender = $("#gender").val();
 
 		if (!validateFilter(initial_date, final_date)) return;
 
-		// Limpia estado y recarga con nueva data
-		table.state.clear();
-		table.ajax.reload(null, false);
+		table.ajax.reload(null, false); // mantiene el paginador
 	});
 });
 
-// Inicializar DataTable
-function initializeDataTable() {
+function initDataTable() {
 	return $('#fetch_generated_wills').DataTable({
 		order: [[1, "desc"]],
-		dom: 'Bfrtip',
+		// dom: 'Bfrtip',
 		processing: true,
 		serverSide: true,
 		stateSave: true,
@@ -580,21 +342,19 @@ function initializeDataTable() {
 		ajax: {
 			url: "data/datadetorders2.php",
 			type: "POST",
-			dataType: "json",
 			data: function (d) {
 				d.action = "fetch_users";
-				d.initial_date = $("#initial_date").val() || "";
-				d.final_date = $("#final_date").val() || "";
-				d.gender = $("#gender").val() || "";
+				d.initial_date = $("#initial_date").val();
+				d.final_date = $("#final_date").val();
 			},
 			dataSrc: function (json) {
 				if (!json || !json.records) {
-					console.error("Respuesta inválida del servidor:", json);
+					console.error("Respuesta inválida:", json);
 					return [];
 				}
 				return json.records;
 			},
-			error: function (xhr, error, code) {
+			error: function (xhr) {
 				console.error("Error AJAX:", xhr.responseText);
 				alert("Ocurrió un error al procesar la solicitud.");
 			}
@@ -616,480 +376,370 @@ function initializeDataTable() {
 			{
 				data: null,
 				orderable: false,
-				render: function (data, type, full) {
-					return `
-						<center>
-							<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
-								<i class="fa fa-edit text-white" style="font-size: 1.2em"></i>
-							</a> | 
-							<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
-								<i class="fas fa-times-circle"></i>
-							</a>
-						</center>`;
-				}
+				render: (data, type, full) => `
+					<center>
+						<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
+							<i class="fa fa-edit text-white" style="font-size: 1.2em"></i>
+						</a> | 
+						<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
+							<i class="fas fa-times-circle"></i>
+						</a>
+					</center>`
 			}
-		],
-		buttons: [
-			'copyHtml5',
-			'excelHtml5',
-			'csvHtml5',
-			// {
-			// 	extend: 'colvis',
-			// 	postfixButtons: ['colvisRestore']
-			// }
 		]
 	});
 }
 
-// Validación de fechas
-function validateFilter(initial_date, final_date) {
+function validateFilter(initial, final) {
 	const $log = $("#error_log");
-	if (!initial_date || !final_date) {
+	if (!initial || !final) {
 		$log.html("⚠️ Debes seleccionar una fecha inicial y final.");
 		return false;
 	}
-
-	const start = new Date(initial_date);
-	const end = new Date(final_date);
-
-	if (start > end) {
+	if (new Date(initial) > new Date(final)) {
 		$log.html("⚠️ La fecha final no puede ser menor que la inicial.");
 		return false;
 	}
-
 	$log.html("");
 	return true;
 }
 </script>
 
- <?php }else {
-  //Supervisor
-   if($_SESSION['rol'] == 4  ){
-?>
+
+<?php elseif ($_SESSION['rol'] == 4): ?>
+<!-- ROL: Supervisor -->
+<script>
+$(function () {
+	let initial_date = $("#initial_date").val();
+	let final_date = $("#final_date").val();
+
+	const table = loadTable(initial_date, final_date); // Carga inicial
+
+	$("#filter").on("submit", function (e) {
+		e.preventDefault();
+
+		initial_date = $("#initial_date").val();
+		final_date = $("#final_date").val();
+
+		if (!validateFilter(initial_date, final_date)) return;
+
+		table.ajax.reload(null, false); // Reload con filtros sin perder paginación
+	});
+});
+
+// Función para cargar la tabla
+function loadTable(initial_date = "", final_date = "") {
+	return $('#fetch_generated_wills').DataTable({
+		order: [[1, "desc"]],
+		// dom: 'Bfrtip',
+		processing: true,
+		serverSide: true,
+		stateSave: true,
+		responsive: true,
+		ajax: {
+			url: "data/datadetorders3.php",
+			type: "POST",
+			data: function (d) {
+				d.action = "fetch_users";
+				d.initial_date = $("#initial_date").val(); // Siempre tomar del input
+				d.final_date = $("#final_date").val();
+			},
+			dataSrc: "records"
+		},
+		columns: [
+			{ data: "pedidono", width: "10px", className: "text-right" },
+			{ data: "fecha", width: "60px" },
+			{ data: "horainicio", width: "50px", className: "text-center" },
+			{ data: "horafin", width: "50px", className: "text-center" },
+			{ data: "nosemana", width: "80px" },
+			{ data: "razonsocial", width: "100px" },
+			{ data: "conductor", width: "100px" },
+			{ data: "tipounidad", width: "80px" },
+			{ data: "nounidad", width: "30px" },
+			{ data: "estatusped", width: "30px" },
+			{
+				render: (data, type, full) => `
+					<center>
+						<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
+							<i class="fa fa-edit" style="color:white; font-size: 1.2em"></i>
+						</a> | 
+						<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
+							<i class="fas fa-times-circle"></i>
+						</a>
+					</center>`
+			}
+		]
+	});
+}
+
+// Validación de fechas
+function validateFilter(initial, final) {
+	if (!initial || !final) {
+		alert("Debes seleccionar ambas fechas.");
+		return false;
+	}
+	if (new Date(initial) > new Date(final)) {
+		alert("La fecha final no puede ser menor que la inicial.");
+		return false;
+	}
+	return true;
+}
+</script>
+
+<?php elseif ($_SESSION['rol'] == 8): ?>
+<!-- ROL: Jefe de Operaciones -->
+<script>
+$(function () {
+	// Inicializa la tabla con valores actuales
+	const table = loadJO();
+
+	$("#filtro").click(function () {
+		const inicio = $("#inicio_date").val();
+		const fin = $("#fin_date2").val();
+
+		if (!inicio || !fin) {
+			$("#error_log").html("Debes seleccionar ambas fechas.");
+			return;
+		}
+		if (new Date(inicio) > new Date(fin)) {
+			$("#error_log").html("La fecha final no puede ser menor.");
+			return;
+		}
+
+		$("#error_log").html("");
+		table.ajax.reload(null, false); // Recarga sin reiniciar paginador
+	});
+});
+
+function loadJO() {
+	return $('#fetch_generated_willss').DataTable({
+		order: [[1, "desc"]],
+		// dom: 'Bfrtip',
+		processing: true,
+		serverSide: true,
+		stateSave: true,
+		responsive: true,
+		ajax: {
+			url: "data/datadetorders2_jo.php",
+			type: "POST",
+			data: function (d) {
+				d.action = "fetch_userss";
+				d.inicio_date = $("#inicio_date").val();
+				d.fin_date = $("#fin_date2").val();
+				d.buscaid = $("#buscaid").val();
+			},
+			dataSrc: "records"
+		},
+		columns: [
+			{ data: "pedidono", width: "10px", className: "text-right" },
+			{ data: "fecha", width: "60px" },
+			{ data: "horainicio", width: "50px", className: "text-center" },
+			{ data: "horafin", width: "50px", className: "text-center" },
+			{ data: "nosemana", width: "80px" },
+			{ data: "razonsocial", width: "100px" },
+			{ data: "rutacte", width: "40px" },
+			{ data: "conductor", width: "100px" },
+			{ data: "tipounidad", width: "80px" },
+			{ data: "nounidad", width: "30px" },
+			{ data: "supervisor", width: "50px" },
+			{ data: "jefeopera", width: "50px" },
+			{ data: "estatusped", width: "30px" },
+			{
+				render: (data, type, full) => `
+					<center>
+						<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
+							<i class="fa fa-edit text-white" style="font-size: 1.2em"></i>
+						</a> | 
+						<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
+							<i class="fas fa-times-circle"></i>
+						</a>
+					</center>`
+			}
+		]
+	});
+}
+</script>
+
+<?php endif; ?>
 
 <script type="text/javascript">
-    load_data(); // first load
+$(document).on('click', '#cancel_pedido', function(e) {
+    e.preventDefault();
 
-    function load_data(initial_date, final_date){
-        var ajax_url = "data/datadetorders3.php";
+    const pedidoId = $(this).data('id');
+    const action = 'infoCancelpedido';
 
-        $('#fetch_generated_wills').DataTable({
-            "order": [[ 1, "desc" ], [0, "desc"]],
-            "dom": 'Bfrtip',
-            "lengthMenu": [
-                [20, 25, 50, -1],
-                ['20 rows', '25 rows', '50 rows', 'Show all']
-            ],
-            "buttons": [
-                'excelHtml5',
-                'pageLength'
-            ],
-            "processing": true,
-            "serverSide": true,
-            "stateSave": true,
-            "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-            "ajax" : {
-                "url" : ajax_url,
-                "dataType": "json",
-                "type": "POST",
-                "data" : { 
-                    "action" : "fetch_users", 
-                    "initial_date" : initial_date, 
-                    "final_date" : final_date 
-                },
-                "dataSrc": "records"
-            },
-            "columns": [
-                { "data" : "pedidono", "width": "10px", "className": "text-right" },
-                { "data" : "fecha", "width": "60px", "orderable": false},
-                { "data" : "horainicio", "width": "50px", "className": "text-center", "orderable": false },
-                { "data" : "horafin", "width": "50px", "className": "text-center", "orderable": false },
-                { "data" : "nosemana", "width": "80px", "orderable": false },
-                { "data" : "razonsocial", "width": "100px", "orderable":false },
-                { "data" : "conductor", "width": "100px", "orderable":false },
-                { "data" : "tipounidad", "width": "80px", "orderable":false },
-                { "data" : "nounidad", "width": "30px", "orderable":false },
-                { "data" : "estatusped", "width": "30px", "orderable":false },
-                {
-                    "render": function ( data, type, full, meta ) {
-                        return '<center><a href="edit_viaje.php?id=' + full.pedidono + '" class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white; font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="' + full.pedidono + '" class="btn btn-danger btn-xs"><i class="fas fa-times-circle"></i></a></center>';
+    Swal.fire({
+        title: '¿Desea cancelar el registro?',
+        text: 'Pedido No.: ' + pedidoId,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, cancelar',
+        cancelButtonText: 'No',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'includes/ajax.php',
+                type: 'POST',
+                data: { action, pedidoId },
+                success: function(response) {
+                    if (response != 0) {
+                        Swal.fire({
+                            title: 'Cancelado',
+                            text: 'Registro cancelado correctamente',
+                            icon: 'success',
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            $('#modalAlumno').modal('hide');
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'No se pudo cancelar el registro',
+                            icon: 'error'
+                        });
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                    Swal.fire('Error', 'Ocurrió un error en la solicitud', 'error');
                 }
-            ],
-            "sDom": "B<'row'<'col-md-6'l><'col-md-6'f>>t<'row'<'col-md-4'i><'col-md-4'p>>",
-            "buttons": [
-                'copyHtml5',
-                'excelHtml5',
-                'csvHtml5',
-                {
-                   // extend: 'colvis',
-                    //postfixButtons: [ 'colvisRestore' ],
-                    columns: '0,1,2,3,4,5,6'
-                }
-            ],
-        }); 
-    }  
-
-    $("#filter").click(function(){
-        var initial_date = $("#initial_date").val();
-        var final_date = $("#final_date").val();
-
-        if(initial_date == '' && final_date == ''){
-            $('#fetch_generated_wills').DataTable().destroy();
-            load_data("", ""); // Carga sin filtros
+            });
         } else {
-            var date1 = new Date(initial_date);
-            var date2 = new Date(final_date);
-            var diffTime = Math.abs(date2 - date1);
-            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
-            if(initial_date == '' || final_date == ''){
-                $("#error_log").html("Warning: You must select both (start and end) dates.");
-            } else {
-                if(date1 > date2){
-                    $("#error_log").html("Warning: End date should be greater than start date.");
-                } else {
-                    $("#error_log").html(""); 
-                    $('#fetch_generated_wills').DataTable().destroy();
-                    load_data(initial_date, final_date);
-                }
-            }
+            Swal.fire('Acción cancelada', 'El registro no fue cancelado', 'info');
         }
     });
-
-    // Datepicker 
-    $( ".datepicker" ).datepicker({
-        language: 'es',
-        dateFormat: "yy-mm-dd",
-        changeYear: true
-    });
+});
 </script>
 
-
-<?php } else {
-  //Jefe de Operaciones
-  if ($_SESSION['rol'] == 8) {
-    ?>
-    <script type="text/javascript">
-      load_data(); // first load
-
-function load_data(inicio_date, fin_date, buscaid){
-  var ajax_url = "data/datadetorders2_jo.php";
-
-  $('#fetch_generated_willss').DataTable({
-	"order": [[ 1, "desc" ]],
-	dom: 'Bfrtip',
-lengthMenu: [
-[20, 25, 50, -1],
-['20 rows', '25 rows', '50 rows', 'Show all']
-],
-buttons: [
-'excelHtml5',
-'pageLength'
-],
-	"processing": true,
-	"serverSide": true,
-	"stateSave": true,
-	"responsive": true,
-	"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-	"ajax" : {
-	  "url" : ajax_url,
-	  "dataType": "json",
-	  "type": "POST",
-	  "data" : { 
-		"action" : "fetch_userss", 
-		"inicio_date" : inicio_date, 
-		"fin_date" : fin_date,
-		"buscaid" : buscaid 
-		
-	  },
-	  "dataSrc": "records"
-	},
-	"columns": [
-	  { "data" : "pedidono", "width": "10px", className: "text-right" },
-	  { "data" : "fecha", "width": "60px"},
-	  { "data" : "horainicio", "width": "50px", className: "text-center", "orderable": false },
-	  { "data" : "horafin", "width": "50px", className: "text-center", "orderable": false },
-	  { "data" : "nosemana", "width": "80px", "orderable": false },
-	  { "data" : "razonsocial", "width": "100px", "orderable":false },
-	  { "data" : "rutacte", "width": "40px", "orderable":false },
-	  { "data" : "conductor", "width": "100px", "orderable":false },
-	  { "data" : "tipounidad", "width": "80px", "orderable":false },
-	  { "data" : "nounidad", "width": "30px", "orderable":false },
-	  { "data" : "supervisor", "width": "50px", "orderable":false },
-	  { "data" : "jefeopera", "width": "50px", "orderable":false },
-	  { "data" : "estatusped", "width": "30px", "orderable":false },
-	  {
-			  "render": function ( data, type, full, meta ) {
-  return '<center><a href=\'edit_viaje.php?id=' + full.pedidono +  '\' class="btn btn-primary btn-xs"><i class="fa fa-edit" style="color:white;  font-size: 1.2em"></i></a> | <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\'' + full.pedidono +  '\' href="#" class="btn btn-danger btn-xs" ><i class="fas fa-times-circle"></i></a></center>';
-}
-			  
-	  
-}   
-	  
-	],
-	"sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
-"buttons": [
-  'copyHtml5',
-  'excelHtml5',
-  'csvHtml5',     
-  {
-	//   extend: 'colvis',
-	//   postfixButtons: [ 'colvisRestore' ],
-	  columns: '0,1,2,3,4,5,6'
-  }
-],
-   
-  }); 
-}  
-
-$("#filtra").click(function(){
-  var inicio_date = $("#inicio_date").val();
-  var fin_date = $("#fin_date2").val();
-  var buscaid = $("#buscaid").val();
-
-  if(inicio_date == '' && fin_date == ''){
-	$('#fetch_generated_willss').DataTable().destroy();
-	load_data("", "", buscaid); // filter immortalize only
-  }else{
-	var date1 = new Date(inicio_date);
-	var date2 = new Date(fin_date);
-	var diffTime = Math.abs(date2 - date1);
-	var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
-	if(inicio_date == '' || fin_date == ''){
-		$("#error_log").html("Warning: You must select both (start and end) date.</span>");
-	}else{
-	  if(date1 > date2){
-		  $("#error_log").html("Warning: End date should be greater then start date.");
-	  }else{
-		 $("#error_log").html(""); 
-		 $('#fetch_generated_willss').DataTable().destroy();
-		 load_data(inicio_date, fin_date, buscaid);
-	  }
-	}
-  }
-});
-
-
-
-	  // Datapicker 
-	  $( ".datepicker" ).datepicker({
-		  language: 'es',
-		  "dateFormat": "yy-mm-dd",
-		  changeYear: true
-	  });
-
-
-
-    </script>
-    <?php  
-      }
-    }} ?>
-
-    <script type="text/javascript">
-
-
- /* it will load products when document loads */
-
-$(document).on('click', '#cancel_pedido', function(e){
-
- e.preventDefault();
-       var pedidoId = $(this).data('id');
-        var action = 'infoCancelpedido';
-        swal({
-  title: "Desea Cancelar el Registro ?",
-  text: "Pedido No.: " + pedidoId,
-  icon: "warning",
-  buttons: true,
-  dangerMode: true,
-})
-.then((willDelete) => {
-  if (willDelete) {
-    $.ajax({
-            url: 'includes/ajax.php',
-            type: "POST",
-            async : true,
-            data: {action:action,pedidoId:pedidoId},
-            success: function(response)
-            {
-                if(response != 0){
-                    swal('Cancelado','Registro Cancelado Correctamente','success').then(function(){ 
-                      $('#modalAlumno').modal('hide');
-                    location.reload();
-                } );
-                  
-                }else{
-                    swal("Poof! Error!", {
-      icon: "warning",
-    });
-                
-                   
-                }
-            },
-            error: function(error) {
-
-            }
-
-        });
-
-   
-  } else {
-    swal("Accion Cancelada Registro no Cancelado !");
-  }
-});
-        
-        
-
-         }); 
-    
-</script>
-
-<script> 
-  $(document).ready(function (e) {
-  $('#modalAlumno').on('show.bs.modal', function(e) {    
-     //var idp = $(e.relatedTarget).data().id;
-     // $(e.currentTarget).find('#bookId').val(idp);
-      
+<!-- Script para cargar ID al abrir modal -->
+<script>
+$(document).ready(function () {
+  $('#modalCancelViaje').on('show.bs.modal', function (e) {
+    const idc = $(e.relatedTarget).data('id');
+    if (idc) {
+      $('#form_pass_idcc').val(idc);
+    }
   });
 });
 </script>
 
-<script> 
-  $(document).ready(function (e) {
-  $('#modalCancelViaje').on('show.bs.modal', function(e) { 
-
-     var idc    = $(e.relatedTarget).data().id;
-  
-    
-      $(e.currentTarget).find('#form_pass_idcc').val(idc);
- 
-     
-      
-  });
-});
-</script>
-  
-   <div class="modal fade" id="modalCancelViaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  
-  
-   <div class="modal-dialog modal-dialog-centered" role="document">
+<!-- Modal Cancelar Viaje -->
+<div class="modal fade" id="modalCancelViaje" tabindex="-1" role="dialog" aria-labelledby="modalCancelViajeTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
+
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Cancelar Viaje</h5>
+        <h5 class="modal-title" id="modalCancelViajeTitle">Cancelar Viaje</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+
       <div class="modal-body">
-
-        
-        <form>
-        <div class="col-md-12">
-          <div class="form-group"> 
+        <form id="cancelForm">
+          <div class="form-group row">
+            <label for="form_pass_idcc" class="col-sm-4 col-form-label">No. de Folio:</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="form_pass_idcc" name="form_pass_idcc" disabled>
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-           <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">No. de Folio:</label>
-           <div class="col-sm-9">
-            <input type="text" class="form-control" id="form_pass_idcc" name="form_pass_idcc" disabled>
-           </div>
-        </div> 
-        
 
-        <div class="form-group row">
-           <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Motivo de Cancelación:</label>
-           <div class="col-sm-9">
-             <textarea class="form-control" rows="1" id="comentarios" name="comentarios">Cancelado / Reprogramado por el Cliente</textarea>
-           </div>
-        </div>  
+          <div class="form-group row">
+            <label for="comentarios" class="col-sm-4 col-form-label">Motivo:</label>
+            <div class="col-sm-8">
+              <textarea class="form-control" id="comentarios" name="comentarios" rows="2">Cancelado / Reprogramado por el Cliente</textarea>
+            </div>
+          </div>
+        </form>
+      </div>
 
-   
-       
- 
-
-        <!--<div class="form-group row">
-           <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">Imagen:</label>
-           <div class="col-sm-10">
-              <input type="file" class="form-control" id="image" name="image" multiple>
-           </div>
-        </div>-->
-
-    
       <div class="modal-footer">
         <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success pull-right" href="#" id="actualizaVuelta"><i class="fa fa-save"></i>&nbsp;Cancelar Viaje</button>
+        <button type="button" class="btn btn-success" id="actualizaVuelta">
+          <i class="fa fa-save"></i> Cancelar Viaje
+        </button>
       </div>
-      </form>
+
     </div>
   </div>
-</div> 
-
 </div>
 
 <script>
-   $('#actualizaVuelta').click(function(e){
-        e.preventDefault();
+$('#actualizaVuelta').click(function (e) {
+    e.preventDefault();
 
-        var idcc      = $('#form_pass_idcc').val();       
-        var motivoc   = $('#comentarios').val();
+    const idcc = $('#form_pass_idcc').val();
+    const motivoc = $('#comentarios').val().trim();
+    const action = 'AddCancelaVuelta';
 
-       var action       = 'AddCancelaVuelta';
+    if (!idcc || motivoc === '') {
+        Swal.fire('Campos incompletos', 'Debe ingresar un motivo de cancelación.', 'warning');
+        return;
+    }
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, idcc:idcc, motivoc:motivoc},
+    Swal.fire({
+        title: '¿Confirmar cancelación?',
+        text: `¿Está seguro de cancelar el viaje No. ${idcc}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, cancelar',
+        cancelButtonText: 'No'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'includes/ajax.php',
+                type: 'POST',
+                data: { action, idcc, motivoc },
+                success: function (response) {
+                    try {
+                        const info = JSON.parse(response);
 
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                             //console.log(response);
-                            var info = JSON.parse(response);
-                            console.log(info);
-                            //$('#modalFactura').modal('hide');
-                            //--$('#detalle_inspeccion').html(info.detalle);
-                            
-                           
-                            alert('Cancelación Registrada Correctamente');
-
-                            $('#modalEditcliente').modal('hide')
-                            location.reload(true);
-                            
-    
-                        }else{
-                           console.log('no data');
-                           alert('faltan datos');
+                        if (info && info.success) {
+                            Swal.fire('Cancelado', 'El viaje fue cancelado correctamente.', 'success')
+                                .then(() => {
+                                    $('#modalCancelViaje').modal('hide');
+                                    location.reload();
+                                });
+                        } else {
+                            Swal.fire('Error', 'No se pudo cancelar el viaje. Verifica los datos.', 'error');
                         }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
+                    } catch (err) {
+                        console.error('Error parsing JSON:', response);
+                        Swal.fire('Error', 'Respuesta inesperada del servidor.', 'error');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX error:', error);
+                    Swal.fire('Error', 'Ocurrió un problema al enviar la solicitud.', 'error');
+                }
+            });
+        }
     });
-
-    </script>   
-
-<script>
-function actualizarLaPagina(){
-    window.location.reload();
-} 
+});
 </script>
 
-
-
+<!-- SweetAlert (si estás usando sweetalert clásico y no SweetAlert2) -->
 <script src="js/sweetalert.min.js"></script>
 
- <script>
-    document.addEventListener("DOMContentLoaded", function(){
-      // Invocamos cada 5 segundos ;)
-      const milisegundos = 5 *1000;
-      setInterval(function(){
-      // No esperamos la respuesta de la petición porque no nos importa
-         fetch("./refrescar.php");
-      },milisegundos);
-    });
+<!-- Recarga completa de la página -->
+<script>
+function actualizarLaPagina() {
+    location.reload(true);
+}
 </script>
+
+<!-- Auto-refresh silencioso cada 5 segundos -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const milisegundos = 5000;
+    setInterval(() => {
+        fetch("./refrescar.php"); // No importa la respuesta
+    }, milisegundos);
+});
+</script>
+
 </body>
 </html>
