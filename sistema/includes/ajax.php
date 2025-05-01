@@ -2152,63 +2152,73 @@ if($_POST['action'] == 'ReingresoEmpleado')
 
 
 //Agregar Productos a Entrada
-if($_POST['action'] == 'EditaAlmacenaViaje')
-{
-    if(empty($_POST['fecha']) || empty($_POST['semana']) || empty($_POST['cliente'])
-    || empty($_POST['ruta']) || empty($_POST['operador']) || empty($_POST['tipovuelta']) )
-    {
-      echo 'error';
-    }else {
+if ($_POST['action'] == 'EditaAlmacenaViaje') {
+    if (
+        empty($_POST['fecha']) || empty($_POST['semana']) ||
+        empty($_POST['cliente']) || empty($_POST['ruta']) ||
+        empty($_POST['operador']) || empty($_POST['tipovuelta']) ||
+        $_POST['tipovuelta'] == 0
+    ) {
+        echo 'error';
+        exit;
+    }
 
-        if ($_POST['tipovuelta'] == 0) {
-          echo 'error';  
-        }else {
+    include '../../conexion.php';
 
-          if ($_POST['sueldovuelta'] == 0) {
-                  echo "error";
-              }else {    
+    $id          = intval($_POST['Id']);
+    $fecha       = $_POST['fecha'];
+    $semana      = $_POST['semana'];
+    $cliente     = $_POST['cliente'];
+    $ruta        = $_POST['ruta'];
+    $operador    = $_POST['operador'];
+    $tipo        = $_POST['tipo'];
+    $unidad_ejec = $_POST['unidad_ejec'];
+    $tipo_viaje  = $_POST['tipoviaje'];
+    $nounidad    = $_POST['noeco'];
+    $nopersonas  = is_numeric($_POST['nopersonas']) ? intval($_POST['nopersonas']) : 0;
+    $horarios    = $_POST['horarios'];
+    $hora_real   = $_POST['hora_real'];
+    $turno       = $_POST['turno'];
+    $tipovuelta  = is_numeric($_POST['tipovuelta']) ? intval($_POST['tipovuelta']) : 0;
+    $sueldovta   = is_numeric($_POST['sueldovuelta']) ? floatval($_POST['sueldovuelta']) : 0;
+    $idsuperv    = is_numeric($_POST['elsuperv']) ? intval($_POST['elsuperv']) : 0;
+    $notas       = $_POST['notas'] ?? '';
+    $usuario     = $_SESSION['idUser'];
 
-        $Id          = $_POST['Id'];
-        $fecha       = $_POST['fecha'];
-        $semana      = $_POST['semana'];
-        $cliente     = $_POST['cliente'];
-        $ruta        = $_POST['ruta'];
-        $operador    = $_POST['operador'];
-        $tipo        = $_POST['tipo'];
-        $unidad_ejec = $_POST['unidad_ejec'];
-        $tipo_viaje  = $_POST['tipoviaje'];
-        $nounidad    = $_POST['noeco'];
-        $nopersonas  = $_POST['nopersonas'];
-        $horarios    = $_POST['horarios'];
-        $hora_real   = $_POST['hora_real'];
-        $turno       = $_POST['turno'];
-        $tipovuelta  = $_POST['tipovuelta'];
-        $sueldovta   = $_POST['sueldovuelta'];
-        $idsuperv    = $_POST['elsuperv'];
-        //$horafin     = $_POST['horafin'];
-        //$destino     = $_POST['destino'];
-        $notas       = $_POST['notas']; 
+    $sql = "UPDATE registro_viajes 
+            SET 
+                fecha = ?, semana = ?, cliente = ?, ruta = ?, operador = ?, unidad = ?, 
+                unidad_ejecuta = ?, tipo_viaje = ?, num_unidad = ?, personas = ?, horarios = ?, 
+                hora_llegadareal = ?, turno = ?, valor_vuelta = ?, sueldo_vuelta = ?, 
+                id_supervisor = ?, notas = ?, usuario_edit = ? 
+            WHERE id = ?";
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-    
-        $query_procesar = mysqli_query($conection,"CALL editar_viaje($Id, '$fecha', '$semana', '$cliente', '$ruta', '$operador', '$tipo', '$unidad_ejec', '$tipo_viaje', '$nounidad', $nopersonas, '$horarios', '$hora_real', '$turno', $tipovuelta, $sueldovta, $idsuperv, '$notas', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+    $stmt = mysqli_prepare($conection, $sql);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'sssssssssissssddssi',
+            $fecha, $semana, $cliente, $ruta, $operador, $tipo,
+            $unidad_ejec, $tipo_viaje, $nounidad, $nopersonas, $horarios,
+            $hora_real, $turno, $tipovuelta, $sueldovta,
+            $idsuperv, $notas, $usuario,
+            $id
+        );
+
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(['success' => true, 'message' => 'Viaje actualizado correctamente'], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Error al actualizar: ' . mysqli_stmt_error($stmt)]);
         }
-    
+
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Error al preparar consulta: ' . mysqli_error($conection)]);
+    }
+
     mysqli_close($conection);
-    }
-    }
-    }
     exit;
- 
-} 
+}
+
 
 
 // ***** Agrega participantes minutas //

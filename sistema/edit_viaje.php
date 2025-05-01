@@ -119,7 +119,7 @@ session_start();
   $queryopr = mysqli_query($conection, $sqlopr);
   $filasopr = mysqli_fetch_all($queryopr, MYSQLI_ASSOC); 
 
-  $sqlcte = "select * from rutas group by cliente ORDER BY cliente";
+  $sqlcte = "SELECT DISTINCT cliente FROM rutas ORDER BY cliente";
   $querycte = mysqli_query($conection, $sqlcte);
   $filascte = mysqli_fetch_all($querycte, MYSQLI_ASSOC);
 
@@ -179,28 +179,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-     <?php
-       if ($_SESSION['rol'] == 4) {
-        include('includes/navbarsup.php');
-      }else {
-        if ($_SESSION['rol'] == 6) {
-          include('includes/navbaroperac.php');
-        }else {
-          if ($_SESSION['rol'] == 8) {
-            include('includes/navbarjefeoper.php');
-          }else {
-            if ($_SESSION['rol'] == 9) {
-              include('includes/navbargrcia.php');
-            }else {
-              if ($_SESSION['rol'] == 5) {
-                include('includes/navbarrhuman.php');
-              }else {
-                include('includes/navbar.php'); 
-              }  
-            }   
-          }  
-        }
-      } ?>
+     <?php include('includes/generalnavbar.php') ?>
       <?php include('includes/nav.php') ?>
 
     </div>

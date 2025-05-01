@@ -731,7 +731,6 @@ $('#btn_salir').click(function(e){
        var comentarios  = $('#comentarios').val();
 
        var action       = 'AlmacenaEmpleado';
-
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",
