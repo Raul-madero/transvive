@@ -91,16 +91,20 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
             // Actualizaciones de sueldo/semana
             $updates = [
                 "UPDATE tempregistro_viajes SET semana = (SELECT s.semana FROM semanas40 s WHERE tempregistro_viajes.fecha BETWEEN s.dia_inicial AND s.dia_final)",
-                "UPDATE tempregistro_viajes op 
-                 INNER JOIN (SELECT cliente, ruta, sueldo_camion AS sumu FROM rutas WHERE sueldo_camion > 0) i 
-                 ON op.cliente = i.cliente AND op.ruta = i.ruta 
-                 SET op.sueldo_vuelta = i.sumu 
-                 WHERE op.unidad = 'Camion'",
-                "UPDATE tempregistro_viajes op 
-                 INNER JOIN (SELECT cliente, ruta, sueldo_camioneta AS sumu FROM rutas WHERE sueldo_camioneta > 0) i 
-                 ON op.cliente = i.cliente AND op.ruta = i.ruta 
-                 SET op.sueldo_vuelta = i.sumu 
-                 WHERE op.unidad = 'Camioneta'"
+                "UPDATE tempregistro_viajes op
+                INNER JOIN rutas i
+                    ON op.cliente = i.cliente
+                AND op.ruta = i.ruta
+                AND op.unidad = 'CAMION'
+                SET op.sueldo_vuelta = i.sueldo_camion
+                WHERE i.sueldo_camion > 0",
+                "UPDATE tempregistro_viajes op
+                INNER JOIN rutas i
+                    ON op.cliente = i.cliente
+                AND op.ruta = i.ruta
+                AND op.unidad = 'CAMIONETA'
+                SET op.sueldo_vuelta = i.sueldo_camioneta
+                WHERE i.sueldo_camioneta > 0"
             ];
 
             foreach ($updates as $sql) {
