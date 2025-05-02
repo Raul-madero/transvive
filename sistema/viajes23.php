@@ -243,7 +243,7 @@ $cancelados = fetch_value("SELECT COUNT(valor_vuelta) FROM registro_viajes WHERE
 
                             <?php elseif ($_SESSION['rol'] == 8): ?>
                                 <!-- Vista para Jefe de Operaciones -->
-                                <table id="fetch_generated_willss" class="table table-hover table-striped table-bordered" width="100%">
+                                <table id="fetch_generated_willss" class="table table-hover table-striped table-bordered dt-responsive" width="100%">
                                     <thead>
                                         <tr>
                                             <th>ID</th><th>Fecha</th><th>Hora Inicio</th><th>Hora Llegada</th><th>Semana</th>
