@@ -35,7 +35,7 @@ if (PHP_SAPI == 'cli')
   die('This example should only be run from a Web Browser');
 
 /** Include PHPExcel */
-require_once dirname(__FILE__) . './phpexcel/Classes/PHPExcel.php';
+require_once dirname(__FILE__) . '/phpexcel/Classes/PHPExcel.php';
 include('../../conexion.php');
 $conection->set_charset('utf8');
 

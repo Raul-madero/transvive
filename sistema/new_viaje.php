@@ -579,8 +579,7 @@ $('#btn_salir2').click(function(e){
        var tipovuelta   = $('#inputTipovta').val();
        var sueldo_vta   = $('#inputSueldovta').val();
        var supervisor   = $('#fsuperv').val();
-       //var horafin      = $('#inputHorafin').val();
-       //var destino      = $('#inputDestino').val();
+       let unidad = $('#inptTipo').val();
        var notas        = $('#inputNotas').val(); 
 
        var action       = 'AlmacenaViaje';
@@ -867,7 +866,6 @@ $('#btn_salir2').click(function(e){
             data: {action:action, op:op, tipo_viaje:tipo_viaje, cliente:cliente, ruta:ruta, operador:operador, tipo_unidad:tipo_unidad},
             success: function(response)
             {
-                // console.log(response);
                 if(response == 0){
                     //$('#idcliente').val('');
                     $('#inputSueldovta').val('0.00');
@@ -875,7 +873,7 @@ $('#btn_salir2').click(function(e){
                 }else{
                     var data = $.parseJSON(response);
        
-                    $('#inputSueldovta').val(data.svta); // Notify only Select2 of changes
+                    $('#inputSueldovta').val(data.sueldo_vuelta); // Notify only Select2 of changes
                   
                    
                 }

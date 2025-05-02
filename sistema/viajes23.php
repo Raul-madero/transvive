@@ -697,17 +697,16 @@ $('#actualizaVuelta').click(function (e) {
                     try {
                         const info = JSON.parse(response);
 
-                        if (info && info.success) {
-                            Swal.fire('Cancelado', 'El viaje fue cancelado correctamente.', 'success')
-                                .then(() => {
-                                    $('#modalCancelViaje').modal('hide');
-                                    location.reload();
-                                });
+                        if (info.status === 'success') {
+                            Swal.fire('Cancelado', info.message, 'success').then(() => {
+                                $('#modalCancelViaje').modal('hide');
+                                location.reload();
+                            });
                         } else {
-                            Swal.fire('Error', 'No se pudo cancelar el viaje. Verifica los datos.', 'error');
+                            Swal.fire('Error', info.message || 'No se pudo cancelar el viaje.', 'error');
                         }
                     } catch (err) {
-                        console.error('Error parsing JSON:', response);
+                        console.error('Error al parsear JSON:', response);
                         Swal.fire('Error', 'Respuesta inesperada del servidor.', 'error');
                     }
                 },

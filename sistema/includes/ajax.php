@@ -798,79 +798,69 @@ if($_POST['action'] == 'AlmacenaUnidad')
 
 
 //Agregar Productos a Entrada.
-if($_POST['action'] == 'AlmacenaViaje')
-
-{
-    if(!empty($_POST['fecha']) || !empty($_POST['semana']) || !empty($_POST['cliente'])
-    || !empty($_POST['ruta']) || !empty($_POST['tipo']) || !empty($_POST['horarios']) )
-    {
-        if ($_POST['cliente'] == "Select" ) {
-           echo "error";
-        }else {
-            if ($_POST['operador'] == "Select") {
-                echo "error";
-            }else {
-                if ($_POST['ruta'] == "") {
-                    echo "error";
-                }else {
-                    if ($_POST['tipo'] == "Select") {
-                        echo "error";
-                    }else {
-                        if ($_POST['noeco'] == "Select") {
-                            echo "error";
-                        }else {
-                            if ($_POST['horarios'] == "") {
-                               echo "error";
-                            }else {
-                                if ($_POST['sueldo_vta'] == 0) {
-                                     echo "error";
-                                }else {
-
-        $fecha        = $_POST['fecha'];
-        $semana       = $_POST['semana'];
-        $cliente      = $_POST['cliente'];
-        $ruta         = $_POST['ruta'];
-        $operador     = $_POST['operador'];
-        $tipo         = $_POST['tipo'];
-        $tipo_viaje   = $_POST['tipoviaje'];
-        $nounidad     = $_POST['noeco'];
-        $nopersonas   = $_POST['nopersonas'];
-        $horarios     = implode(', ', $_POST['horarios']);
-        $turno        = $_POST['turno'];
-        $tipovuelta   = $_POST['tipovuelta'];
-        $sueldovuelta = $_POST['sueldo_vta'];
-        $supervisor   = $_POST['supervisor'];
-        //$horafin     = $_POST['horafin'];
-        //$destino     = $_POST['destino'];
-        $notas       = $_POST['notas']; 
-
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-    
-        $query_procesar = mysqli_query($conection,"CALL procesar_viaje('$fecha', '$semana', '$cliente', '$ruta', '$operador', '$tipo', '$tipo_viaje', '$nounidad', $nopersonas, '$horarios', '$turno', $tipovuelta, $sueldovuelta, $supervisor, '$notas', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+if ($_POST['action'] == 'AlmacenaViaje') {
+    // Validar campos obligatorios
+    $camposRequeridos = ['fecha', 'semana', 'cliente', 'ruta', 'tipo', 'horarios', 'operador', 'noeco', 'tipoviaje', 'turno', 'sueldo_vta', 'tipovuelta'];
+    foreach ($camposRequeridos as $campo) {
+        if (empty($_POST[$campo]) || $_POST[$campo] == "Select") {
+            echo json_encode(['success' => false, 'message' => "Campo inválido: $campo"]);
+            exit;
         }
-    
-    mysqli_close($conection);
-     }
-     }
-     }
-     }
-     }
-     } 
-     }
-    }else{
-        echo 'error';
     }
+
+    // Recolección de datos
+    $fecha        = $_POST['fecha'];
+    $semana       = trim($_POST['semana']);
+    $cliente      = trim($_POST['cliente']);
+    $ruta         = trim($_POST['ruta']);
+    $operador     = trim($_POST['operador']);
+    $tipo         = trim($_POST['tipo']);
+    $tipo_viaje   = trim($_POST['tipoviaje']);
+    $nounidad     = trim($_POST['noeco']);
+    $nopersonas   = is_numeric($_POST['nopersonas']) ? intval($_POST['nopersonas']) : 0;
+    $horarios     = is_array($_POST['horarios']) ? implode(', ', $_POST['horarios']) : trim($_POST['horarios']);
+    $turno        = trim($_POST['turno']);
+    $tipovuelta   = floatval($_POST['tipovuelta']);
+    $sueldo_base  = floatval($_POST['sueldo_vta']);
+    $sueldovuelta = ($tipovuelta == 0.5) ? $sueldo_base * 2 : $sueldo_base;
+    $supervisor   = intval($_POST['supervisor']);
+    $notas        = trim($_POST['notas'] ?? '');
+    $usuario      = intval($_SESSION['idUser']);
+    $estatus      = 1;
+    $anio         = date('Y', strtotime($fecha));
+
+    // Preparar consulta
+    $sql = "INSERT INTO registro_viajes (
+                fecha, semana, cliente, ruta, operador, unidad, unidad_ejecuta, tipo_viaje,
+                num_unidad, personas, horarios, hora_fin, turno, valor_vuelta, sueldo_vuelta,
+                notas, estatus, id_supervisor, yearreg, usuario_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conection->prepare($sql);
+
+    if ($stmt) {
+        $stmt->bind_param(
+            'sssssssssisssddsiiii',
+            $fecha, $semana, $cliente, $ruta, $operador, $tipo, $tipo, $tipo_viaje,
+            $nounidad, $nopersonas, $horarios, $horarios, $turno, $tipovuelta, $sueldovuelta,
+            $notas, $estatus, $supervisor, $anio, $usuario
+        );
+
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'message' => 'Viaje registrado correctamente.'], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error al registrar el viaje: ' . $stmt->error], JSON_UNESCAPED_UNICODE);
+        }
+
+        $stmt->close();
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Error al preparar consulta: ' . $conection->error], JSON_UNESCAPED_UNICODE);
+    }
+
+    mysqli_close($conection);
     exit;
- 
 }
+
 
 // ***** Agrega participantes minutas //
     
@@ -3061,24 +3051,35 @@ if($_POST['action'] == 'deleteCargac')
 
  // Cancela Vuelta Especial
  if ($_POST['action'] == 'AddCancelaVuelta') {
-    if (!empty($_POST['idcc'])) {
-        $idc = $_POST['idcc'];
-        $motivoc = $_POST['motivoc'];
+    $idc = $_POST['idcc'] ?? null;
+    $motivoc = trim($_POST['motivoc'] ?? '');
+    $usuario = $_SESSION['idUser'] ?? null;
 
-        $usuario = $_SESSION['idUser'];
+    // Validar entrada
+    if (!$idc || !$usuario || $motivoc === '') {
+        echo json_encode(['status' => 'error', 'message' => 'Faltan datos o campos vacíos']);
+        exit;
+    }
 
-        $query_procesar = mysqli_query($conection, "CALL cancela_vueltasp($idc, '$motivoc', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
+    // Preparar la consulta
+    $stmt = $conection->prepare(
+        "UPDATE registro_viajes 
+         SET motivo_cancela = ?, valor_vuelta = 0, estatus = 3, usuario_cancel = ? 
+         WHERE id = ?"
+    );
 
-        mysqli_close($conection); // Mover esto antes de salir del script
+    if ($stmt) {
+        $stmt->bind_param("sii", $motivoc, $usuario, $idc);
 
-        if ($result_detalle > 0) {
+        if ($stmt->execute()) {
             echo json_encode(['status' => 'success', 'message' => 'Cancelación registrada correctamente']);
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error al cancelar el viaje']);
+            echo json_encode(['status' => 'error', 'message' => 'Error al ejecutar la cancelación: ' . $stmt->error]);
         }
+
+        $stmt->close();
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Faltan datos']);
+        echo json_encode(['status' => 'error', 'message' => 'Error al preparar la consulta: ' . $conection->error]);
     }
 }
 
@@ -3281,7 +3282,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_semidomiciliada);
                     if($stmt->fetch()) {
-                        $svta = $sdo_semidomiciliada;
+                        $svta = $sdo_semidomiciliada * $tipo_vta;
                     }
                     $stmt->close();
                 }
@@ -3292,7 +3293,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_camion);
                     if($stmt->fetch()) {
-                        $svta = $sdo_camion;
+                        $svta = $sdo_camion * $tipo_vta;
                     }
                     $stmt->close();
                 }
@@ -3303,7 +3304,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_camioneta);
                     if($stmt->fetch()) {
-                        $svta = $sdo_camioneta;
+                        $svta = $sdo_camioneta * $tipo_vta;
                     }
                     $stmt->close();
                 }
@@ -3314,7 +3315,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_camion);
                     if($stmt->fetch()) {
-                        $svta = $sdo_camion;
+                        $svta = $sdo_camion * $tipo_vta;
                     }
                     $stmt->close();
                 }
@@ -3325,7 +3326,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_camioneta);
                     if($stmt->fetch()) {
-                        $svta = $sdo_camioneta;
+                        $svta = $sdo_camioneta * $tipo_vta;
                     }
                     $stmt->close();
                 }
@@ -3336,13 +3337,13 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_sprinter);
                     if($stmt->fetch()) {
-                        $svta = $sdo_sprinter;
+                        $svta = $sdo_sprinter * $tipo_vta;
                     }
                     $stmt->close();
                 }
 
                 if($svta == 0 && $unidad === "Externa") {
-                   $svta = 1;
+                   $svta = 1 * $tipo_vta;
                 }
 
                echo json_encode(['sueldo_vuelta' => $svta], JSON_UNESCAPED_UNICODE);
