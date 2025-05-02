@@ -22,7 +22,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
 
     $columns = 'id, fecha, hora_inicio, hora_fin, semana, cliente, operador, unidad, num_unidad, estatus';
     $table = 'registro_viajes';
-    $where = "WHERE tipo_viaje <> 'Especial' AND usuario_id = ? AND (estatus = 1 OR estatus = 4 OR estatus = 5)";
+    $where = "WHERE tipo_viaje <> 'Especial' AND usuario_id = ? AND estatus IN (1, 4, 5) AND fecha >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)";
 
     // Aplica rango de fechas
     if (!empty($initial_date) && !empty($final_date)) {

@@ -3,6 +3,7 @@ include "../../conexion.php"; //libreria de conexion a la base
 
 //$banda_id = filter_input(INPUT_POST, 'banda_id'); //obtenemos el parametro que viene de ajax
 $banda_id3 = $_POST['banda_id3'];
+var_dump($_POST);
 
 if ($banda_id3 == 'Camion') {
    /*Obtenemos los discos de la banda seleccionada*/
