@@ -10,12 +10,6 @@ $banda_id2 = $_POST['banda_id2'];
   $query = mysqli_query($conection, $sql);
   $filas = mysqli_fetch_all($query, MYSQLI_ASSOC); 
   mysqli_close($conection);
-
-
-/**
- * Como notaras vamos a generar código `html`, esto es lo que sera retornado a `ajax` para llenar 
- * el combo dependiente
- */
 ?>
 
 <option value="">- Seleccione -</option>

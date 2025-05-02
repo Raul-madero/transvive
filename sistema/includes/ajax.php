@@ -3281,7 +3281,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_semidomiciliada);
                     if($stmt->fetch()) {
-                        $svta = $sdo_semidomiciliada * $tipo_vta;
+                        $svta = $sdo_semidomiciliada;
                     }
                     $stmt->close();
                 }
@@ -3292,7 +3292,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_camion);
                     if($stmt->fetch()) {
-                        $svta = $sdo_camion * $tipo_vta;
+                        $svta = $sdo_camion;
                     }
                     $stmt->close();
                 }
@@ -3303,7 +3303,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_camioneta);
                     if($stmt->fetch()) {
-                        $svta = $sdo_camioneta * $tipo_vta;
+                        $svta = $sdo_camioneta;
                     }
                     $stmt->close();
                 }
@@ -3314,7 +3314,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_camion);
                     if($stmt->fetch()) {
-                        $svta = $sdo_camion * $tipo_vta;
+                        $svta = $sdo_camion;
                     }
                     $stmt->close();
                 }
@@ -3325,7 +3325,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_camioneta);
                     if($stmt->fetch()) {
-                        $svta = $sdo_camioneta * $tipo_vta;
+                        $svta = $sdo_camioneta;
                     }
                     $stmt->close();
                 }
@@ -3336,13 +3336,13 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->execute();
                     $stmt->bind_result($sdo_sprinter);
                     if($stmt->fetch()) {
-                        $svta = $sdo_sprinter * $tipo_vta;
+                        $svta = $sdo_sprinter;
                     }
                     $stmt->close();
                 }
 
                 if($svta == 0 && $unidad === "Externa") {
-                   $svta = 1 * $tipo_vta;
+                   $svta = 1;
                 }
 
                echo json_encode(['sueldo_vuelta' => $svta], JSON_UNESCAPED_UNICODE);
