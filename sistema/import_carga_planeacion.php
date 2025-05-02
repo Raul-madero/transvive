@@ -65,10 +65,12 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                 $stmt_emp->execute();
                 $res_emp = $stmt_emp->get_result();
 
-                if ($res_emp->num_rows === 0) {
-                    $errores[] = "Línea $linea: Operador no válido: '$nombre'.";
-                    $error++;
-                    continue;
+                if ($nombre !== "") {
+                    if ($res_emp->num_rows === 0) {
+                        $errores[] = "Línea $linea: Operador no válido: '$nombre'.";
+                        $error++;
+                        continue;
+                    }
                 }
 
                 $stmt_ins->bind_param(
