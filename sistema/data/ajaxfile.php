@@ -3,7 +3,7 @@ session_start();
  $User=$_SESSION['user'];
  $rol=$_SESSION['rol'];
  $idUser = $_SESSION['idUser'];
-include '../config/dbconfig.php';
+include '../../conexion.php';
 
 
 
@@ -34,18 +34,18 @@ if($request == 1){
    
 
     ## Total number of records without filtering
-    $sel = mysqli_query($con,"select count(*) as allcount from registro_viajes WHERE tipo_viaje = 'Especial' and estatus = 1");
+    $sel = mysqli_query($conection,"select count(*) as allcount from registro_viajes WHERE tipo_viaje = 'Especial' and estatus = 1");
     $records = mysqli_fetch_assoc($sel);
     $totalRecords = $records['allcount'];
 
     ## Total number of records with filtering
-    $sel = mysqli_query($con,"select count(*) as allcount from registro_viajes WHERE tipo_viaje = 'Especial' and estatus = 1".$searchQuery);
+    $sel = mysqli_query($conection,"select count(*) as allcount from registro_viajes WHERE tipo_viaje = 'Especial' and estatus = 1".$searchQuery);
     $records = mysqli_fetch_assoc($sel);
     $totalRecordwithFilter = $records['allcount'];
 
     ## Fetch records
     $empQuery = "select * from registro_viajes WHERE tipo_viaje LIKE '%Especial%' and estatus = 1".$searchQuery." order by ".$columnName." ".$columnSortOrder." limit ".$row.",".$rowperpage;
-    $empRecords = mysqli_query($con, $empQuery);
+    $empRecords = mysqli_query($conection, $empQuery);
     $data = array();
 
     while ($row = mysqli_fetch_assoc($empRecords)) {
@@ -102,7 +102,7 @@ if($request == 2){
     $deleteids_arr = $_POST['deleteids_arr'];
 
     foreach($deleteids_arr as $deleteid){
-        mysqli_query($con,"UPDATE registro_viajes SET motivo_cancela = 'Cancelación por el Cliente (Problemas de Pago)',valor_vuelta = 0, estatus = 3, usuario_cancel = $idUser WHERE id=".$deleteid);
+        mysqli_query($conection,"UPDATE registro_viajes SET motivo_cancela = 'Cancelación por el Cliente (Problemas de Pago)',valor_vuelta = 0, estatus = 3, usuario_cancel = $idUser WHERE id=".$deleteid);
     }
 
     echo 1;
