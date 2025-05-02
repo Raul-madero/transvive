@@ -19,8 +19,7 @@ if ($_REQUEST['action'] == 'fetch_userss') {
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
         LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso";
 
-    $where = "WHERE p.tipo_viaje <> 'Especial'";
-
+    $where = "WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 2 DAY)";
     if (!empty($requestData['search']['value'])) {
         $search = mysqli_real_escape_string($conection, $requestData['search']['value']);
         $where .= " AND (
@@ -68,15 +67,30 @@ if ($_REQUEST['action'] == 'fetch_userss') {
     $data = [];
     $count = $start;
     while ($row = mysqli_fetch_assoc($result)) {
-        $estatus = match((int)$row['estatus']) {
-            1 => '<span class="label label-primary">Activo</span>',
-            2 => '<span class="label label-success">Realizado</span>',
-            3 => '<span class="label label-danger">Cancelado</span>',
-            4 => '<span class="label label-primary">Iniciado</span>',
-            5 => '<span class="label label-info">Terminado</span>',
-            6 => '<span class="label label-success">CERRADO</span>',
-            default => '<span class="label label-secondary">Desconocido</span>',
-        };
+        switch ((int)$row['estatus']) {
+            case 1:
+                $estatus = '<span class="label label-primary">Activo</span>';
+                break;
+            case 2:
+                $estatus = '<span class="label label-success">Realizado</span>';
+                break;
+            case 3:
+                $estatus = '<span class="label label-danger">Cancelado</span>';
+                break;
+            case 4:
+                $estatus = '<span class="label label-primary">Iniciado</span>';
+                break;
+            case 5:
+                $estatus = '<span class="label label-info">Terminado</span>';
+                break;
+            case 6:
+                $estatus = '<span class="label label-success">CERRADO</span>';
+                break;
+            default:
+                $estatus = '<span class="label label-secondary">Desconocido</span>';
+                break;
+        }
+        
 
         $data[] = [
             'counter' => ++$count,

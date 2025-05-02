@@ -2184,23 +2184,24 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
     $idsuperv    = is_numeric($_POST['elsuperv']) ? intval($_POST['elsuperv']) : 0;
     $notas       = $_POST['notas'] ?? '';
     $usuario     = $_SESSION['idUser'];
+    $estatus = 2;
 
     $sql = "UPDATE registro_viajes 
             SET 
                 fecha = ?, semana = ?, cliente = ?, ruta = ?, operador = ?, unidad = ?, 
                 unidad_ejecuta = ?, tipo_viaje = ?, num_unidad = ?, personas = ?, horarios = ?, 
                 hora_llegadareal = ?, turno = ?, valor_vuelta = ?, sueldo_vuelta = ?, 
-                id_supervisor = ?, notas = ?, usuario_edit = ? 
+                id_supervisor = ?, notas = ?, usuario_edit = ?, estatus = ? 
             WHERE id = ?";
 
     $stmt = mysqli_prepare($conection, $sql);
 
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, 'sssssssssissssddssi',
+        mysqli_stmt_bind_param($stmt, 'sssssssssissssddssii',
             $fecha, $semana, $cliente, $ruta, $operador, $tipo,
             $unidad_ejec, $tipo_viaje, $nounidad, $nopersonas, $horarios,
             $hora_real, $turno, $tipovuelta, $sueldovta,
-            $idsuperv, $notas, $usuario,
+            $idsuperv, $notas, $usuario, $estatus,
             $id
         );
 
@@ -3272,17 +3273,80 @@ if ($_POST['action'] == 'EditarAdeudo') {
                 $operador   = $_POST['operador'];
                 $unidad     = $_POST['tipo_unidad'];
                 $tipo_vta   = $_POST['tipo_vuelta'];
+                $svta = 0;
 
-               $query_procesarubi = mysqli_query($conection,"CALL calcula_sueldo('$tipo_viaje', '$cliente', '$ruta', '$operador', '$unidad', $tipo_vta)");
-                $result_procesarubi = mysqli_num_rows($query_procesarubi);
-                
-                if($result_procesarubi > 0){
-                    $data = mysqli_fetch_assoc($query_procesarubi);
-                    echo json_encode($data,JSON_UNESCAPED_UNICODE);
-                }else{
-                    echo "error";
+                if($tipo_viaje === 'Semidomiciliadas') {
+                    $stmt = $conection->prepare("SELECT sueldo_semid FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_semid > 0 LIMIT 1");
+                    $stmt->bind_param("ss", $cliente, $ruta);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_semidomiciliada);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_semidomiciliada * $tipo_vta;
+                    }
+                    $stmt->close();
                 }
 
+                if($svta == 0 && $unidad === "Camion") {
+                    $stmt = $conection->prepare("SELECT sueldo_camion FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camion > 0 LIMIT 1");
+                    $stmt->bind_param("ss", $cliente, $ruta);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_camion);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_camion * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Camioneta") {
+                    $stmt = $conection->prepare("SELECT sueldo_camioneta FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camioneta > 0 LIMIT 1");
+                    $stmt->bind_param("ss", $cliente, $ruta);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_camioneta);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_camioneta * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Camion") {
+                    $stmt = $conection->prepare("SELECT sueldo_camion FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
+                    $stmt->bind_param("s", $operador);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_camion);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_camion * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Camioneta") {
+                    $stmt = $conection->prepare("SELECT sueldo_camioneta FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
+                    $stmt->bind_param("s", $operador);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_camioneta);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_camioneta * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Sprinter") {
+                    $stmt = $conection->prepare("SELECT sueldo_sprinter FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
+                    $stmt->bind_param("s", $operador);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_sprinter);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_sprinter * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Externa") {
+                   $svta = 1 * $tipo_vta;
+                }
+
+               echo json_encode(['sueldo_vuelta' => $svta], JSON_UNESCAPED_UNICODE);
+                exit;
             }
         }
 
@@ -3296,17 +3360,81 @@ if ($_POST['action'] == 'EditarAdeudo') {
                 $ruta       = $_POST['ruta'];
                 $operador   = $_POST['operador'];
                 $unidad     = $_POST['tipo_unidad'];
+                $svta = 0;
 
 
-               $query_procesarubi = mysqli_query($conection,"CALL calcula_sueldovta('$tipo_viaje', '$cliente', '$ruta', '$operador', '$unidad', $tipo_vta)");
-                $result_procesarubi = mysqli_num_rows($query_procesarubi);
-                
-                if($result_procesarubi > 0){
-                    $data = mysqli_fetch_assoc($query_procesarubi);
-                    echo json_encode($data,JSON_UNESCAPED_UNICODE);
-                }else{
-                    echo "error";
+                if($tipo_viaje === 'Semidomiciliadas') {
+                    $stmt = $conection->prepare("SELECT sueldo_semid FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_semid > 0 LIMIT 1");
+                    $stmt->bind_param("ss", $cliente, $ruta);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_semidomiciliada);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_semidomiciliada * $tipo_vta;
+                    }
+                    $stmt->close();
                 }
+
+                if($svta == 0 && $unidad === "Camion") {
+                    $stmt = $conection->prepare("SELECT sueldo_camion FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camion > 0 LIMIT 1");
+                    $stmt->bind_param("ss", $cliente, $ruta);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_camion);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_camion * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Camioneta") {
+                    $stmt = $conection->prepare("SELECT sueldo_camioneta FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camioneta > 0 LIMIT 1");
+                    $stmt->bind_param("ss", $cliente, $ruta);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_camioneta);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_camioneta * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Camion") {
+                    $stmt = $conection->prepare("SELECT sueldo_camion FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
+                    $stmt->bind_param("s", $operador);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_camion);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_camion * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Camioneta") {
+                    $stmt = $conection->prepare("SELECT sueldo_camioneta FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
+                    $stmt->bind_param("s", $operador);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_camioneta);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_camioneta * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Sprinter") {
+                    $stmt = $conection->prepare("SELECT sueldo_sprinter FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
+                    $stmt->bind_param("s", $operador);
+                    $stmt->execute();
+                    $stmt->bind_result($sdo_sprinter);
+                    if($stmt->fetch()) {
+                        $svta = $sdo_sprinter * $tipo_vta;
+                    }
+                    $stmt->close();
+                }
+
+                if($svta == 0 && $unidad === "Externa") {
+                   $svta = 1 * $tipo_vta;
+                }
+
+               echo json_encode(['sueldo_vuelta' => $svta], JSON_UNESCAPED_UNICODE);
+                exit;
 
             }
         }

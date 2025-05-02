@@ -401,30 +401,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </select>  
                      </div>
                </div>
-                <!--
-                  <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Hora de Llegada a la Dirección</label>
-                    <div class="col-sm-2">
-                      <input type="time" class="form-control" id="inputHorainicio" name="inputHorainicio">
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Dirección</label>
-                    <div class="col-sm-6">
-                      <input type="text" class="form-control" id="inputDireccion" name="inputDireccion">
-                    </div>
-                  </div>
-
-                   <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Hora de Llegada al Destino</label>
-                    <div class="col-sm-2">
-                      <input type="time" class="form-control" id="inputHorafin" name="inputHorafin">
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Destino</label>
-                    <div class="col-sm-6">
-                      <input type="text" class="form-control" id="inputDestino" name="inputDestino">
-                    </div>
-                  </div>
-
-                  -->
                    <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Observaciones</label>
                     <div class="col-sm-10">
@@ -491,10 +467,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php include('includes/footer.php') ?>
 </div>
 <!-- ./wrapper -->
-
-
-    <!-- Iniciamos el segmento de codigo javascript -->
-   
 <!-- REQUIRED SCRIPTS -->
 
 <!-- jQuery -->
@@ -507,24 +479,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
+<script src="js/sweetalert2.all.min.js"></script>
+
 <script>
 
 $('#btn_salir').click(function(e){
         e.preventDefault();
-
-            
         Swal
     .fire({
         title: "DESEA SALIR!",
         text: "",
         icon: 'info',
-
         showCancelButton: true,
         confirmButtonText: "Regresar",
         cancelButtonText: "Salir",
-       
-
-       
     })
      .then(resultado => {
         if (resultado.value) {
@@ -537,9 +505,6 @@ $('#btn_salir').click(function(e){
             location.href = 'viajes.php';
         }
     });
-
-   
-
     });
     </script>
 
@@ -547,41 +512,27 @@ $('#btn_salir').click(function(e){
 
 $('#btn_salir2').click(function(e){
         e.preventDefault();
-
-            
         Swal
     .fire({
         title: "DESEA SALIR!",
         text: "",
         icon: 'info',
-
         showCancelButton: true,
         confirmButtonText: "Regresar",
         cancelButtonText: "Salir",
-       
-
-       
     })
      .then(resultado => {
         if (resultado.value) {
-            // Hicieron click en "Sí"
-             //*location.href = 'motivo_perdida.php';
              console.log("Alerta cerrada");
         } else {
-            // Dijeron que no
-            //*location.reload();
             location.href = 'viajes23.php';
         }
     });
-
-   
-
     });
     </script>
 
 <script type="text/javascript">
       $(document).ready(function(){
-          
          var pedidos2 = $('#fpedido');
         //Ejecutar accion al cambiar de opcion en el select de las bandas
         $('#frazonsoc').change(function(){
@@ -607,11 +558,6 @@ $('#btn_salir2').click(function(e){
             pedidos2.prop('disabled', true); //deshabilitar el select
           }    
         });
-
-
-        //mostrar una leyenda con el disco seleccionado
-       
-
       });
     </script> 
 
@@ -654,11 +600,11 @@ $('#btn_salir2').click(function(e){
 
 <script type="text/javascript">
       $(document).ready(function(){
-          
-         var pedidos3 = $('#inputNounidad');
-        //Ejecutar accion al cambiar de opcion en el select de las bandas
+        var pedidos3 = $('#inputNounidad');
+        //Ejecutar accion al cambiar de opcion en el select de unidad ejecuta
         $('#inputTipoejecutado').change(function(){
-          var banda_id3 = $(this).val(); //obtener el id seleccionado
+          console.log("Se selecciono unidad ejecuta " + $('#inputTipoejecutado').val());
+          var banda_id3 = $(this).val(); //obtener el tipo de unidad seleccionado
 
           if(banda_id3 !== ''){ //verificar haber seleccionado una opcion valida
 
@@ -688,21 +634,9 @@ $('#btn_salir2').click(function(e){
 
       });
     </script> 
-  
-     <!--
-     <script>
-   
-        $("#inputNounidad").change(function() {            
-            var op = $(this).val();
-            var newop = op.substr(0,1);
-            alert(newop);
-     });     
-    </script>
-  -->
 <script>
    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
-
        var Id           = $('#inputId').val();
        var fecha        = $('#inputFecha').val();
        var semana       = $('#inputSemana').val();
@@ -720,10 +654,7 @@ $('#btn_salir2').click(function(e){
        var tipovuelta   = $('#inputTipovta').val();
        var sueldovuelta = $('#inputSueldovta').val();
        var elsuperv     = $('#fsuperv').val();
-       //var horafin      = $('#inputHorafin').val();
-       //var destino      = $('#inputDestino').val();
        var notas        = $('#inputNotas').val(); 
-       //alert(tipovuelta);
        var action       = 'EditaAlmacenaViaje';
 
         $.ajax({
@@ -736,9 +667,7 @@ $('#btn_salir2').click(function(e){
                     {
                       if(response != 'error')
                         {
-                         console.log(response);
                         var info = JSON.parse(response);
-                        console.log(info);
                         $mensaje=(info.mensaje);
                           if ($mensaje === undefined)
                           {
@@ -746,12 +675,7 @@ $('#btn_salir2').click(function(e){
                          .fire({
                           title: "Exito!",
                           text: "REGISTRO DE VIAJE ALMACENADO CORRECTAMENTE",
-                          icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
+                          icon: 'success'
                        })
                         .then(resultado => {
                        if (resultado.value) {
@@ -767,18 +691,12 @@ $('#btn_salir2').click(function(e){
 
 
                          }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
                             text: $mensaje,
                             })
                         }
-
-                                                        
-    
                         }else{
                           Swal.fire({
                             icon: 'info',
@@ -787,7 +705,6 @@ $('#btn_salir2').click(function(e){
                             })
                             $("#inputTipovta").focus();
                         }
-                        //viewProcesar();
                  },
                  error: function(error) {
                  }
@@ -835,9 +752,7 @@ $('#btn_salir2').click(function(e){
                     {
                       if(response != 'error')
                         {
-                         console.log(response);
                         var info = JSON.parse(response);
-                        console.log(info);
                         $mensaje=(info.mensaje);
                           if ($mensaje === undefined)
                           {
@@ -845,12 +760,7 @@ $('#btn_salir2').click(function(e){
                          .fire({
                           title: "Exito!",
                           text: "REGISTRO DE VIAJE ALMACENADO CORRECTAMENTE",
-                          icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
+                          icon: 'success'
                        })
                         .then(resultado => {
                        if (resultado.value) {
@@ -863,21 +773,13 @@ $('#btn_salir2').click(function(e){
                          location.href = 'viajes23.php';
                         }
                         });
-
-
                          }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
                             text: $mensaje,
                             })
                         }
-
-                                                        
-    
                         }else{
                           Swal.fire({
                             icon: 'info',
@@ -894,10 +796,8 @@ $('#btn_salir2').click(function(e){
                });
 
     });
-
     </script>  
-<script src="js/sweetalert2.all.min.js"></script>   
-<!-- Page specific script -->
+
 <script>
   $(function () {
     //Initialize Select2 Elements
@@ -907,195 +807,18 @@ $('#btn_salir2').click(function(e){
     $('.select2bs4').select2({
       theme: 'bootstrap4'
     })
-
-    //Datemask dd/mm/yyyy
-    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-    //Datemask2 mm/dd/yyyy
-    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-    //Money Euro
-    $('[data-mask]').inputmask()
-
-    //Date picker
-    $('#reservationdate').datetimepicker({
-        format: 'L'
-    });
-
-    //Date and time picker
-    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-    //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-    //Date range as a button
-    $('#daterange-btn').daterangepicker(
-      {
-        ranges   : {
-          'Today'       : [moment(), moment()],
-          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        startDate: moment().subtract(29, 'days'),
-        endDate  : moment()
-      },
-      function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-      }
-    )
-
-    //Timepicker
-    $('#timepicker').datetimepicker({
-      format: 'LT'
-    })
-
-    //Bootstrap Duallistbox
-    $('.duallistbox').bootstrapDualListbox()
-
-    //Colorpicker
-    $('.my-colorpicker1').colorpicker()
-    //color picker with addon
-    $('.my-colorpicker2').colorpicker()
-
-    $('.my-colorpicker2').on('colorpickerChange', function(event) {
-      $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-    })
-
-    $("input[data-bootstrap-switch]").each(function(){
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    })
-
   })
-  // BS-Stepper Init
-  document.addEventListener('DOMContentLoaded', function () {
-    window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-  })
-
-  // DropzoneJS Demo Code Start
-  Dropzone.autoDiscover = false
-
-  // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-  var previewNode = document.querySelector("#template")
-  previewNode.id = ""
-  var previewTemplate = previewNode.parentNode.innerHTML
-  previewNode.parentNode.removeChild(previewNode)
-
-  var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/target-url", // Set the url
-    thumbnailWidth: 80,
-    thumbnailHeight: 80,
-    parallelUploads: 20,
-    previewTemplate: previewTemplate,
-    autoQueue: false, // Make sure the files aren't queued until manually added
-    previewsContainer: "#previews", // Define the container to display the previews
-    clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-  })
-
-  myDropzone.on("addedfile", function(file) {
-    // Hookup the start button
-    file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) }
-  })
-
-  // Update the total progress bar
-  myDropzone.on("totaluploadprogress", function(progress) {
-    document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-  })
-
-  myDropzone.on("sending", function(file) {
-    // Show the total progress bar when upload starts
-    document.querySelector("#total-progress").style.opacity = "1"
-    // And disable the start button
-    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-  })
-
-  // Hide the total progress bar when nothing's uploading anymore
-  myDropzone.on("queuecomplete", function(progress) {
-    document.querySelector("#total-progress").style.opacity = "0"
-  })
-
-  // Setup the buttons for all transfers
-  // The "add files" button doesn't need to be setup because the config
-  // `clickable` has already been specified.
-  document.querySelector("#actions .start").onclick = function() {
-    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-  }
-  document.querySelector("#actions .cancel").onclick = function() {
-    myDropzone.removeAllFiles(true)
-  }
-  // DropzoneJS Demo Code End
 </script> 
 
 <script>
     $(document).ready(function () {
-        $("#inputTipoviaje").on('change', function () {            
-            var op = $(this).val();
-            var cliente     = $('#frazonsoc').val();
-            var ruta        = $('#fpedido').val();
-            var operador    = $('#foperador').val();
-            var tipo_unidad = $('#inputTipoejecutado').val();
-            var tipo_vuelta = $('#inputTipovta').val();
-            //alert (op);
-            var action = 'searchSueldoVuelta';
-
-        $.ajax({
-            url: 'includes/ajax.php',
-            type: "POST",
-            async : true,
-            data: {action:action, op:op, cliente:cliente, ruta:ruta, operador:operador, tipo_unidad:tipo_unidad, tipo_vuelta:tipo_vuelta},
-            success: function(response)
-            {
-                // console.log(response);
-                if(response == 0){
-                    //$('#idcliente').val('');
-                    $('#inputSueldovta').val('0.00');
-                  
-                }else{
-                    var data = $.parseJSON(response);
-       
-                    $('#inputSueldovta').val(data.svta); // Notify only Select2 of changes
-                      var seccionID = $('#inputTipovta').val();  
- 
-    $('#inputTipovta').html('<option value="">-- Seleccione --</option><option value="1">Completa</option><option value="0.5">Media Vuelta</option>');
-                  
-                   
-                }
-            },
-            error: function(error) {
-
-            }
-
-        }); 
-        });
-    });
-</script>  
-
-<script>
-    $(document).ready(function () {
         $("#inputTipoejecutado").on('change', function () {            
-            
-        //alert('prueba'); 
-       
-        //$('#inputTipovta').val(); // Notify only Select2 of changes
-        //document.getElementById("inputTipovta").value = "Toyota Corolla";
-        var seccionID = $('#inputTipovta').val();  
+          var seccionID = $('#inputTipovta').val();  
  
-    $('#inputTipovta').html('<option value="">-- Seleccione --</option><option value="1">Completa</option><option value="0.5">Media Vuelta</option>');
-   
-                 
-          
+          $('#inputTipovta').html('<option value="">-- Seleccione --</option><option value="1">Completa</option><option value="0.5">Media Vuelta</option>');
         });
     });
 </script>
-
-
 
 <script>
     $(document).ready(function () {
@@ -1106,8 +829,6 @@ $('#btn_salir2').click(function(e){
             var ruta        = $('#fpedido').val();
             var operador    = $('#foperador').val();
             var tipo_unidad = $('#inputTipoejecutado').val();
-
-            //alert (op);
             var action = 'searchSueldoVueltavalor';
 
         $.ajax({
@@ -1117,23 +838,15 @@ $('#btn_salir2').click(function(e){
             data: {action:action, op:op, tipo_viaje:tipo_viaje, cliente:cliente, ruta:ruta, operador:operador, tipo_unidad:tipo_unidad},
             success: function(response)
             {
-                // console.log(response);
                 if(response == 0){
-                    //$('#idcliente').val('');
                     $('#inputSueldovta').val('0.00');
-                  
                 }else{
                     var data = $.parseJSON(response);
-       
-                    $('#inputSueldovta').val(data.svta); // Notify only Select2 of changes
-                  
-                   
+                    $('#inputSueldovta').val(data.sueldo_vuelta); // Notify only Select2 of changes
                 }
             },
             error: function(error) {
-
             }
-
         }); 
         });
     });
@@ -1142,15 +855,9 @@ $('#btn_salir2').click(function(e){
 <script>
     $(document).ready(function () {
         $("#foperador").on('change', function () {            
-            
-        //alert('prueba'); 
-       
-        //$('#inputTipovta').val(); // Notify only Select2 of changes
-        //document.getElementById("inputTipovta").value = "Toyota Corolla";
         var seccionID = $('#inputTipovta').val();  
  
     $('#inputTipovta').html('<option value="">-- Seleccione --</option><option value="1">Completa</option><option value="0.5">Media Vuelta</option>');
-   
          $('#inputSueldovta').val('0.00');        
           
         });
