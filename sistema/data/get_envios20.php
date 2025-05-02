@@ -1,35 +1,39 @@
 <?php
-include "../../conexion.php"; //libreria de conexion a la base
+include "../../conexion.php"; // conexión a la base de datos
 
-//$banda_id = filter_input(INPUT_POST, 'banda_id'); //obtenemos el parametro que viene de ajax
-$banda_id20 = $_POST['banda_id20'];
+$banda_id20 = $_POST['banda_id20'] ?? '';
+if (empty($banda_id20)) {
+    echo '<option value="">- No se recibió la ruta -</option>';
+    exit;
+}
 
-  
-  /*Obtenemos los discos de la banda seleccionada*/
-  $sql = "SELECT DISTINCT horario
-     FROM
-     ( SELECT horario1 horario, ruta FROM rutas
-      UNION
-      SELECT horario2 horario, ruta FROM rutas
-      UNION
-       SELECT horario3 horario, ruta FROM rutas
-      UNION
-       SELECT hmixto1 horario, ruta FROM rutas
-      UNION
-       SELECT hmixto2 horario, ruta FROM rutas
-    )  T WHERE ruta = '$banda_id20'  AND horario > '00:00:00' ";  
-  $query = mysqli_query($conection, $sql);
-  $filas = mysqli_fetch_all($query, MYSQLI_ASSOC); 
-  mysqli_close($conection);
+// Usamos consulta preparada
+$sql = "SELECT DISTINCT horario
+        FROM (
+            SELECT horario1 AS horario, ruta FROM rutas
+            UNION
+            SELECT horario2, ruta FROM rutas
+            UNION
+            SELECT horario3, ruta FROM rutas
+            UNION
+            SELECT hmixto1, ruta FROM rutas
+            UNION
+            SELECT hmixto2, ruta FROM rutas
+        ) T
+        WHERE ruta = ? AND horario > '00:00:00'";
 
+$stmt = mysqli_prepare($conection, $sql);
+mysqli_stmt_bind_param($stmt, "s", $banda_id20);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
-/**
- * Como notaras vamos a generar código `html`, esto es lo que sera retornado a `ajax` para llenar 
- * el combo dependiente
- */
+$filas = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+mysqli_stmt_close($stmt);
+mysqli_close($conection);
 ?>
 
 <option value="">- Seleccione -</option>
-<?php foreach($filas as $op): //creamos las opciones a partir de los datos obtenidos ?>
-<option value="<?= $op['horario'] ?>"><?= $op['horario'] ?></option>
+<?php foreach ($filas as $op): ?>
+<option value="<?= htmlspecialchars($op['horario']) ?>"><?= htmlspecialchars($op['horario']) ?></option>
 <?php endforeach; ?>
