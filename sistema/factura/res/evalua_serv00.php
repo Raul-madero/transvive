@@ -61,8 +61,6 @@ if ($pedido['historia3'] > 0) {
     $chist_3  = '';
 }
 //$Datefin = date("d-m-Y", strtotime($pedido['fecha_servicio']));
-
-
 ?>
 <page backcolor="#FEFEFE" backimg="../../images/transvive_water2.png" backimgx="center" backimgy="middle" backimgw="60%" style="font-size: 12pt">
 
@@ -168,7 +166,7 @@ if ($pedido ['tipo_evaluacion'] == 'SELECCIÓN') {
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; TIEMPO DE RESPUESTA</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 50</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['tiempo_respuesta']; ?></td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'. $pedido['tiempo_respuesta']; ?></td>
   <br>
 </tr>
 <?php
@@ -212,10 +210,9 @@ if ($pedido ['tipo_evaluacion'] == 'SELECCIÓN') {
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; COMPRAS</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 25%; font-size: 10pt;" align="left">&nbsp; CALIDAD DEL SERVICIO (EVIDENCIA)</td>
   <td rowspan="1" colspan="1" style="border: solid .5px; width: 15%; font-size: 10pt;" align="center">&nbsp; 1 - 30</td>
-  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'.$pedido['servicio_domicilio']; ?></td>
+  <td rowspan="1" colspan="1" style="border: solid .5px; width: 10%; font-size: 10pt;" align="center"><?php echo ' &nbsp;'. $pedido['calidad_servicio']; ?></td>
   <br>
 </tr>
-
 <?php  
 }
 ?>
