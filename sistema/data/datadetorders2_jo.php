@@ -19,7 +19,7 @@ if ($_REQUEST['action'] == 'fetch_userss') {
         LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario
         LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso";
 
-    $where = "WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 2 DAY)";
+    $where = "WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)";
     if (!empty($requestData['search']['value'])) {
         $search = mysqli_real_escape_string($conection, $requestData['search']['value']);
         $where .= " AND (
