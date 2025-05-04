@@ -656,7 +656,6 @@ $('#btn_salir2').click(function(e){
        var elsuperv     = $('#fsuperv').val();
        var notas        = $('#inputNotas').val(); 
        var action       = 'EditaAlmacenaViaje';
-
         $.ajax({
                     url: 'includes/ajax.php',
                     type: "POST",
