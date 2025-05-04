@@ -2148,10 +2148,10 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
         empty($_POST['cliente']) || empty($_POST['ruta']) ||
         empty($_POST['operador']) || empty($_POST['tipovuelta']) ||
         $_POST['tipovuelta'] == 0
-    ) {
-        echo 'error';
-        exit;
-    }
+        ) {
+            echo 'error';
+            exit;
+        }
 
     include '../../conexion.php';
 
@@ -2169,12 +2169,14 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
     $horarios    = $_POST['horarios'];
     $hora_real   = $_POST['hora_real'];
     $turno       = $_POST['turno'];
-    $tipovuelta  = is_numeric($_POST['tipovuelta']) ? intval($_POST['tipovuelta']) : 0;
+    $tipovuelta  = is_numeric($_POST['tipovuelta']) ? floatval($_POST['tipovuelta']) : 0;
     $sueldovta   = is_numeric($_POST['sueldovuelta']) ? floatval($_POST['sueldovuelta']) : 0;
     $idsuperv    = is_numeric($_POST['elsuperv']) ? intval($_POST['elsuperv']) : 0;
     $notas       = $_POST['notas'] ?? '';
     $usuario     = $_SESSION['idUser'];
     $estatus = 2;
+
+    $sueldovta_guardar = $tipovuelta < 1 ? $sueldovta * 2 : $sueldovta;
 
     $sql = "UPDATE registro_viajes 
             SET 
@@ -2190,7 +2192,7 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
         mysqli_stmt_bind_param($stmt, 'sssssssssissssddssii',
             $fecha, $semana, $cliente, $ruta, $operador, $tipo,
             $unidad_ejec, $tipo_viaje, $nounidad, $nopersonas, $horarios,
-            $hora_real, $turno, $tipovuelta, $sueldovta,
+            $hora_real, $turno, $tipovuelta, $sueldovta_guardar,
             $idsuperv, $notas, $usuario, $estatus,
             $id
         );
