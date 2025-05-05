@@ -800,7 +800,7 @@ if($_POST['action'] == 'AlmacenaUnidad')
 //Agregar Productos a Entrada.
 if ($_POST['action'] == 'AlmacenaViaje') {
     // Validar campos obligatorios
-    $camposRequeridos = ['fecha', 'semana', 'cliente', 'ruta', 'tipo', 'horarios', 'operador', 'noeco', 'tipoviaje', 'turno', 'sueldo_vta', 'tipovuelta'];
+    $camposRequeridos = ['fecha', 'semana', 'cliente', 'ruta', 'tipo', 'operador', 'noeco', 'tipoviaje', 'turno', 'sueldo_vta', 'tipovuelta'];
     foreach ($camposRequeridos as $campo) {
         if (empty($_POST[$campo]) || $_POST[$campo] == "Select") {
             echo json_encode(['success' => false, 'message' => "Campo inválido: $campo"]);
