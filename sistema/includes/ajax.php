@@ -807,7 +807,7 @@ if ($_POST['action'] == 'AlmacenaViaje') {
             exit;
         }
     }
-
+    
     // Recolección de datos
     $fecha        = $_POST['fecha'];
     $semana       = trim($_POST['semana']);
@@ -818,7 +818,8 @@ if ($_POST['action'] == 'AlmacenaViaje') {
     $tipo_viaje   = trim($_POST['tipoviaje']);
     $nounidad     = trim($_POST['noeco']);
     $nopersonas   = is_numeric($_POST['nopersonas']) ? intval($_POST['nopersonas']) : 0;
-    $horarios     = is_array($_POST['horarios']) ? implode(', ', $_POST['horarios']) : trim($_POST['horarios']);
+    $horarios     = $_POST['horarios'] ?? "00:00:00";
+    $hora_fin = '00:00:00';
     $turno        = trim($_POST['turno']);
     $tipovuelta   = floatval($_POST['tipovuelta']);
     $sueldo_base  = floatval($_POST['sueldo_vta']);
@@ -838,11 +839,12 @@ if ($_POST['action'] == 'AlmacenaViaje') {
 
     $stmt = $conection->prepare($sql);
 
+
     if ($stmt) {
         $stmt->bind_param(
             'sssssssssisssddsiiii',
             $fecha, $semana, $cliente, $ruta, $operador, $tipo, $tipo, $tipo_viaje,
-            $nounidad, $nopersonas, $horarios, $horarios, $turno, $tipovuelta, $sueldovuelta,
+            $nounidad, $nopersonas, $horarios, $hora_fin, $turno, $tipovuelta, $sueldovuelta,
             $notas, $estatus, $supervisor, $anio, $usuario
         );
 
@@ -2152,9 +2154,7 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
             echo 'error';
             exit;
         }
-
-    include '../../conexion.php';
-
+        
     $id          = intval($_POST['Id']);
     $fecha       = $_POST['fecha'];
     $semana      = $_POST['semana'];
