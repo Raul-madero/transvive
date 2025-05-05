@@ -3300,7 +3300,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->close();
                 }
 
-                if($svta == 0 && $unidad === "Camioneta") {
+                if($svta == 0 && $unidad === "Camioneta" || $svta == 0 && $unidad === "Sprinter") {
                     $stmt = $conection->prepare("SELECT sueldo_camioneta FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camioneta > 0 LIMIT 1");
                     $stmt->bind_param("ss", $cliente, $ruta);
                     $stmt->execute();
@@ -3388,7 +3388,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                     $stmt->close();
                 }
 
-                if($svta == 0 && $unidad === "Camioneta") {
+                if($svta == 0 && $unidad === "Camioneta" || $svta == 0 && $unidad === "Sprinter") {
                     $stmt = $conection->prepare("SELECT sueldo_camioneta FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camioneta > 0 LIMIT 1");
                     $stmt->bind_param("ss", $cliente, $ruta);
                     $stmt->execute();

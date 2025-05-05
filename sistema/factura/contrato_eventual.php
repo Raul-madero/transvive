@@ -200,8 +200,16 @@ $cotizacion = mysqli_fetch_assoc($query);
     $fechalet2 = $fechainicial;
     $fechalet2 = str_replace("/", "-", $fechainicial);         
     $newDate2 = date("d-m-Y", strtotime($fechalet2));
-//$mesDesc = strftime("%B de %Y", strtotime($newDate));                
-    $mesDesc2 = strftime("%d de %B de %Y", strtotime($newDate2));
+//$mesDesc = strftime("%B de %Y", strtotime($newDate));  
+    $formatter = new IntlDateFormatter(
+        'es_MX', // o 'es_ES', depende de la región
+        IntlDateFormatter::LONG,
+        IntlDateFormatter::NONE,
+        'America/Mexico_City',
+        IntlDateFormatter::GREGORIAN,
+        "d 'de' MMMM 'de' y"
+    );              
+    $mesDesc2 = $formatter->format(new DateTime($newDate2));    
     $mesMen = strtoupper($mesDesc2);
 
     $newDate3 = date("d-m-Y", strtotime($fechafinal));
@@ -209,7 +217,8 @@ $cotizacion = mysqli_fetch_assoc($query);
     $fechalet3 = str_replace("/", "-", $fechafinal);         
     $newDate3 = date("d-m-Y", strtotime($fechalet3));
 //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
-    $mesDesc3 = strftime("%d de %B de %Y", strtotime($newDate3));
+    $mesDesc3 = $formatter->format(new DateTime($newDate2));    
+    $mesMen = strtoupper($newDate3);
     $mesMay = strtoupper($mesDesc3);
 
     $fcha = date("Y-m-d");
@@ -218,7 +227,8 @@ $cotizacion = mysqli_fetch_assoc($query);
     $fechalet4 = str_replace("/", "-", $fcha);         
     $newDate4 = date("d-m-Y", strtotime($fechalet4));
 //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
-    $mesDesc4 = strftime("%d de %B de %Y", strtotime($newDate4));
+    $mesDesc4 = $formatter->format(new DateTime($newDate2));    
+    $mesMen = strtoupper($newDate4);
     $Diaactual = strtoupper($mesDesc4);
 
     $textoinicial=utf8_decode('<br />

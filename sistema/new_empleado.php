@@ -729,7 +729,6 @@ $('#btn_salir').click(function(e){
        var sueldoauto   = $('#inputAuto').val();
        var sdosprinter  = $('#inputSsprinter').val();
        var comentarios  = $('#comentarios').val();
-
        var action       = 'AlmacenaEmpleado';
         $.ajax({
                     url: 'includes/ajax.php',

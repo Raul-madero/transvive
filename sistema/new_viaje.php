@@ -263,7 +263,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="form-group row" style="text-align:left;">
                       <label for="inputEmail3" class="col-sm-2 col-form-label">Horario *</label>
                       <div class="col-sm-4">
-                       <select id="fhorario" name="fhorario" class="tokenizationSelect2 form-control select2"multiple="true" disabled=""></select>
+                       <input type="time" id="fhorario" name="fhorario" class=" form-control"/>
                      </div>
                      <label for="inputEmail3" class="col-sm-2 col-form-label">Turno *</label>
                       <div class="col-sm-4">

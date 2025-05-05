@@ -603,7 +603,6 @@ $('#btn_salir2').click(function(e){
         var pedidos3 = $('#inputNounidad');
         //Ejecutar accion al cambiar de opcion en el select de unidad ejecuta
         $('#inputTipoejecutado').change(function(){
-          console.log("Se selecciono unidad ejecuta " + $('#inputTipoejecutado').val());
           var banda_id3 = $(this).val(); //obtener el tipo de unidad seleccionado
 
           if(banda_id3 !== ''){ //verificar haber seleccionado una opcion valida
