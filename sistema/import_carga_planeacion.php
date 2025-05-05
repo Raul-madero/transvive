@@ -104,7 +104,7 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
                 INNER JOIN rutas i
                     ON op.cliente = i.cliente
                 AND op.ruta = i.ruta
-                AND op.unidad = 'CAMIONETA'
+                AND op.unidad = 'CAMIONETA' OR op.unidad = 'SPRINTER'
                 SET op.sueldo_vuelta = i.sueldo_camioneta
                 WHERE i.sueldo_camioneta > 0"
             ];
