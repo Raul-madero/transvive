@@ -43,7 +43,7 @@ if ($result_sqlact == 0) {
     $salarioxdia    = $data['salarioxdia'];
     $salariodiario  = $data['salario_diario'];
     $sueldobase     = $data['sueldo_base'];
-    $sueldo         = $data['sueldo'];
+    $sueldo         = $data['sueldo_camion'];
     $sueldob2       = $data['sueldo_camioneta'];
     $camion         = $data['sueldo_especialcamion'];
     $camioneta      = $data['sueldo_especialcamioneta'];
