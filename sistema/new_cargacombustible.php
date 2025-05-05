@@ -419,7 +419,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             // Calcular la fecha límite (hace 6 días)
             let fechaLimite = new Date();
-            fechaLimite.setDate(fechaActual.getDate() - 6); // Restar 6 días
+            fechaLimite.setDate(fechaActual.getDate() - 8); // Restar 6 días
 
             // Comparar la fecha ingresada con la fecha límite
             if ((fechaIngresada >= fechaLimite && fechaIngresada <= fechaActual) || (<?php echo $iduser ?> == 32)) {

@@ -1624,6 +1624,7 @@ if($_POST['action'] == 'AlmacenaEditAlerta')
 //Agregar Productos a Entrada
 if($_POST['action'] == 'AlmacenaCargaComb')
 {
+    
     if(empty($_POST['estacion']) || empty($_POST['nounidad']) || empty($_POST['operador']) || empty($_POST['kmactual']) || empty($_POST['combustible']) || empty($_POST['litros']) || empty($_POST['precio']) || empty($_POST['supervisor']) )
     {
          echo 'error';
