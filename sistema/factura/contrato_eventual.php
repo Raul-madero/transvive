@@ -201,35 +201,71 @@ $cotizacion = mysqli_fetch_assoc($query);
     $fechalet2 = str_replace("/", "-", $fechainicial);         
     $newDate2 = date("d-m-Y", strtotime($fechalet2));
 //$mesDesc = strftime("%B de %Y", strtotime($newDate));  
-    $formatter = new IntlDateFormatter(
-        'es_MX', // o 'es_ES', depende de la región
-        IntlDateFormatter::LONG,
-        IntlDateFormatter::NONE,
-        'America/Mexico_City',
-        IntlDateFormatter::GREGORIAN,
-        "d 'de' MMMM 'de' y"
-    );              
-    $mesDesc2 = $formatter->format(new DateTime($newDate2));    
-    $mesMen = strtoupper($mesDesc2);
+//     $formatter = new IntlDateFormatter(
+//         'es_MX', // o 'es_ES', depende de la región
+//         IntlDateFormatter::LONG,
+//         IntlDateFormatter::NONE,
+//         'America/Mexico_City',
+//         IntlDateFormatter::GREGORIAN,
+//         "d 'de' MMMM 'de' y"
+//     );              
+//     $mesDesc2 = $formatter->format(new DateTime($newDate2));    
+//     $mesMen = strtoupper($mesDesc2);
 
-    $newDate3 = date("d-m-Y", strtotime($fechafinal));
-    $fechalet3 = $fechafinal;
-    $fechalet3 = str_replace("/", "-", $fechafinal);         
-    $newDate3 = date("d-m-Y", strtotime($fechalet3));
-//$mesDesc = strftime("%B de %Y", strtotime($newDate));                
-    $mesDesc3 = $formatter->format(new DateTime($newDate2));    
-    $mesMen = strtoupper($newDate3);
-    $mesMay = strtoupper($mesDesc3);
+//     $newDate3 = date("d-m-Y", strtotime($fechafinal));
+//     $fechalet3 = $fechafinal;
+//     $fechalet3 = str_replace("/", "-", $fechafinal);         
+//     $newDate3 = date("d-m-Y", strtotime($fechalet3));
+// //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
+//     $mesDesc3 = $formatter->format(new DateTime($newDate2));    
+//     $mesMen = strtoupper($newDate3);
+//     $mesMay = strtoupper($mesDesc3);
 
-    $fcha = date("Y-m-d");
-    $newDate4 = date("d-m-Y", strtotime($fcha));
-    $fechalet4 = $fcha;
-    $fechalet4 = str_replace("/", "-", $fcha);         
-    $newDate4 = date("d-m-Y", strtotime($fechalet4));
-//$mesDesc = strftime("%B de %Y", strtotime($newDate));                
-    $mesDesc4 = $formatter->format(new DateTime($newDate2));    
-    $mesMen = strtoupper($newDate4);
-    $Diaactual = strtoupper($mesDesc4);
+//     $fcha = date("Y-m-d");
+//     $newDate4 = date("d-m-Y", strtotime($fcha));
+//     $fechalet4 = $fcha;
+//     $fechalet4 = str_replace("/", "-", $fcha);         
+//     $newDate4 = date("d-m-Y", strtotime($fechalet4));
+// //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
+//     $mesDesc4 = $formatter->format(new DateTime($newDate2));    
+//     $mesMen = strtoupper($newDate4);
+//     $Diaactual = strtoupper($mesDesc4);
+
+// Arreglo de meses en español
+$meses = [
+    'January' => 'enero', 'February' => 'febrero', 'March' => 'marzo',
+    'April' => 'abril', 'May' => 'mayo', 'June' => 'junio',
+    'July' => 'julio', 'August' => 'agosto', 'September' => 'septiembre',
+    'October' => 'octubre', 'November' => 'noviembre', 'December' => 'diciembre'
+];
+
+// 1. Fecha inicial
+$fechaObj2 = new DateTime($newDate2);
+$dia2 = $fechaObj2->format('d');
+$mesIng2 = $fechaObj2->format('F');
+$anio2 = $fechaObj2->format('Y');
+$mesDesc2 = "$dia2 de " . $meses[$mesIng2] . " de $anio2";
+$mesMen = strtoupper($mesDesc2);
+
+// 2. Fecha final formateada
+$newDate3 = date("d-m-Y", strtotime(str_replace("/", "-", $fechafinal)));
+$mesMen = strtoupper($newDate3);
+
+// 3. Otra descripción con la misma $newDate2 (seguramente por contexto)
+$mesDesc3 = "$dia2 de " . $meses[$mesIng2] . " de $anio2";
+$mesMay = strtoupper($mesDesc3);
+
+// 4. Fecha actual
+$fcha = date("Y-m-d");
+$newDate4 = date("d-m-Y", strtotime(str_replace("/", "-", $fcha)));
+$fechaObj4 = new DateTime($fcha);
+$dia4 = $fechaObj4->format('d');
+$mesIng4 = $fechaObj4->format('F');
+$anio4 = $fechaObj4->format('Y');
+$mesDesc4 = "$dia4 de " . $meses[$mesIng4] . " de $anio4";
+$mesMen = strtoupper($newDate4);
+$Diaactual = strtoupper($mesDesc4);
+
 
     $textoinicial=utf8_decode('<br />
 <div align="justify">CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO POR 30 DIAS A PARTIR DEL. <b>' . $mesMen . ' AL ' . $mesMay .', </b> EN TERMINOS DE LO NORMADO POR EL ARTICULO 35 DE LA LEY FEDERAL DEL TRABAJO, QUE CELEBRAN POR UNA PARTE LA EMPRESA DENOMINADA <b>TRANSVIVE, S DE RL DE CV</b> REPRESENTADA EN ESTE ACTO POR SU APODERADO, EL C. <b>RAUL GUTIERREZ DE VELASCO ROMO,</b> A QUIEN EN LO SUCESIVO Y PARA EFECTO DEL PRESENTE CONTRATO SE LE DENOMINARÁ "LA EMPRESA", Y POR LA OTRA, Y POR SU PROPIO DERECHO, EL (LA) C. <b>' .$empleado. '</b> EN LO SUCESIVO SE LE DENOMINARÁ COMO "EL TRABAJADOR", DE CONFORMIDAD CON LAS SIGUIENTES DECLARACIONES Y CLAUSULAS.</div>');
