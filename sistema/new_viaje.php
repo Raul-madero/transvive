@@ -42,7 +42,7 @@ session_start();
 This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -261,9 +261,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div>
 
                     <div class="form-group row" style="text-align:left;">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Horario *</label>
+                      <label for="fhorario" class="col-sm-2 col-form-label">Horario *</label>
                       <div class="col-sm-4">
-                       <input type="time" id="fhorario" name="fhorario" class=" form-control"/>
+                       <input type="text" id="fhorario" name="fhorario" class=" form-control" lang="es-MX"/>
                      </div>
                      <label for="inputEmail3" class="col-sm-2 col-form-label">Turno *</label>
                       <div class="col-sm-4">
@@ -378,6 +378,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
+<!-- Inicializamos el timepicker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<script>
+  $(document).ready(function() {
+  $('#fhorario').timepicker({
+    timeFormat: 'HH:mm:ss',   // Formato 24 horas
+    interval: 30,          // Intervalos de 15 minutos
+    dynamic: false,
+    dropdown: true,
+    scrollbar: true
+  });
+});
+</script>
 <script>
 
 $('#btn_salir').click(function(e){
@@ -401,7 +415,6 @@ $('#btn_salir').click(function(e){
         if (resultado.value) {
             // Hicieron click en "Sí"
              //*location.href = 'motivo_perdida.php';
-             console.log("Alerta cerrada");
         } else {
             // Dijeron que no
             //*location.reload();
@@ -438,7 +451,6 @@ $('#btn_salir2').click(function(e){
         if (resultado.value) {
             // Hicieron click en "Sí"
              //*location.href = 'motivo_perdida.php';
-             console.log("Alerta cerrada");
         } else {
             // Dijeron que no
             //*location.reload();
@@ -458,7 +470,6 @@ $('#btn_salir2').click(function(e){
         //Ejecutar accion al cambiar de opcion en el select de las bandas
         $('#frazonsoc').change(function(){
           var banda_id2 = $(this).val(); //obtener el id seleccionado
-          console.log(banda_id2);
           if(banda_id2 !== ''){ //verificar haber seleccionado una opcion valida
 
             /*Inicio de llamada ajax*/
@@ -489,39 +500,39 @@ $('#btn_salir2').click(function(e){
 
 
     <script type="text/javascript">
-      $(document).ready(function(){
+      // $(document).ready(function(){
           
-         var horariosc = $('#fhorario');
-        //Ejecutar accion al cambiar de opcion en el select de las bandas
-        $('#fpedido').change(function(){
-          var banda_id20 = $(this).val(); //obtener el id seleccionado
+      //    var horariosc = $('#fhorario');
+      //   //Ejecutar accion al cambiar de opcion en el select de las bandas
+      //   $('#fpedido').change(function(){
+      //     var banda_id20 = $(this).val(); //obtener el id seleccionado
 
-          if(banda_id20 !== ''){ //verificar haber seleccionado una opcion valida
+      //     if(banda_id20 !== ''){ //verificar haber seleccionado una opcion valida
 
-            /*Inicio de llamada ajax*/
-            $.ajax({
-              data: {banda_id20:banda_id20}, //variables o parametros a enviar, formato => nombre_de_variable:contenido
-              dataType: 'html', //tipo de datos que esperamos de regreso
-              type: 'POST', //mandar variables como post o get
-              url: 'data/get_envios20.php' //url que recibe las variables
-            }).done(function(data){ //metodo que se ejecuta cuando ajax ha completado su ejecucion             
+      //       /*Inicio de llamada ajax*/
+      //       $.ajax({
+      //         data: {banda_id20:banda_id20}, //variables o parametros a enviar, formato => nombre_de_variable:contenido
+      //         dataType: 'html', //tipo de datos que esperamos de regreso
+      //         type: 'POST', //mandar variables como post o get
+      //         url: 'data/get_envios20.php' //url que recibe las variables
+      //       }).done(function(data){ //metodo que se ejecuta cuando ajax ha completado su ejecucion             
 
-              horariosc.html(data); //establecemos el contenido html de discos con la informacion que regresa ajax             
-              horariosc.prop('disabled', false); //habilitar el select
-            });
-            /*fin de llamada ajax*/
+      //         horariosc.html(data); //establecemos el contenido html de discos con la informacion que regresa ajax             
+      //         horariosc.prop('disabled', false); //habilitar el select
+      //       });
+      //       /*fin de llamada ajax*/
 
-          }else{ //en caso de seleccionar una opcion no valida
-            horariosc.val(''); //seleccionar la opcion "- Seleccione -", osea como reiniciar la opcion del select
-            horariosc.prop('disabled', true); //deshabilitar el select
-          }    
-        });
+      //     }else{ //en caso de seleccionar una opcion no valida
+      //       horariosc.val(''); //seleccionar la opcion "- Seleccione -", osea como reiniciar la opcion del select
+      //       horariosc.prop('disabled', true); //deshabilitar el select
+      //     }    
+      //   });
 
 
-        //mostrar una leyenda con el disco seleccionado
+      //   //mostrar una leyenda con el disco seleccionado
        
 
-      });
+      // });
     </script>   
 
 
@@ -563,26 +574,27 @@ $('#btn_salir2').click(function(e){
 
 <script>
    $('#guardar_tipoactividad').click(function(e){
+      console.log('click')
         e.preventDefault();
 
-       var fecha        = $('#inputFecha').val();
-       var semana       = $('#inputSemana').val();
-       var cliente      = $('#frazonsoc').val();
-       var ruta         = $('#fpedido').val();
-       var operador     = $('#foperador').val();
-       var tipo         = $('#inputTipo').val();
-       var tipoviaje    = $('#inputTipoviaje').val();
-       var noeco        = $('#inputNounidad').val();
-       var nopersonas   = $('#inputNopersonas').val();
-       var horarios     = $('#fhorario').val();
-       var turno        = $('#inputTurno').val();
-       var tipovuelta   = $('#inputTipovta').val();
-       var sueldo_vta   = $('#inputSueldovta').val();
-       var supervisor   = $('#fsuperv').val();
+       let fecha        = $('#inputFecha').val();
+       let semana       = $('#inputSemana').val();
+       let cliente      = $('#frazonsoc').val();
+       let ruta         = $('#fpedido').val();
+       let operador     = $('#foperador').val();
+       let tipo         = $('#inputTipo').val();
+       let tipoviaje    = $('#inputTipoviaje').val();
+       let noeco        = $('#inputNounidad').val();
+       let nopersonas   = $('#inputNopersonas').val();
+       let horarios     = $('#fhorario').val();
+       let turno        = $('#inputTurno').val();
+       let tipovuelta   = $('#inputTipovta').val();
+       let sueldo_vta   = $('#inputSueldovta').val();
+       let supervisor   = $('#fsuperv').val();
        let unidad = $('#inptTipo').val();
-       var notas        = $('#inputNotas').val(); 
-
-       var action       = 'AlmacenaViaje';
+       let notas        = $('#inputNotas').val(); 
+    
+       let action       = 'AlmacenaViaje';
 
         $.ajax({
                     url: 'includes/ajax.php',
@@ -594,16 +606,14 @@ $('#btn_salir2').click(function(e){
                     {
                       if(response != 'error')
                         {
-                         console.log(response);
                         var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
+                        let mensaje = info.mensaje;
+                          if (info.success)
                           {
                             Swal
                          .fire({
                           title: "Exito!",
-                          text: "REGISTRO DE VIAJE ALMACENADO CORRECTAMENTE",
+                          text: mensaje,
                           icon: 'success',
 
                           //showCancelButton: true,
@@ -631,7 +641,7 @@ $('#btn_salir2').click(function(e){
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: $mensaje,
+                            text: mensaje,
                             })
                         }
 
@@ -658,27 +668,28 @@ $('#btn_salir2').click(function(e){
 
     <script>
    $('#guardar_tipoactividad2').click(function(e){
+    console.log('Horario leído:', document.getElementById('fhorario'));
+console.log('Valor horario directo JS:', document.getElementById('fhorario').value);
+
         e.preventDefault();
 
-       var fecha        = $('#inputFecha').val();
-       var semana       = $('#inputSemana').val();
-       var cliente      = $('#frazonsoc').val();
-       var ruta         = $('#fpedido').val();
-       var operador     = $('#foperador').val();
-       var tipo         = $('#inputTipo').val();
-       var tipoviaje    = $('#inputTipoviaje').val();
-       var noeco        = $('#inputNounidad').val();
-       var nopersonas   = $('#inputNopersonas').val();
-       var horarios     = $('#fhorario').val();
-       var turno        = $('#inputTurno').val();
-       var tipovuelta   = $('#inputTipovta').val();
-       var sueldo_vta   = $('#inputSueldovta').val();
-       var supervisor   = $('#fsuperv').val();
-       //var horafin      = $('#inputHorafin').val();
-       //var destino      = $('#inputDestino').val();
-       var notas        = $('#inputNotas').val(); 
-
-       var action       = 'AlmacenaViaje';
+       let fecha        = $('#inputFecha').val();
+       let semana       = $('#inputSemana').val();
+       let cliente      = $('#frazonsoc').val();
+       let ruta         = $('#fpedido').val();
+       let operador     = $('#foperador').val();
+       let tipo         = $('#inputTipo').val();
+       let tipoviaje    = $('#inputTipoviaje').val();
+       let noeco        = $('#inputNounidad').val();
+       let nopersonas   = $('#inputNopersonas').val();
+       let horarios     = $('#fhorario').val();
+       let turno        = $('#inputTurno').val();
+       let tipovuelta   = $('#inputTipovta').val();
+       let sueldo_vta   = $('#inputSueldovta').val();
+       let supervisor   = $('#fsuperv').val();
+       let notas        = $('#inputNotas').val(); 
+      console.log(horarios)
+       let action       = 'AlmacenaViaje';
 
         $.ajax({
                     url: 'includes/ajax.php',
@@ -690,16 +701,14 @@ $('#btn_salir2').click(function(e){
                     {
                       if(response != 'error')
                         {
-                         console.log(response);
                         var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
+                        let mensaje = info.message;
+                          if (info.success)
                           {
                             Swal
                          .fire({
                           title: "Exito!",
-                          text: "REGISTRO DE VIAJE ALMACENADO CORRECTAMENTE",
+                          text: mensaje,
                           icon: 'success',
 
                           //showCancelButton: true,
@@ -727,7 +736,7 @@ $('#btn_salir2').click(function(e){
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: $mensaje,
+                            text: mensaje,
                             })
                         }
 
@@ -778,7 +787,6 @@ $('#btn_salir2').click(function(e){
             data: {action:action, op:op},
             success: function(response)
             {
-                //*console.log(response);
                 if(response == 0){
                     //$('#idcliente').val('');
                     var miMenu = document.getElementById("fsuperv");
@@ -816,7 +824,6 @@ $('#btn_salir2').click(function(e){
             var tipo_unidad = $('#inputTipo').val();
             var tipo_vuelta = $('#inputTipovta').val();
             var action = 'searchSueldoVuelta';
-            console.log(op)
 
         $.ajax({
             url: 'includes/ajax.php',
@@ -825,7 +832,6 @@ $('#btn_salir2').click(function(e){
             data: {action:action, op:op, cliente:cliente, ruta:ruta, operador:operador, tipo_unidad:tipo_unidad, tipo_vuelta:tipo_vuelta},
             success: function(response)
             {
-                console.log(response);
                 if(response == 0){
                     $('#inputSueldovta').val('0.00');
                   
@@ -886,10 +892,6 @@ $('#btn_salir2').click(function(e){
         });
     });
 </script>  
-
-
-
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function(){

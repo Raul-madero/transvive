@@ -800,14 +800,13 @@ if($_POST['action'] == 'AlmacenaUnidad')
 //Agregar Productos a Entrada.
 if ($_POST['action'] == 'AlmacenaViaje') {
     // Validar campos obligatorios
-    $camposRequeridos = ['fecha', 'semana', 'cliente', 'ruta', 'tipo', 'operador', 'noeco', 'tipoviaje', 'turno', 'sueldo_vta', 'tipovuelta'];
+    $camposRequeridos = ['fecha', 'semana', 'cliente', 'ruta', 'tipo', 'operador', 'noeco', 'tipoviaje', 'turno', 'tipovuelta', 'horarios', 'nopersonas'];
     foreach ($camposRequeridos as $campo) {
         if (empty($_POST[$campo]) || $_POST[$campo] == "Select") {
             echo json_encode(['success' => false, 'message' => "Campo inválido: $campo"]);
             exit;
         }
     }
-    
     // Recolección de datos
     $fecha        = $_POST['fecha'];
     $semana       = trim($_POST['semana']);
@@ -833,7 +832,7 @@ if ($_POST['action'] == 'AlmacenaViaje') {
     // Preparar consulta
     $sql = "INSERT INTO registro_viajes (
                 fecha, semana, cliente, ruta, operador, unidad, unidad_ejecuta, tipo_viaje,
-                num_unidad, personas, horarios, hora_fin, turno, valor_vuelta, sueldo_vuelta,
+                num_unidad, personas, hora_inicio, hora_fin, turno, valor_vuelta, sueldo_vuelta,
                 notas, estatus, id_supervisor, yearreg, usuario_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
