@@ -8,9 +8,17 @@
     include('../../conexion.php');
     $conection->set_charset('utf8');
  
+    if(!$conection){
+        die("Connection failed: " . mysqli_connect_error());
+    }
 
 
 $query_productos = mysqli_query($conection,"SELECT ct.id, ct.no_cliente, ct.nombre, ct.nombre_corto, ct.correo, ct.telefono, ct.movil, ct.rfc, ct.sitio, ct.contacto, ct.contacto_conta, ct.email_conta, ct.email_contacto, ct.calle, ct.colonia, ct.estado, ct.ciudad, ct.municipio, ct.pais, ct.cod_postal, ct.giro, ct.tipo_contrato, ct.id_supervisor, ct.forma_pago, ct.metodo_pago, ct.uso_cfdi, ct.credito, ct.condiciones_credito, if(ct.estatus = 1,'Activo','Inactivo') as Status, us.nombre as supervisor FROM clientes ct left join usuario us ON ct.id_supervisor = us.idusuario ORDER by ct.no_cliente");
+  
+        if(!$query_productos){
+          die("Connection failed: " . mysqli_connect_error());
+        }
+        
       $result_detalle = mysqli_num_rows($query_productos);
        mysqli_close($conection); 
       //$litrostot = 0;

@@ -1,5 +1,6 @@
 <?php
 session_start();
+ini_set('memory_limit', '256M'); // O 512M si lo necesitas
  $User=$_SESSION['user'];
  $rol=$_SESSION['rol'];
  $idUser = $_SESSION['idUser'];

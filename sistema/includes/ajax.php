@@ -818,7 +818,6 @@ if ($_POST['action'] == 'AlmacenaViaje') {
     $nounidad     = trim($_POST['noeco']);
     $nopersonas   = is_numeric($_POST['nopersonas']) ? intval($_POST['nopersonas']) : 0;
     $horarios     = $_POST['horarios'] ?? "00:00:00";
-    $hora_fin = '00:00:00';
     $turno        = trim($_POST['turno']);
     $tipovuelta   = floatval($_POST['tipovuelta']);
     $sueldo_base  = floatval($_POST['sueldo_vta']);
@@ -843,7 +842,7 @@ if ($_POST['action'] == 'AlmacenaViaje') {
         $stmt->bind_param(
             'sssssssssisssddsiiii',
             $fecha, $semana, $cliente, $ruta, $operador, $tipo, $tipo, $tipo_viaje,
-            $nounidad, $nopersonas, $horarios, $hora_fin, $turno, $tipovuelta, $sueldovuelta,
+            $nounidad, $nopersonas, $horarios, $horarios, $turno, $tipovuelta, $sueldovuelta,
             $notas, $estatus, $supervisor, $anio, $usuario
         );
 
@@ -2149,7 +2148,8 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
         empty($_POST['fecha']) || empty($_POST['semana']) ||
         empty($_POST['cliente']) || empty($_POST['ruta']) ||
         empty($_POST['operador']) || empty($_POST['tipovuelta']) ||
-        $_POST['tipovuelta'] == 0
+        $_POST['tipovuelta'] == 0 || empty($_POST['nopersonas']) ||
+        empty($_POST['nopersonasfin'])
         ) {
             echo 'error';
             exit;
@@ -2166,6 +2166,7 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
     $tipo_viaje  = $_POST['tipoviaje'];
     $nounidad    = $_POST['noeco'];
     $nopersonas  = is_numeric($_POST['nopersonas']) ? intval($_POST['nopersonas']) : 0;
+    $nopersonasfin  = is_numeric($_POST['nopersonasfin']) ? intval($_POST['nopersonasfin']) : 0;
     $horarios    = $_POST['horarios'];
     $hora_real   = $_POST['hora_real'];
     $turno       = $_POST['turno'];
@@ -2175,13 +2176,14 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
     $notas       = $_POST['notas'] ?? '';
     $usuario     = $_SESSION['idUser'];
     $estatus = 2;
+    $justificacion = $_POST['justificacionUnidad'];
 
     $sueldovta_guardar = $tipovuelta < 1 ? $sueldovta * 2 : $sueldovta;
-
+    $notas_guardar = $notas . "Se cambio la unidad por: " . $justificacion;
     $sql = "UPDATE registro_viajes 
             SET 
                 fecha = ?, semana = ?, cliente = ?, ruta = ?, operador = ?, unidad = ?, 
-                unidad_ejecuta = ?, tipo_viaje = ?, num_unidad = ?, personas = ?, horarios = ?, 
+                unidad_ejecuta = ?, tipo_viaje = ?, num_unidad = ?, personas = ?, personas_fin = ?, horarios = ?, 
                 hora_llegadareal = ?, turno = ?, valor_vuelta = ?, sueldo_vuelta = ?, 
                 id_supervisor = ?, notas = ?, usuario_edit = ?, estatus = ? 
             WHERE id = ?";
@@ -2189,9 +2191,9 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
     $stmt = mysqli_prepare($conection, $sql);
 
     if ($stmt) {
-        mysqli_stmt_bind_param($stmt, 'sssssssssissssddssii',
+        mysqli_stmt_bind_param($stmt, 'sssssssssiissssddssii',
             $fecha, $semana, $cliente, $ruta, $operador, $tipo,
-            $unidad_ejec, $tipo_viaje, $nounidad, $nopersonas, $horarios,
+            $unidad_ejec, $tipo_viaje, $nounidad, $nopersonas, $nopersonasfin, $horarios,
             $hora_real, $turno, $tipovuelta, $sueldovta_guardar,
             $idsuperv, $notas, $usuario, $estatus,
             $id
