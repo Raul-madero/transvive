@@ -1,6 +1,3 @@
--- Plantilla SQL optimizada para consultar empleados en cálculo de nómina semanal
--- Reemplazar dinámicamente las variables {fecha_inicio}, {fecha_fin}, {fecha_limite_alertas} en el backend
-
 SELECT
     e.id,
     e.noempleado,
@@ -19,17 +16,30 @@ SELECT
     e.salario_diario,
     al.noalertas,
 
-    COUNT(DISTINCT CASE WHEN inc.tipo_incidencia = 'Falta Injustificada' THEN inc.id END) AS faltas,
+    -- Incidencias como faltas y vacaciones
+    (
+        SELECT COUNT(*) FROM incidencias i 
+        WHERE i.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+        AND i.tipo_incidencia = 'Falta Injustificada'
+        AND (
+            i.fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}' OR
+            i.fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
+        )
+    ) AS faltas,
 
-    CASE
-        WHEN inc.tipo_incidencia = 'Vacaciones' THEN
-            CASE
-                WHEN inc.fecha_inicial <= '{fecha_fin}' AND inc.fecha_final >= '{fecha_inicio}' THEN
-                    1 + DATEDIFF(LEAST(inc.fecha_final, '{fecha_fin}'), GREATEST(inc.fecha_inicial, '{fecha_inicio}'))
-                ELSE 0
-            END
-        ELSE 0
-    END AS dias_vacaciones_pagar,
+    (
+        SELECT 
+            SUM(
+                1 + DATEDIFF(
+                    LEAST(i.fecha_final, '{fecha_fin}'), 
+                    GREATEST(i.fecha_inicial, '{fecha_inicio}')
+                )
+            )
+        FROM incidencias i 
+        WHERE i.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+        AND i.tipo_incidencia = 'Vacaciones'
+        AND i.fecha_final >= '{fecha_inicio}' AND i.fecha_inicial <= '{fecha_fin}'
+    ) AS dias_vacaciones_pagar,
 
     IF (
         STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(e.fecha_contrato), '-', DAY(e.fecha_contrato)), '%Y-%m-%d')
@@ -38,10 +48,24 @@ SELECT
         'NO'
     ) AS prima_vacacional,
 
-    COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
+    viajes.total_vueltas,
+    viajes.sueldo_bruto,
 
-    SUM(CASE 
-        WHEN e.cargo = 'OPERADOR' THEN
+    (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
+    (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
+    (SELECT a.total_abonado FROM adeudos a WHERE a.noempleado = e.noempleado) AS total_abonado,
+
+    fi.pago_fiscal,
+    fi.deduccion_fiscal,
+    fi.neto
+
+FROM empleados e
+
+LEFT JOIN (
+    SELECT
+        rv.operador,
+        SUM(rv.valor_vuelta) AS total_vueltas,
+        SUM(
             CASE 
                 WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
                 ELSE
@@ -54,46 +78,22 @@ SELECT
                         ELSE e.sueldo_base * rv.valor_vuelta
                     END
             END
-        ELSE e.sueldo_base * 7
-    END) AS sueldo_bruto,
+        ) AS sueldo_bruto
+    FROM registro_viajes rv
+    LEFT JOIN rutas r ON rv.cliente = r.cliente AND rv.ruta = r.ruta
+    LEFT JOIN empleados e ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+    WHERE DATE(rv.fecha) BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
+      AND rv.valor_vuelta > 0
+    GROUP BY rv.operador
+) viajes ON viajes.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
 
-    (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
-    (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
-    (SELECT a.total_abonado FROM adeudos a WHERE a.noempleado = e.noempleado) AS total_abonado,
-
-    fi.pago_fiscal,
-    fi.deduccion_fiscal,
-    fi.neto
-
-FROM empleados e
 LEFT JOIN alertas al 
     ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
     AND DATE(al.fecha) BETWEEN '{fecha_fin}' AND '{fecha_limite_alertas}'
-
-LEFT JOIN incidencias inc 
-    ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-    AND (
-        (inc.fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}') 
-        OR (inc.fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
-    )
-
-LEFT JOIN registro_viajes rv 
-    ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-    AND DATE(rv.fecha) BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
-    AND rv.valor_vuelta > 0
-
-LEFT JOIN rutas r 
-    ON rv.cliente = r.cliente AND rv.ruta = r.ruta
 
 LEFT JOIN importes_fiscales fi 
     ON fi.empleado = CONCAT_WS(' ', e.apellido_paterno, e.apellido_materno, e.nombres)
 
 WHERE 
     (e.estatus = 1 OR DATEDIFF(e.fecha_baja, '{fecha_inicio}') >= 6)
-    AND e.tipo_nomina = 'Semanal'
-
-GROUP BY 
-    e.noempleado, e.id, operador, e.sueldo_base, e.cargo, imss, e.estatus, 
-    e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-    e.supervisor, e.apoyo_mes, al.noalertas, inc.tipo_incidencia, inc.fecha_inicial, inc.fecha_final,
-    fi.pago_fiscal, fi.deduccion_fiscal, fi.neto;
+    AND e.tipo_nomina = 'Semanal';
