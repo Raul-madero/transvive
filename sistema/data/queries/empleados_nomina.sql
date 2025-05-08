@@ -43,7 +43,7 @@ SELECT
     SUM(CASE 
         WHEN e.cargo = 'OPERADOR' THEN
             CASE 
-                WHEN rv.tipo_viaje NOT IN ('Normal') THEN rv.sueldo_vuelta * rv.valor_vuelta
+                WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
                 ELSE
                     CASE
                         WHEN LOWER(rv.unidad_ejecuta) LIKE '%camion%' AND IFNULL(r.sueldo_camion, 0) > 0 THEN r.sueldo_camion * rv.valor_vuelta
