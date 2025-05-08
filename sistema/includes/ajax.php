@@ -2148,8 +2148,7 @@ if ($_POST['action'] == 'EditaAlmacenaViaje') {
         empty($_POST['fecha']) || empty($_POST['semana']) ||
         empty($_POST['cliente']) || empty($_POST['ruta']) ||
         empty($_POST['operador']) || empty($_POST['tipovuelta']) ||
-        $_POST['tipovuelta'] == 0 || empty($_POST['nopersonas']) ||
-        empty($_POST['nopersonasfin'])
+        $_POST['tipovuelta'] == 0
         ) {
             echo 'error';
             exit;

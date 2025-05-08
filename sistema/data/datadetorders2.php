@@ -113,9 +113,15 @@ while ($row = $result->fetch_assoc()) {
         'counter' => ++$start,
         'pedidono' => $row["id"],
         'nopedido' => '<a href="factura/pedidonw.php?id=' . $row["id"] . '" target="_blank">' . $row["id"] . '</a>',
-        'fecha' => date('d/m/Y', strtotime($row["fecha"])),
-        'horainicio' => date('H:i', strtotime($row["hora_inicio"])),
-        'horafin' => date('H:i', strtotime($row["hora_fin"])),
+        'fecha' => (!empty($row["fecha"]) && strtotime($row["fecha"]) !== false)
+                    ? date('d/m/Y', strtotime($row["fecha"]))
+                    : '',
+        'horainicio' => (!empty($row["hora_inicio"]) && strtotime($row["hora_inicio"]) !== false)
+                    ? date('H:i', strtotime($row["hora_inicio"]))
+                    : '',
+        'horafin' => (!empty($row["hora_fin"]) && strtotime($row["hora_fin"]) !== false)
+                    ? date('H:i', strtotime($row["hora_fin"]))
+                    : '',
         'nosemana' => $row["semana"],
         'razonsocial' => $row["cliente"],
         'rutacte' => $row["ruta"],
