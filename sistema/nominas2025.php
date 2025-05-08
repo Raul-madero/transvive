@@ -178,7 +178,10 @@ $namerol = $filas['rol'];
 						url: ajaxUrl,
 						type: "POST",
 						data: { semana, anio },
-						dataSrc: "data",
+						dataSrc: function (json) {
+							console.log(json);
+							return json.data;
+						},
 						error(xhr, error, thrown) {
 							console.error(xhr, error, thrown);
 							alert("Error al cargar los datos. Por favor intenta de nuevo.");
@@ -225,7 +228,7 @@ $namerol = $filas['rol'];
 						{ data: "dias_vacaciones" },
 						{ data: "pago_vacaciones", render: renderMoneda },
 						{ data: "prima_vacacional", render: renderMoneda },
-						{ data: "deposito", render: renderMoneda },
+						{ data: "deposito_fiscal", render: renderMoneda },
 						{
 							data: null,
 							render: (data) => formatoMoneda(
