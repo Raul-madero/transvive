@@ -487,7 +487,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   $('.timepicker').timepicker({
     timeFormat: 'HH:mm:ss',   // Formato 24 horas
     interval: 30, // Intervalos de 30 minutos
-    defaultTime: '11', // Hora por defecto
     dynamic: true,
     dropdown: true,
     scrollbar: true
