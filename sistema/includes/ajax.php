@@ -6104,6 +6104,12 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
 
     // Recibir datos generales y limpiarlos
     $folio        = intval($_POST['folio']);
+    $sql = "SELECT no_orden FROM orden_compra WHERE no_orden = $folio";
+    $query = mysqli_query($conection, $sql);
+    $result = mysqli_num_rows($query);
+    if ($result > 0) {
+        $folio++; // Incrementa el folio en 1 si ya existe
+    }
     $noreq        = intval($_POST['noreq']);
     $fecha        = $_POST['fecha'];
     $proveedor    = intval($_POST['proveedor']);
@@ -6119,7 +6125,7 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
     $usuario      = intval($_SESSION['idUser']);
 
     $subtotal     = floatval($_POST['subtotal']);
-    $iva          = floatval($_POST['iva']) ?? 0;
+    $iva          = floatval($_POST['iva']) ? 16 : 0;
     $total        = floatval($_POST['total']);
 
     $detalle = json_decode($_POST['detalle'], true);
@@ -6150,7 +6156,7 @@ if ($_POST['action'] == 'AlmacenaOrdencompra') {
                     $marca = mysqli_real_escape_string($conection, $item['marca']);
                     $precio = floatval($item['precio']);
                     $importe = floatval($item['importe']);
-                    $impuesto = 0; // Calcula si es necesario
+                    $impuesto = $iva ? 16 : 0; // Calcula si es necesario
 
                     $sql_det = "INSERT INTO detalle_ordencompra (folio, cantidad, codigo, descripcion, unidad_medida, marca, precio, impuesto, importe)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
