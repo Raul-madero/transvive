@@ -46,7 +46,7 @@ SELECT
                 WHEN LOWER(rv.tipo_viaje) LIKE '%Especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
                 ELSE
                     CASE
-                        WHEN LOWER(rv.unidad_ejecuta) LIKE '%camion%' AND IFNULL(r.sueldo_camion, 0) > 0 THEN r.sueldo_camion * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN r.sueldo_camion * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) LIKE '%camioneta%' AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN r.sueldo_camioneta * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' THEN e.sueldo_camion * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) LIKE '%camioneta%' THEN e.sueldo_camioneta * rv.valor_vuelta
