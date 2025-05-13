@@ -258,14 +258,14 @@ $('#btn_salir').click(function(e){
   $('#guardar_adeudo').click(function(e) {
     e.preventDefault(); // Previene el comportamiento por defecto del botón (submit)
     function sumarSemanas(fecha, semanas) {
-    // Convertir las semanas en días (1 semana = 7 días)
-    const dias = semanas * 7;
-    // Crear una nueva instancia de fecha
-    let nuevaFecha = new Date(fecha);
-    // Sumar los días a la fecha
-    nuevaFecha.setDate(nuevaFecha.getDate() + dias);
-    return nuevaFecha;
-}
+		// Convertir las semanas en días (1 semana = 7 días)
+		const dias = semanas * 7;
+		// Crear una nueva instancia de fecha
+		let nuevaFecha = new Date(fecha);
+		// Sumar los días a la fecha
+		nuevaFecha.setDate(nuevaFecha.getDate() + dias);
+		return nuevaFecha;
+	}
 
     // Captura los valores de los inputs
     let cantidad = $('#inputCantidad').val();
