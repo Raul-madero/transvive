@@ -30,9 +30,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
   <!-- DataTables -->
   <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.bootstrap4.min.css">
 
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
@@ -68,10 +68,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="new_adeudo.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;', 2); ?>Nuevo</a></li>
-                <!-- <li class="breadcrumb-item"><a href="factura/adeudos_excel.php"><i class="fas fa-file-excel"></i> Excel</a></li>
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Layout</a></li>
-                <li class="breadcrumb-item active">Navegacion</li> -->
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -90,6 +86,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Adeudo Total</th>
                 <th>Descuento</th>
                 <th>Total abonado</th>
+                <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -155,6 +152,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 { "mData": 'cantidad', "sWidth": "100px" },
                 { "mData": 'descuento', "sWidth": "50px" },
                 { "mData": 'total_abonado', "sWidth": "120px" },
+                { "mData": null, "sWidth": "50px", render: function(data, type, full) {
+                  //Revisa el valor del estado para devolver lo correspondiente
+                  switch (parseInt(full.estatus)) {
+                    case 1:
+                      return '<span class="badge badge-primary">Activo</span>';
+                      break;
+                    case 2:
+                      return '<span class="badge badge-success">Pagado</span>';
+                      break;
+                    case 3:
+                      return '<span class="badge badge-danger">No Pagado</span>';
+                      break;
+                    default:
+                      return '<span class="badge badge-warning">Desconocido</span>';
+                  }
+                }},
                 {
                   "mData": null,
                   "sWidth": "50px",

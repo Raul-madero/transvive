@@ -193,7 +193,9 @@ $namerol = $filas['rol'];
 						{ data: "noempleado", className: "text-center" },
 						{ data: "nombre", className: "text-center" },
 						{ data: "cargo", className: "text-center" },
-						{ data: "imss", className: "text-center" },
+						{ data: null, className: "text-center", render: function(rowData) {
+							return rowData.imss == 1 ? '<span class="badge badge-success">Asegurado</span>' : '<span class="badge badge-danger">No Asegurado</span>'
+						} },
 						{ data: "sueldo_base", className: "text-center", render: renderMoneda },
 						{ data: "total_vueltas", className: "text-center" },
 						{

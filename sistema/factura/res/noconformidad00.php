@@ -69,7 +69,7 @@ if ($pedido['fecha_cierre'] > '2000-01-01') {
   <td rowspan="4" style="width: 25%; color: #444444;" ><img style="width: 60%; height: 5%;" align="center" src="../../images/transvive.png" alt="Logo"></td>
   <br>
   <td style="vertical-align:middle; width: 10%; font-size: 9pt; align:left; background: #DCDFDF">&nbsp;Titulo:</td>
-  <td style="vertical-align:middle; width: 40%; font-size: 9pt;" align="center">ANÁLISIS DE QUEJAS Y/O NO CONFORMIDADES</td>
+  <td style="vertical-align:middle; width: 40%; font-size: 9pt;" align="center">QUEJA Y/O NO CONFORMIDADES Y ANÁLISIS</td>
   <br>
  
   <td style="vertical-align:middle; width: 10%; font-size: 9pt; align:left; background: #DCDFDF">&nbsp;Codigo:</td>

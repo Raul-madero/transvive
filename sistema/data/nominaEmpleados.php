@@ -132,24 +132,50 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         die(json_encode(['error' => 'Error en consulta empleados: ' . $conection->error]));
     }
     while ($empleado = $result_empleados->fetch_assoc()) {
-        $faltas = intval($empleado['faltas']);
+        // var_dump($empleado); // Para depuración
+        $noempleado = $empleado['noempleado'];
         $sueldo_base = floatval($empleado['sueldo_base']);
+        $operador = $empleado['operador'];
+        $cargo = $empleado['cargo'];
+        $imss = $empleado['imss'];
+        $bono_categoria = $empleado['bono_categoria'];
+        $bono_supervisor = $empleado['bono_supervisor'];
+        $bono_semanal = $empleado['bono_semanal'];
+        $fecha_contrato = $empleado['fecha_contrato'];
+        $caja_ahorro = $empleado['caja_ahorro'];
+        $supervisor = $empleado['supervisor'];
+        $apoyo_mes = $empleado['apoyo_mes'];
+        $salario_diario = $empleado['salario_diario'];
+        $alertas = intval($empleado['noalertas']);
+        $faltas = intval($empleado['faltas']);
+        $dias_vacaciones_pagar = intval($empleado['dias_vacaciones_pagar']);
+        $prima_vacacional = $empleado['prima_vacacional'];
         $total_vueltas = floatval($empleado['total_vueltas']);
-        $anios_trabajados = calcularAniosTrabajados($empleado['fecha_contrato']);
+        $sueldo_bruto = floatval($empleado['sueldo_bruto']);
+        $descuento = floatval($empleado['descuento']);
+        $cantidad = floatval($empleado['cantidad']);
+        $total_abonado = floatval($empleado['total_abonado']);
+        $pago_fiscal = floatval($empleado['pago_fiscal']);
+        $deduccion_fiscal = floatval($empleado['deduccion_fiscal']);
+        $neto = floatval($empleado['neto']);
+
+        //Calcular los anios trabajados, días de vacaciones y otros bonos
+        $anios_trabajados = calcularAniosTrabajados($fecha_contrato);
         $dias_vacaciones = calcularDiasVacaciones($anios_trabajados);
-        $prima = ($empleado['prima_vacacional'] == 'SI') ? ($empleado['salario_diario'] * $dias_vacaciones * 0.25) : 0;
-        $vacaciones = floatval($empleado['salario_diario']) * intval($empleado['dias_vacaciones_pagar']);
-        $bono_apoyo = (dia15EntreFechas($fecha_inicio, $fecha_fin) && calcularApoyoMesContrato($empleado['fecha_contrato'])) ? floatval($empleado['apoyo_mes']) : 0;
-        $bono_semanal = (intval($empleado['noalertas']) <= 4 && calcularBonoSemanalContrato($empleado['fecha_contrato']) && $empleado['dias_vacaciones_pagar'] <= 2 && $total_vueltas > 0) ? floatval($empleado['bono_semanal']) : 0;
-        $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($empleado['bono_categoria']) : 0;
-        $bono_supervisor = floatval($empleado['bono_supervisor']);
-        $deduccion = max(0, floatval($empleado['cantidad']) - floatval($empleado['total_abonado']));
-        $deduccion = ($deduccion > floatval($empleado['descuento'])) ? floatval($empleado['descuento']) : $deduccion;
-        $bruto = ($empleado['cargo'] == 'OPERADOR') ? floatval($empleado['sueldo_bruto'] - ($faltas * $sueldo_base)) : ($empleado['imss'] != 1 ? ($sueldo_base * 7) - ($sueldo_base * $faltas) : 0);
-        $fiscal = floatval($empleado['pago_fiscal'] ?? 0);
-        $ded_fiscal = floatval($empleado['deduccion_fiscal'] ?? 0);
+        $prima = ($prima_vacacional == 'SI') ? ($salario_diario * $dias_vacaciones * 0.25) : 0;
+        $vacaciones = floatval($salario_diario) * intval($dias_vacaciones_pagar);
+        $bono_apoyo = (dia15EntreFechas($fecha_inicio, $fecha_fin) && calcularApoyoMesContrato($fecha_contrato)) ? floatval($apoyo_mes) : 0;
+        $bono_semanal = (intval($alertas) <= 4 && calcularBonoSemanalContrato($fecha_contrato) && $dias_vacaciones_pagar <= 2 && $total_vueltas > 0) ? floatval($bono_semanal) : 0;
+        $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($bono_categoria) : 0;
+        //Calculo de deducciones
+        $deduccion = max(0, floatval($cantidad) - floatval($total_abonado));
+        $deduccion = ($deduccion > floatval($descuento)) ? floatval($descuento) : $deduccion;
+        //Descontar faltas del sueldo bruto
+        $bruto = ($cargo == 'OPERADOR') ? floatval($sueldo_bruto - ($faltas * $sueldo_base)) : ($imss != 1 ? ($sueldo_base * 7) - ($sueldo_base * $faltas) : 0);
+        $fiscal = floatval($pago_fiscal ?? 0);
+        $ded_fiscal = floatval($deduccion_fiscal ?? 0);
         $deposito = $fiscal - $ded_fiscal;
-        $efectivo = (($bruto > 0) ? ($bruto - $fiscal) : 0) + $bono_semanal + $bono_supervisor + $bono_categoria + $bono_apoyo + $vacaciones + $prima - $deduccion - floatval($empleado['caja_ahorro']);
+        $efectivo = (($bruto > 0) ? ($bruto - $fiscal) : 0) + $bono_semanal + $bono_supervisor + $bono_categoria + $bono_apoyo + $vacaciones + $prima - $deduccion - floatval($caja_ahorro);
         $neto = $deposito + $efectivo;
 
         // Arreglo para inserción
@@ -209,13 +235,21 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
     $totalRecords = $conection->query("SELECT COUNT(*) FROM nomina_temp_2025")->fetch_row()[0];
     $filtered = $conection->query("SELECT COUNT(*) FROM nomina_temp_2025 $where")->fetch_row()[0];
     $total_nomina = $conection->query("SELECT SUM(deposito_fiscal + efectivo) AS total_nomina FROM nomina_temp_2025")->fetch_assoc();
+    $total_fiscal = $conection->query("SELECT SUM(nomina_fiscal) AS fiscal FROM nomina_temp_2025")->fetch_assoc();
+    $total_adeudo = $conection->query("SELECT SUM(deducciones) FROM nomina_temp_2025")->fetch_assoc();
+    $total_caja_ahorro = $conection->query("SELECT SUM(caja_ahorro) FROM nomina_temp_2025")->fetch_assoc();
+    $total_vueltas = $conection->query("SELECT SUM(total_vueltas) FROM nomina_temp_2025");
 
     echo json_encode([
         'draw' => intval($_POST['draw'] ?? 1),
         'recordsTotal' => $totalRecords,
         'recordsFiltered' => $filtered,
         'totales' => $total_nomina,
-        'data' => $data_output
+        'data' => $data_output,
+        'total_fiscal' => $total_fiscal,
+        'total_adeudo' => $total_adeudo,
+        'total_caja_ahorro' => $total_caja_ahorro,
+        'total_vueltas' => $total_vueltas
     ]);
 } else {
     echo json_encode(['error' => 'Semana y año requeridos']);
