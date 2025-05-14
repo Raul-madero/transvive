@@ -330,7 +330,7 @@ mysqli_close($conection);
             })
             .then(resultado => {
                 if (resultado.value) {
-                    console.log("Alerta cerrada");
+                    // console.log("Alerta cerrada");
                 } else {
                     // Dijeron que no
                     location.href = 'requisiciones23.php';
@@ -354,7 +354,7 @@ $(document).ready(function () {
     };
 
     $('#inputNounidad').on('change', function () {
-        console.log("Unidad seleccionada");
+        // console.log("Unidad seleccionada");
         const selectedOption = this.options[this.selectedIndex];
         const textoUnidad = selectedOption.text.trim();
         const letra = textoUnidad.charAt(0).toUpperCase();
@@ -368,7 +368,8 @@ $(document).ready(function () {
 
     <script>
         $('#guardar_tipoactividad').click(function(e){
-            $(this).prop('disabled', true)
+            const boton = $(this);
+            boton.prop('disabled', true)
             e.preventDefault();
 
             var folioVal         = $('#inputFolio').val();
@@ -389,13 +390,15 @@ $(document).ready(function () {
 
                 success: function(response)
                 {
-                    if(response != 'error')
+                    let respuesta = JSON.parse(response);
+                    console.log(respuesta.status);
+                    if(respuesta.status != 'error')
                     {
-                        console.log(response);
+                        // console.log(response);
                         var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                        if ($mensaje === undefined)
+                        // console.log(info);
+                        let mensaje=(info.mensaje);
+                        if (mensaje === undefined)
                         {
                             Swal.fire({
                                 title: "Exito!",
@@ -418,15 +421,17 @@ $(document).ready(function () {
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: $mensaje,
+                            text: response.message,
                             })
+                            boton.prop('disabled', true)
                         }
                     }else{
                         Swal.fire({
                             icon: 'info',
                             title: '',
-                            text: 'Capture los datos requeridos',
+                            text: respuesta.message,
                         })
+                        boton.prop('disabled', false)
                     }
                 },
                 error: function(error) {
@@ -572,7 +577,7 @@ $(document).ready(function () {
             var importe      = $('#inputImporte').val();
             var datoe        = $('#inputDatoe').val();
             var datoom       = $('#inputDatoom').val();        
-            console.log(descripcion);
+            // console.log(descripcion);
             var action       = 'AddDetallecotizacion';
 
             $.ajax({
@@ -586,7 +591,7 @@ $(document).ready(function () {
                     if(response != 'error')
                     {
                         var info = JSON.parse(response);
-                        console.log(info);
+                        // console.log(info);
                         $('#detalle_cotizacion').html(info.detalle);
                         $('#detalle_totcotizacion').html(info.totales);
 
@@ -601,7 +606,7 @@ $(document).ready(function () {
                         $(document).trigger('detalleActualizado');
 
                     }else{
-                        console.log('no data');
+                        // console.log('no data');
                         alert('faltan datos');
                     }
                     //viewProcesar();
@@ -674,7 +679,7 @@ $(document).on('change', '.input-cot', function () {
         },
         success: function (response) {
             if (response.trim() === 'ok') {
-                console.log('Actualización exitosa');
+                // console.log('Actualización exitosa');
             } else {
                 alert('Error al guardar el cambio');
             }
@@ -703,7 +708,7 @@ $(document).on('change', '.input-cot', function () {
                 {
                     if(response != 'error')
                     {
-                        console.log(response);
+                        // console.log(response);
                         var info = JSON.parse(response);
                         $('#detalle_cotizacion').html(info.detalle);
                     }else{
@@ -728,7 +733,7 @@ $(document).on('change', '.input-cot', function () {
                     data: {action:action,op:op},
                     success: function(response)
                     {
-                    console.log(response);
+                    // console.log(response);
                         if(response == 0){
                             $('#selectdescripcion').val('');
                             $('#inputMarca').val('');
