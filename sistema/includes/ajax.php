@@ -5536,6 +5536,25 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
         $folio++; // Incrementa el folio en 1 si ya existe
     }
 
+    // Verificar que existan productos en detalle_temp_cotizacioncompra para este folio
+    $sql_detalle_check = "SELECT COUNT(*) as total FROM detalle_temp_cotizacioncompra WHERE folio = ?";
+    if ($stmt_check = mysqli_prepare($conection, $sql_detalle_check)) {
+        mysqli_stmt_bind_param($stmt_check, "i", $folio);
+        mysqli_stmt_execute($stmt_check);
+        mysqli_stmt_bind_result($stmt_check, $total_detalles);
+        mysqli_stmt_fetch($stmt_check);
+        mysqli_stmt_close($stmt_check);
+
+        if ($total_detalles == 0) {
+            echo json_encode(["status" => "error", "message" => "Debe agregar al menos un producto a la requisición."]);
+            exit;
+        }
+    } else {
+        echo json_encode(["status" => "error", "message" => "Error al verificar los productos de la requisición."]);
+        exit;
+    }
+
+
     // Consulta para insertar en requisicion_compra
     $query = "INSERT INTO requisicion_compra 
         (no_requisicion, fecha, fecha_requiere, tipo_requisicion, area_solicitante, cant_autorizada, observaciones, usuario_id) 
