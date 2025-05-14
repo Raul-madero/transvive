@@ -33,13 +33,13 @@ session_start();
         $id = $data['id'];
         $noempleado = $data['noempleado'];
         $cantidad = $data['cantidad'];
-        $motivo_adeudo = $data['motivo_adeudo'];
-        $estado = $data['estado'];
-        $fecha_inicial = $data['fecha_inicial'];
-        $fecha_final = $data['fecha_final'];
+        // $motivo_adeudo = $data['motivo_adeudo'];
+        $estado = $data['estatus'];
+        // $fecha_inicial = $data['fecha_inicial'];
+        // $fecha_final = $data['fecha_final'];
         $total_abonado = $data['total_abonado'];
         $descuento = $data['descuento'];
-        $comentarios = $data['comentarios'];
+        // $comentarios = $data['comentarios'];
     };
   } else {
     $filadeudo = null;
@@ -129,7 +129,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="col-md-9" >
     <div class="card card-secondary">
               <div class="card-header">
-                <h3 class="card-title">Nuevo Adeudo</h3>
+                <h3 class="card-title">Editar Adeudo</h3>
               </div>
     
               <div class="card-body">
@@ -164,7 +164,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group row">
+                                <!-- <div class="form-group row">
                                     
                                 <label for="inputMotivo" class="col-sm-2 col-form-label" style="text-align: left;">Motivo:</label>
                                     <div class="col-sm-10" style="text-align:left;">
@@ -175,7 +175,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="form-group row">
                                     <label for="inputDescuento" class="col-sm-3 col-form-label" style="text-align: left;">Descuento Semanal:</label>

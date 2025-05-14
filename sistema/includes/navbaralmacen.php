@@ -107,7 +107,7 @@
             </ul>
           </li>
 
-
+        <!-- Reportes -->
           <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Reportes</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
@@ -170,7 +170,27 @@
                 </ul>
               </li>
               -->
-    
+              <?php
+              if ($_SESSION['user'] == 'Elena') {
+              ?>
+              <li class="dropdown-submenu dropdown-hover">
+                <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Viajes</a>
+                <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
+
+                  <!-- <li><a href="viajes_clientesxdia.php" class="dropdown-item"> Viajes Cliente x Día</a></li>
+                  <li><a href="viajes_clientesxsemana.php" class="dropdown-item"> Viajes Cliente x Semana</a></li>
+                  <li><a href="viajes_planeadosvsreg.php" class="dropdown-item"> Viajes Planeados vs Registrados</a></li>
+                  <li><a href="grafica_plaeadosvsregistrados.php" class="dropdown-item"> Grafica Planeados vs Registrados (Sem)</a></li>
+                  <li><a href="grafica_plavsregyear.php" class="dropdown-item"> Grafica Planeados vs Registrados (Anual)</a></li> -->
+                  <li><a href="viajes_normalesxperiodos.php" class="dropdown-item">Viajes por Periodo</a></li>
+                  <!-- <li><a href="viajes_todosxperiodos.php" class="dropdown-item">Viajes por Periodo (Todos)</a></li> -->
+                  <li><a href="viajes_porfecha.php" class="dropdown-item">Viajes por Fecha</a></li>
+
+                </ul>
+              </li>
+              <?php
+              }
+              ?>
               <li class="dropdown-submenu dropdown-hover">
                 <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Combustibles</a>
                 <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">

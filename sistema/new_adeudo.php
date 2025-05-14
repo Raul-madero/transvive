@@ -124,17 +124,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <input type="number" class="form-control" id="inputCantidad" name="inputCantidad">
                                     </div>
                                 </div>
+                                <div class="row">
 
-                                <div class="form-group row" >
-                                    <label for="inptEmpleado" class="col-sm-2 col-form-label" style="text-align: left;">Empleado:</label>
-                                    <div class="col-sm-10" style="text-align:left;">
-                                        <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputEmpleado" name="inputEmpleado">
-                                            <option value="">-Selecciona-</option>
-                                            <?php foreach ($filasemp as $ops): ?>
-                                            <option value="<?php echo $ops['noempleado']; ?>"> <?php echo $ops['noempleado'] . ' ' . $ops['name']; ?> </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
+                                  <div class="form-group row col-8" >
+                                      <label for="inptEmpleado" class="col-4 col-form-label" style="text-align: left;">Empleado:</label>
+                                      <div class="col-8 " style="text-align:left;">
+                                          <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputEmpleado" name="inputEmpleado">
+                                              <option value="">-Selecciona-</option>
+                                              <?php foreach ($filasemp as $ops): ?>
+                                              <option value="<?php echo $ops['noempleado']; ?>"> <?php echo $ops['noempleado'] . ' ' . $ops['name']; ?> </option>
+                                              <?php endforeach; ?>
+                                          </select>
+                                      </div>
+                                  </div>
+                                  <div class="form-group row col-4" >
+                                      <label for="inputFecha" class="col-4 col-form-label" style="text-align: left;">Fecha inicio:</label>
+                                      <div class="col-8" style="text-align:left;">
+                                          <input type="date" class="form-control" name="inputFecha" id="inputFecha">
+                                      </div>
+                                  </div>
                                 </div>
                                 <div class="form-group row">
                                     
@@ -273,10 +281,11 @@ $('#btn_salir').click(function(e){
     let motivo_adeudo = $('#inputMotivo').val();
     let descuento = $('#inputDescuento').val();
     let comentarios = $('#inputComentarios').val();
+    let fecha_inicio = $('#inputFecha').val();
     let estado = 1; // Valor por defecto del estado
 
     // Generar la fecha actual en formato YYYY-MM-DD
-    let fechaActual = new Date();
+    let fechaActual = fecha_inicio = new Date();
     let anio = fechaActual.getFullYear();
     let mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Mes con 2 dígitos
     let dia = String(fechaActual.getDate()).padStart(2, '0'); // Día con 2 dígitos

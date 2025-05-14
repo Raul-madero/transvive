@@ -3095,7 +3095,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
         // Sanitización de datos
         $cantidad = floatval($_POST['cantidad']);
         $noempleado = intval($_POST['noempleado']);
-        $motivo_adeudo = mysqli_real_escape_string($conection, $_POST['motivo_adeudo']);
+        // $motivo_adeudo = mysqli_real_escape_string($conection, $_POST['motivo_adeudo']);
         $estado = isset($_POST['estado']) ? intval($_POST['estado']) : 0;
         $fecha_inicial = mysqli_real_escape_string($conection, $_POST['fecha_inicial']);
         $descuento = isset($_POST['descuento']) ? floatval($_POST['descuento']) : 0.0;

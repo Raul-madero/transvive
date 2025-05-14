@@ -27,17 +27,24 @@ if (mysqli_num_rows($resultado_verificacion) > 0) {
 }
 
 // Insertar datos de nomina_temp_2025 a historico_nomina
-$sql_insertar_historico = "INSERT INTO historico_nomina SELECT * FROM nomina_temp_2025";
+$sql_insertar_historico = "INSERT INTO historico_nomina (semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, bono_semanal, bono_supervisor, bono_categoria, prima_vacacional, dias_vacaciones, pago_vacaciones, apoyo_mes, anio, neto) SELECT semana, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, bono_semanal, bono_supervisor, bono_categoria, prima_vacacional, dias_vacaciones, pago_vacaciones, apoyo_mes, anio, neto FROM nomina_temp_2025";
 $resultado_insertar_historico = mysqli_query($conection, $sql_insertar_historico);
 if (!$resultado_insertar_historico) {
     die(json_encode(['status' => 'error', 'message' => 'Error al insertar los datos en historico_nomina: ' . mysqli_error($conection)]));
 }
 
 // Actualizar adeudos sumando las deducciones
-$sql_insertar_adeudo = "UPDATE adeudos a
+$sql_insertar_adeudo = "
+    UPDATE adeudos a
     JOIN nomina_temp_2025 n ON a.noempleado = n.noempleado
-    SET a.total_abonado = IFNULL(a.total_abonado, 0) + n.deducciones
-    WHERE n.deducciones IS NOT NULL";
+    SET 
+        a.total_abonado = IFNULL(a.total_abonado, 0) + n.deducciones,
+        a.estatus = CASE 
+            WHEN (IFNULL(a.total_abonado, 0) + n.deducciones) >= a.cantidad THEN 2
+            ELSE a.estatus
+        END
+    WHERE n.deducciones IS NOT NULL
+";
 $resultado_insertar_adeudo = mysqli_query($conection, $sql_insertar_adeudo);
 if (!$resultado_insertar_adeudo) {
     die(json_encode(['status' => 'error', 'message' => 'Error al actualizar adeudos: ' . mysqli_error($conection)]));
