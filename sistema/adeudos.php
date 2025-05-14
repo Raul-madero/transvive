@@ -130,6 +130,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         if ($.fn.DataTable.isDataTable('#example1')) {
             $('#example1').DataTable().destroy();
         }
+        let formatoMoneda = (valor) => {
+				if (valor === undefined || valor === null) return '';
+				return valor.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+			};
+
+      let renderMoneda = (data) => formatoMoneda(parseFloat(data) || 0);
 
         let table = $('#example1').DataTable({
             "bProcessing": true,
@@ -149,9 +155,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         return full.nombres + ' ' + full.apellido_paterno + ' ' + full.apellido_materno;
                     }
                 },
-                { "mData": 'cantidad', "sWidth": "100px" },
-                { "mData": 'descuento', "sWidth": "50px" },
-                { "mData": 'total_abonado', "sWidth": "120px" },
+                { "mData": 'cantidad', "sWidth": "100px", "render": renderMoneda },
+                { "mData": 'descuento', "sWidth": "50px", "render": renderMoneda },
+                { "mData": 'total_abonado', "sWidth": "120px", "render": renderMoneda },
                 { "mData": null, "sWidth": "50px", render: function(data, type, full) {
                   //Revisa el valor del estado para devolver lo correspondiente
                   switch (parseInt(full.estatus)) {
