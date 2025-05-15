@@ -33,9 +33,6 @@ $namerol = $filas['rol'];
   <!-- SweetAlert -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
-  <!-- Bootstrap -->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-
   <style>
     .dataTables_length select {
       min-width: 50px;
@@ -62,18 +59,18 @@ $namerol = $filas['rol'];
   <!-- Content Wrapper -->
   <div class="content-wrapper">
     <div class="content-header">
-      <div class="container">
-        <div class="row mb-2">
-          <div class="col-md-3">
-            <h4 class="m-0">Nómina Empleados <small>Semanal</small></h4>
-          </div>
-          <div class="col-md-9">
-            <div class="row">
-              <div class="col-md-2">
+		<div class="container">
+			<div class="row mb-2">
+				<div class="col-md-12">
+					<h4 class="m-0">Nómina Empleados <small>Semanal</small></h4>
+				</div>
+			</div>
+          	<div class="row align-content-center justify-content-between">
+              <div class="col-md-2 align-content-center justify-content-center">
                 <label for="semana">Número de Semana</label>
               </div>
               <div class="col-md-3">
-                <select class="form-control select2bs4" name="semana" id="semana">
+                <select class="form-control select2bs4 rounded-pill" name="semana" id="semana">
                   <option value="0">--Selecciona la Semana--</option>
                   <?php for($i = 1; $i <= 52; $i++): ?>
                     <option value="<?= $i ?>">Semana <?= $i ?></option>
@@ -81,22 +78,19 @@ $namerol = $filas['rol'];
                 </select>
               </div>
               <div class="col-md-2">
-                <input type="number" name="anio" id="anio" value="2025" class="form-control" placeholder="Año"/>
+                <input type="number" name="anio" id="anio" value="2025" class="form-control rounded-pill" placeholder="Año"/>
               </div>
               <div class="col-md-2">
                 <button id="seleccionaSemana" class="btn btn-primary w-100">Seleccionar</button>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-2">
                 <button id="ejecutaNomina" class="btn btn-success w-100">Ejecutar</button>
               </div>
-            </div>
-          </div>
-        </div>
+			  <div class="col-md-1 text-center">
+				<button class="btn btn-outline-success" id="pagarNomina">Pagar</button>
+			  </div>
+          	</div>
         <div class="row mt-3">
-          <div class="col-md-4"></div>
-          <div class="col-md-4 text-center">
-            <button class="btn btn-outline-success btn-lg w-100" id="pagarNomina">Pagar</button>
-          </div>
         </div>
       </div>
     </div>
@@ -107,13 +101,13 @@ $namerol = $filas['rol'];
         <div class="card">
           <div class="card-body">
 			<div class="row mx-auto">
-				<div id="total" class="mb-3 font-weight-bold col-5 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
-				<div id="total_vueltas" class="mb-3 font-weight-bold col-5 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
+				<div id="total" class="mb-3 font-weight-bold col-5 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
+				<div id="total_vueltas" class="mb-3 font-weight-bold col-5 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
 			</div>
 			<div class="row mx-auto">
-				<div id="total_fiscal" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
-				<div id="total_caja_ahorro" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
-				<div id="total_adeudo" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
+				<div id="total_fiscal" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
+				<div id="total_caja_ahorro" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
+				<div id="total_adeudo" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
 			</div>
             <table id="example1" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
               <thead>
@@ -149,8 +143,8 @@ $namerol = $filas['rol'];
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 <script src="../dist/js/adminlte.min.js"></script>
+<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- DataTables Initialization -->
 	<script>
