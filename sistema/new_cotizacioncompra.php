@@ -170,6 +170,9 @@ mysqli_close($conection);
                                                 case 7:
                                                     $solicita = "Mantenimiento";
                                                     break;
+                                                case 8:
+                                                    $solicita = "Operaciones";
+                                                    break;
                                                 case 10:
                                                     $solicita = "Almacen";
                                                     break;

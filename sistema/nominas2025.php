@@ -33,6 +33,9 @@ $namerol = $filas['rol'];
   <!-- SweetAlert -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
+  <!-- Bootstrap -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+
   <style>
     .dataTables_length select {
       min-width: 50px;
@@ -94,9 +97,6 @@ $namerol = $filas['rol'];
           <div class="col-md-4 text-center">
             <button class="btn btn-outline-success btn-lg w-100" id="pagarNomina">Pagar</button>
           </div>
-          <div class="col-md-4">
-            <button class="btn btn-outline-primary btn-lg w-100" id="totales">Totales</button>
-          </div>
         </div>
       </div>
     </div>
@@ -106,7 +106,15 @@ $namerol = $filas['rol'];
       <div class="container-fluid">
         <div class="card">
           <div class="card-body">
-            <div id="total" class="mb-3 font-weight-bold"></div>
+			<div class="row mx-auto">
+				<div id="total" class="mb-3 font-weight-bold col-5 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
+				<div id="total_vueltas" class="mb-3 font-weight-bold col-5 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
+			</div>
+			<div class="row mx-auto">
+				<div id="total_fiscal" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
+				<div id="total_caja_ahorro" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
+				<div id="total_adeudo" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-info rounded-4 p-2 text-black mx-auto"></div>
+			</div>
             <table id="example1" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
               <thead>
                 <tr>
@@ -141,7 +149,7 @@ $namerol = $filas['rol'];
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 <script src="../dist/js/adminlte.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- DataTables Initialization -->
@@ -161,6 +169,10 @@ $namerol = $filas['rol'];
 					let table = $('#example1').DataTable();
 					table.clear().draw();
 					$('#total').text("Total de la Nómina: $0.00");
+					$('#total_vueltas').text("Total Vueltas: 0.00");
+					$('#total_fiscal').text("Total Nomina Fiscal: $0.00");
+					$('#total_caja_ahorro').text("Total Caja Ahorro: $0.00");
+					$('#total_adeudo').text("Total Adeudo: $0.00");
 					return;
 				}
 
@@ -189,16 +201,16 @@ $namerol = $filas['rol'];
 						}
 					},
 					columns: [
-						{ data: "semana", className: "text-center" },
-						{ data: "anio", className: "text-center" },
-						{ data: "noempleado", className: "text-center" },
-						{ data: "nombre", className: "text-center" },
-						{ data: "cargo", className: "text-center" },
-						{ data: null, className: "text-center", render: function(rowData) {
+						{ data: "semana", className: "text-center fs-6" },
+						{ data: "anio", className: "text-center fs-6" },
+						{ data: "noempleado", className: "text-center fs-6" },
+						{ data: "nombre", className: "text-center fs-6" },
+						{ data: "cargo", className: "text-center fs-6" },
+						{ data: null, className: "text-center fs-6", render: function(rowData) {
 							return rowData.imss == 1 ? '<span class="badge badge-success">Asegurado</span>' : '<span class="badge badge-danger">No Asegurado</span>'
 						} },
-						{ data: "sueldo_base", className: "text-center", render: renderMoneda },
-						{ data: "total_vueltas", className: "text-center" },
+						{ data: "sueldo_base", className: "text-center fs-6", render: renderMoneda },
+						{ data: "total_vueltas", className: "text-center fs-6" },
 						{
 							data: "sueldo_bruto",
 							render: renderMoneda,
@@ -270,8 +282,17 @@ $namerol = $filas['rol'];
 						}
 					},
 					drawCallback: function(settings) {
+						console.log(settings.json)
 						let total = settings.json?.totales?.total_nomina || 0;
 						$('#total').text("Total de la Nómina: " + formatoMoneda(parseFloat(total)));
+						let total_vueltas = settings.json?.total_vueltas?.total_total_vueltas || 0;
+						$('#total_vueltas').text("Total de Vueltas: " + total_vueltas);
+						let total_adeudo = settings.json?.total_adeudo?.total_deducciones || 0;
+						$('#total_adeudo').text("Total de Adeudo: " + formatoMoneda(parseFloat(total_adeudo)));
+						let total_fiscal = settings.json?.total_fiscal?.total_fiscal || 0;
+						$('#total_fiscal').text("Total de Nómina Fiscal: " + formatoMoneda(parseFloat(total_fiscal)));
+						let total_caja_ahorro = settings.json?.total_caja_ahorro?.total_caja || 0;
+						$('#total_caja_ahorro').text("Total de Caja de Ahorro: " + formatoMoneda(parseFloat(total_caja_ahorro)));
 					}
 				});
 			};
@@ -325,14 +346,6 @@ $namerol = $filas['rol'];
 				}
 			});
 		});
-	</script>
-	<script>
-		$('#totales').on('click', function() {
-			console.log('click');
-			let semana = $('#semana').val();
-			let anio = $('#anio').val();
-			window.location = `totalNomina.php?semana=${semana}&anio=${anio}`;
-			})
 	</script>
   	<script>
     	document.addEventListener("DOMContentLoaded", function() {
