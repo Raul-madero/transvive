@@ -86,6 +86,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Adeudo Total</th>
                 <th>Descuento</th>
                 <th>Total abonado</th>
+                <th>Cantidad Restante</th>
                 <th>Estado</th>
                 <th>Acciones</th>
               </tr>
@@ -158,6 +159,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 { "mData": 'cantidad', "sWidth": "100px", "render": renderMoneda },
                 { "mData": 'descuento', "sWidth": "50px", "render": renderMoneda },
                 { "mData": 'total_abonado', "sWidth": "120px", "render": renderMoneda },
+                {
+                  "mData": null,
+                  "sWidth": "50px",
+                  "render": function (data, type, full) {
+                    return renderMoneda(parseFloat(full.adeudo_total) - parseFloat(full.total_abonado));
+                  }
+                },
                 { "mData": null, "sWidth": "50px", render: function(data, type, full) {
                   //Revisa el valor del estado para devolver lo correspondiente
                   switch (parseInt(full.estatus)) {
