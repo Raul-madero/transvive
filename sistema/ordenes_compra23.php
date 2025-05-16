@@ -287,7 +287,7 @@ buttons: [
               return '<span style="text-transform: uppercase">OC-' + data + '</span>';
             }  },
             { "data" : "requisicion", "width": "5%", className: "text-right", "render": function(data, type, full, meta) {
-              return '<span style="text-transform: uppercase">REQ-' + data + '</span>';
+              return `<a href='factura/requisicion.php?id=${full.Folio}' style="text-transform: uppercase">REQ-${data}</a>`;
             }  },
             { "data" : "fechaa", "width": "5%" },            
             { "data" : "nameproveedor", "width": "20%", "orderable": false},
