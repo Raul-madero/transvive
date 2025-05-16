@@ -18,25 +18,29 @@ SELECT
     e.apoyo_mes,
     e.salario_diario,
     (
-        SELECT SUM(valor) AS faltas 
-            FROM incidencias 
-            WHERE empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) 
-            AND  (
+        SELECT COALESCE(SUM(valor), 0)
+        FROM incidencias 
+        WHERE empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+        AND (
             (fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}') 
             OR (fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
-            )
-    ) AS faltas, 
+        )
+    ) AS faltas,
     -- COUNT(DISTINCT CASE WHEN inc.tipo_incidencia = 'Falta Injustificada' THEN inc.id END) AS faltas,
 
-    CASE
-        WHEN inc.tipo_incidencia = 'Vacaciones' THEN
+    (
+        SELECT COALESCE(SUM(
             CASE
-                WHEN inc.fecha_inicial <= '{fecha_fin}' AND inc.fecha_final >= '{fecha_inicio}' THEN
-                    1 + DATEDIFF(LEAST(inc.fecha_final, '{fecha_fin}'), GREATEST(inc.fecha_inicial, '{fecha_inicio}'))
+                WHEN tipo_incidencia = 'Vacaciones' 
+                    AND fecha_inicial <= '{fecha_fin}' 
+                    AND fecha_final >= '{fecha_inicio}' THEN
+                    1 + DATEDIFF(LEAST(fecha_final, '{fecha_fin}'), GREATEST(fecha_inicial, '{fecha_inicio}'))
                 ELSE 0
             END
-        ELSE 0
-    END AS dias_vacaciones_pagar,
+        ), 0)
+        FROM incidencias
+        WHERE empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+    ) AS dias_vacaciones_pagar,
 
     IF (
         STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(e.fecha_contrato), '-', DAY(e.fecha_contrato)), '%Y-%m-%d')
@@ -83,12 +87,12 @@ FROM empleados e
 --     ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
 --     AND DATE(al.fecha) BETWEEN '{fecha_fin}' AND '{fecha_limite_alertas}'
 
-LEFT JOIN incidencias inc 
-    ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-    AND (
-        (inc.fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}') 
-        OR (inc.fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
-    )
+-- LEFT JOIN incidencias inc 
+--     ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+--     AND (
+--         (inc.fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}') 
+--         OR (inc.fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
+--     )
 
 LEFT JOIN registro_viajes rv 
     ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
@@ -108,5 +112,4 @@ WHERE
 GROUP BY 
     e.noempleado, e.id, operador, e.sueldo_base, e.cargo, imss, e.estatus, 
     e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-    e.supervisor, e.apoyo_mes, inc.tipo_incidencia, inc.fecha_inicial, inc.fecha_final,
-    fi.pago_fiscal, fi.deduccion_fiscal, fi.neto;
+    e.supervisor, e.apoyo_mes, fi.pago_fiscal, fi.deduccion_fiscal, fi.neto;

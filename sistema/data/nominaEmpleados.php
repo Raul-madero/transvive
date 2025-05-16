@@ -80,6 +80,7 @@ function dia15EntreFechas($fecha_inicio, $fecha_fin) {
 }
 
 function insertar_nomina($conection, $data) {
+    // var_dump($data['dias_vacaciones'], $data['nombre']);
     $stmt = mysqli_prepare($conection, "INSERT INTO nomina_temp_2025 (
         semana, anio, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto,
         bono_semanal, bono_categoria, bono_supervisor, deducciones, caja_ahorro, supervisor, nomina_fiscal, efectivo,
@@ -148,7 +149,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $salario_diario = $empleado['salario_diario'];
         $alertas = intval($empleado['noalertas']);
         $faltas = intval($empleado['faltas']);
-        $dias_vacaciones_pagar = intval($empleado['dias_vacaciones_pagar']);
+        $dias_vacaciones_pagar =$empleado['dias_vacaciones_pagar'] ? intval($empleado['dias_vacaciones_pagar']) : 0;
         $prima_vacacional = $empleado['prima_vacacional'];
         $total_vueltas = floatval($empleado['total_vueltas']);
         $sueldo_bruto = floatval($empleado['sueldo_bruto']);
@@ -165,7 +166,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $prima = ($prima_vacacional == 'SI') ? ($salario_diario * $dias_vacaciones * 0.25) : 0;
         $vacaciones = floatval($salario_diario) * intval($dias_vacaciones_pagar);
         $bono_apoyo = (dia15EntreFechas($fecha_inicio, $fecha_fin) && calcularApoyoMesContrato($fecha_contrato)) ? floatval($apoyo_mes) : 0;
-        $bono_semanal = (intval($alertas) <= 4 && calcularBonoSemanalContrato($fecha_contrato) && $dias_vacaciones_pagar <= 2 && $total_vueltas > 0) ? floatval($bono_semanal) : 0;
+        $bono_semanal = (intval($alertas) <= 4 && calcularBonoSemanalContrato($fecha_contrato) && $dias_vacaciones_pagar <= 2 && $total_vueltas > 0 && intval($faltas == 0)) ? floatval($bono_semanal) : 0;
         $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($bono_categoria) : 0;
         //Calculo de deducciones
         $deduccion = max(0, floatval($cantidad) - floatval($total_abonado));
@@ -206,7 +207,8 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
             'dias_vacaciones' => $empleado['dias_vacaciones_pagar'],
             'pago_vacaciones' => $vacaciones,
             'neto' => $neto
-        ];
+        ]; 
+        // var_dump($datos); // Para depuración
 
         if ($total_check == 0) {
             insertar_nomina($conection, $datos);
@@ -231,7 +233,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
     while ($row = $result_nomina->fetch_assoc()) {
         $data_output[] = $row;
     }
-
+    // var_dump($data_output);
     $totalRecords = $conection->query("SELECT COUNT(*) FROM nomina_temp_2025")->fetch_row()[0];
     $filtered = $conection->query("SELECT COUNT(*) FROM nomina_temp_2025 $where")->fetch_row()[0];
     $total_nomina = $conection->query("SELECT SUM(deposito_fiscal + efectivo) AS total_nomina FROM nomina_temp_2025")->fetch_assoc();
