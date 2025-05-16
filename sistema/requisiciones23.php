@@ -301,8 +301,8 @@ session_start();
                         orderable: false,
                         render: function (data, type, full) {
                             return `
-                            <a href='factura/requisicion.php?id=${full.Folio}' target="_blank">
-                                <i class="fa fa-print" style="font-size: 1.3em;"></i> Imprimir
+                            <a href='factura/requisicion.php?id=${full.Folio}' target='_blank'>
+                                <i class='fa fa-print" style="font-size: 1.3em;'></i> Imprimir
                             </a>
                             |
                             <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEditcliente" 
