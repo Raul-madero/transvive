@@ -319,7 +319,7 @@ buttons: [
             { "data" : "tipojob", "width": "12%", "orderable":false },
             { "data" : "kilometraje", "width": "8%",  render: $.fn.dataTable.render.number( ',', '.', 2 ), className: "text-right", "orderable":false  },
             { "data" : "estatusped", "width": "8%", "orderable":false },
-            <?php if ($rol == 10 || $User == 'Jose A' ) { ?>  
+            <?php if ($rol == 10 || $User == 'MIRILG' ) { ?>  
             {
                     "render": function ( data, type, full, meta ) {
         return '<a class="link_edit" style="color:#007bff;" href= \'edit_manttopreventivo.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmttopreventivo.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a>';

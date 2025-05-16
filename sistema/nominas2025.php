@@ -81,13 +81,13 @@ $namerol = $filas['rol'];
                 <input type="number" name="anio" id="anio" value="2025" class="form-control rounded-pill" placeholder="Año"/>
               </div>
               <div class="col-md-2">
-                <button id="seleccionaSemana" class="btn btn-primary w-100">Seleccionar</button>
+                <button id="seleccionaSemana" class="btn btn-primary w-100  rounded-pill">Seleccionar</button>
               </div>
               <div class="col-md-2">
-                <button id="ejecutaNomina" class="btn btn-success w-100">Ejecutar</button>
+                <button id="ejecutaNomina" class="btn btn-success w-100 rounded-pill">Ejecutar</button>
               </div>
 			  <div class="col-md-1 text-center">
-				<button class="btn btn-outline-success" id="pagarNomina">Pagar</button>
+				<button class="btn btn-outline-success rounded-pill" id="pagarNomina">Pagar</button>
 			  </div>
           	</div>
         <div class="row mt-3">

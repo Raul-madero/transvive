@@ -17,9 +17,16 @@ SELECT
     e.supervisor,
     e.apoyo_mes,
     e.salario_diario,
-    al.noalertas,
-
-    COUNT(DISTINCT CASE WHEN inc.tipo_incidencia = 'Falta Injustificada' THEN inc.id END) AS faltas,
+    (
+        SELECT SUM(valor) AS faltas 
+            FROM incidencias 
+            WHERE empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) 
+            AND  (
+            (fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}') 
+            OR (fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
+            )
+    ) AS faltas, 
+    -- COUNT(DISTINCT CASE WHEN inc.tipo_incidencia = 'Falta Injustificada' THEN inc.id END) AS faltas,
 
     CASE
         WHEN inc.tipo_incidencia = 'Vacaciones' THEN
@@ -60,15 +67,21 @@ SELECT
     (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
     (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
     (SELECT a.total_abonado FROM adeudos a WHERE a.noempleado = e.noempleado) AS total_abonado,
+    (
+        SELECT SUM(al.noalertas) AS noalertas 
+        FROM alertas al
+        WHERE operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) 
+        AND DATE(al.fecha) BETWEEN '{fecha_fin}' AND '{fecha_limite_alertas}'
+    ) AS noalertas,
 
     fi.pago_fiscal,
     fi.deduccion_fiscal,
     fi.neto
 
 FROM empleados e
-LEFT JOIN alertas al 
-    ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
-    AND DATE(al.fecha) BETWEEN '{fecha_fin}' AND '{fecha_limite_alertas}'
+-- LEFT JOIN alertas al 
+--     ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
+--     AND DATE(al.fecha) BETWEEN '{fecha_fin}' AND '{fecha_limite_alertas}'
 
 LEFT JOIN incidencias inc 
     ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
@@ -95,5 +108,5 @@ WHERE
 GROUP BY 
     e.noempleado, e.id, operador, e.sueldo_base, e.cargo, imss, e.estatus, 
     e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-    e.supervisor, e.apoyo_mes, al.noalertas, inc.tipo_incidencia, inc.fecha_inicial, inc.fecha_final,
+    e.supervisor, e.apoyo_mes, inc.tipo_incidencia, inc.fecha_inicial, inc.fecha_final,
     fi.pago_fiscal, fi.deduccion_fiscal, fi.neto;
