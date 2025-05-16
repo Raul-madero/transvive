@@ -163,7 +163,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   "mData": null,
                   "sWidth": "50px",
                   "render": function (data, type, full) {
-                    return renderMoneda(parseFloat(full.adeudo_total) - parseFloat(full.total_abonado));
+                    return renderMoneda(parseFloat(full.cantidad) - parseFloat(full.total_abonado));
                   }
                 },
                 { "mData": null, "sWidth": "50px", render: function(data, type, full) {
