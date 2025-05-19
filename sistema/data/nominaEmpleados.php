@@ -88,6 +88,12 @@ function dia15EntreFechas($fecha_inicio, $fecha_fin) {
 
 function insertar_nomina($conection, $data) {
     // var_dump($data['dias_vacaciones'], $data['nombre']);
+     // Verificar si el cargo es 'OPERADOR' y el total_vueltas es 0
+    if ($data['cargo'] === 'OPERADOR' && $data['total_vueltas'] == 0) {
+        // Si las condiciones se cumplen, no se hace la inserción
+        return; // o puedes usar exit() si quieres detener la ejecución completamente
+    }
+    
     $stmt = mysqli_prepare($conection, "INSERT INTO nomina_temp_2025 (
         semana, anio, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto,
         bono_semanal, bono_categoria, bono_supervisor, deducciones, caja_ahorro, supervisor, nomina_fiscal, efectivo,
