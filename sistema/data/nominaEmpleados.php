@@ -32,8 +32,15 @@ function calcularBonoSemanalContrato($fecha_contrato) {
 function calcularApoyoMesContrato($fecha_contrato) {
     if (empty($fecha_contrato)) return false;
     try {
-        $fechaInicio = new DateTime($fecha_contrato);
-        return $fechaInicio->diff(new DateTime())->days > 35;
+        // Fecha de contrato
+        $fechaContrato = new DateTime($fecha_contrato);
+
+        // Obtener el día 15 del mes actual
+        $hoy = new DateTime();
+        $hoy->setDate($hoy->format('Y'), $hoy->format('m'), 15);
+
+        // Verificar si la fecha de contrato es >= a 30 días del 15 del mes actual
+        return $fechaContrato->diff($hoy)->days >= 30;
     } catch (Exception $e) {
         return false;
     }
