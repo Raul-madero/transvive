@@ -33,7 +33,7 @@ function calcularApoyoMesContrato($fecha_contrato) {
     if (empty($fecha_contrato)) return false;
     try {
         $fechaInicio = new DateTime($fecha_contrato);
-        return $fechaInicio->diff(new DateTime())->days > 30;
+        return $fechaInicio->diff(new DateTime())->days > 35;
     } catch (Exception $e) {
         return false;
     }
