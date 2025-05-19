@@ -6,7 +6,7 @@ session_start();
 include('../../conexion.php');
 $conection->set_charset('utf8');
 
-if ($rol == 1 || $rol == 6 || $rol == 10) {
+if ($rol == 1 || $rol == 6 || $rol == 10 || $rol == 18) {
 $sql = "SELECT id, folio, fecha, nodesemana, estacion, nounidad, placas, operador, supervisor  FROM tempcarga_combustible ";
 }else { 
 $sql = "SELECT id, folio, fecha, nodesemana, estacion, nounidad, placas, operador, supervisor  FROM tempcarga_combustible";

@@ -54,7 +54,7 @@ session_start();
     }
   }
 
-  if ($rol == 7 || $rol == 10 || $rol == 1) {
+  if ($rol == 7 || $rol == 10 || $rol == 1 || $rol == 18) {
     $visible = "";
   }else {
     $visible = "readonly";

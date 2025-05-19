@@ -6,7 +6,7 @@ session_start();
 include('../../conexion.php');
 $conection->set_charset('utf8');
 
-if ($rol == 1 || $rol == 6 || $rol == 8) {
+if ($rol == 1 || $rol == 6 || $rol == 8 || $rol == 18) {
 $sql = "SELECT id as Id, fecha, cliente, operador, unidad, num_unidad, personas, hora_inicio, direccion, hora_fin, destino, estatus, if (estatus = 4, 'INICIADO', if(estatus = 5, 'TERMINADO', 'Cancelado')) as Status  FROM registro_viajes where estatus = 4 or estatus = 5";
 }else { 
 $sql = "SELECT id as Id, fecha, cliente, operador, unidad, num_unidad, personas, hora_inicio, direccion, hora_fin, destino, estatus, if (estatus = 1, 'Activo', 'Cancelado') as Status  FROM registro_viajes where tipo_viaje <> 'Especial' and usuario_id = $idUser";
