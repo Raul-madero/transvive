@@ -33,7 +33,7 @@ function calcularApoyoMesContrato($fecha_contrato) {
     if (empty($fecha_contrato)) return false;
     try {
         $fechaInicio = new DateTime($fecha_contrato);
-        return $fechaInicio->diff(new DateTime())->days > 45;
+        return $fechaInicio->diff(new DateTime())->days > 30;
     } catch (Exception $e) {
         return false;
     }
@@ -165,6 +165,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $dias_vacaciones = calcularDiasVacaciones($anios_trabajados);
         $prima = ($prima_vacacional == 'SI') ? ($salario_diario * $dias_vacaciones * 0.25) : 0;
         $vacaciones = floatval($salario_diario) * intval($dias_vacaciones_pagar);
+        //Calculo de vales de despensa
         $bono_apoyo = (dia15EntreFechas($fecha_inicio, $fecha_fin) && calcularApoyoMesContrato($fecha_contrato)) ? floatval($apoyo_mes) : 0;
         $bono_semanal = (intval($alertas) <= 4 && calcularBonoSemanalContrato($fecha_contrato) && $dias_vacaciones_pagar <= 2 && $total_vueltas > 0 && intval($faltas == 0)) ? floatval($bono_semanal) : 0;
         $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($bono_categoria) : 0;
