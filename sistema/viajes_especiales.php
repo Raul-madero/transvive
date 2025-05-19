@@ -44,7 +44,7 @@ session_start();
       
     }
 
-  if ($rol == 1) {
+  if ($rol == 1 || $rol == 18) {
     include "../conexion.php";
     $sql02= mysqli_query($conection,"SELECT count(*) as viajeshoy FROM registro_viajes WHERE estatus= 1 and fecha = '$fechaActual' and tipo_viaje like '%Especial%' or tipo_viaje  = 'Splinter'");
     mysqli_close($conection);

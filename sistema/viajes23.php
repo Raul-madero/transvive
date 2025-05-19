@@ -42,7 +42,7 @@ $tareasem = 0;
 
 // === Tareas de hoy ===
 include "../conexion.php";
-if ($rol == 1) {
+if ($rol == 1 || $rol == 18) {
     $query = "SELECT COUNT(*) as viajeshoy FROM registro_viajes WHERE estatus = 1 AND fecha = '$fechaActual' AND tipo_viaje NOT IN ('Especial', 'Especial Turistico')";
 } else {
     $query = "SELECT COUNT(*) as viajeshoy FROM registro_viajes WHERE estatus = 1 AND fecha = '$fechaActual' AND tipo_viaje IN ('Especial', 'Especial Turistico') AND usuario_id = $idUser";
@@ -53,7 +53,7 @@ mysqli_close($conection);
 
 // === Tareas de la semana ===
 include "../conexion.php";
-if ($rol == 1) {
+if ($rol == 1 || $rol == 18) {
     $query = "SELECT COUNT(*) as totalsem FROM registro_viajes WHERE estatus = 1 AND fecha BETWEEN '$diainicial' AND '$diafinal' AND tipo_viaje IN ('Especial', 'Especial Turistico')";
 } else {
     $query = "SELECT COUNT(*) as totalsem FROM registro_viajes WHERE estatus = 1 AND fecha BETWEEN '$diainicial' AND '$diafinal' AND tipo_viaje IN ('Especial', 'Especial Turistico') AND usuario_id = $idUser";

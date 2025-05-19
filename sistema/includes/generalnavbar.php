@@ -39,6 +39,9 @@
         case 17:
             include('includes/navbarventas.php');
             break;
+        case 18:
+            include('includes/navbar.php');
+            break;
         default:
             header('Location: ../index.php');
             break;
