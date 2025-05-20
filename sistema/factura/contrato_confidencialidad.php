@@ -174,7 +174,7 @@ $pdf->SetMargins(20, 2 , 20);
 
 #Establecemos el margen inferior:
 $pdf->SetAutoPageBreak(true,20);
-$query = mysqli_query($conection,"SELECT CONCAT(em.apellido_paterno, ' ',em.apellido_materno, ' ', em.nombres) as empleado, em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio, dc.fecha_inicial, dc.fecha_final, em.cargo from empleados em left join detalle_contratos dc ON em.noempleado = dc.no_empleado where CONCAT(em.nombres, ' ',em.apellido_paterno, ' ', em.apellido_materno) = '$nocotiz' ORDER by dc.id DESC LIMIT 1");
+$query = mysqli_query($conection,"SELECT CONCAT(em.apellido_paterno, ' ',em.apellido_materno, ' ', em.nombres) as empleado, em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio, dc.fecha_inicial, dc.fecha_final, em.cargo, em.fecha_reingreso from empleados em left join detalle_contratos dc ON em.noempleado = dc.no_empleado where CONCAT(em.nombres, ' ',em.apellido_paterno, ' ', em.apellido_materno) = '$nocotiz' ORDER by dc.id DESC LIMIT 1");
 $result = mysqli_num_rows($query);
 $cotizacion = mysqli_fetch_assoc($query);
 //$encabezado = mysql_fetch_array($query1, $conexion);
@@ -192,7 +192,36 @@ $cotizacion = mysqli_fetch_assoc($query);
     $fechainicial   = $cotizacion['fecha_inicial'];
     $fechafinal     = $cotizacion['fecha_final'];
     $cargo          = $cotizacion['cargo'];
-    setlocale(LC_TIME, "spanish");
+    $fecha_reingreso = $cotizacion['fecha_reingreso'];
+
+    if($fecha_reingreso != '0000-00-00') {
+        setlocale(LC_TIME, "spanish");
+        $newDate2 = date("d-m-Y", strtotime($fecha_reingreso));
+        $fechalet2 = $fecha_reingreso;
+        $fechalet2 = str_replace("/", "-", $fecha_reingreso);         
+        $newDate2 = date("d-m-Y", strtotime($fechalet2));
+    //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
+        $mesDesc2 = strftime("%d de %B de %Y", strtotime($newDate2));
+        $mesMen = strtoupper($mesDesc2);
+
+        $newDate3 = date("d-m-Y", strtotime($fechafinal));
+        $fechalet3 = $fechafinal;
+        $fechalet3 = str_replace("/", "-", $fechafinal);         
+        $newDate3 = date("d-m-Y", strtotime($fechalet3));
+    //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
+        $mesDesc3 = strftime("%d de %B de %Y", strtotime($newDate3));
+        $mesMay = strtoupper($mesDesc3);
+
+        $fcha = date("Y-m-d");
+        $newDate4 = date("d-m-Y", strtotime($fcha));
+        $fechalet4 = $fcha;
+        $fechalet4 = str_replace("/", "-", $fcha);         
+        $newDate4 = date("d-m-Y", strtotime($fechalet4));
+    //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
+        $mesDesc4 = strftime("%d de %B de %Y", strtotime($newDate4));
+        $Diaactual = strtoupper($mesDesc4);
+    }else {
+        setlocale(LC_TIME, "spanish");
     $newDate2 = date("d-m-Y", strtotime($fecha_contrato));
     $fechalet2 = $fecha_contrato;
     $fechalet2 = str_replace("/", "-", $fecha_contrato);         
@@ -217,6 +246,7 @@ $cotizacion = mysqli_fetch_assoc($query);
 //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
     $mesDesc4 = strftime("%d de %B de %Y", strtotime($newDate4));
     $Diaactual = strtoupper($mesDesc4);
+    }
 
     $textoinicial=utf8_decode('<br />
 <div align="justify">QUE CELEBRAN POR UNA PARTE <b>TRANS VIVE S DE RL DE CV,</b> CON DOMICILIO EN: <b>CALLE HIDALGO 30 COLONIA LOS GAVILANES TLAJOMULCO DE ZUNIGA, JALISCO, C.P. 45645</b> Y POR LA OTRA <b>' .$empleado. '</b> DE NACIONALIDAD MEXICANA, CON DOMICILIO EN: <b>' .$domicilio. '</b> TODO AL TENOR DE LAS SIGUIENTES DECLARACIONES Y CLAUSULAS: </div>');

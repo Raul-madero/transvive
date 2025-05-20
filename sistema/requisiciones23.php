@@ -455,7 +455,10 @@ session_start();
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
                                             <i class="fa fa-print" style="font-size:1.3em;"></i>
-                                        </a>
+                                        </a> | 
+                                        <!-- <a href="" class="text-primary">
+                                            <i class="fa fa-clipboard" style="font-size:1.3em;"></i>
+                                        </a> -->
                                         `;
                                 }
 
