@@ -29,7 +29,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'autorizado' => 2,
             'procesada' => 3,
             'procesado' => 3,
-            'iniciado' => 4,
+            'facturado' => 4,
             'terminado' => 5,
         ];
         $gender_value = $estatus_variants[$gender_input] ?? null;
@@ -71,7 +71,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'autorizado' => 2,
             'procesada' => 3,
             'procesado' => 3,
-            'iniciado' => 4,
+            'facturado' => 4,
             'terminado' => 5,
         ];
 
@@ -115,7 +115,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
                 $Estatusnew = '<span class="label label-danger">Procesada</span>';
                 break;
             case 4:
-                $Estatusnew = '<span class="label label-primary">Iniciado</span>';
+                $Estatusnew = '<span class="label label-primary">Facturado</span>';
                 break;
             case 5:
                 $Estatusnew = '<span class="label label-info">Terminado</span>';
