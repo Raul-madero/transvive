@@ -445,20 +445,20 @@ session_start();
                                             <i class="fa fa-print" style="font-size:1.3em;"></i>
                                         </a> |
                                         <a href="new_orden_compra.php?req=${full.Folio}" class="text-success">
-                                            <i class="fa fa-clipboard"></i>
+                                            <i class="fa fa-clipboard" style="font-size:1.3em;"></i>
                                         </a> |
-                                        <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)">
-                                            <i class="fa fa-ban"></i>
+                                        <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning">
+                                            <i class="fa fa-ban" style="font-size:1.3em;"></i>
+                                        </a>  | 
+                                         <a data-toggle="modal" data-target="#modalFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary">
+                                            <i class="fa fa-file" style="font-size:1.3em;"></i>
                                         </a> 
                                     `;
                                 } else {
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
                                             <i class="fa fa-print" style="font-size:1.3em;"></i>
-                                        </a> | 
-                                        <!-- <a href="" class="text-primary">
-                                            <i class="fa fa-clipboard" style="font-size:1.3em;"></i>
-                                        </a> -->
+                                        </a>
                                         `;
                                 }
 
@@ -551,7 +551,6 @@ session_start();
                             gender
                         },
                         dataSrc: function (json) {
-                            console.log("📦 Respuesta de DataTables:", json);
                             return json.records || [];
                         }
                     },
@@ -1097,8 +1096,411 @@ session_start();
                 }
             });
         });
-
     </script>  
+
+    <script>
+        $(document).ready(function() {
+            //Variables del modal factura
+            $('#modalFactura').on('show.bs.modal', function (event) {
+                const data = $(event.relatedTarget);
+                const noreq = `REQ-${data.data().id}`;
+                
+                const modal = $(this);
+
+                modal.find('#factura_norequi').val(noreq);
+                function recalcularTotalesDesdeTabla() {
+                    let subtotal = 0;
+
+                    $('#cuerpoFactura tr').each(function () {
+                        const cantidad = parseFloat($(this).find('input.cantidad').val()) || 0;
+                        const precio = parseFloat($(this).find('input.precio').val()) || 0;
+                        const total = cantidad * precio;
+
+                        subtotal += total;
+                        $(this).find('.total').text(total.toFixed(2));
+                    });
+
+                    $('#subtotal').val(subtotal.toFixed(2)).trigger('input'); // también recalcula IVA e impuesto adicional
+                }
+                //Obtener los proveedores para el selecta de la factura
+                $.ajax({
+                    url: 'data/getProveedores.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        const select = modal.find('#proveedor');
+                        select.empty();
+                        select.append('<option value="">Seleccione un proveedor</option>');
+                        response.forEach(function(proveedor) {
+                            select.append(`<option value="${proveedor.id}">${proveedor.nombre}</option>`);
+                        })
+
+                    },
+                    error: function(xhr, status, errorThrown) {
+                        console.error('Error:', errorThrown);
+                    }
+                })
+
+                //Obtener los productos de la requisicion para la factura
+                const fol = $('#factura_norequi').val();
+                const folio = fol.replace(/\D+/g, '');
+                console.log('Folio:', folio);
+                $.ajax({
+                    url: 'data/getProductosFactura.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { folio: folio },
+                    success: function(productos) {
+                        const tbody = modal.find('#cuerpoFactura');
+                        tbody.empty();
+
+                        let subtotal = 0;
+
+                        productos.forEach(function(p) {
+                            const total = p.cantidad * p.precio;
+                            subtotal += total;
+
+                            const fila = `
+                                <tr>
+                                    <td>${p.codigo}</td>
+                                    <td><input type="number" class="form-control form-control-sm cantidad" value="${p.cantidad}" min="0"></td>
+                                    <td>${p.descripcion}</td>
+                                    <td><input type="number" class="form-control form-control-sm precio" value="${parseFloat(p.precio).toFixed(2)}" min="0" step="0.01"></td>
+                                    <td class="total">${total.toFixed(2)}</td>
+                                </tr>`;
+                            tbody.append(fila);
+                            // Escuchar cambios en cantidad o precio
+                            tbody.find('input.cantidad, input.precio').on('input', function () {
+                                const fila = $(this).closest('tr');
+                                const cantidad = parseFloat(fila.find('input.cantidad').val()) || 0;
+                                const precio = parseFloat(fila.find('input.precio').val()) || 0;
+                                const total = cantidad * precio;
+
+                                // Actualizar total por fila
+                                fila.find('.total').text(total.toFixed(2));
+
+                                // Recalcular subtotal y total
+                                recalcularTotalesDesdeTabla();
+                            });
+
+                        });
+
+                        $('#subtotal').val(subtotal.toFixed(2)).trigger('input');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al cargar productos:', error);
+                    }
+                });
+            })
+        })
+    </script>
+
+    <!-- Modal para agregar datos de factura -->
+    <div class="modal fade" id="modalFactura" tabindex="-1" role="dialog" aria-labelledby="modalBorraLabel" aria-hidden="true">
+        <div div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+
+                <form id="form_factura">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalBorraLabel">Ingresar Datos de Factura</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- No. Requisición -->
+                        <div class="form-group row">
+                            <div class="col-7 row" >
+                                <label for="factura_norequi" class="col-sm-6 col-form-label text-left">No. Requisición:</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="factura_norequi" name="factura_norequi" readonly>
+                                </div>
+                            </div>
+                            <div class="col-5 row" >
+                                <label for="no_factura" class="col-sm-6 col-form-label text-left">No. Factura:</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="no_factura" name="no_factura" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-7 row" >
+                                <label for="fecha" class="col-sm-6 col-form-label text-left">Fecha Factura:</label>
+                                <div class="col-sm-6">
+                                    <input type="date" class="form-control" id="fecha" name="fecha">
+                                </div>
+                            </div>
+                            <div class="col-5 row" >
+                                <label for="fecha_pago" class="col-sm-6 col-form-label text-left">Fecha Pago:</label>
+                                <div class="col-sm-6">
+                                    <input type="date" class="form-control" id="fecha_pago" name="fecha_pago" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proveedores -->
+                        <div class="form-group row">
+                            <label for="proveedor" class="col-sm-3 col-form-label text-left">Proveedor:</label>
+                            <div class="col-sm-9">
+                                <select class="form-control w-100" id="proveedor" name="proveedor">
+                                    <!-- Se carga con AJAX -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <table class="table mb-4">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Codigo</th>
+                                    <th scope="col">Cant.</th>
+                                    <th scope="col">Descripcion</th>
+                                    <th scope="col">Precio Unit.</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoFactura">
+                                <!-- Cuerpo de la tabla con productos -->
+                            </tbody>
+                        </table>
+
+                        <!-- Totales -->
+                        <div class="form-group row">
+                            <div class="col-4 row">
+                                <label for="subtotal" class="col-sm-3 col-form-label text-left">Subtotal:</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" id="subtotal" name="subtotal">
+                                </div>
+                            </div>
+                            <div class="col-4 row">
+                                <label for="iva" class="col-sm-3 col-form-label text-left">IVA:</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" id="iva" name="iva" readonly>
+                                </div>
+                            </div>
+                            <div class="col-4 row">
+                                <label for="proveedor" class="col-sm-3 col-form-label text-left">Total:</label>
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" id="total" name="total" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resultado del impuesto adicional -->
+                        <div class="form-group row align-items-center" id="resultadoImpuesto" style="display: none;">
+                            <label class="col-sm-4 col-form-label text-left" id="etiquetaImpuestoAdicional"></label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="valorImpuestoAdicional" readonly>
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-sm btn-outline-danger" id="eliminarImpuestoAdicional">
+                                    Quitar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Impuestos adicionales -->
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-left">¿Tiene Impuesto Adicional?</label>
+                            <div class="col-sm-8">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="toggleImpuesto">
+                                    <label class="custom-control-label" for="toggleImpuesto">Si</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row align-items-center" id="grupoImpuestoAdicional" style="display:none">
+                            <div class="col-4 row align-items-center">
+                                <label for="nombreImpuestoAdicional" class="col-sm-4 col-form-label text-left">Nombre Impuesto:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="nombreImpuestoAdicional" name="nombreImpuestoAdicional">
+                                </div>
+                            </div>
+                            <div class="col-4 row">
+                                <label for="porcentajeImpuestoAdicional" class="col-sm-5 col-form-label text-left">Porcentaje:</label>
+                                <div class="col-sm-7">
+                                    <input type="number" class="form-control" id="porcentajeImpuestoAdicional" name="porcentajeImpuestoAdicional">
+                                </div>
+                            </div>
+                            <div class="col-4 row">
+                                <button class="btn btn-outline-success rounded-full">Agregar Impuesto</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success" id="guardarFactura">
+                            <i class="fa fa-save mr-2"></i>&nbsp;Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            //Si esta activado el checkbox para mostrar el grupo de impuestos adicionales
+           $('#toggleImpuesto').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#grupoImpuestoAdicional').slideDown();
+                } else {
+                    $('#grupoImpuestoAdicional').slideUp();
+                    $('#resultadoImpuesto').slideUp();
+                    $('#nombreImpuestoAdicional').val('');
+                    $('#porcentajeImpuestoAdicional').val('');
+                    recalcularTotal(); // limpia impacto del impuesto
+                }
+            });
+
+             // Evento del botón Agregar Impuesto
+            $('#grupoImpuestoAdicional button').click(function (e) {
+                e.preventDefault();
+
+                const nombre = $('#nombreImpuestoAdicional').val().trim();
+                const porcentaje = parseFloat($('#porcentajeImpuestoAdicional').val());
+                const subtotal = parseFloat($('#subtotal').val()) || 0;
+
+                if (!nombre || isNaN(porcentaje)) {
+                    alert('Completa nombre y porcentaje del impuesto.');
+                    return;
+                }
+
+                const valorImpuesto = subtotal * (porcentaje / 100);
+                const total = subtotal + valorImpuesto;
+
+                $('#etiquetaImpuestoAdicional').text(`${nombre} (${porcentaje}%)`);
+                $('#valorImpuestoAdicional').val(valorImpuesto.toFixed(2));
+                $('#resultadoImpuesto').slideDown();
+
+                recalcularTotal(); // recalcula total final
+            });
+
+            // Recalcular total con o sin impuesto
+            $('#subtotal').on('input', function () {
+                recalcularTotal();
+            });
+            //Eliminar el impuesto adicional de la tabla
+            $('#eliminarImpuestoAdicional').click(function () {
+                $('#resultadoImpuesto').slideUp();
+                $('#valorImpuestoAdicional').val('');
+                $('#etiquetaImpuestoAdicional').text('');
+                $('#nombreImpuestoAdicional').val('');
+                $('#porcentajeImpuestoAdicional').val('');
+                $('#toggleImpuesto').prop('checked', false);
+                $('#grupoImpuestoAdicional').slideUp();
+                recalcularTotal();
+            });
+
+            //Recalcular totales despues de haber modificado campos
+            function recalcularTotal() {
+                const subtotal = parseFloat($('#subtotal').val()) || 0;
+                const iva = subtotal * 0.16; // puedes ajustar si el IVA es diferente
+                $('#iva').val(iva.toFixed(2));
+
+                const impuestoAdicional = parseFloat($('#valorImpuestoAdicional').val()) || 0;
+                const total = subtotal + iva + impuestoAdicional;
+
+                $('#total').val(total.toFixed(2));
+            }
+
+            //Al dar click en el boton guardar, valida los datos del formulario y envía los datos al servidor
+            $('#guardarFactura').click(function (e) {
+                e.preventDefault();
+                //Recorre las filas de la tabla de productos para agregarlos al array de datos
+                const productos = [];
+
+                $('#cuerpoFactura tr').each(function () {
+                    const fila = $(this);
+                    const codigo = fila.find('td').eq(0).text().trim();
+                    const cantidad = parseFloat(fila.find('input.cantidad').val()) || 0;
+                    const descripcion = fila.find('td').eq(2).text().trim();
+                    const precio = parseFloat(fila.find('input.precio').val()) || 0;
+                    const total = cantidad * precio;
+
+                    productos.push({
+                        codigo,
+                        descripcion,
+                        cantidad,
+                        precio,
+                        total
+                    });
+                });
+                // Valida los datos del formulario
+                const no_requisicion = $('#factura_norequi').val();
+                const folio = no_requisicion.replace(/\D+/g, '');
+                const no_factura = $('#no_factura').val();
+                const fecha_factura = $('#fecha').val();
+                const fecha_pago = $('#fecha_pago').val();
+                const proveedor = $('#proveedor').val();
+                const subtotal = parseFloat($('#subtotal').val()) || 0;
+                const iva = parseFloat($('#iva').val()) || 0;
+                const total = parseFloat($('#total').val()) || 0;
+                const impuestoAdicional = $('#nombreImpuestoAdicional').val();
+                const valorImpuestoAdicional = parseFloat($('#porcentajeImpuestoAdicional').val()) || 0;
+                const url = 'data/guardarFactura.php';
+                //Llamada ajax para insertar en la base d edatos
+                $.ajax({
+                    url,
+                    method: 'POST',
+                    data: {
+                        no_requisicion,
+                        folio,
+                        no_factura,
+                        fecha_factura,
+                        fecha_pago,
+                        proveedor,
+                        subtotal,
+                        iva,
+                        total,
+                        impuestoAdicional,
+                        valorImpuestoAdicional,
+                        productos: JSON.stringify(productos) //convierte el array de productos a JSON
+                    },
+                    success: function (response) {
+                        // Procesa la respuesta del servidor y muestra el resultado al usuario
+                        try {
+                            const res = typeof response === 'string' ? JSON.parse(response) : response;
+
+                            if (res.status === "success") {
+                                Swal.fire({
+                                    title: 'Factura Guardada!',
+                                    text: res.message,
+                                    icon:'success',
+                                    confirmButtonText: 'Aceptar'
+                                })
+                                $('#modalFactura').modal('hide');
+                                window.location.reload();
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: res.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar'
+                                })
+                            }
+                        } catch (err) {
+                            console.error('Error al parsear respuesta:', err);
+                            Swal.fire('Error', 'Respuesta inesperada del servidor.', 'error');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+
+                        console.error('Error al guardar la factura:', xhr.responseText);
+                        Swal.fire({
+                            title: 'Error al guardar la factura',
+                            text: 'Hubo un error al guardar la factura. Intente nuevamente.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        })
+                    }
+                })
+            })
+        });
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
