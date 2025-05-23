@@ -226,132 +226,6 @@ session_start();
 <!-- Sweet alert 2 (para alertas) -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-    <?php
-        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3) {
-    ?>
- 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            load_data(); // Primera carga
-
-            function load_data(initial_date = '', final_date = '', gender = '') {
-                const ajax_url = "data/datadetorders_req.php";
-
-                $('#fetch_generated_wills').DataTable({
-                    destroy: true, // Limpia si ya estaba iniciado
-                    processing: true,
-                    serverSide: true,
-                    stateSave: true,
-                    responsive: true,
-                    order: [[0, "desc"]],
-                    lengthMenu: [
-                        [10, 25, 50, 100, -1],
-                        [10, 25, 50, 100, "Todos"]
-                    ],
-                    dom: "Bfrtip",
-                    buttons: [
-                        'copyHtml5',
-                        'excelHtml5',
-                        'csvHtml5',
-                        {
-                        extend: 'colvis',
-                        postfixButtons: ['colvisRestore'],
-                        columns: '0,1,2,3,4,5,6'
-                        },
-                        'pageLength'
-                    ],
-                    ajax: {
-                        url: ajax_url,
-                        type: "POST",
-                        dataType: "json",
-                        data: {
-                            action: "fetch_users",
-                            initial_date: initial_date,
-                            final_date: final_date,
-                            gender: gender
-                        },
-                        dataSrc: function (json) {
-                            console.log("📦 Respuesta DataTables:", json); // Útil para depurar
-                            return json.records || [];
-                        }               
-                    },
-                    columns: [
-                        { data: "pedidono", width: "3%", className: "text-right" },
-                        {
-                        data: "Folio",
-                        width: "3%",
-                        className: "text-right dt-folio",
-                        render: (data) => `<span style="text-transform: uppercase;">REQ-${data}</span>`
-                        },
-                        { data: "fechaa", width: "8%", className: "text-center" },
-                        { data: "fecha_req", width: "10%", className: "text-center", orderable: false },
-                        { data: "tipor", width: "5%", orderable: false },
-                        { data: "arear", width: "10%", orderable: false },
-                        {
-                        data: "monto",
-                        width: "6%",
-                        className: "text-right",
-                        orderable: false,
-                        render: $.fn.dataTable.render.number(',', '.', 2)
-                        },
-                        { data: "notas", width: "27%", orderable: false },
-                        { data: "estatusped", width: "8%", orderable: false },
-                        {
-                        orderable: false,
-                        render: function (data, type, full) {
-                            return `
-                            <a href='factura/requisicion.php?id=${full.Folio}' target='_blank'>
-                                <i class='fa fa-print" style="font-size: 1.3em;'></i> Imprimir
-                            </a>
-                            |
-                            <a href="javascript:void(0)" data-toggle="modal" data-target="#modalEditcliente" 
-                                data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}">
-                                <i class="fa fa-thumbs-up"></i> Autorizar
-                            </a>
-                            `;
-                        }
-                        }
-                    ]
-                });
-            }
-
-            // Filtro por fechas y estatus
-            $("#filter").on("click", function () {
-                const initial_date = $("#initial_date").val();
-                const final_date = $("#final_date").val();
-                const gender = $("#gender").val();
-
-                // Validaciones de fechas
-                if (!initial_date || !final_date) {
-                    $("#error_log").html("⚠️ Debes seleccionar ambas fechas.");
-                    return;
-                }           
-
-                const date1 = new Date(initial_date);
-                const date2 = new Date(final_date);
-
-                if (date1 > date2) {
-                    $("#error_log").html("⚠️ La fecha final debe ser posterior a la inicial.");
-                    return;
-                }
-
-                $("#error_log").html("");
-                load_data(initial_date, final_date, gender);
-            });
-
-            // Inicializar datepicker
-            $(".datepicker").datepicker({
-                language: 'es',
-                dateFormat: "yy-mm-dd",
-                changeYear: true
-            });
-        });
-    </script>
-
-    <?php
-        } else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1) {
-    ?>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -424,22 +298,61 @@ session_start();
                             orderable: false,
                             render: function (data, type, full) {
                                 let actions = ""
+                                //Si el estado de la requisicion es activa
                                 if (full.estatus == 1) {
-                                    actions = 
-                                        `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
-                                            <i class="far fa-edit"></i>
-                                        </a> |
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:1.3em;"></i>
-                                        </a> |
-                                        <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)">
-                                            <i class="fa fa-ban"></i>
-                                        </a> |
-                                        <a data-toggle="modal" data-target="#modalBorra" data-id="${full.Folio}" data-name="${full.arear}" href="javascript:void(0)" class="link_delete text-danger">
-                                            <i class="fa fa-trash"></i>
+                                    //Si el usuario es Raul o Itzu
+                                     <?php
+                                        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3) {
+                                    ?>
+                                    actions =
+                                        `
+                                        <a href='factura/requisicion.php?id=${full.Folio}' target='_blank'>
+                                            <i class='fa fa-print" style="font-size: 1.3em;'></i> Imprimir
                                         </a>
-                                        `;
+                                        
+                                        |
+                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion" 
+                                            data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}">
+                                            <i class="fa fa-thumbs-up" style="font-size:1.3em;"></i> Autorizar
+                                        </a> 
+                                        `
+                                        //Si el rol de usuario es compras o administrador
+                                    <?php
+                                        }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1) {
+                                    ?>
+                                        actions = 
+                                            `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
+                                                <i class="far fa-edit" style="font-size:1.3em;"></i>
+                                            </a> |
+                                            <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                                <i class="fa fa-print" style="font-size:1.3em;"></i>
+                                            </a> |
+                                            <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning">
+                                                <i class="fa fa-ban" style="font-size:1.3em;"></i>
+                                            </a> |
+                                            <a data-toggle="modal" data-target="#modalBorra" data-id="${full.Folio}" data-name="${full.arear}" href="javascript:void(0)" class="link_delete text-danger">
+                                                <i class="fa fa-trash" style="font-size:1.3em;"></i>
+                                            </a>
+                                            `;
+                                            //El resto de los usuarios
+                                        <?php
+                                            }else {
+                                        ?>
+                                        actions = 
+                                            `
+                                                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                                    <i class="fa fa-print" style="font-size: 1.3em;"></i>
+                                                </a>
+                                            `;
+                                <?php
+                                    }
+                                ?>
+                                //Si la requisicion esta autorizada
                                 }else if (full.estatus == 2) {
+                                    //Si el rol de usuario es compras o administrador
+                                    <?php
+                                        if ($rol == 16 || $rol == 1) {
+                                    ?>
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
                                             <i class="fa fa-print" style="font-size:1.3em;"></i>
@@ -454,6 +367,19 @@ session_start();
                                             <i class="fa fa-file" style="font-size:1.3em;"></i>
                                         </a> 
                                     `;
+                                    //El resto de los usuarios
+                                <?php
+                                    } else {
+                                ?>
+                                   actions = `
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                            <i class="fa fa-print" style="font-size:1.3em;"></i>
+                                        </a>
+                                        `;
+                                    <?php
+                                        }
+                                    ?>
+                                    //Cualquier otro estado de la requisicion
                                 } else {
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
@@ -503,134 +429,7 @@ session_start();
                 changeYear: true
             });
         });
-
     </script>
-    <?php
-
-        }else {
-    ?>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // Carga inicial
-            load_data();
-
-            function load_data(initial_date = '', final_date = '', gender = '') {
-                const ajax_url = "data/datadetorders_req.php";
-
-                $('#fetch_generated_wills').DataTable({
-                    destroy: true,
-                    processing: true,
-                    serverSide: true,
-                    stateSave: true,
-                    responsive: true,
-                    order: [[0, "desc"]],
-                    lengthMenu: [
-                        [10, 25, 50, 100, -1],
-                        [10, 25, 50, 100, "Todos"]
-                    ],
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copyHtml5',
-                        'excelHtml5',
-                        'csvHtml5',
-                        {
-                            extend: 'colvis',
-                            postfixButtons: ['colvisRestore'],
-                            columns: '0,1,2,3,4,5,6'
-                        },
-                        'pageLength'
-                    ],
-                    ajax: {
-                        url: ajax_url,
-                        type: "POST",
-                        dataType: "json",
-                        data: {
-                            action: "fetch_users",
-                            initial_date,
-                            final_date,
-                            gender
-                        },
-                        dataSrc: function (json) {
-                            return json.records || [];
-                        }
-                    },
-                    columns: [
-                        { data: "pedidono", width: "3%", className: "text-right" },
-                        {
-                            data: "Folio",
-                            width: "3%",
-                            className: "text-right",
-                            render: data => `req-${data}`
-                        },
-                        { data: "fechaa", width: "8%", className: "text-center" },
-                        { data: "fecha_req", width: "10%", className: "text-center", orderable: false },
-                        { data: "tipor", width: "5%", orderable: false },
-                        { data: "arear", width: "10%", orderable: false },
-                        {
-                            data: "monto",
-                            width: "6%",
-                            className: "text-right",
-                            orderable: false,
-                            render: $.fn.dataTable.render.number(',', '.', 2)
-                        },
-                        { data: "notas", width: "27%", orderable: false },
-                        { data: "estatusped", width: "8%", orderable: false },
-                        {
-                            orderable: false,
-                            render: function (data, type, full) {
-                                return `
-                                <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
-                                    <i class="far fa-edit"></i>
-                                </a> |
-                                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                    <i class="fa fa-print" style="font-size: 1.3em;"></i>
-                                </a>
-                                `;
-                            }
-                        }
-                    ],
-                    language: {
-                        url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json",
-                        emptyTable: "No hay registros disponibles"
-                    }
-                });
-            }
-
-            // Filtro con validación de fechas y estatus
-            $("#filter").on("click", function () {
-                const initial_date = $("#initial_date").val();
-                const final_date = $("#final_date").val();
-                const gender = $("#gender").val();
-
-                if (!initial_date || !final_date) {
-                    $("#error_log").html("⚠️ Debes seleccionar ambas fechas.");
-                    return;
-                }
-
-                const date1 = new Date(initial_date);
-                const date2 = new Date(final_date);
-
-                if (date1 > date2) {
-                    $("#error_log").html("⚠️ La fecha final debe ser mayor o igual a la inicial.");
-                    return;
-                }
-
-                $("#error_log").html("");
-                load_data(initial_date, final_date, gender);
-            });
-
-            // Inicializar Datepicker
-            $(".datepicker").datepicker({
-                language: 'es',
-                dateFormat: "yy-mm-dd",
-                changeYear: true
-            });
-        });
-
-    </script>
-    <?php
-        }
-    ?>
     
     <script>
         function actualizarLaPagina(){
@@ -640,30 +439,28 @@ session_start();
 
     <script> 
         $(document).ready(function () {
-            $('#modalEditcliente').on('show.bs.modal', function (event) {
+            // Evento para mostrar el modal para autorizar una requisición
+            $('#modalAutorizaRequisicion').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget); // Botón que disparó el modal
-
                 const noreq   = button.data('id') || '';
                 const datereq = button.data('date') || '';
                 const tiporeq = button.data('name') || '';
-
                 const modal = $(this);
-
+                //Insertar los valores en el modal
                 modal.find('#form_pass_noreq').val(noreq);
                 modal.find('#form_pass_datereq').val(datereq);
                 modal.find('#form_pass_tiporeq').val(tiporeq);
             });
         });
-
     </script>
-  
-    <div class="modal fade" id="modalEditcliente" tabindex="-1" role="dialog" aria-labelledby="modalEditclienteLabel" aria-hidden="true">
+    <!-- Modal de Autorizacion -->
+    <div class="modal fade" id="modalAutorizaRequisicion" tabindex="-1" role="dialog" aria-labelledby="modalAutorizaRequisicionLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
                 <form id="form_autoriza_req">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalEditclienteLabel">Autorizar Requisición</h5>
+                        <h5 class="modal-title" id="modalAutorizaRequisicionLabel">Autorizar Requisición</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -705,7 +502,7 @@ session_start();
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success" id="actualizaclientes">
+                        <button type="button" class="btn btn-success" id="autorizar">
                             <i class="fa fa-save"></i>&nbsp;Autorizar
                         </button>
                     </div>
@@ -717,7 +514,8 @@ session_start();
 
 
     <script>
-        $('#actualizaclientes').click(function (e) {
+        //Evento del boton de Autorizar
+        $('#autorizar').click(function (e) {
             e.preventDefault();
 
             const noreq = $('#form_pass_noreq').val();
@@ -752,7 +550,7 @@ session_start();
                             const info = JSON.parse(response);
                             if (!info.mensaje) {
                                 // Éxito: cerrar modal, limpiar y recargar
-                                $('#modalEditcliente').modal('hide');
+                                $('#modalAutorizaRequisicion').modal('hide');
                                 $('#form_pass_firma').val('');
 
                                 Swal.fire({
@@ -802,6 +600,7 @@ session_start();
     </script>  
 
     <script> 
+        // Evento para mostrar el modal para borrar una requisición
         $(document).ready(function () {
             $('#modalBorra').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget); // Elemento que disparó el modal
@@ -815,7 +614,7 @@ session_start();
             });
         });
     </script>
-  
+    <!-- Modal para borrar requisicion -->
     <div class="modal fade" id="modalBorra" tabindex="-1" role="dialog" aria-labelledby="modalBorraLabel" aria-hidden="true">
         <div div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -859,6 +658,7 @@ session_start();
     </div>
 
     <script>
+        //Evento del boton borrar requisicion
         $(document).ready(function () {
             $('#borrarequisicion').click(function (e) {
                 e.preventDefault();
@@ -939,6 +739,7 @@ session_start();
     </script> 
 
     <script> 
+        //Evento que muestra el modal para cancelar una requisicion
         $(document).ready(function () {
             $('#modalCancela').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget); // Elemento que disparó el modal
@@ -953,9 +754,8 @@ session_start();
                 modal.find('#form_pass_provec').val(namepc);
             });
         });
-
     </script>
-  
+    <!-- Modal para cancelar una requisicion -->
     <div class="modal fade" id="modalCancela" tabindex="-1" role="dialog" aria-labelledby="modalCancelaLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -1015,6 +815,7 @@ session_start();
     </div>
 
     <script>
+        //Evento del boton que cancela la requisicion
         $('#cancelarequisicion').click(function (e) {
             e.preventDefault();
 
@@ -1503,6 +1304,7 @@ session_start();
     </script>
 
     <script>
+        //Refrescar la sesion
         document.addEventListener("DOMContentLoaded", () => {
             const intervalo = 5000; // 5 segundos
 

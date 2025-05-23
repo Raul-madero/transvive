@@ -46,7 +46,7 @@ if (!empty($_POST['productos'])) {
         $total = floatval($p['total']);
 
         $insertDetalle = $conection->prepare("INSERT INTO detalle_factura (no_factura, codigo, descripcion, cantidad, precio_unitario, total) VALUES (?, ?, ?, ?, ?, ?)");
-        $insertDetalle->bind_param("issidd", $no_factura, $codigo, $descripcion, $cantidad, $precio_unitario, $total);
+        $insertDetalle->bind_param("sssidd", $no_factura, $codigo, $descripcion, $cantidad, $precio_unitario, $total);
         if(!$insertDetalle->execute()) {
             echo json_encode(["status" => "error", "message" => "No se pudieron insertar los productos en detalle_factura."]);
             exit;
