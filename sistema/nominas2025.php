@@ -156,8 +156,8 @@ $namerol = $filas['rol'];
 
 			let renderMoneda = (data) => formatoMoneda(parseFloat(data) || 0);
 
-			let load_data = (semana, anio) => {
-				let ajaxUrl = 'data/nominaEmpleados.php';
+			let load_data = (semana, anio, url) => {
+				let ajaxUrl = url;
 
 				if (!semana || !anio) {
 					let table = $('#example1').DataTable();
@@ -294,13 +294,15 @@ $namerol = $filas['rol'];
 			$('#seleccionaSemana').click(function () {
 				let semana = $('#semana').val();
 				let anio = $('#anio').val();
-				if (semana > 0 && anio >= 2024) load_data(semana, anio);
+				let url = 'data/historicoNomina.php'
+				if (semana > 0 && anio >= 2024) load_data(semana, anio, url);
 			});
 
 			$('#ejecutaNomina').click(function () {
 				let semana = $('#semana').val();
 				let anio = $('#anio').val();
-				if (semana > 0 && anio >= 2024) load_data(semana, anio);
+				let url = 'data/nominaEmpleados.php'
+				if (semana > 0 && anio >= 2024) load_data(semana, anio, url);
 			});
 
 			load_data();
