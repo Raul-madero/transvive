@@ -32,6 +32,12 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
         $ok = $error = 0;
         $errores = [];
 
+        echo "<pre>";
+var_dump(file($rutaDestino));
+echo "</pre>";
+exit;
+
+
         if (($file = fopen($rutaDestino, "r")) !== false) {
             $stmt_ruta = $conection->prepare("SELECT ruta FROM rutas WHERE cliente = ? AND ruta = ? LIMIT 1");
             $stmt_emp  = $conection->prepare("SELECT 1 FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? AND estatus = 1 LIMIT 1");
