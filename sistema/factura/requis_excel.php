@@ -64,7 +64,7 @@ $query = mysqli_query($conection,"SELECT
           <td><?php echo $newDate?></td>
           <td><?php echo $fecha_requiere; ?></td>
           <td><?php echo !empty($row['no_orden']) ?  "OC-" . $row['no_orden'] : ""; ?></td>
-          <td><?php echo $fecha_orden; ?></td>
+          <td><?php echo $fecha_orden ?? ""; ?></td>
           <td><?php echo $row['tipo_requisicion']; ?></td>
           <td><?php echo $row['observaciones']; ?></td>
           <td><?php echo $row['area_solicitante']; ?></td>
