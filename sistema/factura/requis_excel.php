@@ -62,7 +62,6 @@ $query = mysqli_query($conection,"SELECT
         <tr>
           <td><?php echo "REQ-" . $row['no_requisicion']; ?></td>
           <td><?php echo $newDate?></td>
-          <td><?php echo $newDate; ?></td>
           <td><?php echo $fecha_requiere; ?></td>
           <td><?php echo "OC-" . $row['no_orden']; ?></td>
           <td><?php echo $fecha_orden; ?></td>
