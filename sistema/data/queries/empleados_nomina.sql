@@ -118,6 +118,9 @@
 -- Query corregido para evitar duplicaciones de vueltas en cálculo de nómina semanal
 -- Considera que {fecha_inicio}, {fecha_fin} y {fecha_limite_alertas} deben ser reemplazados desde el backend
 
+-- Query corregido para evitar duplicaciones de vueltas en cálculo de nómina semanal
+-- Versión consolidada: una sola fila por operador con total de vueltas y sueldo bruto acumulado
+
 SELECT
     e.id,
     e.noempleado,
@@ -166,24 +169,26 @@ SELECT
         'NO'
     ) AS prima_vacacional,
 
-    COALESCE(rv.valor_vuelta, 0) AS total_vueltas,
+    COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
 
-    CASE 
-        WHEN e.cargo = 'OPERADOR' THEN
-            CASE 
-                WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta
-                ELSE
-                    CASE
-                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN r.sueldo_camion * rv.valor_vuelta
-                        WHEN LOWER(rv.unidad_ejecuta) IN ('camioneta', 'sprinter') AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN r.sueldo_camioneta * rv.valor_vuelta
-                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' THEN e.sueldo_camion * rv.valor_vuelta
-                        WHEN LOWER(rv.unidad_ejecuta) LIKE '%camioneta%' THEN e.sueldo_camioneta * rv.valor_vuelta
-                        WHEN LOWER(rv.unidad_ejecuta) LIKE '%sprinter%' THEN e.sueldo_sprinter * rv.valor_vuelta
-                        ELSE e.sueldo_base * rv.valor_vuelta
-                    END
-            END
-        ELSE e.sueldo_base * 7
-    END AS sueldo_bruto,
+    SUM(
+        CASE 
+            WHEN e.cargo = 'OPERADOR' THEN
+                CASE 
+                    WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta
+                    ELSE
+                        CASE
+                            WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN r.sueldo_camion * rv.valor_vuelta
+                            WHEN LOWER(rv.unidad_ejecuta) IN ('camioneta', 'sprinter') AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN r.sueldo_camioneta * rv.valor_vuelta
+                            WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' THEN e.sueldo_camion * rv.valor_vuelta
+                            WHEN LOWER(rv.unidad_ejecuta) LIKE '%camioneta%' THEN e.sueldo_camioneta * rv.valor_vuelta
+                            WHEN LOWER(rv.unidad_ejecuta) LIKE '%sprinter%' THEN e.sueldo_sprinter * rv.valor_vuelta
+                            ELSE e.sueldo_base * rv.valor_vuelta
+                        END
+                END
+            ELSE e.sueldo_base * 7
+        END
+    ) AS sueldo_bruto,
 
     (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
     (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
@@ -233,6 +238,5 @@ GROUP BY
     e.noempleado, e.id, operador, e.sueldo_base, e.cargo, imss, e.estatus, 
     e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
     e.supervisor, e.apoyo_mes, fi.pago_fiscal, fi.deduccion_fiscal, fi.neto,
-    e.fecha_contrato, e.salario_diario, rv.valor_vuelta, rv.tipo_viaje,
-    rv.unidad_ejecuta, r.sueldo_camion, r.sueldo_camioneta,
+    e.fecha_contrato, e.salario_diario,
     e.sueldo_camion, e.sueldo_camioneta, e.sueldo_sprinter;
