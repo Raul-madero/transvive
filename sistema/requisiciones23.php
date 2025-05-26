@@ -318,7 +318,7 @@ session_start();
                                         `
                                         //Si el rol de usuario es compras o administrador
                                     <?php
-                                        }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1) {
+                                        }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7) {
                                     ?>
                                         actions = 
                                             `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
