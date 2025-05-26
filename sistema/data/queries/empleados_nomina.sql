@@ -54,7 +54,8 @@ SELECT
     SUM(CASE 
         WHEN e.cargo = 'OPERADOR' THEN
             CASE 
-                WHEN LOWER(rv.tipo_viaje) LIKE '%Especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
+                WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
+                WHEN LOWER(rv.tipo_viaje) LIKE '%semidomiciliadas%' AND IFNULL(r.sueldo_semid, 0) > 0 THEN r.sueldo_semid * rv.valor_vuelta
                 ELSE
                     CASE
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN r.sueldo_camion * rv.valor_vuelta
@@ -66,7 +67,7 @@ SELECT
                     END
             END
         ELSE e.sueldo_base * 7
-    END) AS sueldo_bruto,
+    END) AS sueldo_bruto
 
     (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
     (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
