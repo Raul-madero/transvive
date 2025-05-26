@@ -54,9 +54,10 @@ $query = mysqli_query($conection,"SELECT
     </thead>
   <?php
     while ($row=mysqli_fetch_assoc($query)) {
+      
     	$newDate = date("d-m-Y", strtotime($row['fecha'])); 
-        $fecha_requiere = date("d-m-Y", strtotime($row['fecha_requiere'])); 
-        $fecha_orden = date("d-m-Y", strtotime($row['fecha_orden'])); 
+      $fecha_requiere = date("d-m-Y", strtotime($row['fecha_requiere'])); 
+      $fecha_orden = $row['fecha_orden'] ? date("d-m-Y", strtotime($row['fecha_orden'])) : ""; 
      
       ?>
         <tr>
