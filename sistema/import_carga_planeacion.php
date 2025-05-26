@@ -32,12 +32,6 @@ if (isset($_FILES['name']) && $_FILES['name']['error'] === UPLOAD_ERR_OK) {
         $ok = $error = 0;
         $errores = [];
 
-        echo "<pre>";
-var_dump(file($rutaDestino));
-echo "</pre>";
-exit;
-
-
         if (($file = fopen($rutaDestino, "r")) !== false) {
             $stmt_ruta = $conection->prepare("SELECT ruta FROM rutas WHERE cliente = ? AND ruta = ? LIMIT 1");
             $stmt_emp  = $conection->prepare("SELECT 1 FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? AND estatus = 1 LIMIT 1");
@@ -46,7 +40,7 @@ exit;
             $linea = 0;
             while (($line = fgets($file)) !== false) {
                 $linea++;
-                $line = mb_convert_encoding($line, 'UTF-8', 'ISO-8859-1'); //Conversion de caracteres
+                $line = iconv('Windows-1252', 'UTF-8//IGNORE', $line); //Conversion de caracteres
                 $data = explode(",", trim($line));
                 if (count($data) < 12) {
                     $errores[] = "Línea $linea: Datos incompletos.";
