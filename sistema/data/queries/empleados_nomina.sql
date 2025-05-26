@@ -67,7 +67,7 @@ SELECT
                     END
             END
         ELSE e.sueldo_base * 7
-    END) AS sueldo_bruto
+    END) AS sueldo_bruto,
 
     (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
     (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
