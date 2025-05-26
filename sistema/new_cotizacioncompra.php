@@ -156,6 +156,8 @@ mysqli_close($conection);
                                             $solicita = "Administracion";
                                         }else if($User === "Lu"){
                                             $solicita = "SGC";
+                                        }else if($User === 'RMADERO') {
+                                            $solicita = 'Sistemas';
                                         }else {
                                             switch (intval($rol)) {
                                                 case 1:
