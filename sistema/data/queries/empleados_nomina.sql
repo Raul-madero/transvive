@@ -49,7 +49,7 @@ SELECT
         'NO'
     ) AS prima_vacacional,
 
-    COALESCE(rv.valor_vuelta_total, 0) AS total_vueltas
+    COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
 
     SUM(CASE 
         WHEN e.cargo = 'OPERADOR' THEN
@@ -94,35 +94,13 @@ FROM empleados e
 --         OR (inc.fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
 --     )
 
--- LEFT JOIN registro_viajes rv 
---     ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
---     AND DATE(rv.fecha) BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
---     AND rv.valor_vuelta > 0
+LEFT JOIN registro_viajes rv 
+    ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+    AND DATE(rv.fecha) BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
+    AND rv.valor_vuelta > 0
 
--- LEFT JOIN rutas r 
---     ON rv.cliente = r.cliente AND rv.ruta = r.ruta
-
-LEFT JOIN (
-    SELECT 
-        operador,
-        cliente,
-        ruta,
-        unidad_ejecuta,
-        tipo_viaje,
-        SUM(valor_vuelta) AS valor_vuelta_total,
-        SUM(sueldo_vuelta) AS sueldo_vuelta_total
-    FROM registro_viajes
-    WHERE fecha BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
-      AND valor_vuelta > 0
-    GROUP BY operador, cliente, ruta, unidad_ejecuta, tipo_viaje
-) rv ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
-
-LEFT JOIN (
-    SELECT cliente, ruta, MAX(sueldo_camion) AS sueldo_camion, MAX(sueldo_camioneta) AS sueldo_camioneta
-    FROM rutas
-    GROUP BY cliente, ruta
-) r ON rv.cliente = r.cliente AND rv.ruta = r.ruta
-
+LEFT JOIN rutas r 
+    ON rv.cliente = r.cliente AND rv.ruta = r.ruta
 
 LEFT JOIN importes_fiscales fi 
     ON fi.empleado = CONCAT_WS(' ', e.apellido_paterno, e.apellido_materno, e.nombres)
