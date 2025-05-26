@@ -249,7 +249,15 @@ session_start();
                     dom: 'Bfrtip',
                     buttons: [
                         'copyHtml5',
-                        'excelHtml5',
+                        {
+                            text: 'Excel',
+                            action: function () {
+
+                                // Redirige a un PHP que genera el Excel completo
+                                const url = `factura/requis_excel.php`;
+                                window.open(url, '_blank');
+                            }
+                        },
                         'csvHtml5',
                         {
                         extend: 'colvis',
