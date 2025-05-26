@@ -46,6 +46,7 @@ exit;
             $linea = 0;
             while (($line = fgets($file)) !== false) {
                 $linea++;
+                $line = mb_convert_encoding($line, 'UTF-8', 'ISO-8859-1'); //Conversion de caracteres
                 $data = explode(",", trim($line));
                 if (count($data) < 12) {
                     $errores[] = "Línea $linea: Datos incompletos.";
