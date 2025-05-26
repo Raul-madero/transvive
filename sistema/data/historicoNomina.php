@@ -59,15 +59,26 @@ SUM(
 FROM historico_nomina
 WHERE semana = $semana AND anio = $anio";
 $result_total_pagar = mysqli_query($conection, $sql_total_pagar);
-$total_nomina = mysqli_fetch_row($result_total_pagar)[0];
+// $total_nomina = mysqli_fetch_row($result_total_pagar)[0];
 $data_output = [];
 while ($row = mysqli_fetch_assoc($result_nomina)) {
     $data_output[] = $row;
 }
 $draw = $_POST['draw'] ?? 1;
+
+$total_nomina = $conection->query("SELECT SUM(deposito_fiscal + efectivo) AS total_nomina FROM nomina_temp_2025")->fetch_assoc();
+    $total_fiscal = $conection->query("SELECT SUM(nomina_fiscal) AS total_fiscal FROM nomina_temp_2025")->fetch_assoc();
+    $total_adeudo = $conection->query("SELECT SUM(deducciones) AS total_deducciones FROM nomina_temp_2025")->fetch_assoc();
+    $total_caja_ahorro = $conection->query("SELECT SUM(caja_ahorro) AS total_caja FROM nomina_temp_2025")->fetch_assoc();
+    $total_vueltas = $conection->query("SELECT SUM(total_vueltas) AS total_total_vueltas FROM nomina_temp_2025")->fetch_assoc();
+
 echo json_encode([
     'draw' => $draw,
-    'totalNomina' => $total_nomina,
+    'totales' => $total_nomina,
+    'total_fiscal' => $total_fiscal,
+    'total_adeudo' => $total_adeudo,
+    'total_caja_ahorro' => $total_caja_ahorro,
+    'total_vueltas' => $total_vueltas,
     'recordsTotal' => $totalRecords,
     'recordsFiltered' => $totalFiltered,
     'data' => $data_output
