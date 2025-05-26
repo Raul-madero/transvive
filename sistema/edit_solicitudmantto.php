@@ -291,7 +291,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Trabajo Solicitado</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputTrabajosolicitado" name="inputTrabajosolicitado" value="<?php echo $wosolicitado;?>" <?php if ($rol != 10 || $User != "MIRILG") { ?> readonly  <?php } ?>> 
+                      <input type="text" class="form-control" id="inputTrabajosolicitado" name="inputTrabajosolicitado" value="<?php echo $wosolicitado;?>"> 
                     </div>
                   </div>
 
