@@ -29,7 +29,7 @@ $query = mysqli_query($conection,"SELECT
             ELSE 'Terminada'
         END AS estatus_texto
     FROM requisicion_compra r
-    INNER JOIN orden_compra o ON r.no_requisicion = o.no_requisicion
+    LEFT JOIN orden_compra o ON r.no_requisicion = o.no_requisicion
     ORDER BY r.fecha DESC;
     ");
       $result = mysqli_num_rows($query);
@@ -63,7 +63,7 @@ $query = mysqli_query($conection,"SELECT
           <td><?php echo "REQ-" . $row['no_requisicion']; ?></td>
           <td><?php echo $newDate?></td>
           <td><?php echo $fecha_requiere; ?></td>
-          <td><?php echo "OC-" . $row['no_orden']; ?></td>
+          <td><?php echo !empty($row['no_orden']) ?  "OC-" . $row['no_orden'] : ""; ?></td>
           <td><?php echo $fecha_orden; ?></td>
           <td><?php echo $row['tipo_requisicion']; ?></td>
           <td><?php echo $row['observaciones']; ?></td>
