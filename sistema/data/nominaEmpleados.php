@@ -45,23 +45,6 @@ function calcularApoyoMesContrato($fecha_contrato) {
         return false;
     }
 }
-
-// function calcularDiasVacaciones($anios) {
-//     return match(true) {
-//         $anios <= 0 => 0,
-//         $anios === 1 => 12,
-//         $anios === 2 => 14,
-//         $anios === 3 => 16,
-//         $anios === 4 => 18,
-//         $anios === 5 => 20,
-//         $anios >= 6 && $anios <= 10 => 22,
-//         $anios >= 11 && $anios <= 15 => 24,
-//         $anios >= 16 && $anios <= 20 => 26,
-//         $anios >= 21 && $anios <= 25 => 28,
-//         $anios >= 26 && $anios <= 30 => 30,
-//         default => 32,
-//     };
-// }
 function calcularDiasVacaciones($anios) {
     if ($anios <= 0) return 0;
     if ($anios === 1) return 12;
@@ -87,7 +70,6 @@ function dia15EntreFechas($fecha_inicio, $fecha_fin) {
 }
 
 function insertar_nomina($conection, $data) {
-    // var_dump($data['dias_vacaciones'], $data['nombre']);
      // Verificar si el cargo es 'OPERADOR' y el total_vueltas es 0
     if ($data['dias_vacaciones'] == 0 && $data['cargo'] === 'OPERADOR' && $data['total_vueltas'] == 0) {
         // Si las condiciones se cumplen, no se hace la inserción
@@ -180,7 +162,13 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $vacaciones = floatval($salario_diario) * intval($dias_vacaciones_pagar);
         //Calculo de vales de despensa
         $bono_apoyo = (dia15EntreFechas($fecha_inicio, $fecha_fin) && calcularApoyoMesContrato($fecha_contrato)) ? floatval($apoyo_mes) : 0;
-        $bono_semanal = (intval($alertas) <= 4 && calcularBonoSemanalContrato($fecha_contrato) && $dias_vacaciones_pagar <= 2 && $total_vueltas > 0 && intval($faltas == 0)) ? floatval($bono_semanal) : 0;
+        $bono_semanal = (
+            intval($alertas) <= 4 && 
+            calcularBonoSemanalContrato($fecha_contrato) && 
+            $dias_vacaciones_pagar <= 2 && 
+            $total_vueltas > 0 && 
+            intval($faltas)  == 0
+            ) ? floatval($bono_semanal) : 0;
         $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($bono_categoria) : 0;
         //Calculo de deducciones
         $deduccion = max(0, floatval($cantidad) - floatval($total_abonado));
