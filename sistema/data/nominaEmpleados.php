@@ -180,7 +180,13 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $vacaciones = floatval($salario_diario) * intval($dias_vacaciones_pagar);
         //Calculo de vales de despensa
         $bono_apoyo = (dia15EntreFechas($fecha_inicio, $fecha_fin) && calcularApoyoMesContrato($fecha_contrato)) ? floatval($apoyo_mes) : 0;
-        $bono_semanal = (intval($alertas) <= 4 && calcularBonoSemanalContrato($fecha_contrato) && $dias_vacaciones_pagar <= 2 && $total_vueltas > 0 && intval($faltas == 0)) ? floatval($bono_semanal) : 0;
+        $bono_semanal = (
+            intval($alertas) <= 4 && 
+            calcularBonoSemanalContrato($fecha_contrato) && 
+            $dias_vacaciones_pagar <= 2 && 
+            $total_vueltas > 0 && 
+            intval($faltas)  == 0
+            ) ? floatval($bono_semanal) : 0;
         $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($bono_categoria) : 0;
         //Calculo de deducciones
         $deduccion = max(0, floatval($cantidad) - floatval($total_abonado));
