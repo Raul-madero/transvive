@@ -45,23 +45,6 @@ function calcularApoyoMesContrato($fecha_contrato) {
         return false;
     }
 }
-
-// function calcularDiasVacaciones($anios) {
-//     return match(true) {
-//         $anios <= 0 => 0,
-//         $anios === 1 => 12,
-//         $anios === 2 => 14,
-//         $anios === 3 => 16,
-//         $anios === 4 => 18,
-//         $anios === 5 => 20,
-//         $anios >= 6 && $anios <= 10 => 22,
-//         $anios >= 11 && $anios <= 15 => 24,
-//         $anios >= 16 && $anios <= 20 => 26,
-//         $anios >= 21 && $anios <= 25 => 28,
-//         $anios >= 26 && $anios <= 30 => 30,
-//         default => 32,
-//     };
-// }
 function calcularDiasVacaciones($anios) {
     if ($anios <= 0) return 0;
     if ($anios === 1) return 12;
@@ -87,7 +70,6 @@ function dia15EntreFechas($fecha_inicio, $fecha_fin) {
 }
 
 function insertar_nomina($conection, $data) {
-    // var_dump($data['dias_vacaciones'], $data['nombre']);
      // Verificar si el cargo es 'OPERADOR' y el total_vueltas es 0
     if ($data['dias_vacaciones'] == 0 && $data['cargo'] === 'OPERADOR' && $data['total_vueltas'] == 0) {
         // Si las condiciones se cumplen, no se hace la inserción
