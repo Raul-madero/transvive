@@ -388,14 +388,24 @@ session_start();
                                         }
                                     ?>
                                     //Cualquier otro estado de la requisicion
-                                } else {
+                                } else if (full.estatus == 4) {
+                                    actions = `
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                            <i class="fa fa-print" style="font-size:1.3em;"></i>
+                                        </a>
+                                        |
+                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary">
+                                            <i class="fa fa-upload" style="font-size:1.3em;"></i> 
+                                        </a>
+                                    `
+                                }else{
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
                                             <i class="fa fa-print" style="font-size:1.3em;"></i>
                                         </a>
                                         `;
+                                    
                                 }
-
                                 return actions;
                             }
                         }
@@ -461,6 +471,51 @@ session_start();
             });
         });
     </script>
+
+    <!-- Modal para subir una factura -->
+     <div class="modal fade" id="subirFactura" tabindex="-1" role="dialog" aria-labelledby="subirFacturaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="subirFacturaLabel">Subir Factura</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-left">No. Requisición:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="form_pass_noreq" name="form_pass_noreq" disabled>
+                            </div>
+                        </div>
+                        <!-- Subir archivo pdf -->
+                         <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-left">Archivo:</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control-file" id="form_archivo" name="form_archivo">
+                            </div>
+                        </div>
+                        <!-- Botones de modal -->
+                         <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button id="form_subir_factura" class="btn btn-primary">Subir</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="form_pass_datereq" name="form_pass_datereq">
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            //Evento para mostrar el modal de subir factura
+            $('#modal')
+        })
+    </script>
+
     <!-- Modal de Autorizacion -->
     <div class="modal fade" id="modalAutorizaRequisicion" tabindex="-1" role="dialog" aria-labelledby="modalAutorizaRequisicionLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
