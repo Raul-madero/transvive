@@ -379,7 +379,10 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 
     impuestosAdicionales.forEach((imp, idx) => {
       const monto = subtotal * (imp.porcentaje / 100);
-      if(imp.tipo === 'ISR' || imp.tipo === 'Retencion de IVA') {
+      if(
+        imp.tipo.trim().toLowerCase() == 'isr' ||
+        imp.tipo.trim().toLowerCase() == 'retencion de iva'
+      ) {
         total -= monto; // ISR se resta del total
       }else {
         total += monto; // Otros impuestos se suman al total
