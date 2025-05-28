@@ -408,25 +408,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         function esFechaValida(fechaUsuario) {
             // Convertir la fecha ingresada a un objeto Date
-            let fechaIngresada = new Date(fechaUsuario);
-            if (isNaN(fechaIngresada)) {
-                return { valid: false, message: "Fecha inválida" };
-            }
+            // let fechaIngresada = new Date(fechaUsuario);
+            // if (isNaN(fechaIngresada)) {
+            //     return { valid: false, message: "Fecha inválida" };
+            // }
 
-            // Obtener la fecha actual
-            let fechaActual = new Date();
-            fechaActual.setHours(0, 0, 0, 0); // Eliminar la hora para comparar solo fechas
+            // // Obtener la fecha actual
+            // let fechaActual = new Date();
+            // fechaActual.setHours(0, 0, 0, 0); // Eliminar la hora para comparar solo fechas
 
-            // Calcular la fecha límite (hace 6 días)
-            let fechaLimite = new Date();
-            fechaLimite.setDate(fechaActual.getDate() - 8); // Restar 6 días
+            // // Calcular la fecha límite (hace 6 días)
+            // let fechaLimite = new Date();
+            // fechaLimite.setDate(fechaActual.getDate() - 8); // Restar 6 días
 
-            // Comparar la fecha ingresada con la fecha límite
-            if ((fechaIngresada >= fechaLimite && fechaIngresada <= fechaActual) || (<?php echo $iduser ?> == 32)) {
-                return true;
-            } else {
-                return false;
-            }
+            // // Comparar la fecha ingresada con la fecha límite
+            // if ((fechaIngresada >= fechaLimite && fechaIngresada <= fechaActual) || (<?php echo $iduser ?> == 32)) {
+            //     return true;
+            // } else {
+            //     return false;
+            // }
+            return true;
         }
 
        var folio       = $('#inputFolio').val();

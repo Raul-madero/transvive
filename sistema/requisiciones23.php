@@ -512,7 +512,9 @@ session_start();
     <script>
         $(document).ready(function () {
             //Evento para mostrar el modal de subir factura
-            $('#modal')
+            $('#subirFactura').on('show.bs.modal', function (event) {
+                console.log($(event.relatedTarget)); // Button that triggered the modal
+            })
         })
     </script>
 
