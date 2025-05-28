@@ -407,11 +407,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         e.preventDefault();
 
         function esFechaValida(fechaUsuario) {
-            // Convertir la fecha ingresada a un objeto Date
-            // let fechaIngresada = new Date(fechaUsuario);
-            // if (isNaN(fechaIngresada)) {
-            //     return { valid: false, message: "Fecha inválida" };
-            // }
+            //Convertir la fecha ingresada a un objeto Date
+            let fechaIngresada = new Date(fechaUsuario);
+            if (isNaN(fechaIngresada)) {
+                return { valid: false, message: "Fecha inválida" };
+            }
 
             // // Obtener la fecha actual
             // let fechaActual = new Date();
@@ -427,7 +427,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             // } else {
             //     return false;
             // }
-            return true;
+            // return true;
         }
 
        var folio       = $('#inputFolio').val();
