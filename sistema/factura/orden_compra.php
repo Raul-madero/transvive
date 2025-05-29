@@ -58,10 +58,10 @@ $entrada = mysqli_fetch_assoc($query);
    
 //Logo
 
-$this->Image("../../images/fondo001.png",10,10,78,93,"png",0,'C');
-$this->Image("../../images/fondo002.png",171,216.5,28,53,"png",0,'C');
-$this->Image("../../images/transvive_logo.png",12,11,48,13,"png",0,'C');
-$this->Image("../../images/fondo01.png",36,110,148,63,"png",0,'C');
+$this->Image("../../images/fondo001.png",10,10,78,93,"png",0);
+$this->Image("../../images/fondo002.png",171,216.5,28,53,"png",0);
+$this->Image("../../images/transvive_logo.png",12,11,48,13,"png",0,);
+$this->Image("../../images/fondo01.png",36,110,148,63,"png",0);
 
 //$this->Image("temp/test.png",12,31,35,23,"png",0,'C');
 //Arial bold 15
@@ -72,12 +72,12 @@ $this->SetFillColor(231,233,238);
 $this->SetTextcolor(6,22,54);
 $this->Cell(15,15,'Título',1,0,'C','T');
 $this->Cell(75,10,$subtitulo1,1,0,'C');
-$this->Cell(19,10,'Código','T,R',0,'C','T');
+$this->Cell(19,10,utf8_decode('Código'),'T,R',0,'C','T');
 $this->SetFont('Arial','',8);
 $this->Cell(30,10,'FO-TV-CO-02','T,R',1,'C');
 $this->SetFont('Arial','',10);
 $this->Cell(65,10,'',0,0,'r');
-$this->Cell(15,5,'Área',1,0,'C','T');
+$this->Cell(15,5,utf8_decode('Área'),1,0,'C','T');
 $this->Cell(60,5,'Compras',1,0,'C');
 $this->Cell(19,5,'','B,R',0,'C','T');
 $this->SetFont('Arial','',8);
@@ -152,28 +152,28 @@ $this->Cell(52,5,'Administración SGC'),0,1,'C');
 //$this->Cell(0,10,'Transvive ERP'),0,0,'C');
 if ($entrada['estatus'] == 0) {
 $this->SetFont('Arial','',7);
-$this->cell(189,5,'Motivo cancelación:',1,1, 'L', 'T');
+$this->cell(189,5,utf8_decode('Motivo cancelación:'),1,1, 'L', 'T');
 $this->SetFillColor(255,255,255);
 $this->cell(189,5,$motivo,1,1, 'L');
 $this->SetFillColor(231,233,238);
-$this->cell(25,5,'Area Solicitante:',1,0, 'L', 'T');
-$this->cell(40,5,$solicita,1,0, 'L');
+$this->cell(25,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
+$this->cell(40,5,utf8_decode($solicita),1,0, 'L');
 $this->cell(15,5,'Fecha:',1,0, 'L', 'T');
-$this->cell(19,5,$newDateReq,1,0, 'C');
+$this->cell(19,5,utf8_decode($newDateReq),1,0, 'C');
 $this->cell(15,5,'Recibe:',1,0, 'L', 'T');
-$this->cell(75,5,$recibe,1,0, 'L');
+$this->cell(75,5,utf8_decode($recibe),1,0, 'L');
 }else {
 $this->SetFont('Arial','',7);
-$this->cell(189,5,'Observaciones:',1,1, 'L', 'T');
+$this->cell(189,5,utf8_decode('Observaciones:'),1,1, 'L', 'T');
 $this->SetFillColor(255,255,255);
-$this->cell(189,5,$notas,1,1, 'L');
+$this->cell(189,5,utf8_decode($notas),1,1, 'L');
 $this->SetFillColor(231,233,238);
-$this->cell(25,5,'Area Solicitante:',1,0, 'L', 'T');
-$this->cell(40,5,$solicita,1,0, 'L');
+$this->cell(25,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
+$this->cell(40,5,utf8_decode($solicita),1,0, 'L');
 $this->cell(15,5,'Fecha:',1,0, 'L', 'T');
 $this->cell(19,5,$newDateReq,1,0, 'C');
 $this->cell(15,5,'Recibe:',1,0, 'L', 'T');
-$this->cell(75,5,$recibe,1,0, 'L');
+$this->cell(75,5,utf8_decode($recibe),1,0, 'L');
 //$this->cell(15,5,'Fecha:'),1,0, 'L', 'T');
 //$this->cell(20,5,'',1,1, 'L');
 //$this->Cell(-15,10,'Página ') . $this->PageNo(),0,0,'C');
@@ -230,33 +230,33 @@ $pdf->SetFont('Arial','',8);
 $pdf->SetTextcolor(0,0,0);
 $pdf->Cell(25,5,'Proveedor',1,0,'L', 'T');
 $pdf->SetFont('Arial','B',8);
-$pdf->Cell(119,5,$proveedor,1,0,'L');
+$pdf->Cell(119,5,utf8_decode($proveedor),1,0,'L');
 $pdf->Cell(20,5,'No. Orden:',1,0,'L', 'T');
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(25,5,'OC-'. $folio,1,1,'R');
 $pdf->SetFont('Arial','',8);
 $pdf->Cell(25,5,'Contacto:',1,0,'L', 'T');
-$pdf->Cell(119,5,$contacto,1,0,'L');
+$pdf->Cell(119,5,utf8_decode($contacto),1,0,'L');
 $pdf->Cell(20,5,'Fecha:',1,0,'L', 'T');
 $pdf->Cell(25,5,$newDate,1,1,'C');
 $pdf->Cell(25,5,'Teléfono:',1,0,'L', 'T');
 $pdf->Cell(55,5,$telefono,1,0,'L');
 $pdf->Cell(30,5,'Correo:',1,0,'L', 'T');
-$pdf->Cell(79,5,$correo,1,1,'C');
+$pdf->Cell(79,5,utf8_decode($correo),1,1,'C');
 $pdf->Cell(50,5,'Datos de Facturación:',1,0,'C', 'T');
 $pdf->Cell(30,5,'Forma de Pago:',1,0,'L', 'T');
-$pdf->Cell(64,5,$formapago,1,0,'L');
+$pdf->Cell(64,5,utf8_decode($formapago),1,0,'L');
 $pdf->Cell(45,5,'Datos de Entrega:',1,1,'C', 'T');
 $pdf->Cell(50,5,'Transvive S. de R.L. de C.V.',1,0,'C');
 $pdf->Cell(30,5,'Metodo de Pago:',1,0,'L', 'T');
-$pdf->Cell(64,5,$metodopago,1,0,'L');
+$pdf->Cell(64,5,utf8_decode($metodopago),1,0,'L');
 $pdf->Cell(45,5,'Hidalgo No. 30',1,1,'C');
 $pdf->Cell(50,5,'TVI-190503-SA3',1,0,'C');
 $pdf->Cell(30,5,'Uso de CFDI:',1,0,'L', 'T');
-$pdf->Cell(64,5,$usocfdi,1,0,'L');
+$pdf->Cell(64,5,utf8_decode($usocfdi),1,0,'L');
 $pdf->Cell(45,5,'C.P. 45640 Col. Los Gavilanes',1,1,'C');
 $pdf->Cell(144,5,'',1,0,'C');
-$pdf->Cell(45,5,'Tlajomulco de Zuñiga, Jal.',1,1,'C');
+$pdf->Cell(45,5,utf8_decode('Tlajomulco de Zuñiga, Jal.'),1,1,'C');
 
 
 
@@ -275,9 +275,9 @@ $nooc = $_REQUEST['id'];
 // }
 $pdf->SetFont('Arial','',8);
 $pdf->Cell(13,5,'Cantidad',1,0,'C','T');
-$pdf->Cell(38,5,'Código',1,0,'C','T');
-$pdf->Cell(85,5,'Descripcion',1,0,'C','T');
-$pdf->Cell(23,5,'Marca',1,0,'C','T');
+$pdf->Cell(38,5,utf8_decode('Código'),1,0,'C','T');
+$pdf->Cell(85,5,utf8_decode('Descripcion'),1,0,'C','T');
+$pdf->Cell(23,5,utf8_decode('Marca'),1,0,'C','T');
 $pdf->Cell(15,5,'Precio',1,0,'C','T');
 $pdf->Cell(15,5,'Importe',1,1,'C','T');
 
