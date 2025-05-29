@@ -13,8 +13,8 @@ function formatear_fecha($fecha) {
         10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'
     ];
 
-    $dia = date('j', strtotime($fecha));
-    $mes = $meses[intval(date('n', strtotime($fecha)))];
+    $dia = strtoupper(date('j', strtotime($fecha)));
+    $mes = strtoupper($meses[intval(date('n', strtotime($fecha)))]);
     $anio = date('Y', strtotime($fecha));
 
     return "$dia de $mes de $anio";
