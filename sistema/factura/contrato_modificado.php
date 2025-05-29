@@ -111,10 +111,27 @@ function generarContratoEmpleado($nombreEmpleado) {
 
     // Aquí se insertarán los textos del contrato original uno por uno
     $clausulas = include('clausulas_eventual.php');
-    foreach ($clausulas as $bloque) {
-        $pdf->Ln(10);
-        $pdf->WriteHTML($bloque);
-    }
+
+$valores = [
+    '{cargo}' => $cargo,
+    '{sexo}' => $sexo,
+    '{edad}' => $edad,
+    '{rfc}' => $rfc,
+    '{curp}' => $curp,
+    '{nss}' => $nss,
+    '{domicilio}' => $domicilio,
+    '{estadocivil}' => $estadocivil,
+    '{salarioxdia}' => $salarioxdia,
+    '{salario_letra}' => $salario_letra,
+    '{Diaactual}' => $Diaactual
+];
+
+foreach ($clausulas as $bloque) {
+    $bloque_con_datos = strtr($bloque, $valores); // Reemplaza los marcadores
+    $pdf->Ln(10);
+    $pdf->WriteHTML($bloque_con_datos);
+}
+
 
     // Firma
     $pdf->Ln(30);

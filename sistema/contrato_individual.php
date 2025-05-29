@@ -143,7 +143,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </div>
                         
                       <div class="col-3">
-                      <a href="#" onclick="window.open ('factura/contrato_eventual.php?id='+document.getElementById('inputOperador').value );" >
+                      <a href="#" onclick="window.open ('factura/contrato_modificado.php?id='+document.getElementById('inputOperador').value );" >
                        
                           <button type ="button" class="btn btn-primary pull-left"><i class="fa fa-play"></i> Aceptar</button>
                         </a>
