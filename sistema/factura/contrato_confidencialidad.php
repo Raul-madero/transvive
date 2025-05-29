@@ -70,7 +70,7 @@ class PDF extends FPDF {
 
 $nocotiz = mysqli_real_escape_string($conection, $_REQUEST['id']);
 $query = mysqli_query($conection, "SELECT CONCAT(em.apellido_paterno, ' ',em.apellido_materno, ' ', em.nombres) AS empleado,
-    em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio,
+    em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio, em.feche_reingreso,
     dc.fecha_inicial, dc.fecha_final, em.cargo
     FROM empleados em
     LEFT JOIN detalle_contratos dc ON em.noempleado = dc.no_empleado
@@ -81,32 +81,52 @@ $cotizacion = mysqli_fetch_assoc($query);
 
 $empleado = $cotizacion['empleado'];
 $domicilio = $cotizacion['domicilio'];
-$fecha_contrato = $cotizacion['fecha_contrato'];
-$fechafinal = $cotizacion['fecha_final'];
+$fecha_original = $cotizacion['fecha_contrato'];
 $cargo = $cotizacion['cargo'];
 
+// Usar fecha_reingreso si es válida y mayor a 1900-01-01
+if (!empty($fecha_reingreso) && strtotime($fecha_reingreso) > strtotime('1900-01-01')) {
+    $fecha_contrato = $fecha_reingreso;
+} else {
+    $fecha_contrato = $fecha_original;
+}
+
+$fechafinal = date('Y-m-d', strtotime($fecha_contrato . ' +30 days'));
 $mesMen = formatearFecha($fecha_contrato);
 $mesMay = formatearFecha($fechafinal);
 $Diaactual = formatearFecha(date("Y-m-d"));
 
 $pdf = new PDF();
 $pdf->AliasNbPages();
-$pdf->AddPage();
-$pdf->SetFont('Arial', '', 9);
-$pdf->SetMargins(20, 20, 20);
-$pdf->SetAutoPageBreak(true, 20);
+pdf->AddPage();
+pdf->SetFont('Arial', '', 9);
+pdf->SetMargins(20, 20, 20);
+pdf->SetAutoPageBreak(true, 20);
 
 $textos = [
-    "<div align=\"justify\">QUE CELEBRAN POR UNA PARTE <b>TRANS VIVE S DE RL DE CV,</b> CON DOMICILIO EN: <b>CALLE HIDALGO 30 COLONIA LOS GAVILANES TLAJOMULCO DE ZUNIGA, JALISCO, C.P. 45645</b> Y POR LA OTRA <b>$empleado</b> DE NACIONALIDAD MEXICANA, CON DOMICILIO EN: <b>$domicilio</b> TODO AL TENOR DE LAS SIGUIENTES DECLARACIONES Y CLAUSULAS: </div>",
+    "<div align=\"justify\">QUE CELEBRAN POR UNA PARTE <b>TRANS VIVE S DE RL DE CV</b>, CON DOMICILIO EN: <b>CALLE HIDALGO 30 COLONIA LOS GAVILANES TLAJOMULCO DE ZUNIGA, JALISCO, C.P. 45645</b> Y POR LA OTRA <b>$empleado</b> DE NACIONALIDAD MEXICANA, CON DOMICILIO EN: <b>$domicilio</b> TODO AL TENOR DE LAS SIGUIENTES DECLARACIONES Y CLAUSULAS: </div>",
     "<b>I.- </b>Declara el RECEPTOR que el día <b>$mesMen</b> prestará sus servicios para LA EMPRESA, en su carácter de <b>$cargo</b>.",
-    "<b>II.- </b>Declara LA EMPRESA que...", // Resto de los textos resumido
-    "<b>DECIMA PRIMERA. - </b>Las partes facultan para conocer de la interpretación...",
-    "El presente instrumento se firma por las partes en la Ciudad de Tlajomulco de Zúñiga, Jalisco, el día <b>$mesMen</b>."
+    "<b>II.- </b>Declara LA EMPRESA que como parte de los elementos que le son suministrados al RECEPTOR...",
+    "<b>III.- </b>Declara LA EMPRESA que las informaciones...",
+    "<b>IV.- </b>Declaran ambas partes que celebran el presente instrumento...",
+    "<b>PRIMERA.- </b>EL RECEPTOR reconoce y acepta que LA EMPRESA le ha venido proporcionando...",
+    "<b>SEGUNDA.- </b>EL RECEPTOR reconoce y acepta que la INFORMACIÓN CONFIDENCIAL...",
+    "<b>TERCERA.- </b>EL RECEPTOR reconoce y acepta que la INFORMACIÓN CONFIDENCIAL está relacionada con los rubros...",
+    "a) SERVICIOS", "b) CLIENTES", "c) PROVEEDORES", "d) COLABORADORES", "e) SITUACIÓN FINANCIERA", "f) RUTAS",
+    "<b>CUARTA.- </b>EL RECEPTOR se obliga a no divulgar a terceros...",
+    "<b>QUINTA.- </b>EL RECEPTOR se obliga a no copiar o reproducir...",
+    "<b>SEXTA.- </b>EL RECEPTOR no podrá reproducir por escrito...",
+    "<b>SEPTIMA.- </b>EL RECEPTOR se obliga a no realizar ingeniería inversa...",
+    "<b>OCTAVA.- </b>Este acuerdo estará vigente incluso después de la relación laboral...",
+    "<b>NOVENA.- </b>El RECEPTOR se obliga a pagar una pena convencional de $500,000.00 en caso de incumplimiento...",
+    "<b>DECIMA.- </b>La nulidad de una cláusula no afectará a las demás...",
+    "<b>DECIMA PRIMERA.- </b>Las partes se someten a los tribunales de Guadalajara, Jalisco...",
+    "Este contrato se firma en Tlajomulco de Zúñiga, Jalisco, el día <b>$mesMen</b>."
 ];
 
 foreach ($textos as $texto) {
     $pdf->WriteHTML(utf8_decode($texto));
-    $pdf->Ln(10);
+    $pdf->Ln(8);
 }
 
 $pdf->Ln(30);
