@@ -1,147 +1,157 @@
 <?php
 
 include('../fpdf/fpdf.php');
+//require('../fpdf/WriteHTML.php');
+//require('../fpdf/cells_bold.php');
 header("Content-Type: text/html; charset=iso-8859-1 ");
 class PDF extends FPDF
+{
+var $B;
+var $I;
+var $U;
+var $HREF;
+
+
+
+function WriteHTML($html)
+{
+    // Intérprete de HTML
+    $html = str_replace("\n",' ',$html);
+    $a = preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE);
+    foreach($a as $i=>$e)
     {
-    var $B;
-    var $I;
-    var $U;
-    var $HREF;
-
-
-
-    function WriteHTML($html)
-    {
-        // Intérprete de HTML
-        $html = str_replace("\n",' ',$html);
-        $a = preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE);
-        foreach($a as $i=>$e)
+        if($i%2==0)
         {
-            if($i%2==0)
-            {
-                // Text
-                if($this->HREF)
-                    $this->PutLink($this->HREF,$e);
-                else
-                    $this->Write(5,$e);
-            }
+            // Text
+            if($this->HREF)
+                $this->PutLink($this->HREF,$e);
+            else
+                $this->Write(5,$e);
+        }
+        else
+        {
+            // Etiqueta
+            if($e[0]=='/')
+                $this->CloseTag(strtoupper(substr($e,1)));
             else
             {
-                // Etiqueta
-                if($e[0]=='/')
-                    $this->CloseTag(strtoupper(substr($e,1)));
-                else
+                // Extraer atributos
+                $a2 = explode(' ',$e);
+                $tag = strtoupper(array_shift($a2));
+                $attr = array();
+                foreach($a2 as $v)
                 {
-                    // Extraer atributos
-                    $a2 = explode(' ',$e);
-                    $tag = strtoupper(array_shift($a2));
-                    $attr = array();
-                    foreach($a2 as $v)
-                    {
-                        if(preg_match('/([^=]*)=["\']?([^"\']*)/',$v,$a3))
-                            $attr[strtoupper($a3[1])] = $a3[2];
-                    }
-                    $this->OpenTag($tag,$attr);
+                    if(preg_match('/([^=]*)=["\']?([^"\']*)/',$v,$a3))
+                        $attr[strtoupper($a3[1])] = $a3[2];
                 }
+                $this->OpenTag($tag,$attr);
             }
         }
     }
+}
 
-    function OpenTag($tag, $attr)
+function OpenTag($tag, $attr)
+{
+    // Etiqueta de apertura
+    if($tag=='B' || $tag=='I' || $tag=='U')
+        $this->SetStyle($tag,true);
+    if($tag=='A')
+        $this->HREF = $attr['HREF'];
+    if($tag=='BR')
+        $this->Ln(5);
+}
+
+function CloseTag($tag)
+{
+    // Etiqueta de cierre
+    if($tag=='B' || $tag=='I' || $tag=='U')
+        $this->SetStyle($tag,false);
+    if($tag=='A')
+        $this->HREF = '';
+}
+
+function SetStyle($tag, $enable)
+{
+    // Modificar estilo y escoger la fuente correspondiente
+    $this->$tag += ($enable ? 1 : -1);
+    $style = '';
+    foreach(array('B', 'I', 'U') as $s)
     {
-        // Etiqueta de apertura
-        if($tag=='B' || $tag=='I' || $tag=='U')
-            $this->SetStyle($tag,true);
-        if($tag=='A')
-            $this->HREF = $attr['HREF'];
-        if($tag=='BR')
-            $this->Ln(5);
+        if($this->$s>0)
+            $style .= $s;
     }
+    $this->SetFont('',$style);
+}
 
-    function CloseTag($tag)
-    {
-        // Etiqueta de cierre
-        if($tag=='B' || $tag=='I' || $tag=='U')
-            $this->SetStyle($tag,false);
-        if($tag=='A')
-            $this->HREF = '';
-    }
+function PutLink($URL, $txt)
+{
+    // Escribir un hiper-enlace
+    $this->SetTextColor(0,0,255);
+    $this->SetStyle('U',true);
+    $this->Write(5,$txt,$URL);
+    $this->SetStyle('U',false);
+    $this->SetTextColor(0);
+}
 
-    function SetStyle($tag, $enable)
-    {
-        // Modificar estilo y escoger la fuente correspondiente
-        $this->$tag += ($enable ? 1 : -1);
-        $style = '';
-        foreach(array('B', 'I', 'U') as $s)
-        {
-            if($this->$s>0)
-                $style .= $s;
-        }
-        $this->SetFont('',$style);
-    }
+function Header()
+{
+//Variables para consulta
+$nocotiz=$_REQUEST['id'];
+//Consulta sql encabezado
+include('../../conexion.php');
+$query = mysqli_query($conection,"SELECT CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) as empleado, fecha_contrato, sexo, estado_civil, edad, rfc, curp, numeross, domicilio from empleados where CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) = '$nocotiz'");
+$result = mysqli_num_rows($query);
+$cotizacion = mysqli_fetch_assoc($query);
+//$encabezado = mysql_fetch_array($query1, $conexion);
+//Variables para encabezado
+    
+    $empleado       = $cotizacion['empleado'];
+    $fecha_contrato = $cotizacion['fecha_contrato'];
+    $sexo           = $cotizacion['sexo'];
+    $estadocivil    = $cotizacion['estado_civil'];
+    $edad           = $cotizacion['edad'];
+    $rfc            = $cotizacion['rfc'];
+    $curp           = $cotizacion['curp'];
+    $nss            = $cotizacion['numeross'];
+    $domicilio      = $cotizacion['domicilio'];
+   
+    $texto1='CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO';
 
-    function PutLink($URL, $txt)
-    {
-        // Escribir un hiper-enlace
-        $this->SetTextColor(0,0,255);
-        $this->SetStyle('U',true);
-        $this->Write(5,$txt,$URL);
-        $this->SetStyle('U',false);
-        $this->SetTextColor(0);
-    }
+   
+   
+    $subtitulo1=utf8_decode('Orgaizacion Auxiliar del Crédito');
 
-    function Header()
-    {
-        //Variables para consulta
-        $nocotiz=$_REQUEST['id'];
-        //Consulta sql encabezado
-        include('../../conexion.php');
-        $query = mysqli_query($conection,"SELECT CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) as empleado, fecha_contrato, sexo, estado_civil, edad, rfc, curp, numeross, domicilio from empleados where CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) = '$nocotiz'");
-        $result = mysqli_num_rows($query);
-        $cotizacion = mysqli_fetch_assoc($query);
-        //Variables para encabezado
-            
-            $empleado       = $cotizacion['empleado'];
-            $fecha_contrato = $cotizacion['fecha_contrato'];
-            $sexo           = $cotizacion['sexo'];
-            $estadocivil    = $cotizacion['estado_civil'];
-            $edad           = $cotizacion['edad'];
-            $rfc            = $cotizacion['rfc'];
-            $curp           = $cotizacion['curp'];
-            $nss            = $cotizacion['numeross'];
-            $domicilio      = $cotizacion['domicilio'];
-        
-            $texto1='CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO';
+    
+    $newDate = date("d-m-Y", strtotime($fecha_contrato));
 
-        
-        
-            $subtitulo1=utf8_decode('Orgaizacion Auxiliar del Crédito');
+//Logo
+//$this->Image("img/logo.png",12,11,40,19,"png",0,'C');
+//Arial bold 15
+$this->SetFont('Arial','B',12);
+//Encabezado
+$this->Cell(40,20,'',0,0,'r');
+$this->SetTextcolor(6,22,54);
+$this->Cell(120,10,'',0,0,'C');
+$this->Ln(10);
 
-            
-            $newDate = date("d-m-Y", strtotime($fecha_contrato));
-
-        //Logo
-        //$this->Image("img/logo.png",12,11,40,19,"png",0,'C');
-        //Arial bold 15
-        $this->SetFont('Arial','B',12);
-        //Encabezado
-        $this->Cell(40,20,'',0,0,'r');
-        $this->SetTextcolor(6,22,54);
-        $this->Cell(120,10,'',0,0,'C');
-        $this->Ln(10);
-
-    }
+}
 
 
 
-// function Footer()
-// {
-//     $nocotiz=$_REQUEST['id'];
-//     include('../../conexion.php');
-//     $query_footer = mysqli_query($conection,"SELECT CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) as empleado, fecha_contrato, sexo, estado_civil, edad, rfc, curp, numeross, domicilio from empleados where CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) = '$nocotiz'");
-//     $result_footer = mysqli_num_rows($query_footer);
-//     $footer = mysqli_fetch_assoc($query_footer);
+function Footer()
+{
+    $nocotiz=$_REQUEST['id'];
+    include('../../conexion.php');
+    $query_footer = mysqli_query($conection,"SELECT CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) as empleado, fecha_contrato, sexo, estado_civil, edad, rfc, curp, numeross, domicilio from empleados where CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) = '$nocotiz'");
+    $result_footer = mysqli_num_rows($query_footer);
+    $footer = mysqli_fetch_assoc($query_footer);
+//Variables para consulta
+//$id_salidas = $_GET['id_item'];
+//Consulta sql pie de pagina
+//$query1 = mysql_query("SELECT * FROM salida_ingreso WHERE id_salida_ingreso = '$id_salidas'");
+//Variables para pie de pagina
+ //   $entrega = $encabezado['entrega'];
+ //   $recibe = $encabezado['recibe'];
 //Posición
 $this->SetY(-20);
 //Fuente
@@ -164,14 +174,14 @@ $pdf->SetMargins(20, 2 , 20);
 
 #Establecemos el margen inferior:
 $pdf->SetAutoPageBreak(true,20);
-$query = mysqli_query($conection,"SELECT CONCAT(em.apellido_paterno, ' ',em.apellido_materno, ' ', em.nombres) as empleado, em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio, em.fecha_reingreso, dc.fecha_inicial, dc.fecha_final, em.cargo, em.fecha_reingreso from empleados em left join detalle_contratos dc ON em.noempleado = dc.no_empleado where CONCAT(em.nombres, ' ',em.apellido_paterno, ' ', em.apellido_materno) = '$nocotiz' ORDER by dc.id DESC LIMIT 1");
+$query = mysqli_query($conection,"SELECT CONCAT(em.apellido_paterno, ' ',em.apellido_materno, ' ', em.nombres) as empleado, em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio, dc.fecha_inicial, dc.fecha_final, em.cargo, em.fecha_reingreso from empleados em left join detalle_contratos dc ON em.noempleado = dc.no_empleado where CONCAT(em.nombres, ' ',em.apellido_paterno, ' ', em.apellido_materno) = '$nocotiz' ORDER by dc.id DESC LIMIT 1");
 $result = mysqli_num_rows($query);
 $cotizacion = mysqli_fetch_assoc($query);
 //$encabezado = mysql_fetch_array($query1, $conexion);
 //Variables para encabezado
     
     $empleado       = $cotizacion['empleado'];
-    $fecha_original = $cotizacion['fecha_contrato'];
+    $fecha_contrato = $cotizacion['fecha_contrato'];
     $sexo           = $cotizacion['sexo'];
     $estadocivil    = $cotizacion['estado_civil'];
     $edad           = $cotizacion['edad'];
