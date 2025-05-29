@@ -40,7 +40,8 @@ $fecha_contrato = ($data['fecha_reingreso'] && $data['fecha_reingreso'] > '1900-
                     ? $data['fecha_reingreso'] 
                     : $data['fecha_contrato'];
 $mesMen         = formatear_fecha($fecha_contrato);
-$mesMay         = formatear_fecha($data['fecha_final']);
+$fecha_final = (new DateTime($fecha_contrato)->modify('+1 month')->format('Y-m-d'));
+$mesMay         = formatear_fecha($fecha_final);
 $Diaactual      = formatear_fecha(date("Y-m-d"));
 
 // Plantilla de texto

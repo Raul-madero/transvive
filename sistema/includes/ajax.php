@@ -12080,31 +12080,52 @@ if($_POST['action'] == 'AddProdnuevo')
 }
 
 // Generar Vuelta
-    if($_POST['action'] == 'AddFirmaAreq')
-    {
-      if(!empty($_POST['firmareq']) )
-      {
-        $noreq     = $_POST['noreq'];
+    if ($_POST['action'] == 'AddFirmaAreq') {
+    if (!empty($_POST['firmareq']) && !empty($_POST['noreq']) && !empty($_POST['datereq']) && !empty($_POST['tiporeq'])) {
+
+        $noreq     = intval($_POST['noreq']); // Sanear número
         $datereq   = $_POST['datereq'];
         $tiporeq   = $_POST['tiporeq'];
-        $firmareq  = $_POST['firmareq'];
+        $firmareq  = mysqli_real_escape_string($conection, $_POST['firmareq']); // Sanear cadena
 
-        $query_procesar = mysqli_query($conection,"CALL add_firmareq($noreq, '$datereq', '$tiporeq', '$firmareq' )");
-        $result_detalle = mysqli_num_rows($query_procesar);
+        // Verificar si ya fue autorizada
+        $sql = "SELECT COUNT(*) as total FROM requisicion_compra WHERE no_requisicion = $noreq AND estatus = 2";
+        $result = mysqli_query($conection, $sql);
+        $row = mysqli_fetch_assoc($result);
 
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-             mysqli_close($conection);
-        }else{
-            echo "error";
+        if ($row['total'] > 0) {
+            echo "Requisición ya fue autorizada.";
+            exit;
         }
-       
-     }else{
-        echo 'error';
-     }
+
+        // Obtener firma autorizada del sistema
+        $sql = "SELECT firma_autoriza FROM perfil_empresa LIMIT 1";
+        $result = mysqli_query($conection, $sql);
+        $data = mysqli_fetch_assoc($result);
+
+        $firma_autoriza = $data['firma_autoriza'];
+
+        // Validar si la firma enviada es la correcta
+        if ($firma_autoriza === $firmareq) {
+            $sql = "UPDATE requisicion_compra 
+                    SET firma_autoriza = '$firmareq', estatus = 2 
+                    WHERE no_requisicion = $noreq";
+
+            if (mysqli_query($conection, $sql)) {
+                echo json_encode(['success' => true, 'mensaje' => 'Requisición autorizada'], JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
+            }
+        } else {
+            echo json_encode(['success' => false, 'mensaje' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
+        }
+
+        mysqli_close($conection);
+    } else {
+        echo json_encode(['success' => false, 'mensaje' => 'Datos incompletos'], JSON_UNESCAPED_UNICODE);
     }
+}
+
 
 
     // Cambia Firma
