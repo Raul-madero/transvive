@@ -60,7 +60,7 @@ $entrada = mysqli_fetch_assoc($query);
 
 $this->Image("../../images/fondo001.png",10,10,78,93,"png",0);
 $this->Image("../../images/fondo002.png",171,216.5,28,53,"png",0);
-$this->Image("../../images/transvive_logo.png",12,11,48,13,"png",0,);
+$this->Image("../../images/transvive_logo.png",12,11,48,13,"png",0);
 $this->Image("../../images/fondo01.png",36,110,148,63,"png",0);
 
 //$this->Image("temp/test.png",12,31,35,23,"png",0,'C');
