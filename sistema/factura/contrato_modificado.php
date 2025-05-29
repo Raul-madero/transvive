@@ -5,17 +5,21 @@ include('../../conexion.php');
 
 header("Content-Type: text/html; charset=iso-8859-1");
 
-function formatear_fecha($fecha, $locale = 'es_MX') {
-    $formatter = new IntlDateFormatter(
-        $locale,
-        IntlDateFormatter::LONG,
-        IntlDateFormatter::NONE,
-        'America/Mexico_City',
-        IntlDateFormatter::GREGORIAN,
-        "d 'de' MMMM 'de' y"
-    );
-    return strtoupper($formatter->format(new DateTime($fecha)));
+function formatear_fecha($fecha) {
+    $meses = [
+        1 => 'enero', 2 => 'febrero', 3 => 'marzo',
+        4 => 'abril', 5 => 'mayo', 6 => 'junio',
+        7 => 'julio', 8 => 'agosto', 9 => 'septiembre',
+        10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'
+    ];
+
+    $dia = date('j', strtotime($fecha));
+    $mes = $meses[intval(date('n', strtotime($fecha)))];
+    $anio = date('Y', strtotime($fecha));
+
+    return "$dia de $mes de $anio";
 }
+
 
 function obtenerDatosEmpleado($con, $nombreCompleto) {
     $sql = "SELECT 
