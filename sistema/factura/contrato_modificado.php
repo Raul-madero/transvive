@@ -3,7 +3,7 @@ require '../fpdf/fpdf.php';
 require '../includes/conversor.php';
 include('../../conexion.php');
 
-header("Content-Type: text/html; charset=iso-8859-1");
+header("Content-Type: text/html; charset=utf-8");
 
 function formatear_fecha($fecha) {
     $meses = [
