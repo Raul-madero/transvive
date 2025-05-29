@@ -113,28 +113,38 @@ function generarContratoEmpleado($nombreEmpleado) {
     $pdf->SetFont('Arial', '', 9);
     $pdf->WriteHTML($intro);
 
+    //Definir variables
+    $cargo        = $data['cargo'];
+    $sexo         = $data['sexo'];
+    $edad         = $data['edad'];
+    $rfc          = $data['rfc'];
+    $curp         = $data['curp'];
+    $nss          = $data['numeross'];
+    $domicilio    = $data['domicilio'];
+    $estadocivil  = $data['estado_civil'];
+    $salarioxdia  = $data['salarioxdia'];
     // Aquí se insertarán los textos del contrato original uno por uno
     $clausulas = include('clausulas_eventual.php');
 
-$valores = [
-    '{cargo}' => $cargo,
-    '{sexo}' => $sexo,
-    '{edad}' => $edad,
-    '{rfc}' => $rfc,
-    '{curp}' => $curp,
-    '{nss}' => $nss,
-    '{domicilio}' => $domicilio,
-    '{estadocivil}' => $estadocivil,
-    '{salarioxdia}' => $salarioxdia,
-    '{salario_letra}' => $salario_letra,
-    '{Diaactual}' => $Diaactual
-];
+    $valores = [
+        '{cargo}' => $cargo,
+        '{sexo}' => $sexo,
+        '{edad}' => $edad,
+        '{rfc}' => $rfc,
+        '{curp}' => $curp,
+        '{nss}' => $nss,
+        '{domicilio}' => $domicilio,
+        '{estadocivil}' => $estadocivil,
+        '{salarioxdia}' => $salarioxdia,
+        '{salario_letra}' => $salario_letra,
+        '{Diaactual}' => $Diaactual
+    ];
 
-foreach ($clausulas as $bloque) {
-    $bloque_con_datos = strtr($bloque, $valores); // Reemplaza los marcadores
-    $pdf->Ln(10);
-    $pdf->WriteHTML(utf8_decode($bloque_con_datos));
-}
+    foreach ($clausulas as $bloque) {
+        $bloque_con_datos = strtr($bloque, $valores); // Reemplaza los marcadores
+        $pdf->Ln(10);
+        $pdf->WriteHTML(utf8_decode($bloque_con_datos));
+    }
 
 
     // Firma
