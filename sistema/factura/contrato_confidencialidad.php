@@ -70,7 +70,7 @@ class PDF extends FPDF {
 
 $nocotiz = mysqli_real_escape_string($conection, $_REQUEST['id']);
 $query = mysqli_query($conection, "SELECT CONCAT(em.apellido_paterno, ' ',em.apellido_materno, ' ', em.nombres) AS empleado,
-    em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio, em.feche_reingreso,
+    em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio, em.fecha_reingreso,
     dc.fecha_inicial, dc.fecha_final, em.cargo
     FROM empleados em
     LEFT JOIN detalle_contratos dc ON em.noempleado = dc.no_empleado
