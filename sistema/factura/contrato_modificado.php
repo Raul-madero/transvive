@@ -106,7 +106,7 @@ function generarContratoEmpleado($nombreEmpleado) {
     $pdf->SetAutoPageBreak(true, 20);
 
     $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(180, 5, 'CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO', 0, 1, 'C');
+    $pdf->Cell(180, 5, utf8_decode('CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO'), 0, 1, 'C');
     $pdf->Ln(5);
 
     $intro = "<div align='justify'>CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO POR 30 DIAS A PARTIR DEL <b>$mesMen</b> AL <b>$mesMay</b>, ENTRE LA EMPRESA <b>TRANSVIVE, S DE RL DE CV</b> Y <b>{$data['empleado']}</b>, QUIEN EN LO SUCESIVO SE LE DENOMINARÁ \"EL TRABAJADOR\".</div>";
@@ -133,7 +133,7 @@ $valores = [
 foreach ($clausulas as $bloque) {
     $bloque_con_datos = strtr($bloque, $valores); // Reemplaza los marcadores
     $pdf->Ln(10);
-    $pdf->WriteHTML($bloque_con_datos);
+    $pdf->WriteHTML(utf8_decode($bloque_con_datos));
 }
 
 
@@ -145,8 +145,8 @@ foreach ($clausulas as $bloque) {
     $pdf->Ln(10);
     $pdf->Cell(85, 5, '_______________________________', 0, 0, 'C');
     $pdf->Cell(85, 5, '_______________________________', 0, 1, 'C');
-    $pdf->Cell(85, 5, 'RAUL GUTIERREZ DE VELASCO ROMO', 0, 0, 'C');
-    $pdf->Cell(85, 5, $data['empleado'], 0, 1, 'C');
+    $pdf->Cell(85, 5, utf8_decode('RAUL GUTIERREZ DE VELASCO ROMO'), 0, 0, 'C');
+    $pdf->Cell(85, 5, utf8_decode($data['empleado']), 0, 1, 'C');
 
     $pdf->Output('I', 'Contrato_Eventual_30_Dias.pdf');
 }
