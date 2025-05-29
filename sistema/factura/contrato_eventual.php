@@ -100,7 +100,7 @@ function Header()
 $nocotiz=$_REQUEST['id'];
 //Consulta sql encabezado
 include('../../conexion.php');
-$query = mysqli_query($conection,"SELECT CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) as empleado, fecha_contrato, sexo, estado_civil, edad, rfc, curp, numeross, domicilio from empleados where CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) = '$nocotiz'");
+$query = mysqli_query($conection,"SELECT CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) as empleado, fecha_contrato, sexo, estado_civil, edad, rfc, curp, numeross, domicilio, fecha_reingreso from empleados where CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) = '$nocotiz'");
 $result = mysqli_num_rows($query);
 $cotizacion = mysqli_fetch_assoc($query);
 //$encabezado = mysql_fetch_array($query1, $conexion);
@@ -143,7 +143,7 @@ function Footer()
 {
     $nocotiz=$_REQUEST['id'];
     include('../../conexion.php');
-    $query_footer = mysqli_query($conection,"SELECT CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) as empleado, fecha_contrato, sexo, estado_civil, edad, rfc, curp, numeross, domicilio from empleados where CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) = '$nocotiz'");
+    $query_footer = mysqli_query($conection,"SELECT CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) as empleado, fecha_contrato, sexo, estado_civil, edad, rfc, curp, numeross, fecha_reingreso, domicilio from empleados where CONCAT(nombres, ' ',apellido_paterno, ' ', apellido_materno) = '$nocotiz'");
     $result_footer = mysqli_num_rows($query_footer);
     $footer = mysqli_fetch_assoc($query_footer);
 //Variables para consulta
@@ -175,14 +175,16 @@ $pdf->SetMargins(20, 2 , 20);
 
 #Establecemos el margen inferior:
 $pdf->SetAutoPageBreak(true,20);
-$query = mysqli_query($conection,"SELECT CONCAT(em.nombres, ' ',em.apellido_paterno, ' ', em.apellido_materno) as empleado, em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.curp, em.numeross, em.domicilio, dc.fecha_inicial, dc.fecha_final, em.cargo, em.salarioxdia from empleados em left join detalle_contratos dc ON em.noempleado = dc.no_empleado where CONCAT(em.nombres, ' ',em.apellido_paterno, ' ', em.apellido_materno) = '$nocotiz' ORDER by dc.id DESC LIMIT 1");
+$query = mysqli_query($conection,"SELECT CONCAT(em.nombres, ' ',em.apellido_paterno, ' ', em.apellido_materno) as empleado, em.fecha_contrato, em.sexo, em.estado_civil, em.edad, em.rfc, em.fecha_reingreso, em.curp, em.numeross, em.domicilio, dc.fecha_inicial, dc.fecha_final, em.cargo, em.salarioxdia from empleados em left join detalle_contratos dc ON em.noempleado = dc.no_empleado where CONCAT(em.nombres, ' ',em.apellido_paterno, ' ', em.apellido_materno) = '$nocotiz' ORDER by dc.id DESC LIMIT 1");
 $result = mysqli_num_rows($query);
 $cotizacion = mysqli_fetch_assoc($query);
 //$encabezado = mysql_fetch_array($query1, $conexion);
 //Variables para encabezado
     
     $empleado       = $cotizacion['empleado'];
-    $fecha_contrato = $cotizacion['fecha_contrato'];
+    $fecha_contrato = ($cotizacion['fecha_reingreso'] && $cotizacion['fecha_reingreso'] > '1900-01-01') 
+                    ? $cotizacion['fecha_reingreso'] 
+                    : $cotizacion['fecha_contrato'];
     $sexo           = $cotizacion['sexo'];
     $estadocivil    = $cotizacion['estado_civil'];
     $edad           = $cotizacion['edad'];
@@ -203,7 +205,6 @@ $cotizacion = mysqli_fetch_assoc($query);
 //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
     $mesDesc2 = strftime("%d de %B de %Y", strtotime($newDate2));
     $mesMen = strtoupper($mesDesc2);
-
     $newDate3 = date("d-m-Y", strtotime($fechafinal));
     $fechalet3 = $fechafinal;
     $fechalet3 = str_replace("/", "-", $fechafinal);         

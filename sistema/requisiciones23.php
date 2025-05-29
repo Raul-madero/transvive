@@ -460,9 +460,10 @@ session_start();
             // Evento para mostrar el modal para autorizar una requisición
             $('#modalAutorizaRequisicion').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget); // Botón que disparó el modal
-                const noreq   = button.data('id') || '';
-                const datereq = button.data('date') || '';
-                const tiporeq = button.data('name') || '';
+                console.log(button[0], button.data('id'))
+                const noreq   = button.data('id');
+                const datereq = button.data('date');
+                const tiporeq = button.data('name');
                 const modal = $(this);
                 //Insertar los valores en el modal
                 modal.find('#form_pass_noreq').val(noreq);
@@ -487,7 +488,7 @@ session_start();
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label text-left">No. Requisición:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="form_pass_noreq" name="form_pass_noreq" disabled>
+                                <input type="text" class="form-control" id="fact_noreq" name="form_pass_noreq" disabled>
                             </div>
                         </div>
                         <!-- Subir archivo pdf -->
@@ -503,7 +504,7 @@ session_start();
                             <button id="form_subir_factura" class="btn btn-primary">Subir</button>
                         </div>
                     </div>
-                    <input type="hidden" id="form_pass_datereq" name="form_pass_datereq">
+                    <input type="hidden" id="fact_date_req" name="form_pass_datereq">
                 </form>
             </div>
         </div>
@@ -588,7 +589,7 @@ session_start();
             const tiporeq = $('#form_pass_tiporeq').val();
             const firmareq = $('#form_pass_firma').val();
             const action = 'AddFirmaAreq';
-
+            console.log(noreq, datereq, tiporeq, firmareq);
             // Validación simple del campo de firma
             if (!firmareq || firmareq.trim() === '') {
                 Swal.fire({
@@ -613,22 +614,20 @@ session_start();
                     try {
                         if (response && response !== 'error') {
                             const info = JSON.parse(response);
-                            if (!info.mensaje) {
-                                // Éxito: cerrar modal, limpiar y recargar
+                            if (info.success) {
                                 $('#modalAutorizaRequisicion').modal('hide');
                                 $('#form_pass_firma').val('');
 
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Autorizado',
-                                    text: 'La requisición fue autorizada correctamente.',
+                                    text: info.mensaje,
                                     timer: 2000,
                                     showConfirmButton: false
                                 }).then(() => {
                                     location.reload();
                                 });
                             } else {
-                                // Error interno del servidor
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
