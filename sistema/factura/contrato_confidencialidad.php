@@ -98,10 +98,10 @@ $Diaactual = formatearFecha(date("Y-m-d"));
 
 $pdf = new PDF();
 $pdf->AliasNbPages();
-pdf->AddPage();
-pdf->SetFont('Arial', '', 9);
-pdf->SetMargins(20, 20, 20);
-pdf->SetAutoPageBreak(true, 20);
+$pdf->AddPage();
+$pdf->SetFont('Arial', '', 9);
+$pdf->SetMargins(20, 20, 20);
+$pdf->SetAutoPageBreak(true, 20);
 
 $textos = [
     "<div align=\"justify\">QUE CELEBRAN POR UNA PARTE <b>TRANS VIVE S DE RL DE CV</b>, CON DOMICILIO EN: <b>CALLE HIDALGO 30 COLONIA LOS GAVILANES TLAJOMULCO DE ZUNIGA, JALISCO, C.P. 45645</b> Y POR LA OTRA <b>$empleado</b> DE NACIONALIDAD MEXICANA, CON DOMICILIO EN: <b>$domicilio</b> TODO AL TENOR DE LAS SIGUIENTES DECLARACIONES Y CLAUSULAS: </div>",
