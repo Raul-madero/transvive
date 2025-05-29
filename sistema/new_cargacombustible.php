@@ -405,7 +405,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
-
         function esFechaValida(fechaUsuario) {
             //Convertir la fecha ingresada a un objeto Date
             let fechaIngresada = new Date(fechaUsuario);
@@ -427,13 +426,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             // } else {
             //     return false;
             // }
-            // return true;
+            return true;
         }
 
        var folio       = $('#inputFolio').val();
        var estacion    = $('#inputEstacion').val();
        var fecha       = esFechaValida($('#inputFecha').val());
-       console.log(fecha);
        var nosemana    = $('#inputSemana').val();
        var nounidad    = $('#inputNounidad').val();
        var placas      = $('#inputPlacas').val();
