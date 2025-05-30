@@ -44,7 +44,7 @@ class PDF extends FPDF {
             //$contenido = 'Certificado '.$certificado.' Almacen '.$almacen;
             $subtitulo1=utf8_decode('REQUISICIÓN');
             //Logo
-            $this->Image("../../images/transvive.png",12,11,48,13,"png",0,'C');
+            $this->Image("../../images/transvive.png",12,11,48,13,"png",0);
             //$this->Image("temp/test.png",12,31,35,23,"png",0,'C');
             //Arial bold 15
             $this->SetFont('Arial','',10);
