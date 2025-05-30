@@ -87,9 +87,15 @@ session_start();
 
 <!-- Estilos personalizados -->
 <style>
-  th { font-size: 12px; font-weight: bold; }
-  td { font-size: 13px; }
-  .dt-folio { text-transform: uppercase !important; }
+  #fetch_generated_wills {
+    width: 100% !important;
+    table-layout: fixed;
+  }
+  .column-actions {
+    white-space: nowrap;
+    text-align: center;
+    min-width: 160px; /* ajusta según la cantidad de íconos */
+}
 </style>
 
 </head>
@@ -167,18 +173,18 @@ session_start();
                             <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" width="100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">Id</th>
+                                        <!-- <th class="text-center">Id</th> -->
                                         <th class="text-center">No. Requisición</th>
                                         <th class="text-center">Fecha</th>
                                         <th class="text-center">Fecha Requiere Material</th>
-                                        <th class="text-center">Orden de Compra</th>
-                                        <th class="text-center">Fecha Orden de Compra</th>
+                                        <th class="text-center">No. OC</th>
+                                        <th class="text-center">Fecha OC</th>
                                         <th class="text-center">Tipo</th>
                                         <th class="text-center">Área Solicitante</th>
                                         <th class="text-center">Monto</th>
                                         <th class="text-center">Observaciones</th>
                                         <th class="text-center">Estatus</th>
-                                        <th class="text-center">Acción</th>
+                                        <th class="text-center">Acciónes</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -284,24 +290,24 @@ session_start();
                         }
                     },
                     columns: [
-                        { data: "pedidono", width: "3%", className: "text-right" },
+                        // { data: "pedidono", width: "3%", className: "text-center" },
                         {
                             data: "Folio",
-                            width: "3%",
+                            width: "2%",
                             className: "text-center",
                             render: data => 'REQ-' + data
                         },
-                        { data: "fechaa", width: "8%", className: "text-center" },
-                        { data: "fecha_req", width: "10%", className: "text-center", orderable: false },
+                        { data: "fechaa", width: "3%", className: "text-center" },
+                        { data: "fecha_req", width: "5%", className: "text-center", orderable: false },
                         { 
                             data: "no_orden", 
                             width: "5%", 
                             className: "text-center", 
                             render: data => data === 'N/A' ? data : 'OC-' + data 
                         },
-                        { data: 'fecha_orden', width: "10%" },
+                        { data: 'fecha_orden', width: "5%" },
                         { data: "tipor", width: "5%", orderable: false },
-                        { data: "arear", width: "10%", orderable: false },
+                        { data: "arear", width: "15%", orderable: false },
                         {
                             data: "monto",
                             width: "6%",
@@ -309,10 +315,12 @@ session_start();
                             orderable: false,
                             render: $.fn.dataTable.render.number(',', '.', 2)
                         },
-                        { data: "notas", width: "27%", orderable: false },
-                        { data: "estatusped", width: "8%", orderable: false },
+                        { data: "notas", width: "30%", orderable: false },
+                        { data: "estatusped", width: "4%", orderable: false },
                         {
                             orderable: false,
+                            width: "20%",
+                            className: "text-center column-actions",
                             render: function (data, type, full) {
                                 let actions = ""
                                 //Si el estado de la requisicion es activa
