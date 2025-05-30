@@ -310,7 +310,7 @@ session_start();
                                 if (full.estatus == 1) {
                                     //Si el usuario es Raul o Itzu
                                      <?php
-                                        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3) {
+                                        if ($idUser == 17 || $idUser == 3) {
                                     ?>
                                     actions =
                                         `
@@ -326,7 +326,7 @@ session_start();
                                         `
                                         //Si el rol de usuario es compras o administrador
                                     <?php
-                                        }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) {
+                                        }else if($rol == 16 || $rol == 1 || $rol == 7 || $idUser == 19) {
                                     ?>
                                         actions = 
                                             `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
@@ -359,7 +359,7 @@ session_start();
                                 }else if (full.estatus == 2) {
                                     //Si el rol de usuario es compras o administrador
                                     <?php
-                                        if ($rol == 16 || $rol == 1) {
+                                        if ($rol == 16 || $rol == 1 || $rol == 7 || $idUser == 19) {
                                     ?>
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
@@ -387,7 +387,7 @@ session_start();
                                     <?php
                                         }
                                     ?>
-                                    //Cualquier otro estado de la requisicion
+                                    //Facturado
                                 } else if (full.estatus == 4) {
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
@@ -398,11 +398,15 @@ session_start();
                                             <i class="fa fa-upload" style="font-size:1.3em;"></i> 
                                         </a>
                                     `
-                                }else{
+                                }else if(full.estatus == 5) {
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:1.3em;"></i>
+                                            <i class="fa fa-print" style="font-size:1.3em;">R</i>
                                         </a>
+                                        |
+                                        <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange">
+                                            <i class="fa fa-print" style="font-size:1.3em;">F</i>
+                                        </a> 
                                         `;
                                     
                                 }
@@ -477,7 +481,7 @@ session_start();
      <div class="modal fade" id="subirFactura" tabindex="-1" role="dialog" aria-labelledby="subirFacturaLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form>
+                <form method="POST" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="subirFacturaLabel">Subir Factura</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
@@ -514,9 +518,65 @@ session_start();
         $(document).ready(function () {
             //Evento para mostrar el modal de subir factura
             $('#subirFactura').on('show.bs.modal', function (event) {
-                console.log($(event.relatedTarget)); // Button that triggered the modal
+                const button = $(event.relatedTarget) // Button that triggered the modal
+                const noreq = button.data('id')
+                const modal = $(this);
+                //Insertar valores en el modal Subir Factura
+                modal.find('#fact_noreq').val(noreq)
             })
         })
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#form_subir_factura').on('click', function (event) {
+                event.preventDefault();
+
+                const formData = new FormData();
+                formData.append('form_pass_noreq', $('#fact_noreq').val());
+                formData.append('form_pass_datereq', $('#fact_date_req').val());
+
+                // Verificamos que haya archivo seleccionado
+                const archivo = $('#form_archivo')[0].files[0];
+                if (!archivo) {
+                    alert('Por favor selecciona un archivo.');
+                    return;
+                }
+                formData.append('archivo', archivo);
+
+                $.ajax({
+                    url: 'carga_facturas.php',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,  // Importante para FormData
+                    processData: false,
+                    success: function (response) {
+                        console.log(response);
+                        if (response.trim() === 'OK') {
+                            Swal.fire({
+                                title: 'Factura subida correctamente!',
+                                icon:'success',
+                                confirmButtonText: 'Aceptar'
+                            });
+                            $('#subirFactura').modal('hide');
+                            // actualizarLaPagina(); // Si tienes esta función definida
+                        } else {
+                            Swal.fire({
+                                title: 'Error al subir la factura!',
+                                icon: 'error',
+                                text: response,
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR.responseText);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    }
+                });
+            });
+        });
     </script>
 
     <!-- Modal de Autorizacion -->

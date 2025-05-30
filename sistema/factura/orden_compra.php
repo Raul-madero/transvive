@@ -22,7 +22,7 @@ class PDF extends FPDF
         $id = intval($this->id);
         $this->con->set_charset('utf8');
 
-        $query = $this->con->prepare("SELECT oc.*, pv.nombre FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id WHERE oc.no_orden = ?");
+        $query = $this->con->prepare("SELECT oc.*, pv.nombre FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id WHERE oc.no_requisicion = ?");
         $query->bind_param("i", $id);
         $query->execute();
         $entrada = $query->get_result()->fetch_assoc();
@@ -38,14 +38,14 @@ class PDF extends FPDF
         $this->Cell(50, 15, '', 1);
         $this->SetFillColor(231, 233, 238);
         $this->SetTextColor(6, 22, 54);
-        $this->Cell(15, 15, utf8_decode('Título'), 1, 0, 'C', true);
+        $this->Cell(15, 15, mb_convert_encoding('Título', 'ISO-8859-1', 'UTF-8'), 1, 0, 'C', true);
         $this->Cell(75, 10, $subtitulo1, 1, 0, 'C');
-        $this->Cell(19, 10, utf8_decode('Código'), 'T,R', 0, 'C', true);
+        $this->Cell(19, 10, mb_convert_encoding('Código', 'ISO-8859-1', 'UTF-8'), 'T,R', 0, 'C', true);
         $this->SetFont('Arial', '', 8);
         $this->Cell(30, 10, 'FO-TV-CO-02', 'T,R', 1, 'C');
         $this->SetFont('Arial', '', 10);
         $this->Cell(65, 10, '', 0);
-        $this->Cell(15, 5, utf8_decode('Área'), 1, 0, 'C', true);
+        $this->Cell(15, 5, mb_convert_encoding('Área', 'ISO-8859-1', 'UTF-8'), 1, 0, 'C', true);
         $this->Cell(60, 5, 'Compras', 1, 0, 'C');
         $this->Cell(19, 5, '', 'B,R', 0, 'C', true);
         $this->SetFont('Arial', '', 8);
@@ -57,7 +57,7 @@ class PDF extends FPDF
     {
         $id = intval($this->id);
 
-        $query = $this->con->prepare("SELECT oc.*, rq.fecha as datereq, pv.nombre FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_orden = ?");
+        $query = $this->con->prepare("SELECT oc.*, rq.fecha as datereq, pv.nombre FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_requisicion = ?");
         $query->bind_param("i", $id);
         $query->execute();
         $entrada = $query->get_result()->fetch_assoc();
@@ -70,23 +70,23 @@ class PDF extends FPDF
 
         if ($entrada['estatus'] == 0) {
             $this->SetFont('Arial', '', 7);
-            $this->Cell(189, 5, utf8_decode('Motivo cancelación:'), 1, 1, 'L', true);
+            $this->Cell(189, 5, mb_convert_encoding('Motivo cancelación:', 'ISO-8859-1', 'UTF-8'), 1, 1, 'L', true);
             $this->SetFillColor(255);
-            $this->Cell(189, 5, utf8_decode($entrada['motivo_cancela']), 1, 1, 'L');
+            $this->Cell(189, 5, mb_convert_encoding($entrada['motivo_cancela'], 'ISO-8859-1', 'UTF-8'), 1, 1, 'L');
         } else {
             $this->SetFont('Arial', '', 7);
-            $this->Cell(189, 5, utf8_decode('Observaciones:'), 1, 1, 'L', true);
+            $this->Cell(189, 5, mb_convert_encoding('Observaciones:', 'ISO-8859-1', 'UTF-8'), 1, 1, 'L', true);
             $this->SetFillColor(255);
-            $this->Cell(189, 5, utf8_decode($entrada['observaciones']), 1, 1, 'L');
+            $this->Cell(189, 5, mb_convert_encoding($entrada['observaciones'], 'ISO-8859-1', 'UTF-8'), 1, 1, 'L');
         }
 
         $this->SetFillColor(231, 233, 238);
-        $this->Cell(25, 5, utf8_decode('Área Solicitante:'), 1, 0, 'L', true);
-        $this->Cell(40, 5, utf8_decode($entrada['area_solicitante']), 1);
+        $this->Cell(25, 5, mb_convert_encoding('Área Solicitante:', 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', true);
+        $this->Cell(40, 5, mb_convert_encoding($entrada['area_solicitante'], 'ISO-8859-1', 'UTF-8'), 1);
         $this->Cell(15, 5, 'Fecha:', 1, 0, 'L', true);
         $this->Cell(19, 5, $newDateReq, 1, 0, 'C');
         $this->Cell(15, 5, 'Recibe:', 1, 0, 'L', true);
-        $this->Cell(75, 5, utf8_decode($entrada['recibe']), 1);
+        $this->Cell(75, 5, mb_convert_encoding($entrada['recibe'], 'ISO-8859-1', 'UTF-8'), 1);
     }
 }
 
@@ -98,7 +98,7 @@ if (!$nooc) {
 $pdf = new PDF($nooc, $conection);
 $pdf->AddPage('portrait', 'letter');
 
-$query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe, rq.fecha as datereq, oc.estatus FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_orden = $nooc");
+$query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe, rq.fecha as datereq, oc.estatus FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_requisicion = $nooc");
 $result = mysqli_num_rows($query);
 $entrada = mysqli_fetch_assoc($query);
 //Variables para encabezado
@@ -136,46 +136,46 @@ $pdf->SetFont('Arial','',8);
 $pdf->SetTextcolor(0,0,0);
 $pdf->Cell(25,5,'Proveedor',1,0,'L', 'T');
 $pdf->SetFont('Arial','B',8);
-$pdf->Cell(119,5,utf8_decode($proveedor),1,0,'L');
+$pdf->Cell(119,5,mb_convert_encoding($proveedor, 'ISO-8859-1', 'UTF-8'),1,0,'L');
 $pdf->Cell(20,5,'No. Orden:',1,0,'L', 'T');
 $pdf->SetFont('Arial','B',10);
 $pdf->Cell(25,5,'OC-'. $folio,1,1,'R');
 $pdf->SetFont('Arial','',8);
 $pdf->Cell(25,5,'Contacto:',1,0,'L', 'T');
-$pdf->Cell(119,5,utf8_decode($contacto),1,0,'L');
+$pdf->Cell(119,5,mb_convert_encoding($contacto, 'ISO-8859-1', 'UTF-8'),1,0,'L');
 $pdf->Cell(20,5,'Fecha:',1,0,'L', 'T');
 $pdf->Cell(25,5,$newDate,1,1,'C');
-$pdf->Cell(25,5,utf8_decode('Teléfono:'),1,0,'L', 'T');
+$pdf->Cell(25,5,mb_convert_encoding('Teléfono:', 'ISO-8859-1', 'UTF-8'),1,0,'L', 'T');
 $pdf->Cell(55,5,$telefono,1,0,'L');
 $pdf->Cell(30,5,'Correo:',1,0,'L', 'T');
-$pdf->Cell(79,5,utf8_decode($correo),1,1,'C');
-$pdf->Cell(50,5,utf8_decode('Datos de Facturación:'),1,0,'C', 'T');
+$pdf->Cell(79,5,mb_convert_encoding($correo, 'ISO-8859-1', 'UTF-8'),1,1,'C');
+$pdf->Cell(50,5,mb_convert_encoding('Datos de Facturación:', 'ISO-8859-1', 'UTF-8'),1,0,'C', 'T');
 $pdf->Cell(30,5,'Forma de Pago:',1,0,'L', 'T');
-$pdf->Cell(64,5,utf8_decode($formapago),1,0,'L');
+$pdf->Cell(64,5,mb_convert_encoding($formapago, 'ISO-8859-1', 'UTF-8'),1,0,'L');
 $pdf->Cell(45,5,'Datos de Entrega:',1,1,'C', 'T');
 $pdf->Cell(50,5,'Transvive S. de R.L. de C.V.',1,0,'C');
 $pdf->Cell(30,5,'Metodo de Pago:',1,0,'L', 'T');
-$pdf->Cell(64,5,utf8_decode($metodopago),1,0,'L');
+$pdf->Cell(64,5,mb_convert_encoding($metodopago, 'ISO-8859-1', 'UTF-8'),1,0,'L');
 $pdf->Cell(45,5,'Hidalgo No. 30',1,1,'C');
 $pdf->Cell(50,5,'TVI-190503-SA3',1,0,'C');
 $pdf->Cell(30,5,'Uso de CFDI:',1,0,'L', 'T');
-$pdf->Cell(64,5,utf8_decode($usocfdi),1,0,'L');
+$pdf->Cell(64,5,mb_convert_encoding($usocfdi, 'ISO-8859-1', 'UTF-8'),1,0,'L');
 $pdf->Cell(45,5,'C.P. 45640 Col. Los Gavilanes',1,1,'C');
 $pdf->Cell(144,5,'',1,0,'C');
-$pdf->Cell(45,5,utf8_decode('Tlajomulco de Zuñiga, Jal.'),1,1,'C');
+$pdf->Cell(45,5,mb_convert_encoding('Tlajomulco de Zuñiga, Jal.', 'ISO-8859-1', 'UTF-8'),1,1,'C');
 
 $pdf->Ln(5);
 
 $nooc = $_REQUEST['id'];
 
-$queryr = mysqli_query($conection,"SELECT * FROM detalle_ordencompra WHERE folio = $nooc");
+$queryr = mysqli_query($conection,"SELECT * FROM detalle_ordencompra WHERE folio = $folio");
 $resultr = mysqli_num_rows($queryr);
 
 $pdf->SetFont('Arial','',8);
 $pdf->Cell(13,5,'Cantidad',1,0,'C','T');
-$pdf->Cell(38,5,utf8_decode('Código'),1,0,'C','T');
-$pdf->Cell(85,5,utf8_decode('Descripcion'),1,0,'C','T');
-$pdf->Cell(23,5,utf8_decode('Marca'),1,0,'C','T');
+$pdf->Cell(38,5,mb_convert_encoding('Código', 'ISO-8859-1', 'UTF-8'),1,0,'C','T');
+$pdf->Cell(85,5,mb_convert_encoding('Descripcion', 'ISO-8859-1', 'UTF-8'),1,0,'C','T');
+$pdf->Cell(23,5,mb_convert_encoding('Marca', 'ISO-8859-1', 'UTF-8'),1,0,'C','T');
 $pdf->Cell(15,5,'Precio',1,0,'C','T');
 $pdf->Cell(15,5,'Importe',1,1,'C','T');
 
