@@ -310,7 +310,7 @@ session_start();
                                 if (full.estatus == 1) {
                                     //Si el usuario es Raul o Itzu
                                      <?php
-                                        if ($idUser == 17 || $idUser == 3) {
+                                        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3) {
                                     ?>
                                     actions =
                                         `
@@ -326,7 +326,7 @@ session_start();
                                         `
                                         //Si el rol de usuario es compras o administrador
                                     <?php
-                                        }else if($rol == 16 || $rol == 1 || $rol == 7 || $idUser == 19) {
+                                        }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) {
                                     ?>
                                         actions = 
                                             `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
@@ -359,7 +359,7 @@ session_start();
                                 }else if (full.estatus == 2) {
                                     //Si el rol de usuario es compras o administrador
                                     <?php
-                                        if ($rol == 16 || $rol == 1 || $rol == 7 || $idUser == 19) {
+                                        if ($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) {
                                     ?>
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
@@ -409,6 +409,16 @@ session_start();
                                         </a> 
                                         `;
                                     
+                                }else if(full.estatus == 3) {
+                                    actions = `
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                            <i class="fa fa-print" style="font-size:1.3em;">R</i>
+                                        </a>
+                                        |
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange">
+                                            <i class="fa fa-print" style="font-size:1.3em;">OC</i>
+                                        </a> 
+                                        `;
                                 }
                                 return actions;
                             }
