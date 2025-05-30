@@ -17,15 +17,11 @@ class PDF extends FPDF
         $dir = 'temp/';
         
         //Si no existe la carpeta la creamos
-        if (!file_exists($dir))
+        if (!file_exists($dir)) {
             mkdir($dir);
-        
+        }
         //Declaramos la ruta y nombre del archivo a generar
         $filename = $dir.'test.png';
-    
-            //Parametros de Condiguración
-        
-        
         $conection->set_charset('utf8');
 
         $query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id WHERE oc.no_orden = $nooc");
