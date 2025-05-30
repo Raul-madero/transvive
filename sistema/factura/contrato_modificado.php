@@ -146,7 +146,9 @@ function generarContratoEmpleado($nombreEmpleado) {
 
         if (strpos($bloque_con_datos, '<b>CLAUSULAS</b>') !== false || 
             strpos($bloque_con_datos, '<b>QUINTA.-</b>') !== false ||
-            strpos($bloque_con_datos, '<b>DECIMA PRIMERA.-</b>') !== false) {
+            strpos($bloque_con_datos, '<b>DECIMA PRIMERA.-</b>') !== false ||
+            strpos($bloque_con_datos, '<b>DECIMA CUARTA.-</b>' !== false) || 
+            strpos($bloque_con_datos, '<b>DECIMA NOVENA.-</b>') !== false) {
             $pdf->AddPage();
         }
 
@@ -155,7 +157,7 @@ function generarContratoEmpleado($nombreEmpleado) {
             $pdf->Cell(0, 10, utf8_decode('CLAUSULAS'), 0, 1, 'C');
             continue; // Ya lo escribiste con Cell, no repetir con WriteHTML
         }
-        
+
         $pdf->Ln(10);
         $pdf->WriteHTML(utf8_decode($bloque_con_datos));
 
