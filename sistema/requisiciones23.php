@@ -294,33 +294,33 @@ session_start();
                         {
                             data: "Folio",
                             width: "2%",
-                            className: "text-center",
+                            className: "text-center align-middle",
                             render: data => 'REQ-' + data
                         },
-                        { data: "fechaa", width: "3%", className: "text-center" },
-                        { data: "fecha_req", width: "5%", className: "text-center", orderable: false },
+                        { data: "fechaa", width: "3%", className: "text-center align-middle" },
+                        { data: "fecha_req", width: "5%", className: "text-center align-middle", orderable: false },
                         { 
                             data: "no_orden", 
                             width: "5%", 
-                            className: "text-center", 
+                            className: "text-center align-middle", 
                             render: data => data === 'N/A' ? data : 'OC-' + data 
                         },
-                        { data: 'fecha_orden', width: "5%" },
-                        { data: "tipor", width: "5%", orderable: false },
-                        { data: "arear", width: "15%", orderable: false },
+                        { data: 'fecha_orden', width: "5%", className: "text-center align-middle" },
+                        { data: "tipor", width: "5%", className: "text-center align-middle", orderable: false },
+                        { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
                         {
                             data: "monto",
                             width: "6%",
-                            className: "text-right",
+                            className: "text-center align-middle",
                             orderable: false,
                             render: $.fn.dataTable.render.number(',', '.', 2)
                         },
-                        { data: "notas", width: "30%", orderable: false },
-                        { data: "estatusped", width: "4%", orderable: false },
+                        { data: "notas", width: "30%", className: "text-center align-middle", orderable: false },
+                        { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
                         {
                             orderable: false,
                             width: "20%",
-                            className: "text-center column-actions",
+                            className: "text-center column-actions align-middle",
                             render: function (data, type, full) {
                                 let actions = ""
                                 //Si el estado de la requisicion es activa
@@ -332,13 +332,13 @@ session_start();
                                     actions =
                                         `
                                         <a href='factura/requisicion.php?id=${full.Folio}' target='_blank'>
-                                            <i class='fa fa-print" style="font-size: 1.3em;'></i> Imprimir
+                                            <i class='fa fa-print" style="font-size: .8rem;'></i> Imprimir
                                         </a>
                                         
                                         |
                                         <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion" 
                                             data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}">
-                                            <i class="fa fa-thumbs-up" style="font-size:1.3em;"></i> Autorizar
+                                            <i class="fa fa-thumbs-up" style="font-size:.8rem;"></i> Autorizar
                                         </a> 
                                         `
                                         //Si el rol de usuario es compras o administrador
@@ -347,16 +347,16 @@ session_start();
                                     ?>
                                         actions = 
                                             `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
-                                                <i class="far fa-edit" style="font-size:1.3em;"></i>
+                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
                                             </a> |
                                             <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                                <i class="fa fa-print" style="font-size:1.3em;"></i>
+                                                <i class="fa fa-print" style="font-size:.8rem;"></i>
                                             </a> |
                                             <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning">
-                                                <i class="fa fa-ban" style="font-size:1.3em;"></i>
+                                                <i class="fa fa-ban" style="font-size:.8rem;"></i>
                                             </a> |
                                             <a data-toggle="modal" data-target="#modalBorra" data-id="${full.Folio}" data-name="${full.arear}" href="javascript:void(0)" class="link_delete text-danger">
-                                                <i class="fa fa-trash" style="font-size:1.3em;"></i>
+                                                <i class="fa fa-trash" style="font-size:.8rem;"></i>
                                             </a>
                                             `;
                                             //El resto de los usuarios
@@ -366,7 +366,7 @@ session_start();
                                         actions = 
                                             `
                                                 <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                                    <i class="fa fa-print" style="font-size: 1.3em;"></i>
+                                                    <i class="fa fa-print" style="font-size: .8rem;"></i>
                                                 </a>
                                             `;
                                 <?php
@@ -380,16 +380,16 @@ session_start();
                                     ?>
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:1.3em;"></i>
+                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
                                         </a> |
                                         <a href="new_orden_compra.php?req=${full.Folio}" class="text-success">
-                                            <i class="fa fa-clipboard" style="font-size:1.3em;"></i>
+                                            <i class="fa fa-clipboard" style="font-size:.8rem;"></i>
                                         </a> |
                                         <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning">
-                                            <i class="fa fa-ban" style="font-size:1.3em;"></i>
+                                            <i class="fa fa-ban" style="font-size:.8rem;"></i>
                                         </a>  | 
                                          <a data-toggle="modal" data-target="#modalFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary">
-                                            <i class="fa fa-file" style="font-size:1.3em;"></i>
+                                            <i class="fa fa-file" style="font-size:.8rem;"></i>
                                         </a> 
                                     `;
                                     //El resto de los usuarios
@@ -398,7 +398,7 @@ session_start();
                                 ?>
                                    actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:1.3em;"></i>
+                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
                                         </a>
                                         `;
                                     <?php
@@ -408,34 +408,53 @@ session_start();
                                 } else if (full.estatus == 4) {
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:1.3em;"></i>
+                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
                                         </a>
                                         |
                                         <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary">
-                                            <i class="fa fa-upload" style="font-size:1.3em;"></i> 
+                                            <i class="fa fa-upload" style="font-size:.8rem;"></i> 
                                         </a>
                                     `
                                 }else if(full.estatus == 5) {
                                     actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:1.3em;">R</i>
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">R</span>
                                         </a>
                                         |
                                         <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange">
-                                            <i class="fa fa-print" style="font-size:1.3em;">F</i>
+                                            <i class="fa fa-print" style="font-size:.8rem;">F</i>
                                         </a> 
                                         `;
                                     
                                 }else if(full.estatus == 3) {
                                     actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:1.3em;">R</i>
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">R</span>
                                         </a>
-                                        |
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange">
-                                            <i class="fa fa-print" style="font-size:1.3em;">OC</i>
-                                        </a> 
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">OC</span>
+                                        </a>
+                                        <a data-toggle="modal" data-target="#modalFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
+                                            <i class="fa fa-file" style="font-size:.8rem;"></i>
+                                        </a>
                                         `;
+                                }else if(full.estatus == 7) {
+                                     actions = `
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">R</span>
+                                        </a>
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">OC</span>
+                                        </a>
+                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
+                                            <i class="fa fa-upload" style="font-size:.8rem;"></i> 
+                                        </a>
+                                        `
                                 }
                                 return actions;
                             }
@@ -517,9 +536,10 @@ session_start();
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label class="col-sm-4 col-form-label text-left">No. Requisición:</label>
+                            <label id="label_subir_factura" class="col-sm-4 col-form-label text-left"></label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" id="fact_noreq" name="form_pass_noreq" disabled>
+                                <input type="text" class="form-control" id="factOrden" name="form_pass_noreq" disabled>
                             </div>
                         </div>
                         <!-- Subir archivo pdf -->
@@ -546,10 +566,21 @@ session_start();
             //Evento para mostrar el modal de subir factura
             $('#subirFactura').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget) // Button that triggered the modal
-                const noreq = button.data('id')
+                const noreq = button.data('id') || ""
+                const orden = button.data('orden') || ""
                 const modal = $(this);
                 //Insertar valores en el modal Subir Factura
-                modal.find('#fact_noreq').val(noreq)
+                if (noreq > 0) {
+                    modal.find('#fact_noreq').val("REQ-" + noreq)
+                    modal.find('#factOrden').prop('hidden', true)
+                    modal.find('#fact_noreq').prop('hidden', false)
+                    modal.find('#label_subir_factura').text("No. Requisicion:")
+                }else {
+                    modal.find('#factOrden').val("OC-" + orden)
+                    modal.find('#fact_noreq').prop('hidden', true)
+                    modal.find('#factOrden').prop('hidden', false)
+                    modal.find('#label_subir_factura').text("No. Orden Compra:")
+                }
             })
         })
     </script>
@@ -560,8 +591,8 @@ session_start();
                 event.preventDefault();
 
                 const formData = new FormData();
-                formData.append('form_pass_noreq', $('#fact_noreq').val());
-                formData.append('form_pass_datereq', $('#fact_date_req').val());
+                formData.append('form_pass_noreq', $('#fact_noreq').val().replace(/\D/g, ''));
+                formData.append('form_pass_orden', $('#factOrden').val().replace(/\D/g, ''));
 
                 // Verificamos que haya archivo seleccionado
                 const archivo = $('#form_archivo')[0].files[0];
@@ -1056,10 +1087,22 @@ session_start();
             $('#modalFactura').on('show.bs.modal', function (event) {
                 const data = $(event.relatedTarget);
                 const noreq = `REQ-${data.data().id}`;
+                const orden = `OC-${data.data().orden}`;
                 
                 const modal = $(this);
 
                 modal.find('#factura_norequi').val(noreq);
+                modal.find('#factura_orden').val(orden);
+                if (data.data().id > 0) {
+                    modal.find('#factura_orden').prop('hidden', true);
+                    modal.find('#factura_norequi').prop('hidden', false);
+                    modal.find('#label_factura').text('No. Requisición');
+                }else {
+                    modal.find('#factura_norequi').prop('hidden', true);
+                    modal.find('#factura_orden').prop('hidden', false);
+                    modal.find('#label_factura').text('No. Orden de Compra');
+                }
+
                 function recalcularTotalesDesdeTabla() {
                     let subtotal = 0;
 
@@ -1096,12 +1139,13 @@ session_start();
                 //Obtener los productos de la requisicion para la factura
                 const fol = $('#factura_norequi').val();
                 const folio = fol.replace(/\D+/g, '');
-                console.log('Folio:', folio);
+                const ord = $('#factura_orden').val();
+                const orden_prod = ord.replace(/\D+/g, '');
                 $.ajax({
                     url: 'data/getProductosFactura.php',
                     type: 'GET',
                     dataType: 'json',
-                    data: { folio: folio },
+                    data: { folio: folio, orden_prod: orden_prod },
                     success: function(productos) {
                         const tbody = modal.find('#cuerpoFactura');
                         tbody.empty();
@@ -1164,9 +1208,10 @@ session_start();
                         <!-- No. Requisición -->
                         <div class="form-group row">
                             <div class="col-7 row" >
-                                <label for="factura_norequi" class="col-sm-6 col-form-label text-left">No. Requisición:</label>
+                                <label id="label_factura" for="factura_norequi" class="col-sm-6 col-form-label text-left"></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="factura_norequi" name="factura_norequi" readonly>
+                                    <input type="text" class="form-control" id="factura_orden" name="factura_orden" readonly>
                                 </div>
                             </div>
                             <div class="col-5 row" >
@@ -1383,7 +1428,9 @@ session_start();
                 });
                 // Valida los datos del formulario
                 const no_requisicion = $('#factura_norequi').val();
+                const no_orden = $('#factura_orden').val();
                 const folio = no_requisicion.replace(/\D+/g, '');
+                const orden = no_orden.replace(/\D+/g, '');
                 const no_factura = $('#no_factura').val();
                 const fecha_factura = $('#fecha').val();
                 const fecha_pago = $('#fecha_pago').val();
@@ -1401,6 +1448,8 @@ session_start();
                     data: {
                         no_requisicion,
                         folio,
+                        no_orden,
+                        orden,
                         no_factura,
                         fecha_factura,
                         fecha_pago,

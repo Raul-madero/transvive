@@ -22,7 +22,7 @@ $filename = $data['ruta'];
 echo $filename; // Devuelve la ruta del archivo, sin el nombre del archivo
 
 // Validar ruta (evitar acceso fuera de la carpeta)
-if (strpos($filename, '..') !== false || !str_starts_with($filename, 'archivos_compras/')) {
+if (strpos($filename, '..') !== false || substr($ruta, 0, strlen('archivos_compras/')) === 'archivos_compras/') {
     die("Ruta inválida.");
 }
 
