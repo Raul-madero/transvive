@@ -75,27 +75,60 @@ $viajesData = [];
 while ($drow = mysqli_fetch_assoc($sqlviajes)) {
     $viajesData[] = [
         'Nmeses' => $drow['Nmeses'],
-        'Planeados' => $drow['Planeados'],
-        'Registrados' => $drow['Registrados'],
-        'Diferencia' => $drow['Diferencia'],
-        'Porcdiferencia' => number_format($drow['Porcdiferencia'], 2),
-		'Cancelados' => $drow['Cancelados']
+        'Planeados' => floatval($drow['Planeados'] ?? 0),
+        'Registrados' => floatval($drow['Registrados'] ?? 0),
+        'Diferencia' => floatval($drow['Diferencia'] ?? 0),
+        'Porcdiferencia' => number_format(floatval($drow['Porcdiferencia'] ?? 0), 2),
+        'Cancelados' => intval($drow['Cancelados'] ?? 0)
     ];
-};
+}
 
-$datos_mes_actual = $viajesData[9];
+// Obtener el nombre del mes actual en inglés (Ej: "May", "June", etc.)
+$mes_actual_nombre = date("F");
 
-//Calcular Porcentajes
- $p_planeados = $datos_mes_actual['Planeados'] - $datos_mes_actual['Cancelados']; 
- $porc_planeados = ($datos_mes_actual['Planeados'] == 0) ? 0 : number_format(($p_planeados / $datos_mes_actual['Planeados']) * 100, 2); 
- $porc_registrados = ($datos_mes_actual['Planeados'] == 0) ? 0 : number_format(100 - (($datos_mes_actual['Registrados'] / $datos_mes_actual['Planeados']) * 100), 2); 
- $porc_diferencia = 0; 
- $porc_cancelados = 0; 
- if ($datos_mes_actual['Planeados'] > 0) { 
-	$p_diferencia = $datos_mes_actual['Planeados'] - $datos_mes_actual['Registrados'];
-	$porc_diferencia = number_format(($datos_mes_actual['Registrados'] / $p_diferencia) * 100, 2); 
-	$porc_cancelados = number_format(($datos_mes_actual['Cancelados'] / $datos_mes_actual['Planeados']) * 100, 2); 
-};
+// Buscar los datos del mes actual
+$datos_mes_actual = null;
+foreach ($viajesData as $mesData) {
+    if ($mesData['Nmeses'] === $mes_actual_nombre) {
+        $datos_mes_actual = $mesData;
+        break;
+    }
+}
+
+// Asignar valores por defecto si no se encontró el mes
+if (!is_array($datos_mes_actual)) {
+    $datos_mes_actual = [
+        'Planeados' => 0,
+        'Registrados' => 0,
+        'Diferencia' => 0,
+        'Porcdiferencia' => 0,
+        'Cancelados' => 0
+    ];
+}
+
+// Calcular porcentajes de forma segura
+$p_planeados = $datos_mes_actual['Planeados'] - $datos_mes_actual['Cancelados'];
+
+$porc_planeados = ($datos_mes_actual['Planeados'] == 0)
+    ? 0
+    : number_format(($p_planeados / $datos_mes_actual['Planeados']) * 100, 2);
+
+$porc_registrados = ($datos_mes_actual['Planeados'] == 0)
+    ? 0
+    : number_format(100 - (($datos_mes_actual['Registrados'] / $datos_mes_actual['Planeados']) * 100), 2);
+
+$porc_diferencia = 0;
+$porc_cancelados = 0;
+
+if ($datos_mes_actual['Planeados'] > 0) {
+    $p_diferencia = $datos_mes_actual['Planeados'] - $datos_mes_actual['Registrados'];
+    $porc_diferencia = ($p_diferencia != 0) 
+        ? number_format(($datos_mes_actual['Registrados'] / $p_diferencia) * 100, 2)
+        : 0;
+    
+    $porc_cancelados = number_format(($datos_mes_actual['Cancelados'] / $datos_mes_actual['Planeados']) * 100, 2);
+}
+
 
 // Consulta para obtener los datos de los viajes planeados y la diferencia para la semana
 $sqlviajes_semana = mysqli_query($conection, "
@@ -171,7 +204,7 @@ if (!$sqlcomprames) {
 $comprasmes = 0.00;
 $compras_semana = 0.00;
 if ($datanc = mysqli_fetch_assoc($sqlcomprames)) {
-    $comprasmes = number_format($datanc['totalcompras'], 2);
+    $comprasmes = number_format($datanc['totalcompras'] ?? 0, 2);
 	$compras_semana = number_format($datanc['totalcompras_semana'], 2);
 };
 
@@ -1562,130 +1595,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			$('#datemask2').inputmask('mm/dd/yyyy', {
 				'placeholder': 'mm/dd/yyyy'
 			})
-			//Money Euro
-			$('[data-mask]').inputmask()
-
-			//Date picker
-			$('#reservationdate').datetimepicker({
-				format: 'L'
-			});
-
-			//Date and time picker
-			$('#reservationdatetime').datetimepicker({
-				icons: {
-					time: 'far fa-clock'
-				}
-			});
-
-			//Date range picker
-			$('#reservation').daterangepicker()
-			//Date range picker with time picker
-			$('#reservationtime').daterangepicker({
-				timePicker: true,
-				timePickerIncrement: 30,
-				locale: {
-					format: 'MM/DD/YYYY hh:mm A'
-				}
 			})
-			//Date range as a button
-			$('#daterange-btn').daterangepicker({
-					ranges: {
-						'Today': [moment(), moment()],
-						'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-						'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-						'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-						'This Month': [moment().startOf('month'), moment().endOf('month')],
-						'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-					},
-					startDate: moment().subtract(29, 'days'),
-					endDate: moment()
-				},
-				function(start, end) {
-					$('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-				}
-			)
-
-			//Timepicker
-			$('#timepicker').datetimepicker({
-				format: 'LT'
-			})
-
-			//Bootstrap Duallistbox
-			$('.duallistbox').bootstrapDualListbox()
-
-			//Colorpicker
-			$('.my-colorpicker1').colorpicker()
-			//color picker with addon
-			$('.my-colorpicker2').colorpicker()
-
-			$('.my-colorpicker2').on('colorpickerChange', function(event) {
-				$('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-			})
-
-			$("input[data-bootstrap-switch]").each(function() {
-				$(this).bootstrapSwitch('state', $(this).prop('checked'));
-			})
-
-		})
-		// BS-Stepper Init
-		document.addEventListener('DOMContentLoaded', function() {
-			window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-		})
-
-		// DropzoneJS Demo Code Start
-		Dropzone.autoDiscover = false
-
-		// Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-		var previewNode = document.querySelector("#template")
-		previewNode.id = ""
-		var previewTemplate = previewNode.parentNode.innerHTML
-		previewNode.parentNode.removeChild(previewNode)
-
-		var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-			url: "/target-url", // Set the url
-			thumbnailWidth: 80,
-			thumbnailHeight: 80,
-			parallelUploads: 20,
-			previewTemplate: previewTemplate,
-			autoQueue: false, // Make sure the files aren't queued until manually added
-			previewsContainer: "#previews", // Define the container to display the previews
-			clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-		})
-
-		myDropzone.on("addedfile", function(file) {
-			// Hookup the start button
-			file.previewElement.querySelector(".start").onclick = function() {
-				myDropzone.enqueueFile(file)
-			}
-		})
-
-		// Update the total progress bar
-		myDropzone.on("totaluploadprogress", function(progress) {
-			document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-		})
-
-		myDropzone.on("sending", function(file) {
-			// Show the total progress bar when upload starts
-			document.querySelector("#total-progress").style.opacity = "1"
-			// And disable the start button
-			file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-		})
-
-		// Hide the total progress bar when nothing's uploading anymore
-		myDropzone.on("queuecomplete", function(progress) {
-			document.querySelector("#total-progress").style.opacity = "0"
-		})
-
-		// Setup the buttons for all transfers
-		// The "add files" button doesn't need to be setup because the config
-		// `clickable` has already been specified.
-		document.querySelector("#actions .start").onclick = function() {
-			myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-		}
-		document.querySelector("#actions .cancel").onclick = function() {
-			myDropzone.removeAllFiles(true)
-		}
-		// DropzoneJS Demo Code End
 	</script>
 
 
