@@ -171,6 +171,7 @@ session_start();
                                         <th class="text-center">No. Requisición</th>
                                         <th class="text-center">Fecha</th>
                                         <th class="text-center">Fecha Requiere Material</th>
+                                        <th class="text-center">Orden de Compra</th>
                                         <th class="text-center">Tipo</th>
                                         <th class="text-center">Área Solicitante</th>
                                         <th class="text-center">Monto</th>
@@ -286,11 +287,17 @@ session_start();
                         {
                             data: "Folio",
                             width: "3%",
-                            className: "text-right",
-                            render: data => 'req-' + data
+                            className: "text-center",
+                            render: data => 'REQ-' + data
                         },
                         { data: "fechaa", width: "8%", className: "text-center" },
                         { data: "fecha_req", width: "10%", className: "text-center", orderable: false },
+                        { 
+                            data: "no_orden", 
+                            width: "5%", 
+                            className: "text-center", 
+                            render: data => data === 'N/A' ? data : 'OC-' + data 
+                        },
                         { data: "tipor", width: "5%", orderable: false },
                         { data: "arear", width: "10%", orderable: false },
                         {

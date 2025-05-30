@@ -38,8 +38,8 @@ if ($_REQUEST['action'] == 'fetch_users') {
         }
     }
 
-    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus ';
-    $table = ' requisicion_compra p ';
+    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden';
+    $table = ' requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion';
     $where = " WHERE p.id > 0 $date_range $estatus_filter";
 
     $columns_order = array(
@@ -78,10 +78,11 @@ if ($_REQUEST['action'] == 'fetch_users') {
         $estatus_value = $estatus_mapping[$search_lower] ?? null;
 
         $sql .= " AND (
-            LOWER(no_requisicion) LIKE '%$search_lower%' OR
-            LOWER(tipo_requisicion) LIKE '%$search_lower%' OR
-            LOWER(area_solicitante) LIKE '%$search_lower%' OR
-            LOWER(observaciones) LIKE '%$search_lower%'
+            LOWER(p.no_requisicion) LIKE '%$search_lower%' OR
+            LOWER(p.tipo_requisicion) LIKE '%$search_lower%' OR
+            LOWER(p.area_solicitante) LIKE '%$search_lower%' OR
+            LOWER(p.observaciones) LIKE '%$search_lower%' OR
+            LOWER(o.no_orden) LIKE '%$search_lower%'
         )";
 
         if ($estatus_value !== null) {
@@ -104,6 +105,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     $count = $start;
 
     while ($row = mysqli_fetch_array($result)) {
+        // var_dump($row);
         switch ($row['estatus']) {
             case 1:
                 $Estatusnew = '<span class="label label-primary">Activa</span>';
@@ -112,6 +114,9 @@ if ($_REQUEST['action'] == 'fetch_users') {
                 $Estatusnew = '<span class="label label-success">Autorizada</span>';
                 break;
             case 3:
+                // $odc = "SELECT no_orden FROM orden_compra WHERE no_requisicion = ". $row['no_requisicion'];
+                // $res = mysqli_query($conection, $odc);
+                // $odc_row = mysqli_fetch_assoc($res);
                 $Estatusnew = '<span class="label label-danger">Procesada</span>';
                 break;
             case 4:
@@ -141,6 +146,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
         $nestedData['notas'] = $row['observaciones'];
         $nestedData['Datenew'] = $row["fecha"];
         $nestedData['estatusped'] = $Estatusnew;
+        $nestedData['no_orden'] = $row['no_orden'] ?? 'N/A';
 
         $data[] = $nestedData;
     }
