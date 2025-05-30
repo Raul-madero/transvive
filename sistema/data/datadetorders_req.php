@@ -38,7 +38,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
         }
     }
 
-    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden';
+    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden';
     $table = ' requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion';
     $where = " WHERE p.id > 0 $date_range $estatus_filter";
 
@@ -147,6 +147,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
         $nestedData['Datenew'] = $row["fecha"];
         $nestedData['estatusped'] = $Estatusnew;
         $nestedData['no_orden'] = $row['no_orden'] ?? 'N/A';
+        $nestedData['fecha_orden'] = $row['fecha_orden']?? 'N/A';
 
         $data[] = $nestedData;
     }

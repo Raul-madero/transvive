@@ -172,6 +172,7 @@ session_start();
                                         <th class="text-center">Fecha</th>
                                         <th class="text-center">Fecha Requiere Material</th>
                                         <th class="text-center">Orden de Compra</th>
+                                        <th class="text-center">Fecha Orden de Compra</th>
                                         <th class="text-center">Tipo</th>
                                         <th class="text-center">Área Solicitante</th>
                                         <th class="text-center">Monto</th>
@@ -298,6 +299,7 @@ session_start();
                             className: "text-center", 
                             render: data => data === 'N/A' ? data : 'OC-' + data 
                         },
+                        { data: 'fecha_orden', width: "10%" },
                         { data: "tipor", width: "5%", orderable: false },
                         { data: "arear", width: "10%", orderable: false },
                         {
