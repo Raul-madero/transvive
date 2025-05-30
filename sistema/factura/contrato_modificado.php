@@ -143,8 +143,20 @@ function generarContratoEmpleado($nombreEmpleado) {
 
     foreach ($clausulas as $bloque) {
         $bloque_con_datos = strtr($bloque, $valores); // Reemplaza los marcadores
+
+        if (strpos($bloque_con_datos, '<b>CLAUSULAS</b>') !== false || 
+            strpos($bloque_con_datos, '<b>DECIMA CUARTA.-</b>') !== false) {
+            $pdf->AddPage();
+        }
+
         $pdf->Ln(10);
         $pdf->WriteHTML(utf8_decode($bloque_con_datos));
+        
+        if (strpos($bloque_con_datos, 'CLAUSULAS') !== false) {
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->Cell(0, 10, utf8_decode('CLAUSULAS'), 0, 1, 'C');
+            continue; // Ya lo escribiste con Cell, no repetir con WriteHTML
+        }
     }
 
 
