@@ -6,130 +6,130 @@ include('../fpdf/fpdf.php');
 header("Content-Type: text/html; charset=iso-8859-1 ");
 class PDF extends FPDF
 {
-    // function Header()
-    // {
-    //     //Variables para consulta
-    //     $nooc=$_REQUEST['id'];
-    //     //Consulta sql encabezado
-    //     include('../../conexion.php');   
+    function Header()
+    {
+        //Variables para consulta
+        $nooc=$_REQUEST['id'];
+        //Consulta sql encabezado
+        include('../../conexion.php');   
             
-    //     //Declaramos una carpeta temporal para guardar la imagenes generadas
-    //     $dir = 'temp/';
+        //Declaramos una carpeta temporal para guardar la imagenes generadas
+        $dir = 'temp/';
         
-    //     //Si no existe la carpeta la creamos
-    //     if (!file_exists($dir))
-    //         mkdir($dir);
+        //Si no existe la carpeta la creamos
+        if (!file_exists($dir))
+            mkdir($dir);
         
-    //     //Declaramos la ruta y nombre del archivo a generar
-    //     $filename = $dir.'test.png';
+        //Declaramos la ruta y nombre del archivo a generar
+        $filename = $dir.'test.png';
     
-    //         //Parametros de Condiguración
+            //Parametros de Condiguración
         
         
-    //     $conection->set_charset('utf8');
+        $conection->set_charset('utf8');
 
-    //     $query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id WHERE oc.no_orden = $nooc");
-    //     $result = mysqli_num_rows($query);
-    //     $entrada = mysqli_fetch_assoc($query);
-    //     //$encabezado = mysql_fetch_array($query1, $conexion);
-    //     //Variables para encabezado
+        $query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id WHERE oc.no_orden = $nooc");
+        $result = mysqli_num_rows($query);
+        $entrada = mysqli_fetch_assoc($query);
+        //$encabezado = mysql_fetch_array($query1, $conexion);
+        //Variables para encabezado
         
-    //     $id         = $entrada['id'];
-    //     $folio      = $entrada['no_orden'];
-    //     $fecha      = $entrada['fecha'];
-    //     $proveedor  = $entrada['proveedor'];
-    //     $contacto   = $entrada['contacto'];
-    //     $telefono   = $entrada['telefono'];
-    //     $correp     = $entrada['correo'];
-    //     $name_prov  = $entrada['nombre'];
-    //     $recibe     = $entrada['recibe'];
+        $id         = $entrada['id'];
+        $folio      = $entrada['no_orden'];
+        $fecha      = $entrada['fecha'];
+        $proveedor  = $entrada['proveedor'];
+        $contacto   = $entrada['contacto'];
+        $telefono   = $entrada['telefono'];
+        $correp     = $entrada['correo'];
+        $name_prov  = $entrada['nombre'];
+        $recibe     = $entrada['recibe'];
 
-    //     //$contenido = 'Certificado '.$certificado.' Almacen '.$almacen;
+        //$contenido = 'Certificado '.$certificado.' Almacen '.$almacen;
     
-    //     $subtitulo1='ORDEN DE COMPRA';
+        $subtitulo1='ORDEN DE COMPRA';
 
-    //     //Logo
+        //Logo
 
-    //     $this->Image("../../images/fondo001.png",10,10,78,93,"png",0);
-    //     $this->Image("../../images/fondo002.png",171,216.5,28,53,"png",0);
-    //     $this->Image("../../images/transvive_logo.png",12,11,48,13,"png",0);
-    //     $this->Image("../../images/fondo01.png",36,110,148,63,"png",0);
+        $this->Image("../../images/fondo001.png",10,10,78,93,"png",0);
+        $this->Image("../../images/fondo002.png",171,216.5,28,53,"png",0);
+        $this->Image("../../images/transvive_logo.png",12,11,48,13,"png",0);
+        $this->Image("../../images/fondo01.png",36,110,148,63,"png",0);
 
-    //     //$this->Image("temp/test.png",12,31,35,23,"png",0,'C');
-    //     //Arial bold 15
-    //     $this->SetFont('Arial','',10);
-    //     //Encabezado
-    //     $this->Cell(50,15,'',1,0,'r');
-    //     $this->SetFillColor(231,233,238);
-    //     $this->SetTextcolor(6,22,54);
-    //     $this->Cell(15,15,utf8_decode('Título'),1,0,'C','T');
-    //     $this->Cell(75,10,$subtitulo1,1,0,'C');
-    //     $this->Cell(19,10,utf8_decode('Código'),'T,R',0,'C','T');
-    //     $this->SetFont('Arial','',8);
-    //     $this->Cell(30,10,'FO-TV-CO-02','T,R',1,'C');
-    //     $this->SetFont('Arial','',10);
-    //     $this->Cell(65,10,'',0,0,'r');
-    //     $this->Cell(15,5,utf8_decode('Área'),1,0,'C','T');
-    //     $this->Cell(60,5,'Compras',1,0,'C');
-    //     $this->Cell(19,5,'','B,R',0,'C','T');
-    //     $this->SetFont('Arial','',8);
-    //     $this->Cell(30,5,'','B,R',0,'C');
-    //     $this->Ln(5);
-    // }
+        //$this->Image("temp/test.png",12,31,35,23,"png",0,'C');
+        //Arial bold 15
+        $this->SetFont('Arial','',10);
+        //Encabezado
+        $this->Cell(50,15,'',1,0,'r');
+        $this->SetFillColor(231,233,238);
+        $this->SetTextcolor(6,22,54);
+        $this->Cell(15,15,utf8_decode('Título'),1,0,'C','T');
+        $this->Cell(75,10,$subtitulo1,1,0,'C');
+        $this->Cell(19,10,utf8_decode('Código'),'T,R',0,'C','T');
+        $this->SetFont('Arial','',8);
+        $this->Cell(30,10,'FO-TV-CO-02','T,R',1,'C');
+        $this->SetFont('Arial','',10);
+        $this->Cell(65,10,'',0,0,'r');
+        $this->Cell(15,5,utf8_decode('Área'),1,0,'C','T');
+        $this->Cell(60,5,'Compras',1,0,'C');
+        $this->Cell(19,5,'','B,R',0,'C','T');
+        $this->SetFont('Arial','',8);
+        $this->Cell(30,5,'','B,R',0,'C');
+        $this->Ln(5);
+    }
 
-    // function Footer()
-    // {
-    //     $nooc=$_REQUEST['id'];
-    //     include('../../conexion.php');
-    //     $query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe, rq.fecha as datereq, oc.estatus, oc.motivo_cancela FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_orden = $nooc");
-    //     $result = mysqli_num_rows($query);
-    //     $entrada = mysqli_fetch_assoc($query);
-    //     //Variables para encabezado
+    function Footer()
+    {
+        $nooc=$_REQUEST['id'];
+        include('../../conexion.php');
+        $query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe, rq.fecha as datereq, oc.estatus, oc.motivo_cancela FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_orden = $nooc");
+        $result = mysqli_num_rows($query);
+        $entrada = mysqli_fetch_assoc($query);
+        //Variables para encabezado
     
-    //     $id         = $entrada['id'];
-    //     $folio      = $entrada['no_orden'];
-    //     $fecha      = $entrada['fecha'];
-    //     $proveedor  = $entrada['proveedor'];
-    //     $contacto   = $entrada['contacto'];
-    //     $telefono   = $entrada['telefono'];
-    //     $correp     = $entrada['correo'];
-    //     $name_prov  = $entrada['nombre'];
-    //     $recibe     = $entrada['recibe'];
-    //     $notas     = $entrada['observaciones'];
-    //     $solicita  = $entrada['area_solicitante'];
-    //     $motivo  = $entrada['motivo_cancela'];
-    //     $newDate = date("d-m-Y", strtotime($entrada['fecha'])); 
-    //     $newDateReq = date("d-m-Y", strtotime($entrada['datereq'])); 
-    //     $this->SetY(-25);
-    //     $this->SetTextcolor(0,0,0);
-    //     $this->SetFont('Arial','I',8);
+        $id         = $entrada['id'];
+        $folio      = $entrada['no_orden'];
+        $fecha      = $entrada['fecha'];
+        $proveedor  = $entrada['proveedor'];
+        $contacto   = $entrada['contacto'];
+        $telefono   = $entrada['telefono'];
+        $correp     = $entrada['correo'];
+        $name_prov  = $entrada['nombre'];
+        $recibe     = $entrada['recibe'];
+        $notas     = $entrada['observaciones'];
+        $solicita  = $entrada['area_solicitante'];
+        $motivo  = $entrada['motivo_cancela'];
+        $newDate = date("d-m-Y", strtotime($entrada['fecha'])); 
+        $newDateReq = date("d-m-Y", strtotime($entrada['datereq'])); 
+        $this->SetY(-25);
+        $this->SetTextcolor(0,0,0);
+        $this->SetFont('Arial','I',8);
 
-    //     if ($entrada['estatus'] == 0) {
-    //         $this->SetFont('Arial','',7);
-    //         $this->cell(189,5,utf8_decode('Motivo cancelación:'),1,1, 'L', 'T');
-    //         $this->SetFillColor(255,255,255);
-    //         $this->cell(189,5,$motivo,1,1, 'L');
-    //         $this->SetFillColor(231,233,238);
-    //         $this->cell(25,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
-    //         $this->cell(40,5,utf8_decode($solicita),1,0, 'L');
-    //         $this->cell(15,5,'Fecha:',1,0, 'L', 'T');
-    //         $this->cell(19,5,utf8_decode($newDateReq),1,0, 'C');
-    //         $this->cell(15,5,'Recibe:',1,0, 'L', 'T');
-    //         $this->cell(75,5,utf8_decode($recibe),1,0, 'L');
-    //     }else {
-    //         $this->SetFont('Arial','',7);
-    //         $this->cell(189,5,utf8_decode('Observaciones:'),1,1, 'L', 'T');
-    //         $this->SetFillColor(255,255,255);
-    //         $this->cell(189,5,utf8_decode($notas),1,1, 'L');
-    //         $this->SetFillColor(231,233,238);
-    //         $this->cell(25,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
-    //         $this->cell(40,5,utf8_decode($solicita),1,0, 'L');
-    //         $this->cell(15,5,'Fecha:',1,0, 'L', 'T');
-    //         $this->cell(19,5,$newDateReq,1,0, 'C');
-    //         $this->cell(15,5,'Recibe:',1,0, 'L', 'T');
-    //         $this->cell(75,5,utf8_decode($recibe),1,0, 'L');
-    //     }
-    // }
+        if ($entrada['estatus'] == 0) {
+            $this->SetFont('Arial','',7);
+            $this->cell(189,5,utf8_decode('Motivo cancelación:'),1,1, 'L', 'T');
+            $this->SetFillColor(255,255,255);
+            $this->cell(189,5,$motivo,1,1, 'L');
+            $this->SetFillColor(231,233,238);
+            $this->cell(25,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
+            $this->cell(40,5,utf8_decode($solicita),1,0, 'L');
+            $this->cell(15,5,'Fecha:',1,0, 'L', 'T');
+            $this->cell(19,5,utf8_decode($newDateReq),1,0, 'C');
+            $this->cell(15,5,'Recibe:',1,0, 'L', 'T');
+            $this->cell(75,5,utf8_decode($recibe),1,0, 'L');
+        }else {
+            $this->SetFont('Arial','',7);
+            $this->cell(189,5,utf8_decode('Observaciones:'),1,1, 'L', 'T');
+            $this->SetFillColor(255,255,255);
+            $this->cell(189,5,utf8_decode($notas),1,1, 'L');
+            $this->SetFillColor(231,233,238);
+            $this->cell(25,5,utf8_decode('Area Solicitante:'),1,0, 'L', 'T');
+            $this->cell(40,5,utf8_decode($solicita),1,0, 'L');
+            $this->cell(15,5,'Fecha:',1,0, 'L', 'T');
+            $this->cell(19,5,$newDateReq,1,0, 'C');
+            $this->cell(15,5,'Recibe:',1,0, 'L', 'T');
+            $this->cell(75,5,utf8_decode($recibe),1,0, 'L');
+        }
+    }
 }
 //Impresion 
 include('../../conexion.php');
