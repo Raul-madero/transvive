@@ -3,7 +3,7 @@ include '../../conexion.php';
 
 //Asignar los campos a variables para su insercion a la base d edatos
 $no_requisicion = isset($_POST['folio']) ? intval($_POST['folio']) : NULL;
-$no_orden = isset($_POST['no_orden']) ? intval($_POST['no_orden']) : NULL;
+$no_orden = isset($_POST['orden']) ? intval($_POST['orden']) : NULL;
 $no_factura = $_POST['no_factura'];
 $fecha_factura = $_POST['fecha_factura'];
 $fecha_pago = $_POST['fecha_pago'];
@@ -20,14 +20,25 @@ if(empty($no_factura) || empty($fecha_factura) || empty($proveedor) || empty($su
     exit;
 }
 
-//Verificar si la requisicion no esta facturada anteriormente
-$check = $conection->prepare("SELECT id FROM facturas WHERE no_requisicion = ?");
-$check->bind_param("i", $no_requisicion);
-$check->execute();
-$check->store_result();
+//Validar si es desde requisicion u orden de compra
+if ($no_requisicion) {
+    //Verificar si la requisicion no esta facturada anteriormente
+    $check = $conection->prepare("SELECT id FROM facturas WHERE no_requisicion = ?");
+    $check->bind_param("i", $no_requisicion);
+    $check->execute();
+    $check->store_result();
+}
+
+if ($no_orden) {
+    //Verificar si la orden de compra no esta facturada anteriormente
+    $check = $conection->prepare("SELECT id FROM facturas WHERE no_orden =?");
+    $check->bind_param("i", $no_orden);
+    $check->execute();
+    $check->store_result();
+}
 
 if ($check->num_rows > 0) {
-    echo json_encode(["status" => "error", "message" => "Ya existe una factura para esta requisición."]);
+    echo json_encode(["status" => "error", "message" => "Ya existe una factura para esta requisición/Orden de Compra."]);
     $check->close();
     $conection->close();
     exit;
@@ -55,15 +66,33 @@ if (!empty($_POST['productos'])) {
     }
 }
 
-
-//Consulta para cambiar el estatus de la requisicion a facturada
-$stmt_req = $conection->prepare("UPDATE requisicion_compra SET estatus = 4 WHERE no_requisicion =?");
-$stmt_req->bind_param("i", $no_requisicion);
-if(!$stmt_req->execute()) {
-    echo json_encode(["status" => "error", "message" => "No se pudo actualizar el estatus de la requisición a facturada."]);
-    exit;
+if ($no_requisicion) {
+    //Consulta para cambiar el estatus de la requisicion a facturada
+    $stmt_req = $conection->prepare("UPDATE requisicion_compra SET estatus = 4 WHERE no_requisicion =?");
+    $stmt_req->bind_param("i", $no_requisicion);
+    if(!$stmt_req->execute()) {
+        echo json_encode(["status" => "error", "message" => "No se pudo actualizar el estatus de la requisición a facturada."]);
+        exit;
+    }
 }
 
+if ($no_orden) {
+    //Obtener el no de requisicion de la tabla orden de compra
+    $stmt_orden = $conection->prepare("SELECT no_requisicion FROM orden_compra WHERE no_orden =?");
+    $stmt_orden->bind_param("i", $no_orden);
+    $stmt_orden->execute();
+    $stmt_orden->bind_result($no_requisicion);
+    $stmt_orden->fetch();
+    $stmt_orden->close();
+    //Consulta para cambiar el estatus de la orden de compra a facturada
+    $stmt_orden = $conection->prepare("UPDATE requisicion_compra SET estatus = 7 WHERE no_requisicion = ?");
+    $stmt_orden->bind_param("i", $no_requisicion);
+    
+    if(!$stmt_orden->execute()) {
+        echo json_encode(["status" => "error", "message" => "No se pudo actualizar el estatus de la orden de compra a facturada."]);
+        exit;
+    }
+}
 //Convertir fechas a un formato para base de datos
 $fecha_factura = date('Y-m-d', strtotime($fecha_factura));
 $fecha_pago = date('Y-m-d', strtotime($fecha_pago));

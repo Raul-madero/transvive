@@ -72,7 +72,9 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'procesada' => 3,
             'procesado' => 3,
             'facturado' => 4,
-            'terminado' => 5,
+            'pagado' => 5,
+            'recibido' => 6,
+            'facturadooc' => 7
         ];
 
         $estatus_value = $estatus_mapping[$search_lower] ?? null;
@@ -108,25 +110,28 @@ if ($_REQUEST['action'] == 'fetch_users') {
         // var_dump($row);
         switch ($row['estatus']) {
             case 1:
-                $Estatusnew = '<span class="label label-primary">Activa</span>';
+                $Estatusnew = '<span class="badge bg-primary">Activa</span>';
                 break;
             case 2:
-                $Estatusnew = '<span class="label label-success">Autorizada</span>';
+                $Estatusnew = '<span class="badge bg-secondary">Autorizada</span>';
                 break;
             case 3:
-                // $odc = "SELECT no_orden FROM orden_compra WHERE no_requisicion = ". $row['no_requisicion'];
-                // $res = mysqli_query($conection, $odc);
-                // $odc_row = mysqli_fetch_assoc($res);
-                $Estatusnew = '<span class="label label-danger">Procesada</span>';
+                $Estatusnew = '<span class="badge bg-success bg-gradient">Procesada</span>';
                 break;
             case 4:
-                $Estatusnew = '<span class="label label-primary">Facturado</span>';
+                $Estatusnew = '<span class="badge bg-warning">Facturado</span>';
                 break;
             case 5:
-                $Estatusnew = '<span class="label label-info">Terminado</span>';
+                $Estatusnew = '<span class="badge bg-info">Pagado</span>';
+                break;
+            case 6:
+                $Estatusnew = '<span class="badge bg-dark">Recibido</span>';
+                break;
+            case 7:
+                $Estatusnew = '<span class="badge bg-info">Facturado OC</span>';
                 break;
             default:
-                $Estatusnew = '<span class="label label-success">Cancelada</span>';
+                $Estatusnew = '<span class="badge bg-danger">Cancelada</span>';
                 break;
         }
 
