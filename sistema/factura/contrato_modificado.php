@@ -147,7 +147,7 @@ function generarContratoEmpleado($nombreEmpleado) {
         if (strpos($bloque_con_datos, '<b>CLAUSULAS</b>') !== false || 
             strpos($bloque_con_datos, '<b>QUINTA.-</b>') !== false ||
             strpos($bloque_con_datos, '<b>DECIMA PRIMERA.-</b>') !== false ||
-            strpos($bloque_con_datos, '<b>DECIMA CUARTA.-</b>' !== false) || 
+            strpos($bloque_con_datos, '<b>DECIMA CUARTA.-</b>') !== false || 
             strpos($bloque_con_datos, '<b>DECIMA NOVENA.-</b>') !== false) {
             $pdf->AddPage();
         }
