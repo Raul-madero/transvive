@@ -30,7 +30,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'procesada' => 3,
             'procesado' => 3,
             'facturado' => 4,
-            'terminado' => 5,
+            'pagado' => 5,
         ];
         $gender_value = $estatus_variants[$gender_input] ?? null;
         if ($gender_value !== null) {

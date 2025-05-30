@@ -50,3 +50,7 @@ $RECYCLE.BIN/
 .idx
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode
 certs/
+archivos_compras/
+archivos_contratos/
+archivos_pagocompra/
+archivos_polizas/

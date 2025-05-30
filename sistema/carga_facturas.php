@@ -1,6 +1,5 @@
 <?php
 include "../conexion.php";
-
 // Validar campos recibidos
 $noreq = $_POST['form_pass_noreq'] ?? '';
 $orden = $_POST['form_pass_orden'] ?? '';

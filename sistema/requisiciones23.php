@@ -415,6 +415,7 @@ session_start();
                                             <i class="fa fa-upload" style="font-size:.8rem;"></i> 
                                         </a>
                                     `
+                                    //Pagado
                                 }else if(full.estatus == 5) {
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;">
@@ -426,7 +427,7 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem;">F</i>
                                         </a> 
                                         `;
-                                    
+                                    //Procesado
                                 }else if(full.estatus == 3) {
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;">
@@ -441,6 +442,7 @@ session_start();
                                             <i class="fa fa-file" style="font-size:.8rem;"></i>
                                         </a>
                                         `;
+                                        //Facturado desde OC
                                 }else if(full.estatus == 7) {
                                      actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;">
@@ -451,7 +453,7 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
-                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
+                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
                                             <i class="fa fa-upload" style="font-size:.8rem;"></i> 
                                         </a>
                                         `
@@ -569,17 +571,19 @@ session_start();
                 const noreq = button.data('id') || ""
                 const orden = button.data('orden') || ""
                 const modal = $(this);
+                console.log(noreq, orden)
                 //Insertar valores en el modal Subir Factura
-                if (noreq > 0) {
+                if (orden > 0) {
+                     modal.find('#factOrden').val("OC-" + orden)
+                     modal.find('#fact_noreq').val('REQ-' + noreq)
+                    modal.find('#fact_noreq').prop('hidden', true)
+                    modal.find('#factOrden').prop('hidden', false)
+                    modal.find('#label_subir_factura').text("No. Orden Compra:")
+                }else {
                     modal.find('#fact_noreq').val("REQ-" + noreq)
                     modal.find('#factOrden').prop('hidden', true)
                     modal.find('#fact_noreq').prop('hidden', false)
                     modal.find('#label_subir_factura').text("No. Requisicion:")
-                }else {
-                    modal.find('#factOrden').val("OC-" + orden)
-                    modal.find('#fact_noreq').prop('hidden', true)
-                    modal.find('#factOrden').prop('hidden', false)
-                    modal.find('#label_subir_factura').text("No. Orden Compra:")
                 }
             })
         })
