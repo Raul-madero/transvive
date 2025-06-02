@@ -4,7 +4,7 @@ $conection->set_charset('utf8');
 
 // Validar parámetro
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-var_dump($id);
+// var_dump($id);
 if ($id <= 0) {
     die("ID inválido.");
 }
@@ -19,10 +19,10 @@ if (!$query || mysqli_num_rows($query) === 0) {
 
 $data = mysqli_fetch_assoc($query);
 $filename = $data['ruta'];
-echo $filename; // Devuelve la ruta del archivo, sin el nombre del archivo
+// echo $filename; // Devuelve la ruta del archivo, sin el nombre del archivo
 
 // Validar ruta (evitar acceso fuera de la carpeta)
-if (strpos($filename, '..') !== false || substr($ruta, 0, strlen('archivos_compras/')) === 'archivos_compras/') {
+if (strpos($filename, '..') !== false || substr($filename, 0, 17) !== 'archivos_compras/') {
     die("Ruta inválida.");
 }
 

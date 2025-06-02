@@ -21,7 +21,20 @@ $ruta = 'archivos_compras/' . $nombre_final;
 // Mover archivo
 if (move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta)) {
     // Guardar ruta en base de datos
-    if ($noreq !== '') {
+    if ($orden !== '') {
+        $stmt = mysqli_prepare($conection, "UPDATE facturas SET ruta =? WHERE no_orden =?");
+        mysqli_stmt_bind_param($stmt, "ss", $ruta, $orden);
+        if (mysqli_stmt_execute($stmt)) {
+            $stmt = mysqli_prepare($conection, "UPDATE requisicion_compra SET estatus = 8 WHERE no_requisicion =?");
+            mysqli_stmt_bind_param($stmt, "i", $noreq);
+            if(mysqli_stmt_execute($stmt)) {
+                echo "OK";
+            }
+        } else {
+            echo "Error en la base de datos: ". mysqli_error($conection);
+        }
+        mysqli_stmt_close($stmt);
+    } else {
         $stmt = mysqli_prepare($conection, "UPDATE facturas SET ruta = ? WHERE no_requisicion = ?");
         mysqli_stmt_bind_param($stmt, "ss", $ruta, $noreq);
         if (mysqli_stmt_execute($stmt)) {
@@ -32,15 +45,6 @@ if (move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta)) {
             }
         } else {
             echo "Error en la base de datos: " . mysqli_error($conection);
-        }
-        mysqli_stmt_close($stmt);
-    } else if ($orden!== '') {
-        $stmt = mysqli_prepare($conection, "UPDATE facturas SET ruta =? WHERE no_orden =?");
-        mysqli_stmt_bind_param($stmt, "ss", $ruta, $orden);
-        if (mysqli_stmt_execute($stmt)) {
-            echo "OK";
-        } else {
-            echo "Error en la base de datos: ". mysqli_error($conection);
         }
         mysqli_stmt_close($stmt);
     }

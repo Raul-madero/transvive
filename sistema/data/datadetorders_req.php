@@ -74,7 +74,8 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'facturado' => 4,
             'pagado' => 5,
             'recibido' => 6,
-            'facturadooc' => 7
+            'facturadooc' => 7,
+            'porpagar' => 8
         ];
 
         $estatus_value = $estatus_mapping[$search_lower] ?? null;
@@ -129,6 +130,9 @@ if ($_REQUEST['action'] == 'fetch_users') {
                 break;
             case 7:
                 $Estatusnew = '<span class="badge bg-info">Facturado OC</span>';
+                break;
+            case 8:
+                $Estatusnew = '<span class="badge bg-danger">Por Pagar</span>';
                 break;
             default:
                 $Estatusnew = '<span class="badge bg-danger">Cancelada</span>';

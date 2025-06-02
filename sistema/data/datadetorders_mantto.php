@@ -84,12 +84,12 @@ if ($_REQUEST['action'] === 'fetch_users') {
 
         while ($row = $result->fetch_assoc()) {
             $estatusLabels = [
-                1 => '<span class="label label-primary">Activa</span>',
-                2 => '<span class="label label-success">Cerrada</span>',
-                3 => '<span class="label label-danger">Cancelado</span>',
-                4 => '<span class="label label-primary">Iniciado</span>',
-                5 => '<span class="label label-info">Terminado</span>',
-                0 => '<span class="label label-success">Cancelada</span>'
+                1 => '<span class="badge bg-primary">Activa</span>',
+                2 => '<span class="badge bg-success">Cerrada</span>',
+                3 => '<span class="badge bg-warning">En Proceso</span>',
+                4 => '<span class="badge bg-primary">Iniciado</span>',
+                5 => '<span class="badge bg-info">Terminado</span>',
+                0 => '<span class="badge bg-success">Cancelada</span>'
             ];
 
             $estatusNew = $estatusLabels[$row['estatus']] ?? '';

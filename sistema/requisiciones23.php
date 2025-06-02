@@ -29,7 +29,9 @@ session_start();
 
 <!-- Font Awesome -->
 <!-- Font Awesome 5 Free -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
 
 <!-- jQuery UI -->
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -423,8 +425,9 @@ session_start();
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
                                         |
-                                        <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange">
-                                            <i class="fa fa-print" style="font-size:.8rem;">F</i>
+                                        <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">F</span>
                                         </a> 
                                         `;
                                     //Procesado
@@ -438,8 +441,8 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
-                                        <a data-toggle="modal" data-target="#modalFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
-                                            <i class="fa fa-file" style="font-size:.8rem;"></i>
+                                        <a data-toggle="modal" data-target="#modalIngreso" data-orden="${full.no_orden}" data-req="${full.Folio}" href="javascript.void(0)" class="text-warning">
+                                            <i class="fa-solid fa-right-to-bracket" style="font-size:.8rem;"></i>
                                         </a>
                                         `;
                                         //Facturado desde OC
@@ -456,7 +459,37 @@ session_start();
                                         <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
                                             <i class="fa fa-upload" style="font-size:.8rem;"></i> 
                                         </a>
-                                        `
+                                        `;
+                                        //Producto Recibido
+                                }else if(full.estatus == 6) {
+                                    actions = `
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">R</span>
+                                        </a>
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">OC</span>
+                                        </a>
+                                        <a data-toggle="modal" data-target="#modalFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
+                                            <i class="fa fa-file" style="font-size:.8rem;"></i>
+                                        </a>
+                                        `;
+                                }else if(full.estatus == 8) {
+                                    actions = `
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">R</span>
+                                        </a>
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">OC</span>
+                                        </a>
+                                        <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <span style="font-size: .8rem; ">F</span>
+                                        </a> 
+                                        `;
                                 }
                                 return actions;
                             }
@@ -505,6 +538,173 @@ session_start();
         function actualizarLaPagina(){
             window.location.reload();
         } 
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            //Evento para mostrar el modal para recibir productos
+            $('#modalIngreso').on('show.bs.modal', function (e) {
+                const button = $(e.relatedTarget); //Boton que disparo el Evento
+                const orden = button.data().orden;
+                const req = button.data().req;
+                const modal = $(this);
+
+                modal.find('#orden').val(`OC-${orden}`);
+                modal.find('#noreq_recibir').val(req);
+
+                const tbody = modal.find('#tablaProductosRecibidos');
+                tbody.empty();
+
+                $.ajax({
+                    url: 'data/get_recibidos_oc.php',
+                    type: 'GET',
+                    data: {
+                        orden: orden
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        data.forEach(function(item){
+                            const fila = `<tr>
+                                    <td>${item.codigo}</td>
+                                    <td>
+                                        <input type="number" class="form-control" name="cant_recibidos" id="cant_recibidos" value="${item.cantidad}"/>
+                                    </td>
+                                    <td>${item.descripcion}</td>
+                                    <td>
+                                        $ ${item.precio}
+                                    </td>
+                                </tr>`;
+                            tbody.append(fila);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al cargar productos:', error);
+                        tbody.append('<tr><td colspan="4" class="text-center text-danger">Error al cargar datos</td></tr>');
+                    }
+                })
+            })
+        })
+    </script>
+
+    <!-- Modal para Ingresar un producto al almacen -->
+     <div class="modal fade" id="modalIngreso" tabindex="-1" role="dialog" aria-labelledby="modalIngresoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalIngresoLabel">Recibir Productos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="orden">Orden de Compra:</label>
+                            <input type="text" class="form-control" id="orden" readonly>
+                            <input type="text" class="form-control" id="noreq_recibir" hidden>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha_entrada">Fecha de Entrada:</label>
+                            <input type="date" class="form-control" id="fecha_entrada">
+                        </div>
+                        <div class="form-group">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Cantidad</th>
+                                        <th>Descripcion</th>
+                                        <th>Precio Unitario</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaProductosRecibidos"></tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <label for="almacen">Almacen Recibe:</label>
+                            <select class="form-control" id="almacen">
+                                <option value="0">Seleccione almacen</option>
+                                <?php 
+                                    $query = "SELECT * FROM almacenes WHERE estatus = 1";
+                                    $result = mysqli_query($conection, $query);
+                                    while($row = mysqli_fetch_assoc($result)) {
+                                        echo "<option value='{$row['id']}'>{$row['descripcion']}</option>";
+                                    }
+                               ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-primary" id="boton_recibir">Recibir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Accion del boton del modal para recibir productos -->
+    <script>
+        $(document).ready(function() {
+            $('#boton_recibir').click(function(e) {
+                e.preventDefault();
+                const orden = $('#orden').val();
+                const fecha_entrada = $('#fecha_entrada').val();
+                const almacen_recibe = $('#almacen').val();
+                const req = $('#noreq_recibir').val();
+                const productos = [];
+                $('#tablaProductosRecibidos tr').each(function() {
+                    const codigo = $(this).find('td:nth-child(1)').text();
+                    const cantidad = $(this).find('td:nth-child(2) input').val();
+                    const precio = $(this).find('td:nth-child(4)').text().replace('$ ', '');
+                    productos.push({
+                        codigo: codigo,
+                        cantidad: cantidad,
+                        precio: parseFloat(precio)
+                    });
+                });
+
+                $.ajax({
+                    url: 'data/recibir_oc.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        orden: orden,
+                        fecha_entrada: fecha_entrada,
+                        almacen_recibe: almacen_recibe,
+                        req: req,
+                        productos: JSON.stringify(productos)
+                    },
+                    success: function(response) {
+                        console.log("Tipo de respuesta:", typeof response); // debería ser 'object'
+                        console.log("Contenido:", response);
+                        if (response.success) {
+                            $('#modalIngreso').modal('hide');
+                            Swal.fire({
+                                title: 'Recibido!',
+                                text: 'Los productos fueron recibidos correctamente.',
+                                icon:'success',
+                                confirmButtonText: 'Aceptar'
+                            }).then((result) => {
+                                actualizarLaPagina();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Hubo un problema al recibir los productos.',
+                                icon: 'error',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al recibir productos:', error);
+                        alert('Error al recibir productos. Intente nuevamente.');
+                    }
+                });
+            })
+        })
     </script>
 
     <script> 
@@ -621,7 +821,7 @@ session_start();
                                 confirmButtonText: 'Aceptar'
                             });
                             $('#subirFactura').modal('hide');
-                            // actualizarLaPagina(); // Si tienes esta función definida
+                            actualizarLaPagina(); // Si tienes esta función definida
                         } else {
                             Swal.fire({
                                 title: 'Error al subir la factura!',

@@ -33,7 +33,8 @@ session_start();
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
+  <<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
   <!-- Ekko Lightbox -->
@@ -52,8 +53,12 @@ session_start();
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery (ya lo estás usando) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
    
 <!------ Include the above in your HEAD tag ---------->
@@ -248,7 +253,7 @@ session_start();
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 
-
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
  
     <script type="text/javascript">
@@ -301,14 +306,14 @@ session_start();
            if ($rol == 10 || $_SESSION['idUser'] == 32 ) { ?>
             {
                     "render": function ( data, type, full, meta ) {
-                    return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a>';
+                    return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a> | <a href="#" id="iniciar_orden" data-id="' + full.pedidono + '" class="text-success "> <i class="fa-solid fa-wrench"></i> Iniciar</a>';
                 }       
             } 
 
          <?php }else { ?>
           {
                     "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a>'
+        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a href="#" id="iniciar_orden" data-id="' + full.pedidono + '" class="text-success"> <i class="fa-solid fa-wrench"></i>Inicio</a>'
                     }
                   }
                   <?php } ?>
@@ -371,7 +376,47 @@ session_start();
 
     </script>
 
+<script>
+      $(document).on('click', '#iniciar_orden', function(e) {
+        e.preventDefault();
 
+        const ordenId = $(this).data('id');
+
+        Swal.fire({
+            title: '¿Iniciar orden?',
+            text: '¿Deseas marcar esta orden como EN PROCESO?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, iniciar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'data/iniciarorden.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'iniciarOrden',
+                        id: ordenId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire('Orden iniciada', response.message, 'success');
+                            // Actualizar tabla o vista
+                            actualizarLaPagina(); // o recargar tabla
+                        } else {
+                            Swal.fire('Error', response.message || 'No se pudo iniciar la orden.', 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        Swal.fire('Error', 'Error de conexión con el servidor.', 'error');
+                    }
+                });
+            }
+        });
+    });
+</script>
 
     <script type="text/javascript">
 
@@ -832,7 +877,6 @@ function actualizarLaPagina(){
     });
 
     </script>    
-<script src="js/sweetalert.min.js"></script>
 
  <script>
     document.addEventListener("DOMContentLoaded", function(){
