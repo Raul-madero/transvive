@@ -48,11 +48,15 @@ foreach ($productos as $producto) {
 
         $query = "INSERT INTO productos (codigo_producto, codigo_interno, descripcion, u_medida, marca, rotacion, categoria, modelo, stock_minimo, stock_maximo, costo_unitario, estatus, almacen) VALUES (?,?,?,?,?,?,?,?,?,?,?,1,?)";
         $stmt = $conection->prepare($query);
-        $stmt->bind_param("ssssssssdddi", $producto->codigo, $codigo_interno, $descripcion, $u_medida, $marca, $rotacion, $categoria, $modelo, $stock_minimo, $stocK_maximo, $producto->costo, $almacen);
+        if (!$stmt) {
+            echo json_encode(['error' => 'Error en prepare(): ' . $conection->error]);
+            exit;
+        }
+        $stmt->bind_param("ssssssssdddi", $producto->codigo, $codigo_interno, $descripcion, $u_medida, $marca, $rotacion, $categoria, $modelo, $stock_minimo, $stock_maximo, $producto->costo, $almacen);
         if($stmt->execute()) {
             $stmt->close();
         }else {
-            echo json_encode(array('error'=> 'Error al agregar producto'));
+            echo json_encode(array('error'=> 'Error al agregar producto' . $conection->error));
             $error++;
             exit;
         }
