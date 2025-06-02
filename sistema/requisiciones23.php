@@ -334,13 +334,12 @@ session_start();
                                     actions =
                                         `
                                         <a href='factura/requisicion.php?id=${full.Folio}' target='_blank'>
-                                            <i class='fa fa-print" style="font-size: .8rem;'></i> Imprimir
+                                            <i class='fa fa-print" style="font-size: .8rem;' title="Ver PDF Requisicion"></i> Imprimir
                                         </a>
-                                        
                                         |
                                         <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion" 
                                             data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}">
-                                            <i class="fa fa-thumbs-up" style="font-size:.8rem;"></i> Autorizar
+                                            <i class="fa fa-thumbs-up" title="Autorizar Requisicion" style="font-size:.8rem;"></i> Autorizar
                                         </a> 
                                         `
                                         //Si el rol de usuario es compras o administrador
@@ -348,16 +347,16 @@ session_start();
                                         }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) {
                                     ?>
                                         actions = 
-                                            `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}">
+                                            `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}" title="Editar Requisicion">
                                                 <i class="far fa-edit" style="font-size:.8rem;"></i>
                                             </a> |
                                             <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                                <i class="fa fa-print" style="font-size:.8rem;"></i>
+                                                <i class="fa fa-print" style="font-size:.8rem;" title="Im primir Requisicion"></i>
                                             </a> |
-                                            <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning">
+                                            <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
                                                 <i class="fa fa-ban" style="font-size:.8rem;"></i>
                                             </a> |
-                                            <a data-toggle="modal" data-target="#modalBorra" data-id="${full.Folio}" data-name="${full.arear}" href="javascript:void(0)" class="link_delete text-danger">
+                                            <a data-toggle="modal" data-target="#modalBorra" data-id="${full.Folio}" data-name="${full.arear}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisicion">
                                                 <i class="fa fa-trash" style="font-size:.8rem;"></i>
                                             </a>
                                             `;
@@ -367,7 +366,7 @@ session_start();
                                         ?>
                                         actions = 
                                             `
-                                                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" title="Imprimir Requisicion">
                                                     <i class="fa fa-print" style="font-size: .8rem;"></i>
                                                 </a>
                                             `;
@@ -382,15 +381,15 @@ session_start();
                                     ?>
                                     actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
+                                            <i class="fa fa-print" style="font-size:.8rem;" title="Imprimir Requisicion"></i>
                                         </a> |
                                         <a href="new_orden_compra.php?req=${full.Folio}" class="text-success">
-                                            <i class="fa fa-clipboard" style="font-size:.8rem;"></i>
+                                            <i class="fa fa-clipboard" style="font-size:.8rem;" title="Generar Orden de Compra"></i>
                                         </a> |
-                                        <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning">
+                                        <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
                                             <i class="fa fa-ban" style="font-size:.8rem;"></i>
                                         </a>  | 
-                                         <a data-toggle="modal" data-target="#modalFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary">
+                                         <a data-toggle="modal" data-target="#modalFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary" title="Ingresar datos de factura">
                                             <i class="fa fa-file" style="font-size:.8rem;"></i>
                                         </a> 
                                     `;
@@ -400,7 +399,7 @@ session_start();
                                 ?>
                                    actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
+                                            <i class="fa fa-print" style="font-size:.8rem;" title="Imprimir Requisicion"></i>
                                         </a>
                                         `;
                                     <?php
@@ -409,86 +408,104 @@ session_start();
                                     //Facturado
                                 } else if (full.estatus == 4) {
                                     actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" title="Imprimir Requisicion">
                                             <i class="fa fa-print" style="font-size:.8rem;"></i>
                                         </a>
                                         |
-                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary">
+                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary" title="Subir Factura">
                                             <i class="fa fa-upload" style="font-size:.8rem;"></i> 
                                         </a>
                                     `
                                     //Pagado
                                 }else if(full.estatus == 5) {
                                     actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;">
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;" title="Imprimir Requisicion">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
                                         |
                                         <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Factura"></i>
                                             <span style="font-size: .8rem; ">F</span>
                                         </a> 
                                         `;
+                                        if(full.no_orden != "N/A") {
+                                            actions += `
+                                            |
+                                                <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
+                                                    <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                                    <span style="font-size: .8rem; ">OC</span>
+                                                </a>
+                                                |
+                                                <a href="data/verpago.php?orden=${full.no_orden}" target="_blank" class="text-primary mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
+                                                    <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                                    <span style="font-size: .8rem; ">P</span>
+                                                </a>
+                                            `
+                                        }
                                     //Procesado
                                 }else if(full.estatus == 3) {
                                     actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;">
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;" title="Imprimir Requisicion">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;">
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
-                                        <a data-toggle="modal" data-target="#modalIngreso" data-orden="${full.no_orden}" data-req="${full.Folio}" href="javascript.void(0)" class="text-warning">
+                                        <a data-toggle="modal" data-target="#modalIngreso" data-orden="${full.no_orden}" data-req="${full.Folio}" href="javascript.void(0)" class="text-warning" title="Ingresar Productos">
                                             <i class="fa-solid fa-right-to-bracket" style="font-size:.8rem;"></i>
                                         </a>
                                         `;
                                         //Facturado desde OC
                                 }else if(full.estatus == 7) {
                                      actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;">
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;" title="Imprimir Factura">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;">
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
-                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
+                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Factura">
                                             <i class="fa fa-upload" style="font-size:.8rem;"></i> 
                                         </a>
                                         `;
                                         //Producto Recibido
                                 }else if(full.estatus == 6) {
                                     actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;">
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;" title="Imprimir Requisicion">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">R</span>
+                                            <span style="font-size: .8rem;" title="Imprimir Requisicion">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;">
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
                                         <a data-toggle="modal" data-target="#modalFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
-                                            <i class="fa fa-file" style="font-size:.8rem;"></i>
+                                            <i class="fa fa-file" style="font-size:.8rem;" title="Cargar datos de factura"></i>
                                         </a>
                                         `;
+                                        //Por Pagar
                                 }else if(full.estatus == 8) {
                                     actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;">
+                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;" title="Imprimir requisicion">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;">
+                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
-                                        <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;">
+                                        <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;" title="Ver Factura">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">F</span>
-                                        </a> 
+                                        </a>
+                                        <a href="" data-toggle="modal" data-target="#pagar" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Pago">
+                                            <i class="fa fa-upload" style="font-size:.8rem;"></i> 
+                                        </a>
                                         `;
                                 }
                                 return actions;
@@ -538,6 +555,106 @@ session_start();
         function actualizarLaPagina(){
             window.location.reload();
         } 
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            //Evento para mostrar el modal para subir comprobante de Pago
+            $('#pagar').on('show.bs.modal', function (e) {
+                const button = $(e.relatedTarget); // Boton que disparo el Evento
+                const id = button.data().id;
+                const orden = button.data().orden;
+                const modal = $(this);
+
+                modal.find('#pagar_noreq').val(id);
+                modal.find('#pagar_orden').val(`OC-${orden}`);
+            });
+        })
+    </script>
+
+    <div class="modal fade" id="pagar" tabindex="-1" role="dialog" aria-labelledby="pagarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pagarLabel">Subir Pago</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label id="label_pagar" class="col-sm-4 col-form-label text-left">No. Orden:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="pagar_noreq" name="pagar_noreq" hidden>
+                                <input type="text" class="form-control" id="pagar_orden" name="pagar_orden" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-left">Fecha de Pago:</label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" id="fecha_pagar" name="fecha_pagar">
+                            </div>
+                        </div>
+                        <!-- Subir archivo pdf -->
+                         <div class="form-group row">
+                            <label class="col-sm-4 col-form-label text-left">Archivo:</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="form-control-file" id="pagar_file" name="pagar_file">
+                            </div>
+                        </div>
+                        <!-- Botones de modal -->
+                         <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button id="form_pagar" class="btn btn-primary">Subir</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#form_pagar').click(function(e) {
+                e.preventDefault();
+                const formData = new FormData();
+                formData.append('pagar_noreq', $('#pagar_noreq').val().replace(/\D/g, ''));
+                formData.append('pagar_orden', $('#pagar_orden').val().replace(/\D/g, ''));
+                formData.append('fecha_pago', $('#fecha_pago').val());
+
+                const archivo = $('#pagar_file')[0].files[0];
+                console.log(archivo);
+                if (!archivo) {
+                    alert('Debes seleccionar un archivo.');
+                    return;
+                }
+                formData.append('pagar_file', archivo);
+
+                $.ajax({
+                    url: 'data/upload_comprobante_pago.php',
+                    type: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log(response);
+                        if (response.success) {
+                            alert('Comprobante de pago subido correctamente.');
+                            $('#pagar').modal('hide');
+                            actualizarLaPagina();
+                        } else {
+                            alert('Error al subir el comprobante de pago.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Error al subir el comprobante de pago.');
+                    }
+                })
+            })
+        })
     </script>
 
     <script>
@@ -726,7 +843,7 @@ session_start();
     </script>
 
     <!-- Modal para subir una factura -->
-     <div class="modal fade" id="subirFactura" tabindex="-1" role="dialog" aria-labelledby="subirFacturaLabel" aria-hidden="true">
+    <div class="modal fade" id="subirFactura" tabindex="-1" role="dialog" aria-labelledby="subirFacturaLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form method="POST" enctype="multipart/form-data">
