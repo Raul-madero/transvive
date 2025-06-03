@@ -24,6 +24,7 @@ function formatear_fecha($fecha) {
 function obtenerDatosEmpleado($con, $nombreCompleto) {
     $sql = "SELECT 
                 CONCAT(em.nombres, ' ', em.apellido_paterno, ' ', em.apellido_materno) AS empleado,
+                em.noempleado,
                 em.fecha_contrato, em.fecha_reingreso, em.sexo, em.estado_civil, em.edad,
                 em.rfc, em.curp, em.numeross, em.domicilio,
                 em.cargo, em.salarioxdia
