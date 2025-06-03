@@ -300,24 +300,29 @@ session_start();
             { "data" : "tipojob", "width": "12%", "orderable":false },
             { "data" : "tipomantto", "width": "8%" },
             { "data" : "trabsolicitado", "width": "12%" },
-            { "data" : "estatusped", "width": "8%", "orderable":false },
+            { "data" : "estatusped", "width": "8%", "orderable":false }
               
           <?php 
-           if ($rol == 10 || $_SESSION['idUser'] == 32 ) { ?>
-            {
+           if ($_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 32 ) { ?>
+            ,{
                     "render": function ( data, type, full, meta ) {
-                    return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> Cancelar</a> | <a href="#" id="iniciar_orden" data-id="' + full.pedidono + '" class="text-success "> <i class="fa-solid fa-wrench"></i> Iniciar</a>';
+                    return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\' title="Editar Orden d eMantenimiento"><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em" title="Imprimir Orden de Mantenimiento"></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.noorden +  '\' href="javascript:void(0)" class="link_delete" style="color:red" title="Cancelar Orden de Mantenimiento"><i class="fa fa-ban"></i> Cancelar</a> | <a href="#" id="iniciar_orden" data-id="' + full.pedidono + '" class="text-success " title="Iniciar Orden de Mantenimiento"> <i class="fa-solid fa-wrench"></i> Iniciar</a>';
                 }       
             } 
 
-         <?php }else { ?>
-          {
+         <?php } else if($_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 32 || $_SESSION['idUser'] == 12) { ?>
+          ,{
                     "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a href="#" id="iniciar_orden" data-id="' + full.pedidono + '" class="text-success"> <i class="fa-solid fa-wrench"></i>Inicio</a>'
+        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\' title="Editar Orden de Mantenimiento"><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank" title="Imprimir Orden de Mantenimiento"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a> | <a href="#" id="iniciar_orden" data-id="' + full.pedidono + '" class="text-success" title="Iniciar Orden de Mantenimiento"> <i class="fa-solid fa-wrench"></i>Inicio</a>'
                     }
                   }
-                  <?php } ?>
-          
+                  <?php } else { ?>
+          ,{
+                    "render": function ( data, type, full, meta ) {
+        return '<a class="link_edit" style="color:#007bff;" href= \'edit_solicitudmantto.php?id=' + full.pedidono +  '\' title="Editar Orden de Mantenimiento"><i class="far fa-edit"></i> Editar</a> | <a href= \'factura/form_ordenmantto.php?id=' + full.noorden + '\'  target="_blank" title="Imprimir Orden de Mantenimiento"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> Print</a>'
+                    }
+                  }
+          <?php }?>
 
 
           ],
