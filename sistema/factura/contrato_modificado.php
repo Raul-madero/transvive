@@ -98,12 +98,12 @@ function generarContratoEmpleado($nombreEmpleado) {
 
     $fecha_contrato_base = ($data['fecha_reingreso'] && $data['fecha_reingreso'] > '1900-01-01') ? $data['fecha_reingreso'] : $data['fecha_contrato'];
 
-    if($fecha_detalle_max && $fecha_detalle_max > $fecha_contrato) {
+    if($fecha_detalle_max && $fecha_detalle_max > $fecha_contrato_base) {
         $fecha_contrato = $fecha_detalle_max;
     }else {
         $fecha_contrato = $fecha_contrato_base;
     }
-    
+
     $fecha_final = (new DateTime($fecha_contrato))->modify('+30 days')->format('Y-m-d');
 
     $mesMen    = formatear_fecha($fecha_contrato);
