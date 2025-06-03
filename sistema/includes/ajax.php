@@ -3132,53 +3132,45 @@ if ($_POST['action'] == 'EditarAdeudo') {
 }
 
 // Generar Vuelta
-    if($_POST['action'] == 'AddPeridoContrato')
-    {
-      if(empty($_POST['noempleado']) )
-      {
+    if ($_POST['action'] == 'AddPeridoContrato') {
+    if (empty($_POST['noempleado'])) {
         echo 'error';
-      }else {  
-        $noempleado = $_POST['noempleado'];
-        $fchainicio = $_POST['dateinicio'];
-        $fchafin    = $_POST['datefin'];
-        
-        $token    = md5($_SESSION['idUser']);
-        $usuario  = $_SESSION['idUser'];
-
-        $query_procesar = mysqli_query($conection,"CALL add_periodoc($noempleado, '$fchainicio', '$fchafin', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        $detalleTablaDetFor = '';
-        $arrayData = array(); 
-        
-        if($result_detalle > 0){
-            while ($data = mysqli_fetch_assoc($query_procesar)){
-                       
-                        
-
-                        $detalleTablaDetFor .= '<tr>
-                                            <td>'.$data['no_empleado'].'</td>
-                                            <td>'.$data['fecha_inicial'].'</td>
-                                            <td>'.$data['fecha_final'].'</td>
-                                            <td>
-                                             <a class="link_delete" href="#" onclick="event.preventDefault(); remove_periodo('.$data['id'].','.$data['no_empleado'].');"><i class="fas fa-minus-square"></i></a>
-                                            </td>
-                                            </tr>';
-                    }
-
-                   
-
-                  
-
-                $arrayData['detalle'] = $detalleTablaDetFor;
-
-
-                    echo json_encode($arrayData,JSON_UNESCAPED_UNICODE); 
-
-       
-        }
-       
-     }
     }
+
+    $noempleado = intval($_POST['noempleado']); // Convertir a int por seguridad
+    $fchainicio = mysqli_real_escape_string($conection, $_POST['dateinicio']);
+    $fchafin    = mysqli_real_escape_string($conection, $_POST['datefin']);
+
+    $usuario  = intval($_SESSION['idUser']);
+
+    $query_insert = mysqli_query($conection, "INSERT INTO detalle_contratos (no_empleado, fecha_inicial, fecha_final, usuario_id) 
+        VALUES ($noempleado, '$fchainicio', '$fchafin', $usuario)");
+
+    if ($query_insert) {
+        // Consulta los periodos actuales del empleado para devolver la tabla actualizada
+        $query_detalles = mysqli_query($conection, "SELECT * FROM detalle_contratos WHERE no_empleado = $noempleado");
+
+        $detalleTablaDetFor = '';
+        while ($data = mysqli_fetch_assoc($query_detalles)) {
+            $detalleTablaDetFor .= '<tr>
+                <td>'.$data['no_empleado'].'</td>
+                <td>'.$data['fecha_inicial'].'</td>
+                <td>'.$data['fecha_final'].'</td>
+                <td>
+                    <a class="link_delete" href="#" onclick="event.preventDefault(); remove_periodo('.$data['id'].','.$data['no_empleado'].');">
+                        <i class="fas fa-minus-square"></i>
+                    </a>
+                </td>
+            </tr>';
+        }
+
+        $arrayData['detalle'] = $detalleTablaDetFor;
+        echo json_encode($arrayData, JSON_UNESCAPED_UNICODE);
+    } else {
+        echo 'error_insert';
+    }
+}
+
 
 //Extrae datos del detalle_Periodos contratos
         if($_POST['action'] == 'searchForDetalleditPeriodo'){
