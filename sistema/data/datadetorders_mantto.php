@@ -89,7 +89,7 @@ if ($_REQUEST['action'] === 'fetch_users') {
                 3 => '<span class="badge bg-warning">En Proceso</span>',
                 4 => '<span class="badge bg-primary">Iniciado</span>',
                 5 => '<span class="badge bg-info">Terminado</span>',
-                0 => '<span class="badge bg-success">Cancelada</span>'
+                0 => '<span class="badge bg-danger">Cancelada</span>'
             ];
 
             $estatusNew = $estatusLabels[$row['estatus']] ?? '';
