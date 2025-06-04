@@ -432,7 +432,7 @@ session_start();
                                         if(full.no_orden != "N/A") {
                                             actions += `
                                             |
-                                                <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
+                                                <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                                     <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                                     <span style="font-size: .8rem; ">OC</span>
                                                 </a>
@@ -450,7 +450,7 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
+                                        <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
@@ -465,7 +465,7 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
+                                        <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
@@ -480,7 +480,7 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem;" title="Imprimir Requisicion">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
+                                        <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
@@ -495,7 +495,7 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.Folio}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
+                                        <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>

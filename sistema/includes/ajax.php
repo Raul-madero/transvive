@@ -4072,26 +4072,25 @@ if($_POST['action'] == 'BajaGas')
 
 // Cancela Solicitud de Mantenimiento 
 
-if($_POST['action'] == 'BajaSolicitud')
-{
+if ($_POST['action'] == 'BajaSolicitud') {
+    $idc = isset($_POST['idc']) ? intval($_POST['idc']) : 0;
+    $usuario = isset($_SESSION['idUser']) ? intval($_SESSION['idUser']) : 0;
 
-        $idc          = $_POST['idc'];
-        $noorden      = $_POST['noorden'];
+    if ($idc <= 0 || $usuario <= 0) {
+        echo "error";
+        exit;
+    }
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+    $query = "UPDATE solicitud_mantenimiento SET estatus = 0, edit_id = $usuario WHERE id = $idc";
+    $query_procesar = mysqli_query($conection, $query);
 
-            $query_procesar = mysqli_query($conection,"CALL baja_solicitud($idc, $noorden, $usuario)");
-            $result_detalle = mysqli_num_rows($query_procesar);
-        
-           if($result_detalle > 0){
-              $data = mysqli_fetch_assoc($query_procesar);
-              echo json_encode($data,JSON_UNESCAPED_UNICODE);
-           }else{
-            echo "error";
-           }
+    if ($query_procesar && mysqli_affected_rows($conection) > 0) {
+        echo json_encode(["success" => true], JSON_UNESCAPED_UNICODE);
+    } else {
+        echo json_encode(["success" => false, "message" => "No se pudo actualizar el registro."]);
+    }
     exit;
-} 
+}
 
 //Baja Cliente
 if($_POST['action'] == 'BajaCliente')

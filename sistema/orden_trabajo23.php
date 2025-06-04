@@ -13,76 +13,57 @@ session_start();
   if (!isset($_SESSION['idUser'])) {
   header('Location: ../index.php');
 }
-
-  
-  //*include "../conexion.php";
-  //*$sqledo = "select estado from estados ORDER BY estado";
-  //*$queryedo = mysqli_query($conection, $sqledo);
-  //*$filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); 
-
- 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-   <meta charset="utf-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TRANSVIVE | ERP</title>
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon"/>
-  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <!-- Theme style -->
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=swap">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- AdminLTE -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   <!-- Ekko Lightbox -->
   <link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-   <!-- Select2 -->
-  <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
-  <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-    
-       
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">
+  <!-- jQuery UI -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+  <!-- DataTables Bootstrap 4 -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- jQuery UI -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
+  <!-- Bootstrap -->
+  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables Core + Bootstrap 4 -->
+  <script src="./js/jquery.dataTables.min.js"></script>
+  <script src="./js/dataTables.bootstrap4.min.js"></script>
+  <!-- RequireJS (si realmente lo usas) -->
+  <script src="./js/require.min.js"></script>
+  <script>
+    requirejs.config({
+      baseUrl: '.'
+    });
+  </script>
 
-  
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- jQuery (ya lo estás usando) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-   
-<!------ Include the above in your HEAD tag ---------->
-
-    <script src="./js/jquery.dataTables.min.js"></script>
-    <script src="./js/dataTables.bootstrap4.min.js"></script>
-    
-        
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
-    
-    <script src="./js/require.min.js"></script>
-    <script>
-      requirejs.config({
-          baseUrl: '.'
-      });
-    </script>
-
-    <style type="text/css">
-      th { font-size: 12px; font-weight:bold; }
-      td { font-size: 13px; }
+  <style>
+    th { font-size: 12px; font-weight: bold; }
+    td { font-size: 13px; }
   </style>
-    <!-- Dashboard Core -->
 </head>
+
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
 
@@ -218,42 +199,21 @@ session_start();
   </footer>
 
 </div>
-  <!-- Control Sidebar -->
- 
-  <!-- /.control-sidebar -->
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
-
-<!-- ./wrapper -->
-
-<!-- jQuery 3 -->
-
-<!-- Bootstrap 3.3.7 -->
-
-<!-- SlimScroll -->
-
-<!-- Bootstrap 3.3.7 -->
-
-
-<!-- AdminLTE App -->
-
-<!-- AdminLTE for demo purposes -->
-<!--<script src="../dist/js/demo.js"></script>-->
 <!-- page script -->
-
-
-    
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
-
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- DataTables Buttons + Export -->
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+<!-- Bootstrap Datepicker (opcional si usas datepickers visuales) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+<!-- Select2 -->
+<script src="../plugins/select2/js/select2.full.min.js"></script>
+<!-- AdminLTE & overlayScrollbars -->
+<script src="../dist/js/adminlte.min.js"></script>
+<script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 
  
     <script type="text/javascript">
@@ -368,17 +328,6 @@ session_start();
           }
         }
       });
-
-      
-
-            // Datapicker 
-            $( ".datepicker" ).datepicker({
-                language: 'es',
-                "dateFormat": "yy-mm-dd",
-                changeYear: true
-            });
-
-
     </script>
 
 <script>
@@ -423,359 +372,11 @@ session_start();
     });
 </script>
 
-    <script type="text/javascript">
-
-
- /* it will load products when document loads */
-
-$(document).on('click', '#cancel_pedido', function(e){
-
- e.preventDefault();
-       var pedidoId = $(this).data('id');
-        var action = 'infoCancelpedido';
-        swal({
-  title: "Desea Cancelar el Registro ?",
-  text: "Pedido No.: " + pedidoId,
-  icon: "warning",
-  buttons: true,
-  dangerMode: true,
-})
-.then((willDelete) => {
-  if (willDelete) {
-    $.ajax({
-            url: 'includes/ajax.php',
-            type: "POST",
-            async : true,
-            data: {action:action,pedidoId:pedidoId},
-            success: function(response)
-            {
-                if(response != 0){
-                    swal('Cancelado','Registro Cancelado Correctamente','success').then(function(){ 
-                      $('#modalAlumno').modal('hide');
-                    location.reload();
-                } );
-                  
-                }else{
-                    swal("Poof! Error!", {
-      icon: "warning",
-    });
-                
-                   
-                }
-            },
-            error: function(error) {
-
-            }
-
-        });
-
-   
-  } else {
-    swal("Accion Cancelada Registro no Cancelado !");
-  }
-});
-        
-        
-
-         }); 
-    
-</script>
-
-<script> 
-  $(document).ready(function (e) {
-  $('#modalAlumno').on('show.bs.modal', function(e) {    
-     //var idp = $(e.relatedTarget).data().id;
-     // $(e.currentTarget).find('#bookId').val(idp);
-      
-  });
-});
-</script>
-
-<script> 
-  $(document).ready(function (e) {
-  $('#modalCancelViaje').on('show.bs.modal', function(e) { 
-
-     var idc    = $(e.relatedTarget).data().id;
-  
-    
-      $(e.currentTarget).find('#form_pass_idcc').val(idc);
- 
-     
-      
-  });
-});
-</script>
-  
-   <div class="modal fade" id="modalCancelViaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  
-  
-   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Cancelar Vuelta</h5>
-      </div>
-      <div class="modal-body">
-
-        
-        <form>
-        <div class="col-md-12">
-          <div class="form-group"> 
-          </div>
-        </div>
-        <div class="form-group row">
-           <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">No. de Folio:</label>
-           <div class="col-sm-9">
-            <input type="text" class="form-control" id="form_pass_idcc" name="form_pass_idcc" disabled>
-           </div>
-        </div> 
-        
-
-        <div class="form-group row">
-           <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">Motivo de Cancelación:</label>
-           <div class="col-sm-9">
-             <textarea class="form-control" rows="1" id="comentarios" name="comentarios">Cancelado / Reprogramado por el Cliente</textarea>
-           </div>
-        </div>  
-
-   
-       
- 
-
-        <!--<div class="form-group row">
-           <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">Imagen:</label>
-           <div class="col-sm-10">
-              <input type="file" class="form-control" id="image" name="image" multiple>
-           </div>
-        </div>-->
-
-    
-      <div class="modal-footer">
-        <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success pull-right" href="#" id="actualizaVuelta"><i class="fa fa-save"></i>&nbsp;Cancelar Vuelta</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div> 
-
-</div>
-
-<script>
-   $('#actualizaVuelta').click(function(e){
-        e.preventDefault();
-
-        var idcc      = $('#form_pass_idcc').val();       
-        var motivoc   = $('#comentarios').val();
-
-       var action       = 'AddCancelaVuelta';
-
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, idcc:idcc, motivoc:motivoc},
-
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                             //console.log(response);
-                            var info = JSON.parse(response);
-                            console.log(info);
-                            //$('#modalFactura').modal('hide');
-                            //--$('#detalle_inspeccion').html(info.detalle);
-                            
-                           
-                            alert('Cancelación Registrada Correctamente');
-
-                            $('#modalEditcliente').modal('hide')
-                            location.reload(true);
-                            
-    
-                        }else{
-                           console.log('no data');
-                           alert('faltan datos');
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
-    });
-
-    </script>   
-
-<script> 
-  $(document).ready(function (e) {
-  $('#modalCopiaViaje').on('show.bs.modal', function(e) { 
-
-     var idcp    = $(e.relatedTarget).data().id;
-  
-    
-      $(e.currentTarget).find('#form_pass_idcp').val(idcp);
- 
-     
-      
-  });
-});
-</script>
-  
-   <div class="modal fade" id="modalCopiaViaje" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  
-  
-   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Copia Vuelta</h5>
-      </div>
-      <div class="modal-body">
-
-        
-        <form>
-        <div class="col-md-12">
-          <div class="form-group"> 
-          </div>
-        </div>
-        <div class="form-group row">
-           <label for="inputName2" class="col-sm-3 col-form-label" style="text-align: left;">No. de Folio:</label>
-           <div class="col-sm-9">
-            <input type="text" class="form-control" id="form_pass_idcp" name="form_pass_idcp" disabled>
-           </div>
-        </div> 
-        
-
-        <!--<div class="form-group row">
-           <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">Imagen:</label>
-           <div class="col-sm-10">
-              <input type="file" class="form-control" id="image" name="image" multiple>
-           </div>
-        </div>-->
-
-    
-      <div class="modal-footer">
-        <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success pull-right" href="#" id="copiaVuelta"><i class="fa fa-save"></i>&nbsp;Copiar Vuelta</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div> 
-
-</div>
-
-<script>
-   $('#copiaVuelta').click(function(e){
-        e.preventDefault();
-
-        var idcp      = $('#form_pass_idcp').val();       
-       
-
-       var action       = 'AddCopiaVuelta';
-
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, idcp:idcp},
-
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                             //console.log(response);
-                            var info = JSON.parse(response);
-                            console.log(info);
-                            
-                           
-                            alert('Vuelta Copiada  Correctamente');
-
-                            $('#modalCopiaViaje').modal('hide')
-                            location.reload(true);
-                            
-    
-                        }else{
-                           console.log('no data');
-                           alert('faltan datos');
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
-    });
-
-    </script>    
-
-<script type="text/javascript">
-
-
-/* it will load products when document loads */
-
-$(document).on('click', '#delete_viaje', function(e){
-
-e.preventDefault();
-      var viajeId = $(this).data('id');
-       var action = 'infoBorraViaje';
-       swal({
- title: "Desea Borrar el Registro del Viaje ?",
- text: "No. ID: " + viajeId,
- icon: "warning",
- buttons: true,
- dangerMode: true,
-})
-.then((willDelete) => {
- if (willDelete) {
-   $.ajax({
-           url: 'includes/ajax.php',
-           type: "POST",
-           async : true,
-           data: {action:action,viajeId:viajeId},
-           success: function(response)
-           {
-               if(response != 0){
-                   swal('Eliminado','Viaje Borrado Correctamente','success').then((value) => {
-                   location.reload();
-})
-                 
-               }else{
-                   swal("Poof! Error!", {
-     icon: "warning",
-   });
-               
-                  
-               }
-           },
-           error: function(error) {
-
-           }
-
-       });
-
-  
- } else {
-   swal("Accion Cancelada Tarea no Cerrada !");
- }
-});
-       
-       
-
-        }); 
-   
-</script>   
-
-
-
-
   <script>
 function actualizarLaPagina(){
     window.location.reload();
 } 
 </script>
-
 
 <script> 
   $(document).ready(function (e) {
@@ -783,6 +384,8 @@ function actualizarLaPagina(){
 
      var idi    = $(e.relatedTarget).data().id;
      var no_orden  = $(e.relatedTarget).data().name;
+     console.log(idi);
+     console.log
   
      
     
@@ -836,7 +439,6 @@ function actualizarLaPagina(){
 
         var idc          = $('#form_pass_idc').val();
         var noorden      = $('#form_pass_noorden').val();
-
        var action       = 'BajaSolicitud';
 
         $.ajax({
