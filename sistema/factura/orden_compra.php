@@ -98,7 +98,7 @@ if (!$nooc) {
 $pdf = new PDF($nooc, $conection);
 $pdf->AddPage('portrait', 'letter');
 
-$query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe, rq.fecha as datereq, oc.estatus FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_requisicion = $nooc");
+$query = mysqli_query($conection,"SELECT oc.id, oc.no_orden, oc.fecha, oc.proveedor, oc.contacto, oc.telefono, oc.correo, oc.forma_pago, oc.metodo_pago, oc.uso_cfdi, oc.area_solicitante, oc.observaciones, pv.nombre, oc.recibe, rq.fecha as datereq, oc.estatus FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_orden = $nooc");
 $result = mysqli_num_rows($query);
 $entrada = mysqli_fetch_assoc($query);
 //Variables para encabezado
