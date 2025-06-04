@@ -22,7 +22,7 @@ class PDF extends FPDF
         $id = intval($this->id);
         $this->con->set_charset('utf8');
 
-        $query = $this->con->prepare("SELECT oc.*, pv.nombre FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id WHERE oc.no_requisicion = ?");
+        $query = $this->con->prepare("SELECT oc.*, pv.nombre FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id WHERE oc.no_orden = ?");
         $query->bind_param("i", $id);
         $query->execute();
         $entrada = $query->get_result()->fetch_assoc();
@@ -57,7 +57,7 @@ class PDF extends FPDF
     {
         $id = intval($this->id);
 
-        $query = $this->con->prepare("SELECT oc.*, rq.fecha as datereq, pv.nombre FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_requisicion = ?");
+        $query = $this->con->prepare("SELECT oc.*, rq.fecha as datereq, pv.nombre FROM orden_compra oc INNER JOIN proveedores pv ON oc.proveedor = pv.id INNER JOIN requisicion_compra rq ON oc.no_requisicion = rq.no_requisicion WHERE oc.no_orden = ?");
         $query->bind_param("i", $id);
         $query->execute();
         $entrada = $query->get_result()->fetch_assoc();
