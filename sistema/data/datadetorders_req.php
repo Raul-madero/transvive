@@ -38,8 +38,8 @@ if ($_REQUEST['action'] == 'fetch_users') {
         }
     }
 
-    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden';
-    $table = ' requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion';
+    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden, f.no_factura, f.fecha AS fecha_factura, pg.fecha AS fecha_pago';
+    $table = ' requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion LEFT JOIN facturas f ON f.no_requisicion = o.no_requisicion LEFT JOIN pagos_proveedor pg ON pg.no_requisicion = o.no_requisicion';
     $where = " WHERE p.id > 0 $date_range $estatus_filter";
 
     $columns_order = array(
@@ -157,6 +157,9 @@ if ($_REQUEST['action'] == 'fetch_users') {
         $nestedData['estatusped'] = $Estatusnew;
         $nestedData['no_orden'] = $row['no_orden'] ?? 'N/A';
         $nestedData['fecha_orden'] = $row['fecha_orden']?? 'N/A';
+        $nestedData['no_factura'] = $row['no_factura']?? 'N/A';
+        $nestedData['fecha_factura'] = $row['fecha_factura']?? 'N/A';
+        $nestedData['fecha_pago'] = $row['fecha_pago']?? 'N/A';
 
         $data[] = $nestedData;
     }

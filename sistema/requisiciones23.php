@@ -181,6 +181,9 @@ session_start();
                                         <th class="text-center">Fecha Requiere Material</th>
                                         <th class="text-center">No. OC</th>
                                         <th class="text-center">Fecha OC</th>
+                                        <th class="text-center">No. Factura</th>
+                                        <th class="text-center">Fecha Factura</th>
+                                        <th class="text-center">Fecha Pago</th>
                                         <th class="text-center">Tipo</th>
                                         <th class="text-center">Área Solicitante</th>
                                         <th class="text-center">Monto</th>
@@ -323,6 +326,24 @@ session_start();
                             render: data => data === 'N/A' ? data : 'OC-' + data 
                         },
                         { data: 'fecha_orden', width: "5%", className: "text-center align-middle" },
+                        {
+                            data: 'no_factura',
+                            width: "5%",
+                            className: "text-center align-middle",
+                            render: data => data === 'N/A' ? data : 'FA-' + data
+                        },
+                        {
+                            data: "fecha_factura",
+                            width: "5%",
+                            className: "text-center align-middle",
+                            orderable: false
+                        },
+                        {
+                            data: "fecha_pago",
+                            width: "5%",
+                            className: "text-center align-middle",
+                            orderable: false
+                        },
                         { data: "tipor", width: "5%", className: "text-center align-middle", orderable: false },
                         { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
                         {

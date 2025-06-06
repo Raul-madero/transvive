@@ -34,6 +34,7 @@ $sqlprov = "
         forma_pago, uso_cfdi, metodo_pago 
     FROM proveedores 
     WHERE estatus = 1
+    ORDER BY nombre
 ";
 
 $queryprov = mysqli_query($conection, $sqlprov);
