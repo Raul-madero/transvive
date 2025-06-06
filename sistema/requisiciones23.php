@@ -135,10 +135,6 @@ session_start();
                                 <li class="breadcrumb-item">
                                     <a href="new_cotizacioncompra.php"><i class="fas fa-plus text-success"></i>&nbsp;&nbsp;Nueva</a>
                                 </li>
-                                <!-- <li class="breadcrumb-item">
-                                    <a href="factura/requisiciones_excel.php"><i class="fas fa-file-excel"></i> Excel</a>
-                                </li>
-                                <li class="breadcrumb-item"><a href="#">Home</a></li> -->
                             </ol>
                         </div>
                     </div>
@@ -476,14 +472,14 @@ session_start();
                                                 </a>
                                                 |
                                                  <a href="data/verpago.php?orden=${full.no_orden}" target="_blank" class="text-success" style="display: inline-block; text-align: center;">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Factura"></i>
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Pago"></i>
                                             <span style="font-size: .8rem; ">P</span>
                                         </a> 
                                             `
                                         }else {
                                             actions += `
                                              <a href="data/verpago.php?id=${full.Folio}" target="_blank" class="text-success" style="display: inline-block; text-align: center;">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Factura"></i>
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Pago"></i>
                                             <span style="font-size: .8rem; ">P</span>
                                         </a> 
                                             `
@@ -499,6 +495,9 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
+                                        <a class="link_edit text-primary" href="edit_ordencompra.php?id=${full.no_orden}" title="Editar Orden de Compra">
+                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
+                                            </a>
                                         <a data-toggle="modal" data-target="#modalIngreso" data-orden="${full.no_orden}" data-req="${full.Folio}" href="javascript.void(0)" class="text-warning" title="Ingresar Productos">
                                             <i class="fa-solid fa-right-to-bracket" style="font-size:.8rem;"></i>
                                         </a>
@@ -539,7 +538,8 @@ session_start();
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;" title="Imprimir requisicion">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
-                                        </a>`
+                                        </a>
+                                        `
                                         if(full.no_orden === 'N/A' ) {
                                             actions += `
                                                 <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;" title="Ver Factura">
@@ -565,6 +565,11 @@ session_start();
                                             </a>
                                             `
                                         }
+                                        actions += `
+                                        <a class="link_edit text-primary" href="edit_factura.php?id=${full.no_factura}" title="Editar Factura">
+                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
+                                            </a>
+                                        `
                                 }
                                 return actions;
                             }
