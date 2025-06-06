@@ -443,6 +443,8 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Factura"></i>
                                             <span style="font-size: .8rem; ">F</span>
                                         </a> 
+                                        
+                                       
                                         `;
                                         if(full.no_orden != "N/A") {
                                             actions += `
@@ -452,10 +454,17 @@ session_start();
                                                     <span style="font-size: .8rem; ">OC</span>
                                                 </a>
                                                 |
-                                                <a href="data/verpago.php?orden=${full.no_orden}" target="_blank" class="text-primary mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
-                                                    <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                                    <span style="font-size: .8rem; ">P</span>
-                                                </a>
+                                                 <a href="data/verpago.php?orden=${full.no_orden}" target="_blank" class="text-success" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Factura"></i>
+                                            <span style="font-size: .8rem; ">P</span>
+                                        </a> 
+                                            `
+                                        }else {
+                                            actions += `
+                                             <a href="data/verpago.php?id=${full.Folio}" target="_blank" class="text-success" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Factura"></i>
+                                            <span style="font-size: .8rem; ">P</span>
+                                        </a> 
                                             `
                                         }
                                     //Procesado
@@ -723,8 +732,18 @@ session_start();
                 const orden = button.data().orden;
                 const modal = $(this);
 
-                modal.find('#pagar_noreq').val(id);
-                modal.find('#pagar_orden').val(`OC-${orden}`);
+                if(orden === 'N/A') {
+                    modal.find('#label_pagar').text('Requisicion:');
+                    modal.find('#pagar_noreq').val('REQ-' + id);
+                    modal.find('#pagar_orden').prop('hidden', true);
+                    modal.find('#pagar_noreq').prop('hidden', false);
+                }else {
+                    modal.find('#label_pagar').text('Orden de Compra:');
+                    modal.find('#pagar_orden').val('OC-' + orden);
+                    modal.find('#pagar_noreq').val(id);
+                    modal.find('#pagar_noreq').prop('hidden', true);
+                    modal.find('#pagar_orden').prop('hidden', false);
+                }
             });
         })
     </script>
@@ -741,9 +760,9 @@ session_start();
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label id="label_pagar" class="col-sm-4 col-form-label text-left">No. Orden:</label>
+                            <label id="label_pagar" class="col-sm-4 col-form-label text-left"></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="pagar_noreq" name="pagar_noreq" hidden>
+                                <input type="text" class="form-control" id="pagar_noreq" name="pagar_noreq" disabled>
                                 <input type="text" class="form-control" id="pagar_orden" name="pagar_orden" disabled>
                             </div>
                         </div>
@@ -752,6 +771,7 @@ session_start();
                             <div class="col-sm-8">
                                 <input type="date" class="form-control" id="fecha_pagar" name="fecha_pagar">
                             </div>
+                            <input type="hidden" id="id_pagar" value="<?php echo $_SESSION['idUser'] ?>">
                         </div>
                         <!-- Subir archivo pdf -->
                          <div class="form-group row">
@@ -778,7 +798,8 @@ session_start();
                 const formData = new FormData();
                 formData.append('pagar_noreq', $('#pagar_noreq').val().replace(/\D/g, ''));
                 formData.append('pagar_orden', $('#pagar_orden').val().replace(/\D/g, ''));
-                formData.append('fecha_pago', $('#fecha_pago').val());
+                formData.append('fecha_pago', $('#fecha_pagar').val());
+                formData.append('user', $('#id_pagar').val());
 
                 const archivo = $('#pagar_file')[0].files[0];
                 console.log(archivo);
