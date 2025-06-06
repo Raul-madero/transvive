@@ -170,7 +170,7 @@ session_start();
                                     </button>
                                 </div>
                             </form>
-
+                            <?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23): ?>
                             <!-- Tabla -->
                             <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" width="100%">
                                 <thead>
@@ -190,7 +190,20 @@ session_start();
                                     </tr>
                                 </thead>
                             </table>
-
+                            <?php else:?>
+                                <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" width="100%">
+                                <thead>
+                                    <tr>
+                                        <!-- <th class="text-center">Id</th> -->
+                                        <th class="text-center">No. Requisición</th>
+                                        <th class="text-center">Fecha</th>
+                                        <th class="text-center">Fecha Requiere Material</th>
+                                        <th class="text-center">Área Solicitante</th>
+                                        <th class="text-center">Observaciones</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <?php endif;?>
                         </div>
                     </div>
                 </div>
@@ -236,12 +249,12 @@ session_start();
 <!-- Sweet alert 2 (para alertas) -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23):?>
     <script type="text/javascript">
 
         $(document).ready(function () {
         // Carga inicial
             load_data();
-
             function load_data(initial_date = '', final_date = '', gender = '') {
                 const ajax_url = "data/datadetorders_req.php";
 
@@ -460,7 +473,7 @@ session_start();
                                         `;
                                         //Facturado desde OC
                                 }else if(full.estatus == 7) {
-                                     actions = `
+                                    actions = `
                                         <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;" title="Imprimir Factura">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
@@ -518,7 +531,7 @@ session_start();
                     }
                 });
             }
-
+           
             // Filtro por fecha y estatus
             $("#filter").on("click", function () {
                 const initial_date = $("#initial_date").val();
@@ -550,6 +563,108 @@ session_start();
             });
         });
     </script>
+    <?php else: ?>
+        <script type="text/javascript">
+
+        $(document).ready(function () {
+        // Carga inicial
+            load_data();
+            function load_data(initial_date = '', final_date = '', gender = '') {
+                const ajax_url = "data/datadetorders_req.php";
+
+                $('#fetch_generated_wills').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    stateSave: true,
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    lengthMenu: [
+                        [10, 25, 50, 100, -1],
+                        [10, 25, 50, 100, "Todos"]
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copyHtml5',
+                        {
+                            text: 'Excel',
+                            action: function () {
+
+                                // Redirige a un PHP que genera el Excel completo
+                                const url = `factura/requis_excel.php`;
+                                window.open(url, '_blank');
+                            }
+                        },
+                        'csvHtml5',
+                        'pageLength'
+                    ],
+                    ajax: {
+                        url: ajax_url,
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            action: "fetch_users",
+                            initial_date,
+                            final_date,
+                            gender
+                        },
+                        dataSrc: function (json) {
+                            console.log("📦 Respuesta recibida:", json);
+                            return json.records || [];
+                        }
+                    },
+                    columns: [
+                        // { data: "pedidono", width: "3%", className: "text-center" },
+                        {
+                            data: "Folio",
+                            width: "2%",
+                            className: "text-center align-middle",
+                            render: data => 'REQ-' + data
+                        },
+                        { data: "fechaa", width: "3%", className: "text-center align-middle" },
+                        { data: "fecha_req", width: "5%", className: "text-center align-middle", orderable: false },
+                        { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
+                        { data: "notas", width: "30%", className: "text-left align-middle", orderable: false }
+                    ],
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json",
+                        emptyTable: "No hay datos disponibles"
+                    }
+                });
+            }
+           
+            // Filtro por fecha y estatus
+            $("#filter").on("click", function () {
+                const initial_date = $("#initial_date").val();
+                const final_date = $("#final_date").val();
+                const gender = $("#gender").val();
+
+                if (!initial_date || !final_date) {
+                    $("#error_log").html("⚠️ Debes seleccionar ambas fechas.");
+                    return;
+                }
+
+                const date1 = new Date(initial_date);
+                const date2 = new Date(final_date);
+
+                if (date1 > date2) {
+                    $("#error_log").html("⚠️ La fecha final debe ser posterior a la inicial.");
+                    return;
+                }
+
+                $("#error_log").html("");
+                load_data(initial_date, final_date, gender);
+            });
+
+            // Inicialización del datepicker
+            $(".datepicker").datepicker({
+                language: 'es',
+                dateFormat: "yy-mm-dd",
+                changeYear: true
+            });
+        });
+    </script>
+    <?php endif; ?>
     
     <script>
         function actualizarLaPagina(){
