@@ -24,7 +24,7 @@ $fecha_ejercicio = substr($idoentrada, $final3, 10);
 
 if ($fecha_ini != '') {
   $nosemana = $fecha_ini;
-  $query_productos = mysqli_query($conection,"SELECT rv.id, rv.semana, rv.fecha, rv.cliente, rv.direccion, rv.destino, rv.costo_viaje, rv.hora_inicio, rv.hora_fin, rv.hora_llegadareal, rv.notas, rv.unidad, rv.unidad_ejecuta, rv.num_unidad, rv.numero_unidades, if(rv.estatus = 1,'Activo',if(rv.estatus = 2, 'Realizado', if(rv.estatus= 3,'Cancelado', if(rv.estatus = 4,'Iniciado',if(rv.estatus=5, 'Finalizado', ''))))) as Status, rv.valor_vuelta, rv.sueldo_vuelta, rv.ruta, rv.operador, if (rv.planeado = 1, 'Planeado', 'Registrado') as Tipoviaje, rv.tipo_viaje, us.nombre AS jefeo, CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) as superv, em.noempleado, rv.personas FROM registro_viajes rv LEFT JOIN clientes ct ON rv.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON rv.id_supervisor = sp.idacceso LEFT JOIN empleados em ON rv.operador = CONCAT(em.nombres, ' ', em.apellido_paterno, ' ', em.apellido_materno) WHERE (rv.tipo_viaje <> 'Especial' or rv.tipo_viaje <> 'Especial Turistico') and (rv.semana = '$nosemana' and YEAR(rv.fecha) = $fecha_ejercicio)  ORDER by rv.fecha, rv.id");
+  $query_productos = mysqli_query($conection,"SELECT rv.id, rv.semana, rv.fecha, rv.cliente, rv.direccion, rv.destino, rv.costo_viaje, rv.hora_inicio, rv.hora_fin, rv.hora_llegadareal, rv.notas, rv.unidad, rv.unidad_ejecuta, rv.num_unidad, rv.numero_unidades, if(rv.estatus = 1,'Activo',if(rv.estatus = 2, 'Realizado', if(rv.estatus= 3,'Cancelado', if(rv.estatus = 4,'Iniciado',if(rv.estatus=5, 'Finalizado', ''))))) as Status, rv.valor_vuelta, rv.sueldo_vuelta, rv.ruta, rv.operador, if (rv.planeado = 1, 'Planeado', 'Registrado') as Tipoviaje, rv.tipo_viaje, us.nombre AS jefeo, CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) as superv, em.noempleado, rv.personas, rv.personas_fin FROM registro_viajes rv LEFT JOIN clientes ct ON rv.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON rv.id_supervisor = sp.idacceso LEFT JOIN empleados em ON rv.operador = CONCAT(em.nombres, ' ', em.apellido_paterno, ' ', em.apellido_materno) WHERE (rv.tipo_viaje <> 'Especial' or rv.tipo_viaje <> 'Especial Turistico') and (rv.semana = '$nosemana' and YEAR(rv.fecha) = $fecha_ejercicio)  ORDER by rv.fecha, rv.id");
 $result_detalle = mysqli_num_rows($query_productos);
 mysqli_close($conection);
 
@@ -110,7 +110,7 @@ $titulo = "REPORTE DE VIAJES DE: $nosemana ";
         }
     $titulo = "REPORTE DE VIAJES POR MES DE: $monthNameSpanish" ;    
 
-  $query_productos = mysqli_query($conection,"SELECT rv.id, rv.semana, rv.fecha, rv.cliente, rv.direccion, rv.destino, rv.costo_viaje, rv.hora_inicio, rv.hora_fin, rv.hora_llegadareal, rv.notas, rv.unidad, rv.unidad_ejecuta, rv.num_unidad, rv.numero_unidades, if(rv.estatus = 1,'Activo',if(rv.estatus = 2, 'Realizado', if(rv.estatus= 3,'Cancelado', if(rv.estatus = 4,'Iniciado',if(rv.estatus=5, 'Finalizado', ''))))) as Status, rv.valor_vuelta, rv.sueldo_vuelta, rv.ruta, rv.operador, if (rv.planeado = 1, 'Planeado', 'Registrado') as Tipoviaje, rv.tipo_viaje, us.nombre AS jefeo, CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) as superv, em.noempleado, rv.personas FROM registro_viajes rv LEFT JOIN clientes ct ON rv.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON rv.id_supervisor = sp.idacceso LEFT JOIN empleados em ON rv.operador = CONCAT(em.nombres, ' ', em.apellido_paterno, ' ', em.apellido_materno) WHERE (rv.tipo_viaje <> 'ESPECIAL' or rv.tipo_viaje <> 'ESPECIAL TURISTICO') and rv.fecha BETWEEN '$fini' and '$ffin' ORDER by rv.fecha, rv.id");
+  $query_productos = mysqli_query($conection,"SELECT rv.id, rv.semana, rv.fecha, rv.cliente, rv.direccion, rv.destino, rv.costo_viaje, rv.hora_inicio, rv.hora_fin, rv.hora_llegadareal, rv.notas, rv.unidad, rv.unidad_ejecuta, rv.num_unidad, rv.numero_unidades, if(rv.estatus = 1,'Activo',if(rv.estatus = 2, 'Realizado', if(rv.estatus= 3,'Cancelado', if(rv.estatus = 4,'Iniciado',if(rv.estatus=5, 'Finalizado', ''))))) as Status, rv.valor_vuelta, rv.sueldo_vuelta, rv.ruta, rv.operador, if (rv.planeado = 1, 'Planeado', 'Registrado') as Tipoviaje, rv.tipo_viaje, us.nombre AS jefeo, CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) as superv, em.noempleado, rv.personas, rv.personas_fin FROM registro_viajes rv LEFT JOIN clientes ct ON rv.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON rv.id_supervisor = sp.idacceso LEFT JOIN empleados em ON rv.operador = CONCAT(em.nombres, ' ', em.apellido_paterno, ' ', em.apellido_materno) WHERE (rv.tipo_viaje <> 'ESPECIAL' or rv.tipo_viaje <> 'ESPECIAL TURISTICO') and rv.fecha BETWEEN '$fini' and '$ffin' ORDER by rv.fecha, rv.id");
 $result_detalle = mysqli_num_rows($query_productos);
 mysqli_close($conection); 
 }
@@ -135,6 +135,7 @@ mysqli_close($conection);
     <th>Unidad Ejecuta</th>
     <th>No. de Unidad</th>
     <th>No. de Personas</th>
+    <th>No. de Personas Salida</th>
     <th>Tipo Vuelta</th>
     <th>Ruta</th>
     <th>No. Empleado</th>
@@ -226,6 +227,7 @@ mysqli_close($conection);
           <td><?php echo strtoupper($row['unidad_ejecuta']); ?></td>
           <td><?php echo strtoupper($row['num_unidad']); ?></td>
           <td><?php echo strtoupper($row['personas']); ?></td>
+          <td><?php echo strtoupper($row['personas_fin']); ?></td>
           <td><?php echo strtoupper($row['Tipoviaje']); ?></td>
           <td><?php echo strtoupper($row['ruta']); ?></td>
           <td><?php echo $row['noempleado']; ?></td>
