@@ -124,7 +124,7 @@ function generarContratoEmpleado($nombreEmpleado) {
     $pdf->Ln(5);
 
     $intro = '<br />
-            <div align="justify">CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO POR 30 DIAS A PARTIR DEL. <b>' . $mesMen . ' AL ' . $mesMay .', </b> EN TERMINOS DE LO NORMADO POR EL ARTICULO 35 DE LA LEY FEDERAL DEL TRABAJO, QUE CELEBRAN POR UNA PARTE LA EMPRESA DENOMINADA <b>TRANSVIVE, S DE RL DE CV</b> REPRESENTADA EN ESTE ACTO POR SU APODERADO, EL C. <b>RAUL GUTIERREZ DE VELASCO ROMO,</b> A QUIEN EN LO SUCESIVO Y PARA EFECTO DEL PRESENTE CONTRATO SE LE DENOMINARÁ "LA EMPRESA", Y POR LA OTRA, Y POR SU PROPIO DERECHO, EL (LA) C. <b>' . $data['empleado'] . '</b> EN LO SUCESIVO SE LE DENOMINARÁ COMO "EL TRABAJADOR", DE CONFORMIDAD CON LAS SIGUIENTES DECLARACIONES Y CLAUSULAS.</div>';
+            <div align="justify">CONTRATO INDIVIDUAL DE TRABAJO POR TIEMPO DETERMINADO POR 30 DIAS A PARTIR DEL. <b>' . $mesMen . ' AL ' . $mesMay .', </b> EN TERMINOS DE LO NORMADO POR EL ARTICULO 35 DE LA LEY FEDERAL DEL TRABAJO, QUE CELEBRAN POR UNA PARTE LA EMPRESA DENOMINADA <b>TRANSVIVE, S DE RL DE CV</b> REPRESENTADA EN ESTE ACTO POR SU APODERADO, EL C. <b>RAUL GUTIERREZ DE VELASCO ROMO,</b> A QUIEN EN LO SUCESIVO Y PARA EFECTO DEL PRESENTE CONTRATO SE LE DENOMINARÁ "LA EMPRESA", Y POR LA OTRA, Y POR SU PROPIO DERECHO, EL (LA) C. <b>' . mb_convert_encoding($data['empleado'], 'ISO-8859-1', 'UTF-8') . '</b> EN LO SUCESIVO SE LE DENOMINARÁ COMO "EL TRABAJADOR", DE CONFORMIDAD CON LAS SIGUIENTES DECLARACIONES Y CLAUSULAS.</div>';
     $pdf->SetFont('Arial', '', 9);
     $pdf->WriteHTML($intro);
 
@@ -187,7 +187,7 @@ function generarContratoEmpleado($nombreEmpleado) {
     $pdf->Cell(85, 5, '_______________________________', 0, 0, 'C');
     $pdf->Cell(85, 5, '_______________________________', 0, 1, 'C');
     $pdf->Cell(85, 5, utf8_decode('RAUL GUTIERREZ DE VELASCO ROMO'), 0, 0, 'C');
-    $pdf->Cell(85, 5, utf8_decode($data['empleado']), 0, 1, 'C');
+    $pdf->Cell(85, 5, mb_convert_encoding($data['empleado'], 'ISO-8859-1', 'UTF-8'), 0, 1, 'C');
 
     $pdf->Output('I', 'Contrato_Eventual_30_Dias.pdf');
 }
