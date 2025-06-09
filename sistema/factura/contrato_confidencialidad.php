@@ -237,41 +237,12 @@ $cotizacion = mysqli_fetch_assoc($query);
     $cargo          = $cotizacion['cargo'];
     $fecha_reingreso = $cotizacion['fecha_reingreso'];
 
-
-
-    // if($fecha_reingreso != '0000-00-00') {
-    //     setlocale(LC_TIME, "spanish");
-    //     $newDate2 = date("d-m-Y", strtotime($fecha_reingreso));
-    //     $fechalet2 = $fecha_reingreso;
-    //     $fechalet2 = str_replace("/", "-", $fecha_reingreso);         
-    //     $newDate2 = date("d-m-Y", strtotime($fechalet2));
-    // //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
-    //     $mesDesc2 = strftime("%d de %B de %Y", strtotime($newDate2));
-    //     $mesMen = strtoupper($mesDesc2);
-
-    //     $newDate3 = date("d-m-Y", strtotime($fechafinal));
-    //     $fechalet3 = $fechafinal;
-    //     $fechalet3 = str_replace("/", "-", $fechafinal);         
-    //     $newDate3 = date("d-m-Y", strtotime($fechalet3));
-    // //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
-    //     $mesDesc3 = strftime("%d de %B de %Y", strtotime($newDate3));
-    //     $mesMay = strtoupper($mesDesc3);
-
-    //     $fcha = date("Y-m-d");
-    //     $newDate4 = date("d-m-Y", strtotime($fcha));
-    //     $fechalet4 = $fcha;
-    //     $fechalet4 = str_replace("/", "-", $fcha);         
-    //     $newDate4 = date("d-m-Y", strtotime($fechalet4));
-    // //$mesDesc = strftime("%B de %Y", strtotime($newDate));                
-    //     $mesDesc4 = strftime("%d de %B de %Y", strtotime($newDate4));
-    //     $Diaactual = strtoupper($mesDesc4);
-    // }else {
-        setlocale(LC_TIME, "spanish");
+    setlocale(LC_TIME, "spanish");
     $newDate2 = date("d-m-Y", strtotime($fecha_contrato));
     $fechalet2 = $fecha_contrato;
     $fechalet2 = str_replace("/", "-", $fecha_contrato);         
     $newDate2 = date("d-m-Y", strtotime($fechalet2));
-//$mesDesc = strftime("%B de %Y", strtotime($newDate));                
+             
     $mesDesc2 = strftime("%d de %B de %Y", strtotime($newDate2));
     $mesMen = strtoupper($mesDesc2);
 
@@ -279,7 +250,7 @@ $cotizacion = mysqli_fetch_assoc($query);
     $fechalet3 = $fechafinal;
     $fechalet3 = str_replace("/", "-", $fechafinal);         
     $newDate3 = date("d-m-Y", strtotime($fechalet3));
-//$mesDesc = strftime("%B de %Y", strtotime($newDate));                
+            
     $mesDesc3 = strftime("%d de %B de %Y", strtotime($newDate3));
     $mesMay = strtoupper($mesDesc3);
 
@@ -288,7 +259,7 @@ $cotizacion = mysqli_fetch_assoc($query);
     $fechalet4 = $fcha;
     $fechalet4 = str_replace("/", "-", $fcha);         
     $newDate4 = date("d-m-Y", strtotime($fechalet4));
-//$mesDesc = strftime("%B de %Y", strtotime($newDate));                
+              
     $mesDesc4 = strftime("%d de %B de %Y", strtotime($newDate4));
     $Diaactual = strtoupper($mesDesc4);
     // }
@@ -395,7 +366,7 @@ $pdf->SetFont('Arial','B',9);
 $pdf->Cell(85,5,'______________________________________',0,0,'C');
 $pdf->Cell(85,5,'______________________________________',0,1,'C');
 $pdf->Cell(85,5,'ING. RAUL GUTIERREZ DE VELASCO ROMO',0,0,'C');
-$pdf->Cell(85,5,$empleado,0,1,'C');
+$pdf->Cell(85,5,mb_convert_encoding($empleado, 'ISO-8859-1', 'UTF-8'),0,1,'C');
 $pdf->SetFont('Arial','',9);
 $pdf->Cell(85,5,'LA EMPRESA',0,0,'C');
 $pdf->Cell(85,5,'EL RECEPTOR',0,1,'C');
