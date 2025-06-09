@@ -58,7 +58,7 @@ SELECT
                 WHEN LOWER(rv.tipo_viaje) LIKE '%semidomiciliadas%' AND IFNULL(r.sueldo_semid, 0) > 0 THEN r.sueldo_semid * rv.valor_vuelta
                 ELSE
                     CASE
-                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN (r.sueldo_camion, e.sueldo_camion) * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN GREATEST(r.sueldo_camion, e.sueldo_camion) * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamioneta\\b' AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN GREATEST(r.sueldo_camioneta, e.sueldo_camioneta) * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bsprinter\\b'AND IFNULL(r.sueldo_sprinter, 0) > 0 THEN GREATEST(r.sueldo_sprinter, e.sueldo_sprinter) * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' THEN e.sueldo_camion * rv.valor_vuelta
