@@ -306,6 +306,41 @@ $namerol = $filas['rol'];
 			});
 
 			load_data();
+			$(document).on('dblclick', '.editable-sueldo_bruto, .editable-deducciones', function () {
+				let td = $(this);
+				let originalValue = td.text().replace(/[$,]/g, '');
+				let input = $('<input type="number" class="form-control form-control-sm" style="width:100px;">').val(originalValue);
+				td.html(input);
+				input.focus();
+
+				input.on('blur keydown', function (e) {
+					if (e.type === 'blur' || e.key === 'Enter') {
+						let nuevoValor = parseFloat($(this).val()) || 0;
+						let id = td.data('id');
+						let campo = td.hasClass('editable-sueldo_bruto') ? 'sueldo_bruto' : 'deducciones';
+
+						// Restaurar valor formateado
+						td.html(nuevoValor.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }));
+
+						// Enviar actualización al servidor
+						$.ajax({
+							url: 'data/actualizarCampoNomina.php',
+							type: 'POST',
+							data: {
+								id: id,
+								campo: campo,
+								valor: nuevoValor
+							},
+							success: function (res) {
+								console.log(res);
+							},
+							error: function () {
+								alert("Error al actualizar.");
+							}
+						});
+					}
+				});
+			});
 		});
 	</script>
 	<script>
