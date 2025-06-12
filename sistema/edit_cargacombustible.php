@@ -346,7 +346,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Supervisor</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputSupervisor" name="inputSupervisor" value="<?php echo $supervisor;?>">
+                      <input type="text" class="form-control" id="inputSupervisor" name="inputSupervisor" value="<?php echo $supervisor;?>" readonly>
                     </div>
                   </div>
 
