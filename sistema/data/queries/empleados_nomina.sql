@@ -43,11 +43,24 @@ SELECT
     ) AS dias_vacaciones_pagar,
 
     IF (
-        STR_TO_DATE(CONCAT(YEAR(CURDATE()), '-', MONTH(e.fecha_contrato), '-', DAY(e.fecha_contrato)), '%Y-%m-%d')
-        BETWEEN '{fecha_inicio}' AND '{fecha_fin}',
-        'SI',
+        STR_TO_DATE(CONCAT(
+            YEAR(CURDATE()), '-', 
+            MONTH(CASE 
+                    WHEN e.fecha_reingreso IS NOT NULL AND e.fecha_reingreso > '1900-01-01' 
+                    THEN e.fecha_reingreso 
+                    ELSE e.fecha_contrato 
+                END), 
+            '-', 
+            DAY(CASE 
+                    WHEN e.fecha_reingreso IS NOT NULL AND e.fecha_reingreso > '1900-01-01' 
+                    THEN e.fecha_reingreso 
+                    ELSE e.fecha_contrato 
+                END)
+        ), '%Y-%m-%d') 
+        BETWEEN '{fecha_inicio}' AND '{fecha_fin}', 
+        'SI', 
         'NO'
-    ) AS prima_vacacional,
+    ) AS prima_vacacional
 
     COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
 
