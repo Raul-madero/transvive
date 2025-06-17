@@ -35,8 +35,8 @@ if ($_REQUEST['action'] == 'fetch_users') {
     }
 
 
-    $columns = 'p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden';
-    $table   = 'requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion';
+    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden, f.no_factura, f.fecha AS fecha_factura, pg.fecha AS fecha_pago';
+    $table = ' requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion LEFT JOIN facturas f ON f.no_requisicion = o.no_requisicion LEFT JOIN pagos_proveedor pg ON pg.no_requisicion = o.no_requisicion';
 
     // Construcción dinámica del WHERE
     $where = " WHERE p.id > 0 $date_range $estatus_filter";
@@ -60,7 +60,8 @@ if ($_REQUEST['action'] == 'fetch_users') {
             LOWER(p.tipo_requisicion) LIKE '%$search%' OR
             LOWER(p.area_solicitante) LIKE '%$search%' OR
             LOWER(p.observaciones) LIKE '%$search%' OR
-            LOWER(o.no_orden) LIKE '%$search%'
+            LOWER(o.no_orden) LIKE '%$search%' OR
+            f.no_factura LIKE '%$search%'
         )";
 
         if ($estatus_value !== null) {
@@ -132,7 +133,10 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'Datenew'       => $row["fecha"],
             'estatusped'    => $estatusMap[$row["estatus"]] ?? '<span class="badge bg-secondary">Desconocido</span>',
             'no_orden'      => $row['no_orden'] ?? 'N/A',
-            'fecha_orden'   => $row['fecha_orden'] ?? 'N/A'
+            'fecha_orden'   => $row['fecha_orden'] ?? 'N/A',
+            'no_factura'    => $row['no_factura']?? 'N/A',
+            'fecha_factura' => $row['fecha_factura']?? 'N/A',
+            'fecha_pago'    => $row['fecha_pago']?? 'N/A'
         ];
 
 
