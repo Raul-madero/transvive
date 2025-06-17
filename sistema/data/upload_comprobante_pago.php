@@ -2,9 +2,10 @@
 include "../../conexion.php";
 
 // Validar campos recibidos
-$noreq = $_POST['pagar_noreq'] ?? '';
-$orden = $_POST['pagar_orden'] ?? '';
-$fecha = $_POST['fecha_pago'] ?? '';
+$noreq = $_POST['pagar_noreq'];
+$orden = $_POST['pagar_orden'];
+$fecha = $_POST['fecha_pago'];
+$usuario = $_POST['user'];
 
 if ($noreq === '' && $orden === '') {
     echo "Debe proporcionar un número de requisición o número de orden.";
@@ -29,14 +30,15 @@ $nombre_base = basename($_FILES['pagar_file']['name']);
 $nombre_final = date('Ymd-His') . '-' . preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', $nombre_base); // Limpieza básica
 $ruta = '../archivos_compras/'. $nombre_final;
 
+
 // Mover archivo al servidor
 if (move_uploaded_file($_FILES['pagar_file']['tmp_name'], $ruta)) {
     // Guardar en base de datos
-    $stmt = mysqli_prepare($conection, "INSERT INTO pagos_proveedor (fecha, ruta, orden_compra) VALUES (?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "sss", $fecha, $ruta, $orden);
+    $stmt = mysqli_prepare($conection, "INSERT INTO pagos_proveedor (fecha, ruta, o_compra, no_requisicion, usuario_id) VALUES (?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "ssiii", $fecha, $ruta, $orden, $noreq, $usuario);
     
     if (mysqli_stmt_execute($stmt)) {
-        $stmt = mysqli_prepare($conection, "UPDATE requisicion_compra SET estatus = 5 WHERE no_requisicion =?");
+        $stmt = mysqli_prepare($conection, "UPDATE requisicion_compra SET estatus = 5 WHERE no_requisicion = ?");
         mysqli_stmt_bind_param($stmt, "i", $noreq);
         if(mysqli_stmt_execute($stmt)) {
             echo json_encode([

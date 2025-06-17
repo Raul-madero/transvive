@@ -3,11 +3,13 @@ include "../../conexion.php";
 $conection->set_charset('utf8');
 
 $orden = isset($_GET['orden']) ? intval($_GET['orden']) : 0;
-if ($orden <= 0) {
-    die("Orden de Compra inválida.");
+$requisicion = isset($_GET['id'])? intval($_GET['id']) : 0;
+if (intval($orden) <= 0) {
+    $query = mysqli_query($conection, "SELECT ruta FROM pagps_proveedor WHERE no_requisicion = $requisicion");
+}else {
+    $query = mysqli_query($conection, "SELECT ruta FROM pagos_proveedor WHERE o_compra = $orden");
 }
 
-$query = mysqli_query($conection, "SELECT ruta FROM pagos_proveedor WHERE orden_compra = $orden");
 mysqli_close($conection);
 
 if (!$query || mysqli_num_rows($query) === 0) {

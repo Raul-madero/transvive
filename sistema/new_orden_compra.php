@@ -34,6 +34,7 @@ $sqlprov = "
         forma_pago, uso_cfdi, metodo_pago 
     FROM proveedores 
     WHERE estatus = 1
+    ORDER BY nombre
 ";
 
 $queryprov = mysqli_query($conection, $sqlprov);
@@ -46,10 +47,9 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 
 // Llenar selector de quien recibe
 $sqlrecb = "
-    SELECT nombre, estatus 
-    FROM usuario 
-    WHERE estatus = 1
-    ORDER BY nombre
+    SELECT *
+    FROM almacenes 
+    ORDER BY codigo
 ";
 $queryrecb = mysqli_query($conection, $sqlrecb);
 if (!$queryrecb) {
@@ -303,7 +303,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                     <div class="col-sm-10">
                       <select class="form-control" name="inputRecibe" id="inputRecibe" required>
                         <?php foreach ($filasrecb as $oprc): ?>
-                          <option value="<?= $oprc['nombre'] ?>"><?= strtoupper($oprc['nombre']) ?></option>
+                          <option value="<?= $oprc['codigo'] ?>"><?= strtoupper($oprc['descripcion']) ?></option>
                         <?php endforeach; ?>
                       </select>
                     </div>

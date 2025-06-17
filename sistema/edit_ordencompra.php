@@ -11,21 +11,20 @@ session_start();
    if (!isset($_SESSION['idUser'])) {
   header('Location: ../index.php');
 }
-
    //Mostrar Datos
   if(empty($_REQUEST['id']))
   {
-    header('Location: ordenes_compra23.php');
+    header('Location: requisiciones23.php');
     mysqli_close($conection);
   }
   $idsol = $_REQUEST['id'];
 
-  $sqlact= mysqli_query($conection,"SELECT * FROM orden_compra WHERE id=$idsol /*and estatus = 1*/");
+  $sqlact= mysqli_query($conection,"SELECT * FROM orden_compra WHERE no_orden=$idsol /*and estatus = 1*/");
   mysqli_close($conection);
   $result_sqlact = mysqli_num_rows($sqlact);
 
   if($result_sqlact == 0){
-    header('Location: ordenes_compra23.php');
+    header('Location: requisiciones23.php');
   }else{
     $option = '';
     while ($data = mysqli_fetch_array($sqlact)){
@@ -74,7 +73,7 @@ session_start();
   $queryoper = mysqli_query($conection, $sqloper);
   $filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
 
-  $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
+  $sqlrecb   = "SELECT * from almacenes ORDER BY codigo";
   $queryrecb = mysqli_query($conection, $sqlrecb);
   $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
 
@@ -362,12 +361,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Recibe</label>
                     <div class="col-sm-10">
                       <select class="form-control" style="width: 100%; text-align: left" id="inputRecibe" name="inputRecibe">
-                       <!--<?php foreach ($filasrecb as $oprc): //llenar las opciones del primer select ?>-->
-                       <option value="Almacén">Almacén</option>
-                       <option value="Compras">Compras</option>
-                       <!--
-                       <option value="<?= $oprc['nombre'] ?>"><?= $oprc['nombre'] ?></option>  
-                       <?php endforeach; ?>-->
+                      <?php foreach ($filasrecb as $oprc): //llenar las opciones del primer select ?>
+                       <option value="<?= $oprc['codigo'] ?>"><?= $oprc['descripcion'] ?></option>  
+                       <?php endforeach; ?>
                     </select>
                     </div>
                   </div>
@@ -471,7 +467,7 @@ $('#btn_salir').click(function(e){
                     {
                       var info = JSON.parse(response);
                       console.log(response); */
-                      location.href = 'ordenes_compra23.php';
+                      location.href = 'requisiciones23.php';
                        //*location.reload();
 
                
@@ -542,12 +538,12 @@ $('#btn_salir').click(function(e){
                         .then(resultado => {
                        if (resultado.value) {
                         generarimpformulaPDF(info.folio);
-                        location.href = 'ordenes_compra23.php';
+                        location.href = 'requisiciones23.php';
                        
                         } else {
                           // Dijeron que no
                           location.reload();
-                         location.href = 'ordenes_compra23.php';
+                         location.href = 'requisiciones23.php';
                         }
                         });
 

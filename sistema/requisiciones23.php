@@ -135,10 +135,6 @@ session_start();
                                 <li class="breadcrumb-item">
                                     <a href="new_cotizacioncompra.php"><i class="fas fa-plus text-success"></i>&nbsp;&nbsp;Nueva</a>
                                 </li>
-                                <!-- <li class="breadcrumb-item">
-                                    <a href="factura/requisiciones_excel.php"><i class="fas fa-file-excel"></i> Excel</a>
-                                </li>
-                                <li class="breadcrumb-item"><a href="#">Home</a></li> -->
                             </ol>
                         </div>
                     </div>
@@ -181,6 +177,9 @@ session_start();
                                         <th class="text-center">Fecha Requiere Material</th>
                                         <th class="text-center">No. OC</th>
                                         <th class="text-center">Fecha OC</th>
+                                        <th class="text-center">No. Factura</th>
+                                        <th class="text-center">Fecha Factura</th>
+                                        <th class="text-center">Fecha Pago</th>
                                         <th class="text-center">Tipo</th>
                                         <th class="text-center">Área Solicitante</th>
                                         <th class="text-center">Monto</th>
@@ -200,6 +199,8 @@ session_start();
                                         <th class="text-center">Fecha Requiere Material</th>
                                         <th class="text-center">Área Solicitante</th>
                                         <th class="text-center">Observaciones</th>
+                                        <th class="text-center">Estatus</th>
+                                        <th class="text-center">Acciónes</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -321,6 +322,24 @@ session_start();
                             render: data => data === 'N/A' ? data : 'OC-' + data 
                         },
                         { data: 'fecha_orden', width: "5%", className: "text-center align-middle" },
+                        {
+                            data: 'no_factura',
+                            width: "5%",
+                            className: "text-center align-middle",
+                            render: data => data === 'N/A' ? data : 'FA-' + data
+                        },
+                        {
+                            data: "fecha_factura",
+                            width: "5%",
+                            className: "text-center align-middle",
+                            orderable: false
+                        },
+                        {
+                            data: "fecha_pago",
+                            width: "5%",
+                            className: "text-center align-middle",
+                            orderable: false
+                        },
                         { data: "tipor", width: "5%", className: "text-center align-middle", orderable: false },
                         { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
                         {
@@ -441,6 +460,8 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Factura"></i>
                                             <span style="font-size: .8rem; ">F</span>
                                         </a> 
+                                        
+                                       
                                         `;
                                         if(full.no_orden != "N/A") {
                                             actions += `
@@ -450,10 +471,17 @@ session_start();
                                                     <span style="font-size: .8rem; ">OC</span>
                                                 </a>
                                                 |
-                                                <a href="data/verpago.php?orden=${full.no_orden}" target="_blank" class="text-primary mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
-                                                    <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                                    <span style="font-size: .8rem; ">P</span>
-                                                </a>
+                                                 <a href="data/verpago.php?orden=${full.no_orden}" target="_blank" class="text-success" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Pago"></i>
+                                            <span style="font-size: .8rem; ">P</span>
+                                        </a> 
+                                            `
+                                        }else {
+                                            actions += `
+                                             <a href="data/verpago.php?id=${full.Folio}" target="_blank" class="text-success" style="display: inline-block; text-align: center;">
+                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Pago"></i>
+                                            <span style="font-size: .8rem; ">P</span>
+                                        </a> 
                                             `
                                         }
                                     //Procesado
@@ -467,6 +495,9 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
                                         </a>
+                                        <a class="link_edit text-primary" href="edit_ordencompra.php?id=${full.no_orden}" title="Editar Orden de Compra">
+                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
+                                            </a>
                                         <a data-toggle="modal" data-target="#modalIngreso" data-orden="${full.no_orden}" data-req="${full.Folio}" href="javascript.void(0)" class="text-warning" title="Ingresar Productos">
                                             <i class="fa-solid fa-right-to-bracket" style="font-size:.8rem;"></i>
                                         </a>
@@ -508,18 +539,37 @@ session_start();
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">R</span>
                                         </a>
-                                        <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">OC</span>
-                                        </a>
-                                        <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;" title="Ver Factura">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">F</span>
-                                        </a>
-                                        <a href="" data-toggle="modal" data-target="#pagar" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Pago">
-                                            <i class="fa fa-upload" style="font-size:.8rem;"></i> 
-                                        </a>
-                                        `;
+                                        `
+                                        if(full.no_orden === 'N/A' ) {
+                                            actions += `
+                                                <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;" title="Ver Factura">
+                                                    <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                                    <span style="font-size: .8rem; ">F</span>
+                                                </a>
+                                                <a href="" data-toggle="modal" data-target="#pagar" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Pago">
+                                                    <i class="fa fa-upload" style="font-size:.8rem;"></i> 
+                                                </a>
+                                            `
+                                        }else {
+                                            actions += `
+                                            <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
+                                                <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                                <span style="font-size: .8rem; ">OC</span>
+                                            </a>
+                                            <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;" title="Ver Factura">
+                                                <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
+                                                <span style="font-size: .8rem; ">F</span>
+                                            </a>
+                                            <a href="" data-toggle="modal" data-target="#pagar" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Pago">
+                                                <i class="fa fa-upload" style="font-size:.8rem;"></i> 
+                                            </a>
+                                            `
+                                        }
+                                        actions += `
+                                        <a class="link_edit text-primary" href="edit_factura.php?id=${full.no_factura}" title="Editar Factura">
+                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
+                                            </a>
+                                        `
                                 }
                                 return actions;
                             }
@@ -624,7 +674,34 @@ session_start();
                         { data: "fechaa", width: "3%", className: "text-center align-middle" },
                         { data: "fecha_req", width: "5%", className: "text-center align-middle", orderable: false },
                         { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
-                        { data: "notas", width: "30%", className: "text-left align-middle", orderable: false }
+                        { data: "notas", width: "30%", className: "text-left align-middle", orderable: false },
+                        { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
+                        {
+                            orderable: false,
+                            width: "20%",
+                            className: "text-center column-actions align-middle",
+                            render: function (data, type, full) {
+                                let actions = ""
+                                //Si el estado de la requisicion es activa
+                                if (full.estatus == 1) {
+                                    actions = `
+                                        <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}" title="Editar Requisicion">
+                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
+                                            </a> |
+                                            <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                                <i class="fa fa-print" style="font-size:.8rem;" title="Im primir Requisicion"></i>
+                                            </a>
+                                        `;
+                                }else {
+                                     actions = `
+                                            <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                                <i class="fa fa-print" style="font-size:.8rem;" title="Im primir Requisicion"></i>
+                                            </a>
+                                        `;
+                                }
+                                return actions;
+                            }
+                        }
                     ],
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json",
@@ -681,8 +758,18 @@ session_start();
                 const orden = button.data().orden;
                 const modal = $(this);
 
-                modal.find('#pagar_noreq').val(id);
-                modal.find('#pagar_orden').val(`OC-${orden}`);
+                if(orden === 'N/A') {
+                    modal.find('#label_pagar').text('Requisicion:');
+                    modal.find('#pagar_noreq').val('REQ-' + id);
+                    modal.find('#pagar_orden').prop('hidden', true);
+                    modal.find('#pagar_noreq').prop('hidden', false);
+                }else {
+                    modal.find('#label_pagar').text('Orden de Compra:');
+                    modal.find('#pagar_orden').val('OC-' + orden);
+                    modal.find('#pagar_noreq').val(id);
+                    modal.find('#pagar_noreq').prop('hidden', true);
+                    modal.find('#pagar_orden').prop('hidden', false);
+                }
             });
         })
     </script>
@@ -699,9 +786,9 @@ session_start();
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label id="label_pagar" class="col-sm-4 col-form-label text-left">No. Orden:</label>
+                            <label id="label_pagar" class="col-sm-4 col-form-label text-left"></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="pagar_noreq" name="pagar_noreq" hidden>
+                                <input type="text" class="form-control" id="pagar_noreq" name="pagar_noreq" disabled>
                                 <input type="text" class="form-control" id="pagar_orden" name="pagar_orden" disabled>
                             </div>
                         </div>
@@ -710,6 +797,7 @@ session_start();
                             <div class="col-sm-8">
                                 <input type="date" class="form-control" id="fecha_pagar" name="fecha_pagar">
                             </div>
+                            <input type="hidden" id="id_pagar" value="<?php echo $_SESSION['idUser'] ?>">
                         </div>
                         <!-- Subir archivo pdf -->
                          <div class="form-group row">
@@ -736,7 +824,8 @@ session_start();
                 const formData = new FormData();
                 formData.append('pagar_noreq', $('#pagar_noreq').val().replace(/\D/g, ''));
                 formData.append('pagar_orden', $('#pagar_orden').val().replace(/\D/g, ''));
-                formData.append('fecha_pago', $('#fecha_pago').val());
+                formData.append('fecha_pago', $('#fecha_pagar').val());
+                formData.append('user', $('#id_pagar').val());
 
                 const archivo = $('#pagar_file')[0].files[0];
                 console.log(archivo);

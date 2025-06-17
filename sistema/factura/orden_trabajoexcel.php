@@ -117,7 +117,7 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('T')->setWidth(20);
 $objPHPExcel->getActiveSheet()->getColumnDimension('U')->setWidth(12);
 
 
-$query_productos = mysqli_query($conection,"SELECT id, no_orden, fecha, usuario, solicita, unidad, tipo_trabajo, tipo_mantenimiento, programado, trabajo_solicitado, notas_genera, trabajo_hecho, costo_descuento, fecha_inicial, fecha_termino, notas, causas_servicio, aprobado, if(estatus = 1,'Activo',if(estatus = 2,'Cerrada', 'Cancelada')) as Status FROM solicitud_mantenimiento");
+$query_productos = mysqli_query($conection,"SELECT id, no_orden, fecha, usuario, solicita, unidad, tipo_trabajo, tipo_mantenimiento, programado, trabajo_solicitado, notas_genera, trabajo_hecho, costo_descuento, fecha_inicial, fecha_termino, notas, causas_servicio, aprobado, if(estatus = 1,'Activo',if(estatus = 2,'Cerrada',if(estatus = 3, 'En Proceso', 'Cancelada'))) as Status FROM solicitud_mantenimiento");
       $result_detalle = mysqli_num_rows($query_productos);
        mysqli_close($conection);             
 

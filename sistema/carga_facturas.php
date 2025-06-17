@@ -38,7 +38,7 @@ if (move_uploaded_file($_FILES['archivo']['tmp_name'], $ruta)) {
         $stmt = mysqli_prepare($conection, "UPDATE facturas SET ruta = ? WHERE no_requisicion = ?");
         mysqli_stmt_bind_param($stmt, "ss", $ruta, $noreq);
         if (mysqli_stmt_execute($stmt)) {
-            $stmt = mysqli_prepare($conection, "UPDATE requisicion_compra SET estatus = 5 WHERE no_requisicion =?");
+            $stmt = mysqli_prepare($conection, "UPDATE requisicion_compra SET estatus = 8 WHERE no_requisicion =?");
             mysqli_stmt_bind_param($stmt, "i", $noreq);
             if(mysqli_stmt_execute($stmt)) {
                 echo "OK";
