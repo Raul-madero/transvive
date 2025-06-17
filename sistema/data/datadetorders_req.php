@@ -60,7 +60,8 @@ if ($_REQUEST['action'] == 'fetch_users') {
             LOWER(p.tipo_requisicion) LIKE '%$search%' OR
             LOWER(p.area_solicitante) LIKE '%$search%' OR
             LOWER(p.observaciones) LIKE '%$search%' OR
-            LOWER(o.no_orden) LIKE '%$search%'
+            LOWER(o.no_orden) LIKE '%$search%' OR
+            f.no_factura LIKE '%$search%'
         )";
 
         if ($estatus_value !== null) {
