@@ -23,7 +23,7 @@ function calcularBonoSemanalContrato($fecha_contrato) {
     if (empty($fecha_contrato)) return false;
     try {
         $fechaInicio = new DateTime($fecha_contrato);
-        return $fechaInicio->diff(new DateTime())->days > 7;
+        return $fechaInicio->diff(new DateTime())->days > 8;
     } catch (Exception $e) {
         return false;
     }
