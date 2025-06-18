@@ -33,6 +33,13 @@ if (!$resultado_insertar_historico) {
     die(json_encode(['status' => 'error', 'message' => 'Error al insertar los datos en historico_nomina: ' . mysqli_error($conection)]));
 }
 
+//Actualizar categoria de bono de empleados
+$sql_categoria = "UPDATE empleados SET clasifica_categoria = 'A', bono_categoria = 0 WHERE noempleado IN (SELECT noempleado FROM nomina_temp_2025 WHERE bono_categoria > 0)";
+$resultado_categoria = mysqli_query($conection, $sql_categoria);
+if (!$resultado_categoria) {
+    die(json_encode(['status' => 'error', 'message' => 'Error al actualizar categoría de bono: ' . mysqli_error($conection)]));
+}
+
 // Actualizar adeudos sumando las deducciones
 $sql_insertar_adeudo = "
     UPDATE adeudos a

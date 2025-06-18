@@ -60,7 +60,7 @@ SELECT
         BETWEEN '{fecha_inicio}' AND '{fecha_fin}', 
         'SI', 
         'NO'
-    ) AS prima_vacacional
+    ) AS prima_vacacional,
 
     COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
 
