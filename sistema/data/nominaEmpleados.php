@@ -160,6 +160,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $dias_vacaciones = calcularDiasVacaciones($anios_trabajados);
         $prima = ($prima_vacacional == 'SI') ? ($salario_diario * $dias_vacaciones * 0.25) : 0;
         $vacaciones = floatval($salario_diario) * intval($dias_vacaciones_pagar);
+
         //Calculo de vales de despensa
         $bono_apoyo = (dia15EntreFechas($fecha_inicio, $fecha_fin) && calcularApoyoMesContrato($fecha_contrato)) ? floatval($apoyo_mes) : 0;
         $bono_semanal = (
@@ -170,15 +171,17 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
             intval($faltas)  == 0
             ) ? floatval($bono_semanal) : 0;
         $bono_categoria = dia15EntreFechas($fecha_inicio, $fecha_fin) ? floatval($bono_categoria) : 0;
+
         //Calculo de deducciones
         $deduccion = max(0, floatval($cantidad) - floatval($total_abonado));
         $deduccion = ($deduccion > floatval($descuento)) ? floatval($descuento) : $deduccion;
+        
         //Descontar faltas del sueldo bruto
         $bruto = $dias_vacaciones_pagar == 0 ? (($cargo == 'OPERADOR') ?  floatval($sueldo_bruto - ($faltas * $sueldo_base)) :  ($sueldo_base * 7) - ($sueldo_base * $faltas)) : 0;
         $fiscal = floatval($pago_fiscal ?? 0);
         $ded_fiscal = floatval($deduccion_fiscal ?? 0);
         $deposito = $fiscal - $ded_fiscal;
-        $efectivo = (($bruto > 0) ? ($bruto - $fiscal) : 0) + $bono_semanal + $bono_supervisor + $bono_categoria + $bono_apoyo + $vacaciones + $prima - $deduccion - floatval($caja_ahorro);
+        $efectivo = (($bruto > 0) ? ($bruto - $fiscal) : (($vacaciones > 0) ? ($vacaciones - $fiscal) : 0)) + $bono_semanal + $bono_supervisor + $bono_categoria + $bono_apoyo + $prima - $deduccion - floatval($caja_ahorro);
         $neto = $deposito + $efectivo;
 
         // Arreglo para inserción
