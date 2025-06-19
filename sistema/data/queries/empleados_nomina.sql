@@ -164,6 +164,4 @@ WHERE
     AND e.tipo_nomina = 'Semanal'
 
 GROUP BY 
-    e.noempleado, e.id, operador, e.sueldo_base, e.cargo, imss, e.estatus, 
-    e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
-    e.supervisor, e.apoyo_mes, fi.pago_fiscal, fi.deduccion_fiscal, fi.neto;
+    e.noempleado;
