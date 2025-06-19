@@ -137,7 +137,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $bono_categoria = $empleado['bono_categoria'];
         $bono_supervisor = $empleado['bono_supervisor'];
         $bono_semanal = $empleado['bono_semanal'];
-       function esFechaValida($fecha) {
+       function esFechaValidaContrato($fecha) {
             if (empty($fecha)) return false;
 
             $f = DateTime::createFromFormat('Y-m-d', $fecha);
@@ -146,9 +146,9 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
 
         $fecha_contrato = null;
 
-        if (esFechaValida($empleado['fecha_reingreso'])) {
+        if (esFechaValidaContrato($empleado['fecha_reingreso'])) {
             $fecha_contrato = $empleado['fecha_reingreso'];
-        } elseif (esFechaValida($empleado['fecha_contrato'])) {
+        } elseif (esFechaValidaContrato($empleado['fecha_contrato'])) {
             $fecha_contrato = $empleado['fecha_contrato'];
         } else {
             // Opcional: manejar si ninguna fecha es válida
