@@ -66,8 +66,8 @@ SELECT
     COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
 
     SUM(
-    CASE 
-        WHEN e.cargo = 'OPERADOR' THEN
+        CASE 
+            WHEN e.cargo = 'OPERADOR' THEN
             CASE 
                 WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
                 WHEN LOWER(rv.tipo_viaje) LIKE '%semidomiciliadas%' AND IFNULL(r.sueldo_semid, 0) > 0 THEN r.sueldo_semid * rv.valor_vuelta
@@ -82,12 +82,15 @@ SELECT
                     ELSE e.sueldo_base * rv.valor_vuelta
                 END
             END
-        WHEN e.tipo_nomina LIKE '%Semanal%' THEN
+            ELSE 
+            CASE
+                WHEN e.tipo_nomina = 'Semanal' AND rv.valor_vuelta > 0 THEN
                 (rv.valor_vuelta * rv.sueldo_vuelta) + (e.sueldo_base * 7)
-        ELSE
-        e.sueldo_base * 7       
-    END
-    ) AS sueldo_bruto,
+                ELSE
+                e.sueldo_base * 7
+            END
+        END
+        ) AS sueldo_bruto,
 
     (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
     (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
