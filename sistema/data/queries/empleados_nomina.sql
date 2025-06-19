@@ -102,7 +102,7 @@ SELECT
                     END
             END
         )
-    ), AS sueldo_vueltas,
+    ) AS sueldo_vueltas,
 
     (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
     (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
