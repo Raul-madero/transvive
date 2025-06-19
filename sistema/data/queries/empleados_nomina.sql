@@ -70,7 +70,7 @@ SELECT
             CASE 
                 WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
                 WHEN LOWER(rv.tipo_viaje) LIKE '%semidomiciliadas%' 
-                AND LOWER(rv.unidad_ejecuta) LIKE '%sprinter%' 
+                AND LOWER(rv.unidad_ejecuta) REGEXP 'sprinter' 
                 AND IFNULL(r.sueldo_sprinter, 0) > 0 
                 THEN GREATEST(r.sueldo_sprinter, e.sueldo_sprinter) * rv.valor_vuelta
                 WHEN LOWER(rv.tipo_viaje) LIKE '%semidomiciliadas%' AND IFNULL(r.sueldo_semid, 0) > 0 THEN r.sueldo_semid * rv.valor_vuelta
