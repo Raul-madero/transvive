@@ -67,7 +67,7 @@ SELECT
 
     SUM(
         CASE 
-            WHEN e.cargo IN ('OPERADOR', 'MECANICO') THEN
+            WHEN e.cargo IN ('OPERADOR', 'MECANICO') AND rv.valor_vuelta > 0 THEN
                 (
                     CASE 
                         WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
