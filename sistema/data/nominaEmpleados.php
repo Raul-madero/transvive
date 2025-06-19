@@ -19,6 +19,13 @@ function calcularAniosTrabajados($fecha_contrato) {
     }
 }
 
+function esFechaValidaContrato($fecha) {
+    if (empty($fecha)) return false;
+
+    $f = DateTime::createFromFormat('Y-m-d', $fecha);
+    return $f && $f->format('Y-m-d') === $fecha && $f >= new DateTime('1900-01-01');
+}
+
 function calcularBonoSemanalContrato($fecha_contrato) {
     if (empty($fecha_contrato)) return false;
     try {
@@ -137,12 +144,6 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $bono_categoria = $empleado['bono_categoria'];
         $bono_supervisor = $empleado['bono_supervisor'];
         $bono_semanal = $empleado['bono_semanal'];
-       function esFechaValidaContrato($fecha) {
-            if (empty($fecha)) return false;
-
-            $f = DateTime::createFromFormat('Y-m-d', $fecha);
-            return $f && $f->format('Y-m-d') === $fecha && $f >= new DateTime('1900-01-01');
-        }
 
         $fecha_contrato = null;
 
