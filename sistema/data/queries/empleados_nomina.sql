@@ -84,7 +84,7 @@ SELECT
             END
             ELSE 
             CASE
-                WHEN e.tipo_nomina = 'Semanal' AND rv.valor_vuelta > 0 THEN
+                WHEN e.cargo = 'MECANICO' AND rv.valor_vuelta > 0 THEN
                 (rv.valor_vuelta * rv.sueldo_vuelta) + (e.sueldo_base * 7)
                 ELSE
                 e.sueldo_base * 7
