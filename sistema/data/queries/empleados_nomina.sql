@@ -81,7 +81,6 @@ SELECT
                 WHEN LOWER(rv.unidad_ejecuta) LIKE '%sprinter%' THEN e.sueldo_sprinter * rv.valor_vuelta
                 ELSE e.sueldo_base * rv.valor_vuelta
             END
-        END
         ELSE 
         CASE
             WHEN e.tipo_nomina LIKE '%Semanal%' THEN
