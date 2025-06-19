@@ -119,7 +119,7 @@ FROM empleados e
 LEFT JOIN registro_viajes rv 
     ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
     AND DATE(rv.fecha) BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
-    AND rv.valor_vuelta > 0
+    -- AND rv.valor_vuelta > 0
 
 LEFT JOIN rutas r 
     ON rv.cliente = r.cliente AND rv.ruta = r.ruta
