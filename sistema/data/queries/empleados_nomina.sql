@@ -84,7 +84,7 @@ SELECT
         END
         ELSE 
         CASE
-            WHEN e.tipo_nomina = 'Semanal' THEN
+            WHEN e.tipo_nomina LIKE '%Semanal%' THEN
             (rv.valor_vuelta * rv.sueldo_vuelta) + (e.sueldo_base * 7)
             ELSE
             e.sueldo_base * 7
