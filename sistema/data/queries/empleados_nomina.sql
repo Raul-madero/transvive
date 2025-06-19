@@ -65,30 +65,44 @@ SELECT
 
     COALESCE(SUM(rv.valor_vuelta), 0) AS total_vueltas,
 
-    SUM(
-        CASE 
-            WHEN e.cargo IN ('OPERADOR', 'MECANICO') THEN
-            (
-                CASE 
+    SUM(CASE 
+        WHEN e.cargo = 'OPERADOR' THEN
+            CASE 
                 WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
                 WHEN LOWER(rv.tipo_viaje) LIKE '%semidomiciliadas%' AND IFNULL(r.sueldo_semid, 0) > 0 THEN r.sueldo_semid * rv.valor_vuelta
                 ELSE
                     CASE
-                    WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN GREATEST(r.sueldo_camion, e.sueldo_camion) * rv.valor_vuelta
-                    WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamioneta\\b' AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN GREATEST(r.sueldo_camioneta, e.sueldo_camioneta) * rv.valor_vuelta
-                    WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bsprinter\\b' AND IFNULL(r.sueldo_sprinter, 0) > 0 THEN GREATEST(r.sueldo_sprinter, e.sueldo_sprinter) * rv.valor_vuelta
-                    WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' THEN e.sueldo_camion * rv.valor_vuelta
-                    WHEN LOWER(rv.unidad_ejecuta) LIKE '%camioneta%' THEN e.sueldo_camioneta * rv.valor_vuelta
-                    WHEN LOWER(rv.unidad_ejecuta) LIKE '%sprinter%' THEN e.sueldo_sprinter * rv.valor_vuelta
-                    ELSE e.sueldo_base * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN GREATEST(r.sueldo_camion, e.sueldo_camion) * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamioneta\\b' AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN GREATEST(r.sueldo_camioneta, e.sueldo_camioneta) * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bsprinter\\b'AND IFNULL(r.sueldo_sprinter, 0) > 0 THEN GREATEST(r.sueldo_sprinter, e.sueldo_sprinter) * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' THEN e.sueldo_camion * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) LIKE '%camioneta%' THEN e.sueldo_camioneta * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) LIKE '%sprinter%' THEN e.sueldo_sprinter * rv.valor_vuelta
+                        ELSE e.sueldo_base * rv.valor_vuelta
                     END
-                END
-            )
-            ELSE 0
-        END
-        ) 
-        + 
-        CASE WHEN e.cargo = 'MECANICO' THEN e.sueldo_base * 7 ELSE 0 END AS sueldo_bruto,
+            END
+        ELSE
+            e.sueldo_base * 7
+    END) AS sueldo_bruto,
+
+    COALESCE(
+        SUM(
+            CASE 
+                WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
+                WHEN LOWER(rv.tipo_viaje) LIKE '%semidomiciliadas%' AND IFNULL(r.sueldo_semid, 0) > 0 THEN r.sueldo_semid * rv.valor_vuelta
+                ELSE
+                    CASE
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN GREATEST(r.sueldo_camion, e.sueldo_camion) * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamioneta\\b' AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN GREATEST(r.sueldo_camioneta, e.sueldo_camioneta) * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bsprinter\\b'AND IFNULL(r.sueldo_sprinter, 0) > 0 THEN GREATEST(r.sueldo_sprinter, e.sueldo_sprinter) * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' THEN e.sueldo_camion * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) LIKE '%camioneta%' THEN e.sueldo_camioneta * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) LIKE '%sprinter%' THEN e.sueldo_sprinter * rv.valor_vuelta
+                        ELSE e.sueldo_base * rv.valor_vuelta
+                    END
+            END
+        )
+    ), AS sueldo_vueltas,
 
     (SELECT a.descuento FROM adeudos a WHERE a.noempleado = e.noempleado) AS descuento,
     (SELECT a.cantidad FROM adeudos a WHERE a.noempleado = e.noempleado) AS cantidad,
@@ -105,10 +119,21 @@ SELECT
     fi.neto
 
 FROM empleados e
+-- LEFT JOIN alertas al 
+--     ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
+--     AND DATE(al.fecha) BETWEEN '{fecha_fin}' AND '{fecha_limite_alertas}'
+
+-- LEFT JOIN incidencias inc 
+--     ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
+--     AND (
+--         (inc.fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}') 
+--         OR (inc.fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
+--     )
 
 LEFT JOIN registro_viajes rv 
-    ON LOWER(rv.operador) = LOWER(CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno))
+    ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
     AND DATE(rv.fecha) BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
+    AND rv.valor_vuelta > 0
 
 LEFT JOIN rutas r 
     ON rv.cliente = r.cliente AND rv.ruta = r.ruta
