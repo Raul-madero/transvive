@@ -71,14 +71,14 @@ SELECT
                 WHEN LOWER(rv.tipo_viaje) LIKE '%especial%' THEN rv.sueldo_vuelta * rv.valor_vuelta
 
                 WHEN LOWER(rv.tipo_viaje) LIKE '%semidomiciliadas%' THEN
-                    CASE 
-                        WHEN LOWER(rv.unidad_ejecuta) REGEXP 'sprinter' 
-                            AND IFNULL(r.sueldo_sprinter, 0) > 0 
-                        THEN GREATEST(r.sueldo_sprinter, e.sueldo_sprinter) * rv.valor_vuelta
-                        WHEN IFNULL(r.sueldo_semid, 0) > 0 
-                        THEN r.sueldo_semid * rv.valor_vuelta
-                        ELSE e.sueldo_base * rv.valor_vuelta
-                    END
+                CASE 
+                    WHEN LOWER(rv.unidad_ejecuta) REGEXP 'sprinter' 
+                        AND IFNULL(r.sueldo_sprinter, 0) > 0 
+                    THEN GREATEST(r.sueldo_sprinter, e.sueldo_sprinter) * rv.valor_vuelta
+                    WHEN IFNULL(r.sueldo_semid, 0) > 0 
+                    THEN r.sueldo_semid * rv.valor_vuelta
+                    ELSE e.sueldo_base * rv.valor_vuelta
+                END
 
                 ELSE
                     CASE
@@ -164,4 +164,6 @@ WHERE
     AND e.tipo_nomina = 'Semanal'
 
 GROUP BY 
-    e.noempleado;
+    e.noempleado, e.id, operador, e.sueldo_base, e.cargo, imss, e.estatus, 
+    e.bono_categoria, e.bono_supervisor, e.bono_semanal, e.caja_ahorro, 
+    e.supervisor, e.apoyo_mes, fi.pago_fiscal, fi.deduccion_fiscal, fi.neto;
