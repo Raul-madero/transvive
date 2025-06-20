@@ -252,7 +252,16 @@ $cancelados = fetch_value("SELECT COUNT(valor_vuelta) FROM registro_viajes WHERE
                                         </tr>
                                     </thead>
                                 </table>
-                            <?php endif; ?>
+                            <?php elseif($_SESSION['rol'] == 15): ?>
+                                 <!-- Vista para Monitorista -->
+                                <table id="fetch_generated_willss" class="table table-hover table-striped table-bordered dt-responsive" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th><th>Operador</th><th>Tipo Unidad</th><th>No. Eco.</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            <?php endif;?>
                         </div>
                     </div>
                 </div>
@@ -555,6 +564,60 @@ function loadJO() {
 						</a>
 					</center>`
 			}
+		]
+	});
+}
+</script>
+
+<?php elseif ($_SESSION['rol'] == 15): ?>
+<!-- ROL: Monitorista -->
+<script>
+$(function () {
+	// Inicializa la tabla con valores actuales
+	const table = loadMon();
+
+	$("#filtro").click(function () {
+		const inicio = $("#inicio_date").val();
+		const fin = $("#fin_date2").val();
+
+		if (!inicio || !fin) {
+			$("#error_log").html("Debes seleccionar ambas fechas.");
+			return;
+		}
+		if (new Date(inicio) > new Date(fin)) {
+			$("#error_log").html("La fecha final no puede ser menor.");
+			return;
+		}
+
+		$("#error_log").html("");
+		table.ajax.reload(null, false); // Recarga sin reiniciar paginador
+	});
+});
+
+function loadMon() {
+	return $('#fetch_generated_willss').DataTable({
+		order: [[1, "desc"]],
+		// dom: 'Bfrtip',
+		processing: true,
+		serverSide: true,
+		stateSave: true,
+		responsive: true,
+		ajax: {
+			url: "data/datadetorders2_jo.php",
+			type: "POST",
+			data: function (d) {
+				d.action = "fetch_userss";
+				d.inicio_date = $("#inicio_date").val();
+				d.fin_date = $("#fin_date2").val();
+				d.buscaid = $("#buscaid").val();
+			},
+			dataSrc: "records"
+		},
+		columns: [
+			{ data: "fecha", width: "60px" },
+			{ data: "conductor", width: "100px" },
+			{ data: "tipounidad", width: "80px" },
+			{ data: "nounidad", width: "30px" }
 		]
 	});
 }
