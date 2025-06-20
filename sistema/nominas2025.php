@@ -113,7 +113,7 @@ $namerol = $filas['rol'];
               <thead>
                 <tr>
                   <th>Semana</th><th>Año</th><th>No.</th><th>Nombre</th><th>Cargo</th>
-                  <th>IMSS</th><th>Sueldo Base</th><th>Total Vueltas</th><th>Sueldo Bruto</th>
+                  <th>IMSS</th><th>Sueldo Base</th><th>Total Vueltas</th><th>Sueldo Bruto</th><th>Sueldo Adicional</th>
                   <th>Nomina Fiscal</th><th>Descuento Adeudo</th><th>Bono Semanal</th><th>Bono Categoria</th>
                   <th>Bono Supervisor</th><th>Apoyo Mensual</th><th>Sueldo Total</th><th>Días Vacaciones</th>
                   <th>Pago Vacaciones</th><th>Prima Vacacional</th><th>Depósito</th><th>Efectivo</th>
@@ -212,6 +212,13 @@ $namerol = $filas['rol'];
 								$(td).addClass('editable-sueldo_bruto').attr('data-id', rowData.id).text(renderMoneda(cellData));
 							}
 						},
+						{
+							data: 'sueldo_adicional',
+							render: function(data, type, row) {
+								return `<input type="number" class="form-control form-control-sm sueldo-adicional-input" style="width: 100px;" data-id="${row.id}" value="${parseFloat(data)}" || "">`;
+							}
+							
+						},
 						{ data: "nomina_fiscal", render: renderMoneda },
 						{
 							data: "deducciones",
@@ -291,6 +298,31 @@ $namerol = $filas['rol'];
 				});
 			};
 
+			$(document).on('blur', '.sueldo-adicional-input', function () {
+				let input = $(this);
+				let id = input.data('id');
+				let valor = parseFloat(input.val()) || 0;
+
+				// Enviar al servidor
+				$.ajax({
+					url: 'data/actualizarCampoNomina.php',
+					type: 'POST',
+					data: {
+						id: id,
+						campo: 'sueldo_adicional',
+						valor: valor
+					},
+					success: function (res) {
+						console.log("Sueldo adicional actualizado:", res);
+						// Recargar tabla para reflejar cálculos dependientes
+						$('#example1').DataTable().ajax.reload(null, false); // false para no perder la paginación
+					},
+					error: function () {
+						alert("Error al actualizar el sueldo adicional.");
+					}
+				});
+			});
+
 			$('#seleccionaSemana').click(function () {
 				let semana = $('#semana').val();
 				let anio = $('#anio').val();
@@ -306,7 +338,7 @@ $namerol = $filas['rol'];
 			});
 
 			load_data();
-			$(document).on('dblclick', '.editable-sueldo_bruto, .editable-deducciones', function () {
+			$(document).on('dblclick', '.editable-sueldo_bruto, .editable-deducciones, .sueldo-adicional-input', function () {
 				let td = $(this);
 				let originalValue = td.text().replace(/[$,]/g, '');
 				let input = $('<input type="number" class="form-control form-control-sm" style="width:100px;">').val(originalValue);
@@ -317,7 +349,14 @@ $namerol = $filas['rol'];
 					if (e.type === 'blur' || e.key === 'Enter') {
 						let nuevoValor = parseFloat($(this).val()) || 0;
 						let id = td.data('id');
-						let campo = td.hasClass('editable-sueldo_bruto') ? 'sueldo_bruto' : 'deducciones';
+						let campo = "";
+						if(td.hasClass('editable-sueldo_bruto')) {
+							campo ='sueldo_bruto';
+						}else if(td.hasClass('editable-deducciones')) {
+							campo = 'deducciones';
+                        } else if(td.hasClass('sueldo-adicional-input')) {
+							campo ='sueldo_adicional';
+						}
 
 						// Restaurar valor formateado
 						td.html(nuevoValor.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }));
