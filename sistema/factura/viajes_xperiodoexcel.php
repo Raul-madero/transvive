@@ -221,21 +221,29 @@ mysqli_close($conection);
               case 'Camion':
                   if (!empty($row['sueldo_ruta_camion']) && $row['sueldo_ruta_camion'] != 0) {
                       $sueldo_vuelta = max($row['sueldo_camion'], $row['sueldo_ruta_camion']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camion'];
                   }
                   break;
               case 'Camioneta':
                   if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
                       $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camioneta'];
                   }
                   break;
               case 'Sprinter':
                   if (!empty($row['sueldo_ruta_sprinter']) && $row['sueldo_ruta_sprinter'] != 0) {
                       $sueldo_vuelta = max($row['sueldo_sprinter'], $row['sueldo_ruta_sprinter']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_sprinter'];
                   }
                   break;
                    case 'Automovil':
                 if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
                       $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camioneta'];
                   }
                   break;
               default:
