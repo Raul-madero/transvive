@@ -25,10 +25,10 @@ $fecha_ejercicio = substr($idoentrada, $final3, 10);
 if ($fecha_ini != '') {
   $nosemana = $fecha_ini;
   $query_productos = mysqli_query($conection,"SELECT rv.id, rv.semana, rv.fecha, rv.cliente, rv.direccion, rv.destino, rv.costo_viaje, rv.hora_inicio, rv.hora_fin, rv.hora_llegadareal, rv.hora_finreal, rv.notas, rv.unidad, rv.unidad_ejecuta, rv.num_unidad, rv.numero_unidades, 
-    if(rv.estatus = 1,'Activo',
-      if(rv.estatus = 2, 'Realizado', 
-        if(rv.estatus= 3,'Cancelado', 
-          if(rv.estatus = 4,'Iniciado',if(rv.estatus=5, 'Finalizado', ''
+  if(rv.estatus = 1,'Activo',
+    if(rv.estatus = 2, 'Realizado', 
+      if(rv.estatus= 3,'Cancelado', 
+        if(rv.estatus = 4,'Iniciado',if(rv.estatus=5, 'Finalizado', ''
     ))))) as Status, 
     rv.valor_vuelta, rv.sueldo_vuelta, rv.ruta, rv.operador, 
     if (rv.planeado = 1, 'Planeado', 'Registrado') as Tipoviaje, 
@@ -128,11 +128,11 @@ $titulo = "REPORTE DE VIAJES DE: $nosemana ";
     $titulo = "REPORTE DE VIAJES POR MES DE: $monthNameSpanish" ;    
 
   $query_productos = mysqli_query($conection,"SELECT rv.id, rv.semana, rv.fecha, rv.cliente, rv.direccion, rv.destino, rv.costo_viaje, rv.hora_inicio, rv.hora_fin, rv.hora_llegadareal, rv.hora_finreal, rv.notas, rv.unidad, rv.unidad_ejecuta, rv.num_unidad, rv.numero_unidades, 
-    if(rv.estatus = 1,'Activo',
-      if(rv.estatus = 2, 'Realizado', 
-        if(rv.estatus= 3,'Cancelado', 
-          if(rv.estatus = 4,'Iniciado',
-            if(rv.estatus=5, 'Finalizado', ''
+  if(rv.estatus = 1,'Activo',
+    if(rv.estatus = 2, 'Realizado', 
+      if(rv.estatus= 3,'Cancelado', 
+        if(rv.estatus = 4,'Iniciado',
+          if(rv.estatus=5, 'Finalizado', ''
     ))))) as Status, 
     rv.valor_vuelta, rv.sueldo_vuelta, rv.ruta, rv.operador, 
     if (rv.planeado = 1, 'Planeado', 'Registrado') as Tipoviaje, 
@@ -151,7 +151,7 @@ $titulo = "REPORTE DE VIAJES DE: $nosemana ";
     if(!$query_productos) {
       die('Error: '. mysqli_error($conection));
     }
-    
+
 $result_detalle = mysqli_num_rows($query_productos);
 mysqli_close($conection); 
 }
