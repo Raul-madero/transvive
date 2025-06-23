@@ -233,6 +233,11 @@ mysqli_close($conection);
                       $sueldo_vuelta = max($row['sueldo_sprinter'], $row['sueldo_ruta_sprinter']);
                   }
                   break;
+                   case 'Automovil':
+                if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }
+                  break;
               default:
                   $sueldo_vuelta = $row['sueldo_vuelta'];
           }

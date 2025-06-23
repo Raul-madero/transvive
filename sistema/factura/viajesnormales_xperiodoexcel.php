@@ -176,8 +176,11 @@ mysqli_close($conection);
                       $sueldo_vuelta = max($row['sueldo_sprinter'], $row['sueldo_ruta_sprinter']);
                   }
                   break;
-              default:
-                  $sueldo_vuelta = $row['sueldo_vuelta'];
+              case 'Automovil':
+                if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }
+                  break;
           }
       } else {
           $sueldo_vuelta = $row['sueldo_vuelta'];
@@ -264,7 +267,7 @@ mysqli_close($conection);
           <td><?php echo $row['hora_fin']; ?></td>
           <td><?php echo $row['hora_llegadareal']; ?></td>
           <td><?php echo number_format($row['valor_vuelta'],2); ?></td>
-          <td><?php echo number_format($row['sueldo_vuelta'],2); ?></td>
+          <td><?php echo number_format($sueldo_vuelta,2); ?></td>
           <td><?php echo strtoupper($row['tipo_viaje']); ?></td>
           <td><?php echo strtoupper($row['Status']); ?></td>
           <td><?php echo strtoupper($row['notas']); ?></td>
