@@ -260,7 +260,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">No. Semana *</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputSemana" name="inputSemana" placeholder="Descripcion de la Tarea" value="<?php echo $semana;?>" >
+                      <input type="text" class="form-control" id="inputSemana" name="inputSemana" placeholder="Descripcion de la Tarea" value="Semana <?php echo $semana;?>" readonly >
                     </div>
                   </div>
 
@@ -670,86 +670,6 @@ $('#btn_salir2').click(function(e){
   </div>
 </div>
 <script>
-//    $('#guardar_tipoactividad').click(function(e){
-//         e.preventDefault();
-//        let Id           = $('#inputId').val();
-//        let fecha        = $('#inputFecha').val();
-//        let semana       = $('#inputSemana').val();
-//        let cliente      = $('#frazonsoc').val();
-//        let ruta         = $('#fpedido').val();
-//        let operador     = $('#foperador').val();
-//        let tipo         = $('#inputTipo').val();
-//        let unidad_ejec  = $('#inputTipoejecutado').val();
-//        let tipoviaje    = $('#inputTipoviaje').val();
-//        let noeco        = $('#inputNounidad').val();
-//        let nopersonas   = $('#inputNopersonas').val();
-// 	   let nopersonasfin = $('#inputNopersonasFin').val();
-//        let horarios     = $('#fhorario').val();
-//        let hora_real    = $('#fhorarioreal').val();
-//        let turno        = $('#inputTurno').val();
-//        let tipovuelta   = $('#inputTipovta').val();
-//        let sueldovuelta = $('#inputSueldovta').val();
-//        let elsuperv     = $('#fsuperv').val();
-//        let notas        = $('#inputNotas').val();
-
-
-
-//        let action       = 'EditaAlmacenaViaje';
-//         $.ajax({
-//                     url: 'includes/ajax.php',
-//                     type: "POST",
-//                     async : true,
-//                     data: {action:action, Id:Id, fecha:fecha, semana:semana, cliente:cliente, ruta:ruta, operador:operador, tipo:tipo, unidad_ejec:unidad_ejec, tipoviaje:tipoviaje, noeco:noeco, nopersonas:nopersonas, horarios:horarios, hora_real:hora_real, turno:turno, tipovuelta:tipovuelta, sueldovuelta:sueldovuelta, elsuperv:elsuperv, notas:notas},
-
-//                     success: function(response)
-//                     {
-//                       if(response != 'error')
-//                         {
-//                         let info = JSON.parse(response);
-//                         $mensaje=(info.mensaje);
-//                           if ($mensaje === undefined)
-//                           {
-//                             Swal
-//                          .fire({
-//                           title: "Exito!",
-//                           text: "REGISTRO DE VIAJE ALMACENADO CORRECTAMENTE",
-//                           icon: 'success'
-//                        })
-//                         .then(resultado => {
-//                        if (resultado.value) {
-//                         //* generarimpformulaPDF(info.folio);
-//                         location.href = 'viajes.php';
-                       
-//                         } else {
-//                           // Dijeron que no
-//                           location.reload();
-//                          location.href = 'viajes.php';
-//                         }
-//                         });
-
-
-//                          }else {  
-//                             Swal.fire({
-//                             icon: 'error',
-//                             title: 'Oops...',
-//                             text: $mensaje,
-//                             })
-//                         }
-//                         }else{
-//                           Swal.fire({
-//                             icon: 'info',
-//                             title: '',
-//                             text: 'Capture los datos requeridos',
-//                             })
-//                             $("#inputTipovta").focus();
-//                         }
-//                  },
-//                  error: function(error) {
-//                  }
-
-//                });
-
-//     });
 $('#guardar_tipoactividad').click(function(e) {
     e.preventDefault();
 
@@ -867,89 +787,8 @@ function enviarDatos(justificacionUnidad) {
     </script>  
 
     <script>
-//    $('#guardar_tipoactividad2').click(function(e){
-//         e.preventDefault();
-
-//        let Id           = $('#inputId').val();
-//        let fecha        = $('#inputFecha').val();
-//        let semana       = $('#inputSemana').val();
-//        let cliente      = $('#frazonsoc').val();
-//        let ruta         = $('#fpedido').val();
-//        let operador     = $('#foperador').val();
-//        let tipo         = $('#inputTipo').val();
-//        let unidad_ejec  = $('#inputTipoejecutado').val();
-//        let tipoviaje    = $('#inputTipoviaje').val();
-//        let noeco        = $('#inputNounidad').val();
-//        let nopersonas   = $('#inputNopersonas').val();
-//        let horarios     = $('#fhorario').val();
-//        let hora_real    = $('#fhorarioreal').val();
-//        let turno        = $('#inputTurno').val();
-//        let tipovuelta   = $('#inputTipovta').val();
-//        let sueldovuelta = $('#inputSueldovta').val();
-//        let elsuperv     = $('#fsuperv').val();
-//        //let horafin      = $('#inputHorafin').val();
-//        //let destino      = $('#inputDestino').val();
-//        let notas        = $('#inputNotas').val(); 
-//        //alert(tipovuelta);
-//        let action       = 'EditaAlmacenaViaje';
-
-//         $.ajax({
-//                     url: 'includes/ajax.php',
-//                     type: "POST",
-//                     async : true,
-//                     data: {action:action, Id:Id, fecha:fecha, semana:semana, cliente:cliente, ruta:ruta, operador:operador, tipo:tipo, unidad_ejec:unidad_ejec, tipoviaje:tipoviaje, noeco:noeco, nopersonas:nopersonas, horarios:horarios, hora_real:hora_real, turno:turno, tipovuelta:tipovuelta, sueldovuelta:sueldovuelta, elsuperv:elsuperv, notas:notas},
-
-//                     success: function(response)
-//                     {
-//                       if(response != 'error')
-//                         {
-//                         let info = JSON.parse(response);
-//                         $mensaje=(info.mensaje);
-//                           if ($mensaje === undefined)
-//                           {
-//                             Swal
-//                          .fire({
-//                           title: "Exito!",
-//                           text: "REGISTRO DE VIAJE ALMACENADO CORRECTAMENTE",
-//                           icon: 'success'
-//                        })
-//                         .then(resultado => {
-//                        if (resultado.value) {
-//                         //* generarimpformulaPDF(info.folio);
-//                         location.href = 'viajes23.php';
-                       
-//                         } else {
-//                           // Dijeron que no
-//                           location.reload();
-//                          location.href = 'viajes23.php';
-//                         }
-//                         });
-//                          }else {  
-//                             Swal.fire({
-//                             icon: 'error',
-//                             title: 'Oops...',
-//                             text: $mensaje,
-//                             })
-//                         }
-//                         }else{
-//                           Swal.fire({
-//                             icon: 'info',
-//                             title: '',
-//                             text: 'Capture los datos requeridos',
-//                             })
-//                             $("#inputTipovta").focus();
-//                         }
-//                         //viewProcesar();
-//                  },
-//                  error: function(error) {
-//                  }
-
-//                });
-
-//     });
 $('#guardar_tipoactividad2').click(function(e) {
     e.preventDefault();
-    console.log("Click en guardar_tipoactividad2");
     let unidad      = $('#inputTipo').val().trim();
     let unidad_ejec = $('#inputTipoejecutado').val().trim();
 
@@ -1069,18 +908,19 @@ function enviarDatosUnidad2(justificacionUnidad) {
 </script> 
 
 <script>
-    $(document).ready(function () {
-        $("#inputTipoejecutado").on('change', function () {            
-          let seccionID = $('#inputTipovta').val();  
+    // $(document).ready(function () {
+    //     $("#inputTipoejecutado").on('change', function () {            
+    //       let seccionID = $('#inputTipovta').val();  
  
-          $('#inputTipovta').html('<option value="">-- Seleccione --</option><option value="1">Completa</option><option value="0.5">Media Vuelta</option>');
-        });
-    });
+    //       $('#inputTipovta').html('<option value="">-- Seleccione --</option><option value="1">Completa</option><option value="0.5">Media Vuelta</option>');
+    //     });
+    // });
 </script>
 
 <script>
     $(document).ready(function () {
-        $("#inputTipovta").on('change', function () {            
+        $("#inputTipovta").on('change', function () {      
+            let id =    $('#inputId').val();   
             let op = $(this).val();
             let tipo_viaje  = $('#inputTipoviaje').val();
             let cliente     = $('#frazonsoc').val();
@@ -1093,7 +933,7 @@ function enviarDatosUnidad2(justificacionUnidad) {
             url: 'includes/ajax.php',
             type: "POST",
             async : true,
-            data: {action:action, op:op, tipo_viaje:tipo_viaje, cliente:cliente, ruta:ruta, operador:operador, tipo_unidad:tipo_unidad},
+            data: {action:action, id:id, op:op, tipo_viaje:tipo_viaje, cliente:cliente, ruta:ruta, operador:operador, tipo_unidad:tipo_unidad},
             success: function(response)
             {
                 if(response == 0){
