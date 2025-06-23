@@ -156,6 +156,32 @@ mysqli_close($conection);
   <?php
     while ($row=mysqli_fetch_assoc($query_productos)) {
     	$newDate = date("d-m-Y", strtotime($row['fecha'])); 
+
+      $sueldo_vuelta = null;
+
+      if (in_array($row['tipo_viaje'], ['Normal', 'Extra', 'Semidomiciliadas'])) {
+          switch ($row['unidad_ejecuta']) {
+              case 'Camion':
+                  if (!empty($row['sueldo_ruta_camion']) && $row['sueldo_ruta_camion'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camion'], $row['sueldo_ruta_camion']);
+                  }
+                  break;
+              case 'Camioneta':
+                  if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }
+                  break;
+              case 'Sprinter':
+                  if (!empty($row['sueldo_ruta_sprinter']) && $row['sueldo_ruta_sprinter'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_sprinter'], $row['sueldo_ruta_sprinter']);
+                  }
+                  break;
+              default:
+                  $sueldo_vuelta = $row['sueldo_vuelta'];
+          }
+      } else {
+          $sueldo_vuelta = $row['sueldo_vuelta'];
+      }
     
 
       setlocale(LC_ALL, 'es_MX');

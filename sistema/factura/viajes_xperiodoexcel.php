@@ -233,6 +233,8 @@ mysqli_close($conection);
                       $sueldo_vuelta = max($row['sueldo_sprinter'], $row['sueldo_ruta_sprinter']);
                   }
                   break;
+              default:
+                  $sueldo_vuelta = $row['sueldo_vuelta'];
           }
       } else {
           $sueldo_vuelta = $row['sueldo_vuelta'];
