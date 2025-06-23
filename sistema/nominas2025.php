@@ -91,6 +91,10 @@ $namerol = $filas['rol'];
 			  </div>
           	</div>
         <div class="row mt-3">
+			<a href="factura/nomina_excel.php" class="text-success flex gap-2 btn btn-outline-success hover:text-dark">
+				<i class="fa fa-file-excel"></i>
+				Excel
+			</a>
         </div>
       </div>
     </div>
