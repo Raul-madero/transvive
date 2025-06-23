@@ -12,7 +12,7 @@ if ($_REQUEST['action'] == 'fetch_userss') {
     $draw = intval($requestData['draw'] ?? 1);
 
     $columns = "p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus,
-        CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) AS name, us.nombre AS jefeo, p.ruta";
+        CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) AS supervisor_nombre, us.nombre AS jefeo, p.ruta";
 
     $table = "registro_viajes p
         LEFT JOIN clientes ct ON p.cliente = ct.nombre_corto
@@ -44,7 +44,7 @@ if ($_REQUEST['action'] == 'fetch_userss') {
         7 => 'p.operador',
         8 => 'p.unidad',
         9 => 'p.num_unidad',
-        10 => 'name',
+        10 => 'supervisor_nombre',
         11 => 'jefeo',
         12 => 'p.estatus'
     ];
@@ -105,16 +105,27 @@ if ($_REQUEST['action'] == 'fetch_userss') {
             'conductor' => $row['operador'],
             'tipounidad' => $row['unidad'],
             'nounidad' => $row['num_unidad'],
-            'supervisor' => $row['name'],
+            'supervisor' => $row['supervisor_nombre'],
             'jefeopera' => $row['jefeo'],
             'estatusped' => $estatus
         ];
     }
 
+    // Total sin filtros
+    $sqlTotal = "SELECT COUNT(*) as total FROM $table WHERE p.tipo_viaje <> 'Especial' AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)";
+    $resultTotal = mysqli_query($conection, $sqlTotal);
+    $totalData = mysqli_fetch_assoc($resultTotal)['total'];
+
+    // Total con filtros aplicados
+    $sqlFiltered = "SELECT COUNT(*) as total FROM $table $where";
+    $resultFiltered = mysqli_query($conection, $sqlFiltered);
+    $totalFiltered = mysqli_fetch_assoc($resultFiltered)['total'];
+
+
     echo json_encode([
         "draw" => $draw,
-        "recordsTotal" => $count,
-        "recordsFiltered" => $count,
+        "recordsTotal" => intval($totalData),
+        "recordsFiltered" => intval($totalFiltered),
         "records" => $data
     ]);
 }
