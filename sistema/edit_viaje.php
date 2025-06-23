@@ -40,8 +40,11 @@ session_start();
     while ($data = mysqli_fetch_array($sqlact)){
       $Id         = $data['id'];
       $fecha      = $data['fecha'];
+      $datetime     = DateTime::createFromFormat('Y-m-d', $fecha);
+      $semana = $datetime->format('W');
+
       $fechafinal = $data['fechafinal'];
-      $semana     = $data['semana'];
+      // $semana     = $data['semana'];
       $cliente    = $data['cliente'];
       $ruta       = $data['ruta'];
       $operador   = $data['operador'];
