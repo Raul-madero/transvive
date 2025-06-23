@@ -147,6 +147,11 @@ $titulo = "REPORTE DE VIAJES DE: $nosemana ";
     LEFT JOIN rutas ru ON rv.cliente = ru.cliente AND rv.ruta = ru.ruta
     WHERE rv.fecha BETWEEN '$fini' and '$ffin' 
     ORDER by rv.fecha, rv.id");
+
+    if(!$query_productos) {
+      die('Error: '. mysqli_error($conection));
+    }
+    
 $result_detalle = mysqli_num_rows($query_productos);
 mysqli_close($conection); 
 }
