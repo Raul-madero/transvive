@@ -157,7 +157,7 @@ while ($row=mysqli_fetch_assoc($query_productos)) {
             ->setCellValue('N'.$fila, $row['bono_categoria'])
             ->setCellValue('O'.$fila, $row['bono_supervisor'])
             ->setCellValue('P'.$fila, $row['apoyo_mes'])
-            ->setCellValue('Q'.$fila, $row[''])
+            ->setCellValue('Q'.$fila, $row['sueldo_bruto'])
             ->setCellValue('R'.$fila, $row['dias_vacaciones'])
             ->setCellValue('S'.$fila, $row['pago_vacaciones'])
             ->setCellValue('T'.$fila, $row['prima_vacacional'])
