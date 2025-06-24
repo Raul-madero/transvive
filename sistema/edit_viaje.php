@@ -919,7 +919,7 @@ function enviarDatosUnidad2(justificacionUnidad) {
 
 <script>
     $(document).ready(function () {
-        $("#inputTipovta").on('change', function () {      
+        $("#inputTipovta").on('change', function () { 
             let id =    $('#inputId').val();   
             let op = $(this).val();
             let tipo_viaje  = $('#inputTipoviaje').val();
