@@ -3358,6 +3358,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                 $operador   = $_POST['operador'];
                 $unidad     = $_POST['tipo_unidad'];
                 $svta = 0;
+                $svta_rutas = 0;
 
                 if($svta == 0 && $unidad === "Camion") {
                     $stmt = $conection->prepare("SELECT sueldo_camion FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camion > 0 LIMIT 1");
