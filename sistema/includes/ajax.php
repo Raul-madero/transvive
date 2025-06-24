@@ -3359,83 +3359,36 @@ if ($_POST['action'] == 'EditarAdeudo') {
                 $unidad     = $_POST['tipo_unidad'];
                 $svta = 0;
                 $svta_rutas = 0;
+                $svta_total = 0;
 
-                if($svta == 0 && $unidad === "Camion") {
-                    $stmt = $conection->prepare("SELECT sueldo_camion FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camion > 0 LIMIT 1");
+                $unidad_map = [
+                    "Camion" => "sueldo_camion",
+                    "Camioneta" => "sueldo_camioneta",
+                    "Sprinter" => "sueldo_sprinter"
+                ];
+
+                if(isset($unidad_map[$unidad])) {
+                    $campo = $unidad_map[$unidad];
+
+                    $stmt = $conection->prepare("SELECT $campo FROM rutas WHERE cliente =? AND ruta =? AND $campo > 0 LIMIT 1");
                     $stmt->bind_param("ss", $cliente, $ruta);
                     $stmt->execute();
-                    $stmt->bind_result($sdo_camion);
+                    $stmt->bind_result($sdo_ruta);
                     if($stmt->fetch()) {
-                        $svta_rutas = $sdo_camion * $tipo_vta;
+                        $svta_rutas = $sdo_ruta;
                     }
                     $stmt->close();
-                }
 
-                if($svta == 0 && $unidad === "Camioneta") {
-                    $stmt = $conection->prepare("SELECT sueldo_camioneta FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_camioneta > 0 LIMIT 1");
-                    $stmt->bind_param("ss", $cliente, $ruta);
-                    $stmt->execute();
-                    $stmt->bind_result($sdo_camioneta);
-                    if($stmt->fetch()) {
-                        $svta_rutas = $sdo_camioneta * $tipo_vta;
-                    }
-                    $stmt->close();
-                }
-
-                if($svta ==0 && $unidad === 'Sprinter') {
-                    $stmt = $conection->prepare("SELECT sueldo_sprinter FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_sprinter > 0 LIMIT 1");
-                    $stmt->bind_param("ss", $cliente, $ruta);
-                    $stmt->execute();
-                    $stmt->bind_result($sdo_sprinter);
-                    if($stmt->fetch()) {
-                        $svta_rutas = $sdo_sprinter * $tipo_vta;
-                    }
-                    $stmt->close();
-                }
-
-                if($unidad === "Camion") {
-                    $stmt = $conection->prepare("SELECT sueldo_camion FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
+                    $stmt = $conection->prepare("SELECT $campo FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) =? LIMIT 1");
                     $stmt->bind_param("s", $operador);
                     $stmt->execute();
-                    $stmt->bind_result($sdo_camion);
+                    $stmt->bind_result($sdo_operador);
                     if($stmt->fetch()) {
-                        if($svta_rutas != 0) {
-                            $svta_total = max($svta_rutas, $sdo_camion);
-                        }
-                        $svta = $svta_total * $tipo_vta;
+                        $svta_op = ($svta_rutas !=0) ? max($svta_rutas, $sdo_operador) : $sdo_operador;
+                        $svta = $svta_op * $tipo_vta;
                     }
                     $stmt->close();
                 }
-
-                if($unidad === "Camioneta") {
-                    $stmt = $conection->prepare("SELECT sueldo_camioneta FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
-                    $stmt->bind_param("s", $operador);
-                    $stmt->execute();
-                    $stmt->bind_result($sdo_camioneta);
-                    if($stmt->fetch()) {
-                        if($svta_rutas!= 0) {
-                            $svta_total = max($svta_rutas, $sdo_camioneta);
-                        }
-                        $svta = $svta_total * $tipo_vta;
-                    }
-                    $stmt->close();
-                }
-
-                if($unidad === "Sprinter") {
-                    $stmt = $conection->prepare("SELECT sueldo_sprinter FROM empleados WHERE CONCAT(nombres, ' ', apellido_paterno, ' ', apellido_materno) = ? LIMIT 1");
-                    $stmt->bind_param("s", $operador);
-                    $stmt->execute();
-                    $stmt->bind_result($sdo_sprinter);
-                    if($stmt->fetch()) {
-                        if($svta_rutas!= 0) {
-                            $svta_total = max($svta_rutas, $sdo_sprinter);
-                        }
-                        $svta = $svta_total * $tipo_vta;
-                    }
-                    $stmt->close();
-                }
-
-                
                 if($tipo_viaje == 'Especial' || $tipo_viaje == 'Especial Turistico') {
                     $stmt = $conection->prepare("SELECT sueldo_vuelta FROM registro_viajes WHERE id = ?");
                     $stmt->bind_param("i", $id);
@@ -3445,7 +3398,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                         $svta = $sueldo_vuelta * $tipo_vta;
                     }
                 }
-
+                
                 if($tipo_viaje === 'Semidomiciliadas' && $unidad === 'Camioneta') {
                     $stmt = $conection->prepare("SELECT sueldo_semid FROM rutas WHERE cliente = ? AND ruta = ? AND sueldo_semid > 0 LIMIT 1");
                     $stmt->bind_param("ss", $cliente, $ruta);
@@ -3464,7 +3417,6 @@ if ($_POST['action'] == 'EditarAdeudo') {
                         $svta = $sdo_sprinter * $tipo_vta;
                     }
                 }
-
                 if($svta == 0 && $unidad === "Externa") {
                    $svta = 1 * $tipo_vta;
                 }

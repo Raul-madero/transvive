@@ -53,7 +53,7 @@ $where = "WHERE p.tipo_viaje <> 'Especial'";
 if (!empty($initial_date) && !empty($final_date)) {
     $where .= " AND p.fecha BETWEEN '$initial_date' AND '$final_date'";
 } else {
-    $where .= " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 2 WEEK)";
+    // $where .= " AND p.fecha >= DATE_SUB(CURDATE(), INTERVAL 2 WEEK)";
 }
 
 // Filtro por ID (gender)
