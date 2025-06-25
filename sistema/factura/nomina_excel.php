@@ -140,7 +140,7 @@ $query_productos = mysqli_query($conection,"SELECT * FROM nomina_temp_2025");
 $fila = 4;
 $total = 0;
 while ($row=mysqli_fetch_assoc($query_productos)) {
- 
+ $efectivo = ($row['sueldo_bruto'] - $row['nomina_fiscal']) + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['apoyo_mes'] + $row['pago_vacaciones'] + $row['prima_vacacional'] + $row['sueldo_adicional'] - $row['deducciones'] + $row['caja_ahorro'];
   $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A'.$fila, $row['semana'])
             ->setCellValue('B'.$fila, $anio)
@@ -158,16 +158,16 @@ while ($row=mysqli_fetch_assoc($query_productos)) {
             ->setCellValue('N'.$fila, $row['bono_categoria'])
             ->setCellValue('O'.$fila, $row['bono_supervisor'])
             ->setCellValue('P'.$fila, $row['apoyo_mes'])
-            ->setCellValue('Q'.$fila, $row['sueldo_bruto'])
+            ->setCellValue('Q'.$fila, ($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes']))
             ->setCellValue('R'.$fila, $row['dias_vacaciones'])
             ->setCellValue('S'.$fila, $row['pago_vacaciones'])
             ->setCellValue('T'.$fila, $row['prima_vacacional'])
             ->setCellValue('U'.$fila, $row['deposito_fiscal'])
-            ->setCellValue('V'.$fila, $row['efectivo'])
+            ->setCellValue('V'.$fila, $efectivo)
             ->setCellValue('W'.$fila, $row['deduccion_fiscal'])
             ->setCellValue('X'.$fila, $row['caja_ahorro'])
             ->setCellValue('Y'.$fila, $row['supervisor'])
-            ->setCellValue('Z'.$fila, $row['neto']);
+            ->setCellValue('Z'.$fila, $efectivo + $row['deposito_fiscal']);
   //formato de numeros
   //$objPHPExcel->getActiveSheet()->getStyle('F'.$fila)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);          
 $fila++;   
