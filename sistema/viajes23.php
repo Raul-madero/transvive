@@ -398,6 +398,7 @@ function initDataTable() {
                                         <i class="fas fa-times-circle"></i>
                                     </a>
                                 </center>`
+                            <?php endif;?>
                             }
 			}
 		]
