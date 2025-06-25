@@ -3067,7 +3067,7 @@ if($_POST['action'] == 'deleteCargac')
     // Preparar la consulta
     $stmt = $conection->prepare(
         "UPDATE registro_viajes 
-         SET motivo_cancela = ?, valor_vuelta = 0, estatus = 3, usuario_cancel = ? 
+         SET motivo_cancela = ?, valor_vuelta = 0, estatus = 3, usuario_cancel = ?, costo_viaje = 0 
          WHERE id = ?"
     );
 
