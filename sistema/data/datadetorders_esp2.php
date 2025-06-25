@@ -27,8 +27,8 @@ $final_date = isset($requestData['final_date']) ? $requestData['final_date'] : n
 $year = isset($requestData['gender']) ? $requestData['gender'] : null; // Cambiado a 'year'
 $draw = isset($requestData['draw']) ? intval($requestData['draw']) : 1;
 
-$columns = ' p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, " ", sp.apellido_paterno, " ", sp.apellido_materno)AS name, us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, p.sueldo_vuelta, p.tipo_viaje';
-$table = ' registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso';
+$columns = "p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, p.unidad, p.num_unidad, p.personas, p.estatus, CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) AS name, us.nombre AS jefeo, p.ruta, p.direccion, p.destino, p.costo_viaje, p.sueldo_vuelta, p.tipo_viaje";
+$table = "registro_viajes p LEFT JOIN clientes ct ON p.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON p.id_supervisor = sp.idacceso";
 $where = "WHERE p.tipo_viaje LIKE '%Especial%'";
 
 (!empty($initial_date) && !empty($final_date)) 
@@ -55,7 +55,7 @@ $orderColumn = $_POST['order_column'];
 $orderDir = $_POST['order_dir'];
 
 $allowed_columns = array("p.id", "p.fecha", "p.cliente", "p.direccion", "p.unidad", "p.destino", "us.nombre", "p.estatus"); // Agrega aquí todas las columnas permitidas
-if (!in_array($order_column, $allowed_columns)) {
+if (!in_array($orderColumn, $allowed_columns)) {
   $order_column = "fecha"; // Columna por defecto si la recibida no es válida
 }
 

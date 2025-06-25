@@ -543,7 +543,7 @@ session_start();
               {
                   render: function ( data, type, full, meta ) {
                     // console.log(full)
-                  return '<a class="link_edit" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.id +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.id + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" data-id=\'' + full.id + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.id + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.id  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.direccion  + '\' data-destino=\'' + full.Destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
+                  return '<a class="link_edit" title="Editar Viaje" style="color:#007bff;" href= \'edit_viajespecial.php?id=' + full.id +  '\'><i class="far fa-edit"></i></a>&nbsp;|&nbsp;<a href="#" title="Copiar Viaje" data-toggle="modal" data-target="#modalCopiaViaje" data-id=\''+ full.id + '\' href="#" class="link_delete" style="color:#1398A1" ><i class="fa fa-copy"></i></a>&nbsp;|&nbsp<a id="delete_viaje" title="Borrar Viaje" data-id=\'' + full.id + '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-eraser"></i></a>&nbsp;|&nbsp<a href="#" title="Cancelar Viaje" data-toggle="modal" data-target="#modalCancelViaje" data-id=\''+ full.id + '\' href="#" class="link_delete" style="color:#94456E" ><i class="fa fa-close"></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#" title="Registrar Viaje" data-toggle="modal" data-target="#modalEditcliente" data-id=\'' + full.id  + '\' data-costo=\'' + full.Costo  + '\' data-fchaa=\'' + full.Datenew  + '\' data-sueldo=\'' + full.Valor_vuelta  + '\' data-unidades=\'' + full.nounidad  + '\' data-direcc=\'' + full.direccion  + '\' data-destino=\'' + full.Destino  + '\' href="#" class="link_delete" style="color:#1D8707" ><i class="fa fa-rotate-left"></a>';
                   }   
               }
             <?php
@@ -553,7 +553,7 @@ session_start();
 
 				{
 					render: function ( data, type, full, meta ) {
-					return '<a class="link_edit" style="color:#007bff;" href= \'editgcia_viajespecial.php?id=' + full.id +  '\'><i class="far fa-edit"></i> Registrar/Editar</a>';
+					return '<a class="link_edit" title="Registrar Viaje" style="color:#007bff;" href= \'editgcia_viajespecial.php?id=' + full.id +  '\'><i class="far fa-edit"></i> Registrar/Editar</a>';
 					}        
 				} 
             <?php
@@ -803,7 +803,7 @@ buttons: [
            { "data" : "estatusped", "width": "8%", "orderable":false },
            {
                     "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'editsup_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Registrar</a>';
+        return '<a class="link_edit" title="Registrar Viaje" style="color:#007bff;" href= \'editsup_viajespecial.php?id=' + full.pedidono +  '\'><i class="far fa-edit"></i> Registrar</a>';
            }
            }
             
