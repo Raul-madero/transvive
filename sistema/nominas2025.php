@@ -299,7 +299,16 @@ $namerol = $filas['rol'];
 						{
 							data: null,
 							render: (data) => formatoMoneda(
-								parseFloat(data.deposito_fiscal || 0) + parseFloat(data.efectivo || 0)
+								parseFloat(data.deposito_fiscal || 0) + ((parseFloat(data.sueldo_bruto || 0) - parseFloat(data.nomina_fiscal || 0)) +
+								parseFloat(data.bono_semanal || 0) +
+								parseFloat(data.bono_supervisor || 0) +
+								parseFloat(data.bono_categoria || 0) +
+								parseFloat(data.apoyo_mes || 0) +
+								parseFloat(data.pago_vacaciones || 0) +
+								parseFloat(data.sueldo_adicional || 0) +
+								parseFloat(data.prima_vacacional || 0) -
+								parseFloat(data.deducciones || 0) -
+								parseFloat(data.caja_ahorro || 0))
 							)
 						}
 					],
