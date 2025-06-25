@@ -385,15 +385,20 @@ function initDataTable() {
 			{
 				data: null,
 				orderable: false,
-				render: (data, type, full) => `
-					<center>
-						<a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
-							<i class="fa fa-edit text-white" style="font-size: 1.2em"></i>
-						</a> | 
-						<a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
-							<i class="fas fa-times-circle"></i>
-						</a>
-					</center>`
+				render: (data, type, full) => {
+                    <?php if ($_SESSION['rol'] == 14):?>
+                        return ''
+                        <?php else:?>
+                            return`
+                                <center>
+                                    <a href="edit_viaje.php?id=${full.pedidono}" class="btn btn-primary btn-xs">
+                                        <i class="fa fa-edit text-white" style="font-size: 1.2em"></i>
+                                    </a> | 
+                                    <a href="#" data-toggle="modal" data-target="#modalCancelViaje" data-id="${full.pedidono}" class="btn btn-danger btn-xs">
+                                        <i class="fas fa-times-circle"></i>
+                                    </a>
+                                </center>`
+                            }
 			}
 		]
 	});
