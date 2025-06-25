@@ -33,7 +33,7 @@ session_start();
 
   $namerol = $filas['rol'];
 
-  $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(importe) as Importec, sum(litros) as Litros FROM carga_combustible WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY MONTH(fecha)");
+  $sqlenc= mysqli_query($conection,"SELECT MONTH(fecha) as Nmes, YEAR(fecha), SUM(importe) as Importec, sum(litros) as Litros FROM carga_combustible WHERE YEAR(fecha) = YEAR(CURDATE()) GROUP BY MONTH(fecha), YEAR(fecha)");
   mysqli_close($conection);
   $result_sqlenc = mysqli_num_rows($sqlenc);
 
@@ -451,7 +451,7 @@ session_start();
   }
 
   include "../conexion.php";
-  $sqlviajes= mysqli_query($conection,"SELECT MONTHNAME(fecha) as Nmeses, YEAR(fecha), SUM(IF(planeado=1, valor_vuelta, 0)) as Planeados, SUM(valor_vuelta) as Registrados,(SUM(valor_vuelta)  - SUM(IF(planeado=1, valor_vuelta, 0))) as Diferencia  FROM registro_viajes WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus = 2 GROUP BY MONTH(fecha)");
+  $sqlviajes= mysqli_query($conection,"SELECT MONTHNAME(fecha) as Nmeses, YEAR(fecha), SUM(IF(planeado=1, valor_vuelta, 0)) as Planeados, SUM(valor_vuelta) as Registrados,(SUM(valor_vuelta)  - SUM(IF(planeado=1, valor_vuelta, 0))) as Diferencia  FROM registro_viajes WHERE YEAR(fecha) = YEAR(CURDATE()) and estatus = 2 GROUP BY MONTH(fecha), YEAR(fecha)");
   mysqli_close($conection);
   while ($drow = mysqli_fetch_array($sqlviajes)){
    //extract $drow;
