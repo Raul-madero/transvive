@@ -210,7 +210,7 @@ $cancelados = fetch_value("SELECT COUNT(valor_vuelta) FROM registro_viajes WHERE
                         </div>
 
                         <div class="card-body">
-                            <?php if (in_array($_SESSION['rol'], [1, 9, 5])): ?>
+                            <?php if (in_array($_SESSION['rol'], [1, 9, 5, 14])): ?>
                                 <!-- Filtros de fecha -->
                                 <form id="filtro-form" class="form-inline mb-3">
                                     <input type="text" readonly name="initial_date" id="initial_date" class="form-control datepicker mr-2" placeholder="De Fecha">
@@ -385,7 +385,7 @@ function initDataTable() {
 			{
 				data: null,
 				orderable: false,
-				render: (data, type, full) => {
+				render: function (data, type, full) {
                     <?php if ($_SESSION['rol'] == 14):?>
                         return ''
                         <?php else:?>
