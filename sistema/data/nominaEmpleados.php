@@ -260,7 +260,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
     // var_dump($data_output);
     $totalRecords = $conection->query("SELECT COUNT(*) FROM nomina_temp_2025")->fetch_row()[0];
     $filtered = $conection->query("SELECT COUNT(*) FROM nomina_temp_2025 $where")->fetch_row()[0];
-    $total_nomina = $conection->query("SELECT SUM(deposito_fiscal + efectivo) AS total_nomina FROM nomina_temp_2025")->fetch_assoc();
+    $total_nomina = $conection->query("SELECT SUM(deposito_fiscal + ((sueldo_bruto - nomina_fiscal) + bono_semanal + bono_supervisor + bono_categoria + apoyo_mes + pago_vacaciones + sueldo_adicional + prima_vacacional - deducciones - caja_ahorro )) AS total_nomina FROM nomina_temp_2025")->fetch_assoc();
     $total_fiscal = $conection->query("SELECT SUM(nomina_fiscal) AS total_fiscal FROM nomina_temp_2025")->fetch_assoc();
     $total_adeudo = $conection->query("SELECT SUM(deducciones) AS total_deducciones FROM nomina_temp_2025")->fetch_assoc();
     $total_caja_ahorro = $conection->query("SELECT SUM(caja_ahorro) AS total_caja FROM nomina_temp_2025")->fetch_assoc();
