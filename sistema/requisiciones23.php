@@ -301,7 +301,7 @@ session_start();
                             gender
                         },
                         dataSrc: function (json) {
-                            console.log("📦 Respuesta recibida:", json);
+                            // console.log("📦 Respuesta recibida:", json);
                             return json.records || [];
                         }
                     },

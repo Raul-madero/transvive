@@ -6,7 +6,7 @@ $campo = $_POST['campo'];
 $valor = $_POST['valor'];
 
 $camposPermitidos = ['sueldo_bruto', 'deducciones', 'sueldo_adicional'];
-
+var_dump($_POST);
 if (in_array($campo, $camposPermitidos)) {
     $stmt = $conection->prepare("UPDATE nomina_temp_2025 SET $campo = ? WHERE id = ?");
     $stmt->bind_param("di", $valor, $id);
