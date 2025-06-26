@@ -105,7 +105,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     // Orden y paginación
     $order_col = $columns_order[$requestData['order'][0]['column']] ?? 'p.id';
     $order_dir = $requestData['order'][0]['dir'] === 'asc' ? 'ASC' : 'DESC';
-    $limit = ($requestData['length'] != "-1") ? "LIMIT 0, {$requestData['length']}" : "";
+    $limit = ($requestData['length'] != "-1") ? "LIMIT {$requestData['start']}, {$requestData['length']}" : "";
 
     $sql_final = "$sql_base ORDER BY $order_col $order_dir $limit";
     // echo($sql_final);
