@@ -60,7 +60,10 @@ session_start();
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
+<script>
+  $.datepicker.setDefaults($.datepicker.regional['es']);
+</script> -->
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- DataTables + Buttons (JS actualizados) -->
@@ -76,7 +79,9 @@ session_start();
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
 <!-- Bootstrap Datepicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.es.min.js"></script>
+
 
 <!-- Bootbox (para modales) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js"></script>
@@ -245,7 +250,7 @@ session_start();
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 
 <!-- Bootstrap Datepicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script> -->
 
 <!-- Sweet alert 2 (para alertas) -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -583,7 +588,9 @@ session_start();
             }
            
             // Filtro por fecha y estatus
-            $("#filter").on("click", function () {
+            $("#filter").on("click", function (e) {
+                e.preventDefault();
+                console.log("Filter clicked");
                 const initial_date = $("#initial_date").val();
                 const final_date = $("#final_date").val();
                 const gender = $("#gender").val();
@@ -608,8 +615,12 @@ session_start();
             // Inicialización del datepicker
             $(".datepicker").datepicker({
                 language: 'es',
-                dateFormat: "yy-mm-dd",
-                changeYear: true
+                dateFormat: "dd-mm-yy",
+                todayHighlight: true,
+                autoclose: true,
+                changeYear: true,
+                changeMonth: true
+
             });
         });
     </script>
@@ -711,7 +722,9 @@ session_start();
             }
            
             // Filtro por fecha y estatus
-            $("#filter").on("click", function () {
+            $("#filter").on("click", function (e) {
+                e.preventDefault();
+                console.log('Filtro...')
                 const initial_date = $("#initial_date").val();
                 const final_date = $("#final_date").val();
                 const gender = $("#gender").val();
@@ -736,8 +749,11 @@ session_start();
             // Inicialización del datepicker
             $(".datepicker").datepicker({
                 language: 'es',
-                dateFormat: "yy-mm-dd",
-                changeYear: true
+                dateFormat: "dd-mm-yyyy",
+                changeYear: true,
+                changeMonth: true,
+                todayHighlight: true,
+                autoclose: true
             });
         });
     </script>

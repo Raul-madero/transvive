@@ -6,11 +6,25 @@ global $conection;
 if ($_REQUEST['action'] == 'fetch_users') {
     $requestData = $_REQUEST;
     $start = intval($requestData['start']);
-
     $initial_date = $requestData['initial_date'] ?? "";
     $final_date   = $requestData['final_date'] ?? "";
-    $gender       = $requestData['gender'] ?? "";
 
+    // Convertir fechas al formato MySQL si están presentes
+    if (!empty($initial_date) && !empty($final_date)) {
+        $initial_date_obj = DateTime::createFromFormat('d-m-Y', $initial_date);
+        $final_date_obj   = DateTime::createFromFormat('d-m-Y', $final_date);
+
+        if ($initial_date_obj && $final_date_obj) {
+            $initial_date = $initial_date_obj->format('Y-m-d');
+            $final_date   = $final_date_obj->format('Y-m-d');
+        } else {
+            // Si alguna fecha no es válida, eliminar el filtro
+            $initial_date = "";
+            $final_date = "";
+        }
+    }
+    $gender       = $requestData['gender'] ?? "";
+    // echo($initial_date . $final_date);
     // Filtro por fechas
     $date_range = "";
     if (!empty($initial_date) && !empty($final_date)) {
@@ -91,9 +105,10 @@ if ($_REQUEST['action'] == 'fetch_users') {
     // Orden y paginación
     $order_col = $columns_order[$requestData['order'][0]['column']] ?? 'p.id';
     $order_dir = $requestData['order'][0]['dir'] === 'asc' ? 'ASC' : 'DESC';
-    $limit = ($requestData['length'] != "-1") ? "LIMIT {$requestData['start']}, {$requestData['length']}" : "";
+    $limit = ($requestData['length'] != "-1") ? "LIMIT 0, {$requestData['length']}" : "";
 
     $sql_final = "$sql_base ORDER BY $order_col $order_dir $limit";
+    // echo($sql_final);
     $result = mysqli_query($conection, $sql_final);
 
     // Total sin filtros
