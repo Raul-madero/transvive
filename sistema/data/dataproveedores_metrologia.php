@@ -47,7 +47,7 @@ if($_REQUEST['action'] == 'fetch_users'){
     $totalFiltered = $totalData;
 
     if( !empty($requestData['search']['value']) ) {
-        $sql.="AND ( cveproveedor LIKE '%".$requestData['search']['value']."%' ";
+        $sql.=" AND ( cveproveedor LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR nombre LIKE '%".$requestData['search']['value']."%'  )";
        
         
