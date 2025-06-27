@@ -15,19 +15,20 @@ if($_REQUEST['action'] == 'fetch_users'){
     $gender = $_REQUEST['gender'] ?? "";
 
     if(!empty($initial_date) && !empty($final_date)){
-        $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
+        $date_range = " AND p.fecha BETWEEN '" . $initial_date . "' AND '" . $final_date . "' ";
     }else{
         $date_range = "";
     }
 
+    $gender_filter = "";
     if($gender != ""){
        
-        $gender = " AND p.ideval = $gender ";
+        $gender_filter = " AND p.ideval = $gender ";
     }
 
     $columns = ' p.ideval, p.fecha_eval, p.tipo_evaluacion, p.cveproveedor, pv.nombre, p.producto, p.resultado, p.calificacion_total, p.estatus ';
     $table = ' evaluaciones_productos p inner join proveedores pv ON p.cveproveedor = pv.no_prov' ;
-    $where = " WHERE p.ideval > 0 and p.estatus = 1".$date_range.$gender ;
+    $where = " WHERE p.ideval > 0 and p.estatus = 1" . $date_range . $gender_filter ;
 
     $columns_order = array(
         0 => 'ideval',
@@ -41,17 +42,17 @@ if($_REQUEST['action'] == 'fetch_users'){
     );
 
     $sql = "SELECT ".$columns." FROM ".$table." ".$where;
-
     $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
-
+    
     if( !empty($requestData['search']['value']) ) {
-        $sql.="AND ( cveproveedor LIKE '%".$requestData['search']['value']."%' ";
+        $sql.=" AND ( cveproveedor LIKE '%".$requestData['search']['value']."%' ";
         $sql.=" OR nombre LIKE '%".$requestData['search']['value']."%'  )";
-       
+        
         
     }
+    // echo($sql);
 
     $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
