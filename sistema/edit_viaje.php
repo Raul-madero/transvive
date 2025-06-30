@@ -321,10 +321,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <label for="inputEmail3" class="col-sm-2 col-form-label">No. Eco.</label>
                     <div class="col-sm-4">
                       <select class="form-control select2bs4" style="width: 100%;" name="inputNounidad" id="inputNounidad">
-                  <option value="<?php echo $num_unidad;?>"><?php echo $num_unidad;?></option>
-                  <?php foreach ($filasunidad as $oprt): //llenar las opciones del primer select ?>
-                  <option value="<?= $oprt['no_unidad'] ?>"><?= $oprt['no_unidad'] ?></option>  
-                  <?php endforeach; ?>
                 </select>  
                     </div>
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Viaje</label>
@@ -631,7 +627,7 @@ $('#btn_salir2').click(function(e){
               type: 'POST', //mandar variables como post o get
               url: 'data/get_envios3.php' //url que recibe las variables
             }).done(function(data){ //metodo que se ejecuta cuando ajax ha completado su ejecucion             
-
+              console.log(data)
               pedidos3.html(data); //establecemos el contenido html de discos con la informacion que regresa ajax             
               pedidos3.prop('disabled', false); //habilitar el select
 
