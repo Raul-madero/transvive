@@ -109,6 +109,7 @@
                   <!--<li><a href="clientes.php" class="dropdown-item">Clientes</a></li>
                   <li><a href="empleados.php" class="dropdown-item">Empleados</a></li>
                   <li><a href="supervisores.php" class="dropdown-item">Supervisores</a></li>-->
+                  <li><a href="refacciones.php" class="dropdown-item">Refacciones/Articulos</a></li>
                   <li><a href="unidades.php" class="dropdown-item">Unidades</a></li>
                   <li><a href="gasolineras.php" class="dropdown-item">Gasolineras</a></li>
                   <!--<li><a href="unidades_tcp.php" class="dropdown-item">Unidades TC Personales</a></li>
