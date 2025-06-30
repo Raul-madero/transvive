@@ -17,10 +17,11 @@ $tipos = [
 if (array_key_exists($banda_id3, $tipos)) {
     $like = $tipos[$banda_id3];
     $sql = "SELECT * FROM unidades WHERE no_unidad LIKE '$like' ORDER BY id";
+    // echo $sql; // Descomentar para ver la consulta SQL en la consola de MySQL
     $query = mysqli_query($conection, $sql);
     $filas = mysqli_fetch_all($query, MYSQLI_ASSOC);
     mysqli_close($conection);
-    
+    // var_dump($filas); // Descomentar para ver los resultados en la consola de PHP
     // Generar las opciones del <select>
     echo '<option value="">- Seleccione -</option>';
     foreach ($filas as $op) {
