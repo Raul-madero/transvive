@@ -175,6 +175,13 @@ mysqli_close($conection);
                       $sueldo_vuelta = $row['sueldo_camioneta'];
                   }
                   break;
+              case 'JAC':
+                  if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camioneta'];
+                  }
+                  break;
               case 'Sprinter':
                   if (!empty($row['sueldo_ruta_sprinter']) && $row['sueldo_ruta_sprinter'] != 0) {
                       $sueldo_vuelta = max($row['sueldo_sprinter'], $row['sueldo_ruta_sprinter']);
