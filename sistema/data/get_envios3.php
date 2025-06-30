@@ -82,7 +82,7 @@ if ($banda_id3 == 'Camion') {
           <?php
         } else {
           if ($banda_id3 == 'JAC') {
-            $sql = "select * FROM unidades where no_unidad like '%T-%' ORDER BY id";
+            $sql = "select * FROM unidades where no_unidad like '%J-%' ORDER BY id";
             $query = mysqli_query($conection, $sql);
             $filas = mysqli_fetch_all($query, MYSQLI_ASSOC);
             mysqli_close($conection);
