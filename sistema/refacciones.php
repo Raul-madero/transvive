@@ -54,32 +54,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <?php
-       if ($_SESSION['rol'] == 1) {
-        include('includes/navbar.php');
-      }else {
-        if ($_SESSION['rol'] == 6) {
-          include('includes/navbaroperac.php');
-        }else {
-          if ($_SESSION['rol'] == 8) {
-            include('includes/navbarjefeoper.php');
-          }else {
-            if ($_SESSION['rol'] == 4) {
-              include('includes/navbarsup.php');
-            }else {
-              if ($_SESSION['rol'] == 9) {
-                include('includes/navbargrcia.php');
-              }else {
-                if ($_SESSION['rol'] == 16) {
-                  include('includes/navbarcompras.php');
-                }else {
-                  include('includes/navbar.php'); 
-                }  
-              }
-            }
-          }  
-        }
-      } ?>
+      <?php include('includes/generalnavbar.php')?>
       <?php include('includes/nav.php') ?>
       
     </div>
@@ -97,7 +72,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
+              <?php if($rol == 16): ?>
             <li class="breadcrumb-item"><a href="new_refaccion.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;',2);?>Nuevo</a></li>
+            <?php endif; ?>
               <li class="breadcrumb-item"><a href="factura/refacciones_excel.php"><i class="fas fa-file-excel"></i> Excel</a></li>
               
             </ol>
