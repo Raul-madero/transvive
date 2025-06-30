@@ -310,6 +310,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        <option value="Camioneta">Camioneta</option>
                        <option value="Automovil">Automovil</option>
                        <option value="Sprinter">Sprinter</option>
+                       <option value="JAC">JAC</option>
                        <option value="Unidad Externa">Unidad Externa</option>
                        
                     </select>

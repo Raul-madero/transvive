@@ -72,9 +72,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <?php if($rol == 16): ?>
+              <!-- <?php //if($rol == 16): ?> -->
             <li class="breadcrumb-item"><a href="new_refaccion.php"><i class="fas fa-plus" style="color: green;"></i><?php echo str_repeat('&nbsp;',2);?>Nuevo</a></li>
-            <?php endif; ?>
+            <!-- <?php //endif; ?> -->
               <li class="breadcrumb-item"><a href="factura/refacciones_excel.php"><i class="fas fa-file-excel"></i> Excel</a></li>
               
             </ol>
