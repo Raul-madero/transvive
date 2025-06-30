@@ -60,6 +60,7 @@
               <li><a href="#" class="dropdown-item">Mantenimientos </a></li>
               <li><a href="rep_servicios.php" class="dropdown-item">Servicios</a></li>
               -->
+              <?php if($_SESSION['user'] === 'Victor'): ?>
                <li class="dropdown-submenu dropdown-hover">
                 <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Nominas</a>
                 <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow">
@@ -76,7 +77,7 @@
                   
                 </ul>
               </li>
-
+                <?php endif; ?>
 
                      <li class="dropdown-submenu dropdown-hover">
                 <a id="dropdownSubMenu2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">Calidad</a>
