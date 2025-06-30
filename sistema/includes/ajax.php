@@ -3364,6 +3364,7 @@ if ($_POST['action'] == 'EditarAdeudo') {
                 $unidad_map = [
                     "Camion" => "sueldo_camion",
                     "Camioneta" => "sueldo_camioneta",
+                    "JAC" => "sueldo_camioneta",
                     "Sprinter" => "sueldo_sprinter"
                 ];
 
