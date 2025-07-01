@@ -36,7 +36,7 @@ $final_date = mysqli_real_escape_string($conection, $requestData['final_date'] ?
 $gender = mysqli_real_escape_string($conection, $_POST['gender'] ?? '');
 
 // Columnas del SELECT
-$selectColumns = "p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, 
+$selectColumns = "DISTINCT p.id, p.fecha, p.hora_inicio, p.hora_fin, p.semana, p.cliente, p.operador, 
                   p.unidad, p.num_unidad, p.personas, p.estatus, 
                   CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) AS name, 
                   us.nombre AS jefeo, p.ruta";
