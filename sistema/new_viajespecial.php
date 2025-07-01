@@ -743,6 +743,9 @@ function onTimeChange() {
                    }else {
                       if (optipo == 'Unidad Externa') {
                          $('#inputSueldovta').val('0.00');
+                      }else {
+                         if (optipo == 'JAC') {
+                         $('#inputSueldovta').val('120.00');
                       }else {       
                           $('#inputSueldovta').val('0.00');
                       }
