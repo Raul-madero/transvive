@@ -726,33 +726,57 @@ function onTimeChange() {
             var optipo = $(this).val();
             
             //alert(optipo);
+            switch(optipo){
+               case 'Camion':
+                 $('#inputSueldovta').val('180.00');
+                 break;
+              case 'Camioneta':
+                 $('#inputSueldovta').val('120.00');
+                 break;
+              case 'Automovil':
+                 $('#inputSueldovta').val('100.00');
+                 break;
+              case 'Sprinter':
+                 $('#inputSueldovta').val('160.00');
+                 break;
+              case 'Unidad Externa':
+                 $('#inputSueldovta').val('0.00');
+                 break;
+              case 'JAC':
+                 $('#inputSueldovta').val('120.00');
+                 break;
+              default:
+                 $('#inputSueldovta').val('0.00');
+                 break;
+              }
 
-             if (optipo == 'Camion')
-             {
-              $('#inputSueldovta').val('180.00');
-             }else {
-               if (optipo == 'Camioneta') 
-               {
-                  $('#inputSueldovta').val('120.00');
-               }else {
-                 if (optipo == 'Automovil') {
-                   $('#inputSueldovta').val('100.00');
-                 }else {
-                   if (optipo == 'Sprinter') {
-                    $('#inputSueldovta').val('160.00');
-                   }else {
-                      if (optipo == 'Unidad Externa') {
-                         $('#inputSueldovta').val('0.00');
-                      }else {
-                         if (optipo == 'JAC') {
-                         $('#inputSueldovta').val('120.00');
-                      }else {       
-                          $('#inputSueldovta').val('0.00');
-                      }
-                   }
-                 }
-               }
-             }
+            //  if (optipo == 'Camion')
+            //  {
+            //   $('#inputSueldovta').val('180.00');
+            //  }else {
+            //    if (optipo == 'Camioneta') 
+            //    {
+            //       $('#inputSueldovta').val('120.00');
+            //    }else {
+            //      if (optipo == 'Automovil') {
+            //        $('#inputSueldovta').val('100.00');
+            //      }else {
+            //        if (optipo == 'Sprinter') {
+            //         $('#inputSueldovta').val('160.00');
+            //        }else {
+            //           if (optipo == 'Unidad Externa') {
+            //              $('#inputSueldovta').val('0.00');
+            //           }else {
+            //              if (optipo == 'JAC') {
+            //              $('#inputSueldovta').val('120.00');
+            //           }else {       
+            //               $('#inputSueldovta').val('0.00');
+            //           }
+            //         }
+            //        }
+            //      }
+            //    }
+            //  }
 
              
 
