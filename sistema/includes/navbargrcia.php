@@ -151,7 +151,7 @@
               <!-- End Level two -->
             </ul>
           </li>
-
+                <?php if($_SESSION['user'] === 'Victor'): ?>
           <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Nominas</a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
@@ -175,7 +175,7 @@
               <!-- End Level two -->
             </ul>
           </li>
-
+                  <?php endif;?>
 
                <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Calidad</a>
