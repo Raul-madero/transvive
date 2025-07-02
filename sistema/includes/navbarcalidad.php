@@ -115,10 +115,10 @@
                   <li><a href="viajes_clientesxsemana.php" class="dropdown-item"> Viajes Cliente x Semana</a></li>
                   <li><a href="viajes_planeadosvsreg.php" class="dropdown-item"> Viajes Planeados vs Registrados</a></li>
                   <li><a href="grafica_plaeadosvsregistrados.php" class="dropdown-item"> Grafica Planeados vs Registrados (Sem)</a></li>
-                  <li><a href="grafica_plavsregyear.php" class="dropdown-item"> Grafica Planeados vs Registrados (Anual)</a></li>
+                  <li><a href="grafica_plavsregyear.php" class="dropdown-item"> Grafica Planeados vs Registrados (Anual)</a></li> -->
                   <li><a href="viajes_normalesxperiodos.php" class="dropdown-item">Viajes por Periodo</a></li>
                   
-                </ul>
+                <!-- </ul>
               </li>
 
 
