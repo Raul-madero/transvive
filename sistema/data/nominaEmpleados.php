@@ -196,7 +196,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $deduccion = ($deduccion > floatval($descuento)) ? floatval($descuento) : $deduccion;
         
         //Descontar faltas del sueldo bruto
-        $bruto = $dias_vacaciones_pagar == 0 ? (($cargo == 'OPERADOR') ?  floatval($sueldo_bruto - ($faltas * $sueldo_base)) :  ($sueldo_base * 7) + $sueldo_vueltas - ($sueldo_base * $faltas)) : 0;
+        $bruto = (($cargo == 'OPERADOR') ?  floatval($sueldo_bruto - ($faltas * $sueldo_base)) :  ($sueldo_base * 7) + $sueldo_vueltas - ($sueldo_base * $faltas));
         $fiscal = floatval($pago_fiscal ?? 0);
         $ded_fiscal = floatval($deduccion_fiscal ?? 0);
         $deposito = $fiscal - $ded_fiscal;
