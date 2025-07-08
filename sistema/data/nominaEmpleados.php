@@ -78,7 +78,7 @@ function dia15EntreFechas($fecha_inicio, $fecha_fin) {
 
 function insertar_nomina($conection, $data) {
      // Verificar si el cargo es 'OPERADOR' y el total_vueltas es 0
-    if ($data['dias_vacaciones'] == 0 && $data['cargo'] === 'OPERADOR' && $data['total_vueltas'] == 0) {
+    if ($data['cargo'] === 'OPERADOR' && $data['total_vueltas'] == 0) {
         // Si las condiciones se cumplen, no se hace la inserción
         return; // o puedes usar exit() si quieres detener la ejecución completamente
     }
@@ -200,7 +200,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $fiscal = floatval($pago_fiscal ?? 0);
         $ded_fiscal = floatval($deduccion_fiscal ?? 0);
         $deposito = $fiscal - $ded_fiscal;
-        $efectivo = (($bruto > 0) ? ($bruto - $fiscal) : (($vacaciones > 0) ? ($vacaciones - $fiscal) : 0)) + $bono_semanal + $bono_supervisor + $bono_categoria + $bono_apoyo + $prima - $deduccion - floatval($caja_ahorro);
+        $efectivo = (($bruto > 0) ? ($bruto - $fiscal) : (($vacaciones > 0) ? ($vacaciones - $fiscal) : 0)) + $bono_semanal + $bono_supervisor + $bono_categoria + $bono_apoyo + $prima + $vacaciones - $deduccion - floatval($caja_ahorro);
         $neto = $deposito + $efectivo;
 
         // Arreglo para inserción
