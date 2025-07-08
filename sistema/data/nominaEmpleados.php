@@ -200,7 +200,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $fiscal = floatval($pago_fiscal ?? 0);
         $ded_fiscal = floatval($deduccion_fiscal ?? 0);
         $deposito = $fiscal - $ded_fiscal;
-        $efectivo = (($bruto > 0) ? ($bruto - $fiscal) : (($vacaciones > 0) ? ($vacaciones - $fiscal) : 0)) + $bono_semanal + $bono_supervisor + $bono_categoria + $bono_apoyo + $prima - $deduccion - floatval($caja_ahorro);
+        $efectivo = (($bruto > 0) ? ($bruto - $fiscal) : (($vacaciones > 0) ? ($vacaciones - $fiscal) : 0)) + $bono_semanal + $bono_supervisor + $bono_categoria + $bono_apoyo + $prima + $vacaciones - $deduccion - floatval($caja_ahorro);
         $neto = $deposito + $efectivo;
 
         // Arreglo para inserción
