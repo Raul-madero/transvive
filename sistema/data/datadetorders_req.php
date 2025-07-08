@@ -2,6 +2,7 @@
 session_start();
 include '../../conexion.php';
 global $conection;
+// var_dump($_SESSION);
 
 if ($_REQUEST['action'] == 'fetch_users') {
     $requestData = $_REQUEST;
@@ -23,6 +24,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
             $final_date = "";
         }
     }
+    $rol      = $_SESSION['rol']?? "";
     $gender       = $requestData['gender'] ?? "";
     // echo($initial_date . $final_date);
     // Filtro por fechas
@@ -54,6 +56,46 @@ if ($_REQUEST['action'] == 'fetch_users') {
 
     // Construcción dinámica del WHERE
     $where = " WHERE p.id > 0 $date_range $estatus_filter";
+
+    switch ($rol) {
+        case 1:
+            break;
+        case 2:
+            $where .= " AND p.area_solicitante = 'Servicio' ";
+            break;
+        case 4:
+            $where .= " AND p.area_solicitante = 'Servicio' ";
+            break;
+        case 5:
+            $where .= " AND p.area_solicitante = 'Recursos Humanos' ";
+            break;
+        case 6:
+            $where .= " AND p.area_solicitante = 'Servicio' ";
+            break;
+        case 7:
+            $where .= " AND p.area_solicitante = 'Mantenimiento' ";
+            break;
+        case 8:
+            $where .= " AND p.area_solicitante = 'Servicio' ";
+            break;
+        case 9:
+            $where .= " AND p.area_solicitante = 'Servicio' ";
+            break;
+        case 13:
+            $where.= " AND p.area_solicitante = 'Servicio' ";
+            break;
+        case 14:
+            $where.= " AND p.area_solicitante = 'Calidad' ";
+            break;
+        case 15:
+            $where.= " AND p.area_solicitante = 'Monitorista' ";
+            break;
+        case 17:
+            $where.= " AND p.area_solicitante = 'Ventas' ";
+            break;
+        default:
+            break;
+    }
 
     // Buscador general
     if (!empty($requestData['search']['value'])) {
@@ -157,6 +199,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
 
         $data[] = $nestedData;
     }
+    // var_dump($data);
 
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
