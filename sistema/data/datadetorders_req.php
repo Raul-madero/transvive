@@ -90,6 +90,9 @@ if ($_REQUEST['action'] == 'fetch_users') {
         case 15:
             $where.= " AND p.area_solicitante = 'Monitorista' ";
             break;
+        case 16:
+            $where.= " AND p.area_solicitante <> 'Administracion' ";
+            break;
         case 17:
             $where.= " AND p.area_solicitante = 'Ventas' ";
             break;
