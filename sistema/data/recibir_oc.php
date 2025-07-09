@@ -6,7 +6,7 @@ $fecha = $_POST['fecha_entrada'];
 $almacen = $_POST['almacen_recibe'];
 $requisicion = $_POST['req'];
 $productos = json_decode($_POST['productos']);
-
+// var_dump($productos);
 if ($orden == '' || $fecha == '' || $almacen == '' || empty($productos)) {
     echo json_encode(array('error'=> 'Faltan datos obligatorios'));
     exit;
@@ -15,6 +15,7 @@ if ($orden == '' || $fecha == '' || $almacen == '' || empty($productos)) {
 $error = 0;
 foreach ($productos as $producto) {
     $codigo = $producto->codigo;
+    $cantidad = $producto->cantidad;
 
     $query = "SELECT * FROM refacciones WHERE codigo = ?";
     $stmt = $conection->prepare($query);
@@ -34,10 +35,9 @@ foreach ($productos as $producto) {
         $stock_minimo = $row['stock_minimo'];
         $stocK_maximo = $row['stock_maximo'];
 
-
-        $query = "INSERT INTO entradas (cantidad, fecha, id_producto, id_almacen) VALUES (?,?,?,?)";
+        $query = "INSERT INTO entradas (cantidad, fecha, id_producto, id_almacen, no_requisicion) VALUES (?,?,?,?,?)";
         $stmt = $conection->prepare($query);
-        $stmt->bind_param("issi", $producto->cantidad, $fecha, $id, $almacen);
+        $stmt->bind_param("issii", $producto->cantidad, $fecha, $id, $almacen, $requisicion);
         if ($stmt->execute()) {
             $stmt->close();
         }else {
@@ -45,20 +45,38 @@ foreach ($productos as $producto) {
             $error++;
             exit;
         }
-
-        $query = "INSERT INTO productos (codigo_producto, codigo_interno, descripcion, u_medida, marca, rotacion, categoria, modelo, stock_minimo, stock_maximo, costo_unitario, estatus, almacen) VALUES (?,?,?,?,?,?,?,?,?,?,?,1,?)";
+        
+        $query = "SELECT stock_actual FROM productos WHERE codigo_producto =?";
         $stmt = $conection->prepare($query);
-        if (!$stmt) {
-            echo json_encode(['error' => 'Error en prepare(): ' . $conection->error]);
-            exit;
-        }
-        $stmt->bind_param("ssssssssdddi", $producto->codigo, $codigo_interno, $descripcion, $u_medida, $marca, $rotacion, $categoria, $modelo, $stock_minimo, $stock_maximo, $producto->costo, $almacen);
-        if($stmt->execute()) {
+        $stmt->bind_param("s", $codigo);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $stock_actual = $row['stock_actual'];
+            $stock_actual += $cantidad;
+
+            $query = "UPDATE productos SET stock_actual =? WHERE codigo_producto =?";
+            $stmt = $conection->prepare($query);
+            $stmt->bind_param("ds", $stock_actual, $codigo);
+            $stmt->execute();
             $stmt->close();
-        }else {
-            echo json_encode(array('error'=> 'Error al agregar producto' . $conection->error));
-            $error++;
-            exit;
+        } else {
+
+            $query = "INSERT INTO productos (codigo_producto, codigo_interno, descripcion, u_medida, marca, rotacion, categoria, modelo, stock_minimo, stock_maximo, costo_unitario, estatus, almacen, stock_actual) VALUES (?,?,?,?,?,?,?,?,?,?,?,1,?,?)";
+            $stmt = $conection->prepare($query);
+            if (!$stmt) {
+                echo json_encode(['error' => 'Error en prepare(): ' . $conection->error]);
+                exit;
+            }
+            $stmt->bind_param("ssssssssdddii", $producto->codigo, $codigo_interno, $descripcion, $u_medida, $marca, $rotacion, $categoria, $modelo, $stock_minimo, $stock_maximo, $producto->costo, $almacen, $cantidad);
+            if($stmt->execute()) {
+                $stmt->close();
+            }else {
+                echo json_encode(array('error'=> 'Error al agregar producto' . $conection->error));
+                $error++;
+                exit;
+            }
         }
     }
 
