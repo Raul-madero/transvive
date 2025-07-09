@@ -397,7 +397,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="form-group row" style="text-align:right;">
                         <div class="offset-sm-2 col-sm-10">
                           <button type="button" class="btn btn-secondary" id="btn_salir">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                          <button type="submit" class="btn btn-success" id="guardar_Cliente">Guardar</button>
+                          <button type="button" class="btn btn-success" id="guardar_Cliente">Guardar</button>
                         </div>
                       </div>
 
@@ -614,11 +614,8 @@ $('#btn_salir').click(function(e){
                           text: info.message || "Proveedor almacenado correctamente",
                           icon: 'success'
                       }).then(resultado => {
-                          if (resultado.isConfirmed) {
-                              location.href = 'proveedores.php';
-                          } else {
-                              location.reload();
-                          }
+                        window.location.href = 'proveedores.php';
+                          
                       });
 
                   } else {
