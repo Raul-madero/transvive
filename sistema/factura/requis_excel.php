@@ -19,7 +19,9 @@ $query = mysqli_query($conection,"SELECT
         r.cant_autorizada,
         r.observaciones, 
         o.no_orden, 
-        o.fecha AS fecha_orden, 
+        o.fecha AS fecha_orden,
+        f.no_factura,
+        f.fecha AS fecha_factura,
         CASE r.estatus
             WHEN 0 THEN 'Cancelada'
             WHEN 1 THEN 'Activa'
@@ -30,6 +32,7 @@ $query = mysqli_query($conection,"SELECT
         END AS estatus_texto
     FROM requisicion_compra r
     LEFT JOIN orden_compra o ON r.no_requisicion = o.no_requisicion
+    LEFT JOIN facturas f ON f.no_requisicion = o.no_requisicion
     ORDER BY r.fecha DESC;
     ");
       $result = mysqli_num_rows($query);
@@ -45,6 +48,8 @@ $query = mysqli_query($conection,"SELECT
             <th>Fecha en que requiere</th>
             <th>Orden de compra</th>
             <th>Fecha Orden de compra</th>
+            <th>No. Factura</th>
+            <th>Fecha Factura</th>
             <th>Tipo requisicion</th>
             <th>Observaciones</th>
             <th>Area Requiere</th>
@@ -58,7 +63,7 @@ $query = mysqli_query($conection,"SELECT
     	$newDate = date("d-m-Y", strtotime($row['fecha'])); 
       $fecha_requiere = date("d-m-Y", strtotime($row['fecha_requiere'])); 
       $fecha_orden = $row['fecha_orden'] ? date("d-m-Y", strtotime($row['fecha_orden'])) : ""; 
-     
+     $fecha_factura = $row['fecha_factura']? date("d-m-Y", strtotime($row['fecha_factura'])) : ""; 
       ?>
         <tr>
           <td><?php echo "REQ-" . $row['no_requisicion']; ?></td>
@@ -66,6 +71,8 @@ $query = mysqli_query($conection,"SELECT
           <td><?php echo $fecha_requiere; ?></td>
           <td><?php echo !empty($row['no_orden']) ?  "OC-" . $row['no_orden'] : ""; ?></td>
           <td><?php echo $fecha_orden ?? ""; ?></td>
+          <td><?php echo !empty($row['no_factura']) ?? ""; ?></td>
+          <td><?php echo $fecha_factura ?? ""; ?></td>
           <td><?php echo $row['tipo_requisicion']; ?></td>
           <td><?php echo $row['observaciones']; ?></td>
           <td><?php echo $row['area_solicitante']; ?></td>
