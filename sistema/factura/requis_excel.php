@@ -22,6 +22,8 @@ $query = mysqli_query($conection,"SELECT
         o.fecha AS fecha_orden,
         f.no_factura,
         f.fecha AS fecha_factura,
+        e.fecha AS fecha_entrega,
+        r.estatus,
         CASE r.estatus
             WHEN 0 THEN 'Cancelada'
             WHEN 1 THEN 'Activa'
@@ -50,6 +52,7 @@ $query = mysqli_query($conection,"SELECT
             <th>Fecha Orden de compra</th>
             <th>No. Factura</th>
             <th>Fecha Factura</th>
+            <th>Fecha Entrega</th>
             <th>Tipo requisicion</th>
             <th>Observaciones</th>
             <th>Area Requiere</th>
@@ -63,7 +66,8 @@ $query = mysqli_query($conection,"SELECT
     	$newDate = date("d-m-Y", strtotime($row['fecha'])); 
       $fecha_requiere = date("d-m-Y", strtotime($row['fecha_requiere'])); 
       $fecha_orden = $row['fecha_orden'] ? date("d-m-Y", strtotime($row['fecha_orden'])) : ""; 
-     $fecha_factura = $row['fecha_factura']? date("d-m-Y", strtotime($row['fecha_factura'])) : ""; 
+      $fecha_factura = $row['fecha_factura']? date("d-m-Y", strtotime($row['fecha_factura'])) : ""; 
+      $fecha_entrega = $row['fecha_entrada']? date("d-m-Y", strtotime($row['fecha_entrada'])) : ""; 
       ?>
         <tr>
           <td><?php echo "REQ-" . $row['no_requisicion']; ?></td>
@@ -73,6 +77,7 @@ $query = mysqli_query($conection,"SELECT
           <td><?php echo $fecha_orden ?? ""; ?></td>
           <td><?php echo !empty($row['no_factura']) ?? ""; ?></td>
           <td><?php echo $fecha_factura ?? ""; ?></td>
+          <td><?php echo $fecha_entrega ?? ""; ?></td>
           <td><?php echo $row['tipo_requisicion']; ?></td>
           <td><?php echo $row['observaciones']; ?></td>
           <td><?php echo $row['area_solicitante']; ?></td>
