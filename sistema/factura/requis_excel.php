@@ -35,6 +35,7 @@ $query = mysqli_query($conection,"SELECT
     FROM requisicion_compra r
     LEFT JOIN orden_compra o ON r.no_requisicion = o.no_requisicion
     LEFT JOIN facturas f ON f.no_requisicion = o.no_requisicion
+    LEFT JOIN entradas e ON e.no_requisicion = o.no_requisicion
     ORDER BY r.fecha DESC;
     ");
       $result = mysqli_num_rows($query);
