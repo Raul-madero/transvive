@@ -136,7 +136,7 @@ while ($row = $resultDet->fetch_assoc()) {
     $cell_h   = $line_height * $lines;
 
     // Verificar si cabe en la página, si no, agregar página y reimprimir encabezados
-    if ($pdf->GetY() + $cell_h > $pdf->GetPageHeight() - $pdf->bMargin) {
+    if ($pdf->GetY() + $cell_h > $pdf->GetPageHeight()) {
         $pdf->AddPage();
         imprimirEncabezados($pdf);
     }
