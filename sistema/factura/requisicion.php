@@ -149,11 +149,11 @@ while ($row = $resultDet->fetch_assoc()) {
     $pdf->Cell(13, $cell_h, number_format($row['cantidad'], 2), 1, 0, 'R');
 
     // MultiCell Descripción
-    $pdf->SetXY($x + 13 + $maxwidth, $y);
+    $pdf->SetXY($x + 13, $y);
     $pdf->MultiCell($maxWidth, $line_height, $desc, 1);
 
     // Celdas Marca, E y OM
-    $pdf->SetXY($x + 13 + $maxWidth, $y);
+    // $pdf->SetXY($x + 13 + $maxWidth, $y);
     $pdf->Cell(46, $cell_h, utf8_decode($row['marca']), 1, 0, 'L');
     $pdf->Cell(20, $cell_h, utf8_decode($row['dato_e']), 1, 0, 'C');
     $pdf->Cell(20, $cell_h, utf8_decode($row['dato_om']), 1, 1, 'C');
