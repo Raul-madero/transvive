@@ -150,7 +150,7 @@ while ($row = $resultDet->fetch_assoc()) {
 
     // MultiCell Descripción
     $pdf->SetXY($x + 13, $y);
-    $pdf->Cell($maxWidth, $line_height, $desc, 1);
+    $pdf->MultiCell($maxWidth, $line_height, $desc, 1);
 
     // Celdas Marca, E y OM
     // $pdf->SetXY($w + 13, $y);
