@@ -44,7 +44,7 @@ if (!$entrada) {
     die('Requisición no encontrada.');
 }
 
-$pdf = new PDF('P', 'mm', 'Letter');
+$pdf = new PDF('P', 'mm');
 $pdf->AddPage();
 $pdf->SetAutoPageBreak(true, 20);
 $pdf->SetFont('Arial', '', 8);
@@ -53,7 +53,7 @@ $newDate = date("d-m-Y", strtotime($entrada['fecha']));
 $newDatereq = ($entrada['fecha_requiere'] > '2000-01-01') ? date("d-m-Y", strtotime($entrada['fecha_requiere'])) : '';
 
 if ($entrada['estatus'] == 0) {
-    $pdf->Image("img/anulado.png", 12, 74, 168, 123, "png", 0, 'C');
+    $pdf->Image("img/anulado.png", 12, 74, 168, 123, "png", 0);
 }
 
 $pdf->Cell(144, 5, '', 0);
@@ -119,7 +119,7 @@ $pdf->Cell(46, 5, utf8_decode('Monto Aprox. Autorizado:'), 1);
 $pdf->Cell(20, 5, number_format($entrada['cant_autorizada'], 2), 1, 0, 'R');
 $pdf->Cell(20, 5, '', 1);
 $pdf->Ln();
-$pdf->Cell(189, 5, 'Observaciones:', 1);
+$pdf->Cell(20, 5, 'Observaciones:', 1);
 $pdf->MultiCell(189, 5, utf8_decode($entrada['observaciones']), 1, 'L');
 
 if ($entrada['estatus'] == 0) {
@@ -132,5 +132,6 @@ if (!empty($entrada['firma_autoriza']) && $entrada['estatus'] != 0) {
     $pdf->Image("../../images/firmadig.png", 75, 230, 48, 23, "png", 0, 'C');
 }
 
+$pdf->SetAutoPageBreak(false);
 $pdf->Output();
 ?>
