@@ -47,6 +47,16 @@ class PDF extends FPDF {
     }
 }
 
+// Función para (re)imprimir encabezados de tabla
+function imprimirEncabezados(PDF $pdf) {
+    $pdf->SetFont('Arial', '', 8);
+    $pdf->Cell(13, 5, 'Cantidad', 1, 0, 'C');
+    $pdf->Cell(90, 5, utf8_decode('Descripción'), 1, 0, 'C');
+    $pdf->Cell(46, 5, 'Marca', 1, 0, 'C');
+    $pdf->Cell(20, 5, 'E', 1, 0, 'C');
+    $pdf->Cell(20, 5, 'OM', 1, 1, 'C');
+}
+
 // Validar y obtener ID de requisición
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) {
@@ -86,7 +96,7 @@ if ($entrada['estatus'] == 0) {
     }
 }
 
-// Encabezado de datos
+// Encabezado de datos principales
 $pdf->Cell(144, 5, '', 0);
 $pdf->Cell(20, 5, 'Folio:', 1);
 $pdf->Cell(25, 5, 'REQ-' . $entrada['no_requisicion'], 1, 1, 'R');
@@ -105,43 +115,50 @@ $pdf->Ln(5);
 // Detalle de la requisición
 $sqlDet = "SELECT * FROM detalle_requisicioncompra WHERE folio = ?";
 $stmtDet = $conection->prepare($sqlDet);
-$stmtDet->bind_param('i', $id);
+stmtDet->bind_param('i', $id);
 $stmtDet->execute();
 $resultDet = $stmtDet->get_result();
 $resultr   = $resultDet->num_rows;
 
-$pdf->Cell(13, 5, 'Cantidad', 1, 0, 'C');
-$pdf->Cell(90, 5, utf8_decode('Descripción'), 1, 0, 'C');
-$pdf->Cell(46, 5, 'Marca', 1, 0, 'C');
-$pdf->Cell(20, 5, 'E', 1, 0, 'C');
-$pdf->Cell(20, 5, 'OM', 1, 1, 'C');
+// Imprimir la primera cabecera de detalle
+imprimirEncabezados($pdf);
 
 $line_height = 5;
 $maxWidth    = 90;
 
 while ($row = $resultDet->fetch_assoc()) {
     $pdf->SetFont('Arial', '', 7);
+
+    // Calcular altura de la fila
+    $desc     = utf8_decode($row['descripcion']);
+    $strWidth = $pdf->GetStringWidth($desc);
+    $lines    = max(1, ceil($strWidth / $maxWidth));
+    $cell_h   = $line_height * $lines;
+
+    // Verificar si cabe en la página, si no, agregar página y reimprimir encabezados
+    if ($pdf->GetY() + $cell_h > $pdf->GetPageHeight() - $pdf->bMargin) {
+        $pdf->AddPage();
+        imprimirEncabezados($pdf);
+    }
+
+    // Guardar posición
     $x = $pdf->GetX();
     $y = $pdf->GetY();
 
-    $desc      = utf8_decode($row['descripcion']);
-    $strWidth  = $pdf->GetStringWidth($desc);
-    $lines     = max(1, ceil($strWidth / $maxWidth));
-    $cell_h    = $line_height * $lines;
-
-    // Cantidad
+    // Celda Cantidad
     $pdf->Cell(13, $cell_h, number_format($row['cantidad'], 2), 1, 0, 'R');
 
-    // Descripción
+    // MultiCell Descripción
     $pdf->SetXY($x + 13, $y);
     $pdf->MultiCell($maxWidth, $line_height, $desc, 1);
 
-    // Marca, E y OM
+    // Celdas Marca, E y OM
     $pdf->SetXY($x + 13 + $maxWidth, $y);
     $pdf->Cell(46, $cell_h, utf8_decode($row['marca']), 1, 0, 'L');
     $pdf->Cell(20, $cell_h, utf8_decode($row['dato_e']), 1, 0, 'C');
     $pdf->Cell(20, $cell_h, utf8_decode($row['dato_om']), 1, 1, 'C');
 }
+
 $stmtDet->close();
 
 // Filas vacías hasta 32
@@ -174,7 +191,7 @@ if ($entrada['estatus'] == 0) {
     $pdf->MultiCell(189, 5, utf8_decode($entrada['motivo_cancela']), 1);
 }
 
-// Firma digital
+// Firma digital si aplica
 if (!empty($entrada['firma_autoriza']) && $entrada['estatus'] != 0) {
     $firma = __DIR__ . '/../../images/firmadig.png';
     if (file_exists($firma)) {
