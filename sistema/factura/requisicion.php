@@ -115,7 +115,7 @@ $pdf->Ln(5);
 // Detalle de la requisición
 $sqlDet = "SELECT * FROM detalle_requisicioncompra WHERE folio = ?";
 $stmtDet = $conection->prepare($sqlDet);
-stmtDet->bind_param('i', $id);
+$stmtDet->bind_param('i', $id);
 $stmtDet->execute();
 $resultDet = $stmtDet->get_result();
 $resultr   = $resultDet->num_rows;
