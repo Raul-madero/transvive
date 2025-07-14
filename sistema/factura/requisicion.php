@@ -211,7 +211,7 @@ $pdf->Cell(46,5,utf8_decode('Marca'),1,0,'C','T');
 $pdf->Cell(20,5,utf8_decode('E'),1,0,'C','T');
 $pdf->Cell(20,5,utf8_decode('OM'),1,1,'C','T');
 
-echo $resultr;
+// echo $resultr;
 if ($resultr >= 32) {
     $filas = $result_detalle;
 }else {
