@@ -149,11 +149,6 @@ foreach ($statusMap as $key => $val) {
     $statusCounts[$key] = intval($stmt->get_result()->fetch_assoc()['cnt'] ?? 0);
     $stmt->close();
 }
-    $stmt->bind_param($bindTypes . 'i', ...array_merge($bindParams, [$val]));
-    $stmt->execute();
-    $statusCounts[$key] = intval($stmt->get_result()->fetch_assoc()['cnt'] ?? 0);
-    $stmt->close();
-}
 
 // 5) Conteos por tipo y estatus de mantenimiento (excluyendo valores vacíos)
 $maintStats = [];
