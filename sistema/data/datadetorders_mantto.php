@@ -1,125 +1,197 @@
 <?php
+// fetch_solicitud_mantenimiento.php
+// Responde a DataTables con registros de solicitud_mantenimiento y conteos por estatus y tipo de mantenimiento usando mismos filtros
+
 session_start();
-include '../../conexion.php';
+require_once '../../conexion.php';
 
-global $conection;
+// Validar acción
+if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
+    http_response_code(400);
+    echo json_encode(['error' => 'Acción inválida']);
+    exit;
+}
 
-if ($_REQUEST['action'] === 'fetch_users') {
-    $requestData = $_REQUEST;
-    $start = intval($_REQUEST['start']);
-    $length = intval($_REQUEST['length']);
-    $searchValue = $requestData['search']['value'] ?? '';
+// Parámetros DataTables
+$draw      = intval($_REQUEST['draw'] ?? 0);
+$start     = intval($_REQUEST['start'] ?? 0);
+$length    = intval($_REQUEST['length'] ?? 10);
+$searchRaw = trim($_REQUEST['search']['value'] ?? '');
 
-    $initialDate = $_REQUEST['initial_date'] ?? '';
-    $finalDate = $_REQUEST['final_date'] ?? '';
-    $gender = $_REQUEST['gender'] ?? '';
+// Filtros
+$initialDate = trim($_REQUEST['initial_date'] ?? '');
+$finalDate   = trim($_REQUEST['final_date'] ?? '');
+$gender      = trim($_REQUEST['gender'] ?? '');
 
-    $dateRangeQuery = (!empty($initialDate) && !empty($finalDate)) ? " AND p.fecha BETWEEN ? AND ? " : '';
+// Mapeo estatus
+$statusMap = [
+    'Activa'    => 1,
+    'Cerrada'   => 2,
+    'Cancelada' => 0,
+];
 
-    $statusMapping = [
-        'Activa' => 1,
-        'Cerrada' => 2,
-        'Cancelada' => 0,
-    ];
-    $genderQuery = isset($statusMapping[$gender]) ? " AND p.estatus = ? " : '';
+// Construir WHERE y parámetros
+$whereClauses = ['p.id > 0'];
+$bindParams   = [];
+$bindTypes    = '';
 
-    $columns = [
-        'p.id', 'p.no_orden', 'p.fecha', 'p.usuario', 'p.solicita', 'p.unidad',
-        'p.tipo_trabajo', 'p.tipo_mantenimiento', 'p.trabajo_solicitado', 'p.estatus'
-    ];
-    $columnsOrder = ['id', 'no_orden', 'fecha', 'usuario', 'solicita', 'unidad', 'tipo_trabajo', 'tipo_mantenimiento', 'trabajo_solicitado', 'estatus'];
-
-    $orderColumn = $columnsOrder[$requestData['order'][0]['column']] ?? 'id';
-    $orderDir = $requestData['order'][0]['dir'] === 'desc' ? 'DESC' : 'ASC';
-
-    $query = "SELECT " . implode(',', $columns) . " FROM solicitud_mantenimiento p WHERE p.id > 0";
-
-    $params = [];
-    $paramTypes = '';
-
-    if ($dateRangeQuery) {
-        $query .= $dateRangeQuery;
-        $params[] = $initialDate;
-        $params[] = $finalDate;
-        $paramTypes .= 'ss';
-    }
-
-    if ($genderQuery) {
-        $query .= $genderQuery;
-        $params[] = $statusMapping[$gender];
-        $paramTypes .= 'i';
-    }
-
-    if (!empty($searchValue)) {
-        $query .= " AND (p.no_orden LIKE ? OR p.tipo_mantenimiento LIKE ? OR p.unidad LIKE ? )";
-        $params[] = "%$searchValue%";
-        $params[] = "%$searchValue%";
-        $params[] = "%$searchValue%";
-        $paramTypes .= 'sss';
-    }
-
-    $stmt = $conection->prepare($query);
-
-    if ($stmt) {
-        if (!empty($paramTypes)) {
-            $stmt->bind_param($paramTypes, ...$params);
-        }
-
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $totalData = $result->num_rows;
-
-        $query .= " ORDER BY $orderColumn $orderDir LIMIT ?, ?";
-        $params[] = $start;
-        $params[] = $length;
-        $paramTypes .= 'ii';
-
-        $stmt = $conection->prepare($query);
-        $stmt->bind_param($paramTypes, ...$params);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $data = [];
-        $count = $start;
-
-        while ($row = $result->fetch_assoc()) {
-            $estatusLabels = [
-                1 => '<span class="badge bg-primary">Activa</span>',
-                2 => '<span class="badge bg-success">Cerrada</span>',
-                3 => '<span class="badge bg-warning">En Proceso</span>',
-                4 => '<span class="badge bg-primary">Iniciado</span>',
-                5 => '<span class="badge bg-info">Terminado</span>',
-                0 => '<span class="badge bg-danger">Cancelada</span>'
-            ];
-
-            $estatusNew = $estatusLabels[$row['estatus']] ?? '';
-
-            $data[] = [
-                'counter' => ++$count,
-                'pedidono' => $row['id'],
-                'nopedido' => '<a style="text-decoration:none" href="factura/pedidonw.php?id=' . $row['id'] . '" target="_blank">' . $row['id'] . '</a>',
-                'fechaa' => date('d/m/Y', strtotime($row['fecha'])),
-                'noorden' => $row['no_orden'],
-                'usuario' => $row['usuario'],
-                'solicita' => $row['solicita'],
-                'unidad' => $row['unidad'],
-                'tipojob' => $row['tipo_trabajo'],
-                'tipomantto' => $row['tipo_mantenimiento'],
-                'trabsolicitado' => $row['trabajo_solicitado'],
-                'Datenew' => $row['fecha'],
-                'estatusped' => $estatusNew
-            ];
-        }
-        header('Content-Type: application/json; charset=uitf-8');
-        $json_data = [
-            'draw' => intval($requestData['draw']),
-            'recordsTotal' => $totalData,
-            'recordsFiltered' => $totalData,
-            'records' => $data
-        ];
-        echo json_encode($json_data);
-    } else {
-        echo json_encode(['error' => 'Error en la consulta SQL']);
+// Rango fechas
+if ($initialDate !== '' && $finalDate !== '') {
+    $whereClauses[] = 'p.fecha BETWEEN ? AND ?';
+    $bindParams[]  = $initialDate;
+    $bindParams[]  = $finalDate;
+    $bindTypes    .= 'ss';
+}
+// Búsqueda libre
+if ($searchRaw !== '') {
+    $like = "%{$searchRaw}%";
+    $whereClauses[] = '(
+        p.no_orden LIKE ? OR
+        p.tipo_mantenimiento LIKE ? OR
+        p.unidad LIKE ? OR
+        p.usuario LIKE ? OR
+        p.solicita LIKE ?
+    )';
+    for ($i = 0; $i < 5; $i++) {
+        $bindParams[] = $like;
+        $bindTypes   .= 's';
     }
 }
+// Filtro estatus
+if (isset($statusMap[$gender])) {
+    $whereClauses[] = 'p.estatus = ?';
+    $bindParams[]  = $statusMap[$gender];
+    $bindTypes    .= 'i';
+}
+$whereSQL = 'WHERE ' . implode(' AND ', $whereClauses);
+
+// 1) Conteo total filtrado
+$stmt = $conection->prepare("SELECT COUNT(*) AS cnt FROM solicitud_mantenimiento p {$whereSQL}");
+if ($bindTypes) {
+    $stmt->bind_param($bindTypes, ...$bindParams);
+}
+$stmt->execute();
+$recordsFiltered = intval($stmt->get_result()->fetch_assoc()['cnt'] ?? 0);
+$stmt->close();
+
+// 2) Carga de datos paginados
+$columnsOrder = [
+    0 => 'p.id',
+    1 => 'p.no_orden',
+    2 => 'p.fecha',
+    3 => 'p.usuario',
+    4 => 'p.solicita',
+    5 => 'p.unidad',
+    6 => 'p.tipo_trabajo',
+    7 => 'p.tipo_mantenimiento',
+    8 => 'p.trabajo_solicitado',
+    9 => 'p.estatus',
+];
+$orderIdx = intval($_REQUEST['order'][0]['column'] ?? 0);
+$orderDir = ($_REQUEST['order'][0]['dir'] ?? 'asc') === 'desc' ? 'DESC' : 'ASC';
+$orderCol = $columnsOrder[$orderIdx] ?? 'p.id';
+
+$sqlData = <<<SQL
+SELECT p.id, p.no_orden, p.fecha, p.usuario, p.solicita,
+       p.unidad, p.tipo_trabajo, p.tipo_mantenimiento,
+       p.trabajo_solicitado, p.estatus
+FROM solicitud_mantenimiento p
+{$whereSQL}
+ORDER BY {$orderCol} {$orderDir}
+LIMIT ?, ?
+SQL;
+$stmt = $conection->prepare($sqlData);
+$paramTypes = $bindTypes . 'ii';
+$params     = array_merge($bindParams, [$start, $length]);
+$stmt->bind_param($paramTypes, ...$params);
+$stmt->execute();
+$dataResult = $stmt->get_result();
+
+// 3) Formatear registros
+$data    = [];
+$counter = $start;
+$labelMap = [
+    1 => '<span class="badge bg-primary">Activa</span>',
+    2 => '<span class="badge bg-success">Cerrada</span>',
+    3 => '<span class="badge bg-warning">En Proceso</span>',
+    4 => '<span class="badge bg-info">Iniciado</span>',
+    5 => '<span class="badge bg-secondary">Terminado</span>',
+    0 => '<span class="badge bg-danger">Cancelada</span>',
+];
+while ($row = $dataResult->fetch_assoc()) {
+    $data[] = [
+        'counter'        => ++$counter,
+        'pedidono'       => $row['id'],
+        'nopedido'       => '<a href="factura/pedidonw.php?id=' . $row['id'] . '" target="_blank">' . $row['id'] . '</a>',
+        'fechaa'         => date('d/m/Y', strtotime($row['fecha'])),
+        'noorden'        => htmlspecialchars($row['no_orden'] ?? ''),
+        'usuario'        => htmlspecialchars($row['usuario'] ?? ''),
+        'solicita'       => htmlspecialchars($row['solicita'] ?? ''),
+        'unidad'         => htmlspecialchars($row['unidad'] ?? ''),
+        'tipojob'        => htmlspecialchars($row['tipo_trabajo'] ?? ''),
+        'tipomantto'     => htmlspecialchars($row['tipo_mantenimiento'] ?? ''),
+        'trabsolicitado' => htmlspecialchars($row['trabajo_solicitado'] ?? ''),
+        'Datenew'        => $row['fecha'],
+        'estatusped'     => $labelMap[$row['estatus']] ?? '',
+    ];
+}
+$stmt->close();
+
+// 4) Conteos por estatus global
+$statusCounts = [];
+foreach ($statusMap as $key => $val) {
+    $stmt = $conection->prepare(
+        "SELECT COUNT(*) AS cnt FROM solicitud_mantenimiento p {$whereSQL} AND p.estatus = ?"
+    );
+    $stmt->bind_param($bindTypes . 'i', ...array_merge($bindParams, [$val]));
+    $stmt->execute();
+    $statusCounts[$key] = intval($stmt->get_result()->fetch_assoc()['cnt'] ?? 0);
+    $stmt->close();
+}
+
+// 5) Conteos por tipo y estatus de mantenimiento (excluyendo valores vacíos)
+$maintStats = [];
+$sqlCombo = <<<SQL
+SELECT p.tipo_mantenimiento AS tipo, p.estatus, COUNT(*) AS cnt
+FROM solicitud_mantenimiento p
+{$whereSQL}
+AND p.tipo_mantenimiento IS NOT NULL AND p.tipo_mantenimiento <> ''
+GROUP BY p.tipo_mantenimiento, p.estatus
+SQL;
+$stmt = $conection->prepare($sqlCombo);
+if ($bindTypes) {
+    $stmt->bind_param($bindTypes, ...$bindParams);
+}
+$stmt->execute();
+$resCombo = $stmt->get_result();
+while ($r = $resCombo->fetch_assoc()) {
+    $tipo    = $r['tipo'];
+    if ($tipo === "NO APLICA") {
+        $tipo = 'NOAPLICA'; // Agrupar sin clasificar
+    }
+    $estatus = $r['estatus'];
+    if (!isset($maintStats[$tipo])) {
+        $maintStats[$tipo] = ['Activa'=>0, 'Cerrada'=>0, 'Cancelada'=>0];
+    }
+    switch ($estatus) {
+        case 1: $maintStats[$tipo]['Activa']   = intval($r['cnt']); break;
+        case 2: $maintStats[$tipo]['Cerrada']  = intval($r['cnt']); break;
+        case 0: $maintStats[$tipo]['Cancelada']= intval($r['cnt']); break;
+    }
+}
+$stmt->close();
+
+// 6) Respuesta JSON
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode([
+    'draw'                      => $draw,
+    'recordsTotal'              => $recordsFiltered,
+    'recordsFiltered'           => $recordsFiltered,
+    'records'                   => $data,
+    'activas'                   => $statusCounts['Activa'],
+    'cerradas'                  => $statusCounts['Cerrada'],
+    'canceladas'                => $statusCounts['Cancelada'],
+    'tipoMantenimientoEstatus'  => $maintStats,
+]);
+exit;
 ?>
