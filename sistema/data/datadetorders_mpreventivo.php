@@ -2,144 +2,139 @@
 session_start();
 include '../../conexion.php';
 
-
-global $conection;
-
-if($_REQUEST['action'] == 'fetch_users'){
-
-    $requestData = $_REQUEST;
-    $start = $_REQUEST['start'];
-
-    $initial_date = isset($_REQUEST['initial_date']) ? $_REQUEST['initial_date'] : '';
-    $final_date = isset($_REQUEST['final_date']) ? $_REQUEST['final_date'] : '';
-    $gender = isset($_REQUEST['gender']) ? $_REQUEST['gender'] : '';
-
-    $date_range = "";
-
-    if(!empty($initial_date) && !empty($final_date)){
-        $date_range = " AND p.fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    }else{
-        $date_range = "";
-    }
-
-    if($gender != ""){
-        if ($gender == "Activa") {
-         $gender = 1;   
-        }else {
-            if ($gender == "Cerrada") {
-              $gender = 2;
-            }else {
-                if ($gender == "Cancelada") {
-                    $gender = 0;
-                }
-            }
-        }
-
-        $gender = " AND p.estatus = $gender ";
-    }
-
-    $columns = ' p.id, p.no_orden, p.fecha, p.hora, p.solicitada, p.unidad, p.tipo_trabajo, p.kilometraje, p.estatus ';
-    $table = ' mantenimiento_preventivo p ' ;
-    $where = " WHERE p.id > 0 ".$date_range.$gender ;
-
-    $columns_order = array(
-        0 => 'id',
-        1 => 'no_orden',
-        2 => 'fecha',
-        3 => 'hora',
-        4 => 'solicitada',
-        5 => 'unidad',
-        6 => 'tipo_trabajo',
-        7 => 'kilometraje',
-        8 => 'estatus'
-    );
-
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
-
-    $result = mysqli_query($conection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
-
-    if( !empty($requestData['search']['value']) ) {
-        $sql.="AND ( no_orden LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR solicitada LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR unidad LIKE '%".$requestData['search']['value']."%'  )";
-       
-        
-    }
-
-    $result = mysqli_query($conection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
-
-    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
-
-    if($requestData['length'] != "-1"){
-        $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
-    }
-
-    $result = mysqli_query($conection, $sql);
-    $data = array();
-    $counter = $start;
-
-    $count = $start;
-    while($row = mysqli_fetch_array($result)){
-        if ($row['estatus'] == 1){
-        $Estatusnew = '<span class="label label-primary">Activa</span>'; 
-    }else{
-        if ($row['estatus'] == 2){
-           $Estatusnew = '<span class="label label-success">Cerrada</span>';
-        }else{
-            if ($row['estatus'] == 3) {
-              $Estatusnew = '<span class="label label-danger">Cancelado</span>';
-            }else {
-                if ($row['estatus'] == 4) {
-                 $Estatusnew = '<span class="label label-primary">Iniciado</span>';
-                }else {
-                 if ($row['estatus'] == 5) {
-                  $Estatusnew = '<span class="label label-info">Terminado</span>';
-                 }else {
-                  $Estatusnew = '<span class="label label-success">Cancelada</span>';
-                 } 
-                }     
-        }
-    }
-    }
-
-        $count++;
-        $nestedData = array();
-
-        $nestedData['counter'] = $count;
-        $nestedData['pedidono'] =  $row["id"];
-
-        $nestedData['nopedido'] = '<a style="text-decoration:none" href="factura/pedidonw.php?id='.($row["id"]).'" target="_blank">'.($row["id"]).'</a>';
-        $time = strtotime($row["fecha"]);
-        $time2 = strtotime($row["hora"]);
-        $nestedData['fechaa'] = date('d/m/Y', $time);
-        $nestedData['horaa'] = date('h:i', $time2);
-        $nestedData['noorden'] = $row["no_orden"];
-        $nestedData['usuario'] = $row['usuario'];
-        $nestedData['solicita'] = $row["solicitada"];
-
-        $nestedData['unidad'] = $row["unidad"];
-        $nestedData['tipojob'] = $row["tipo_trabajo"];
-      
-        $nestedData['kilometraje'] = $row["kilometraje"];       
-        $nestedData['Datenew'] = $row["fecha"];
-
-        $nestedData['estatusped'] = $Estatusnew;
-
-        $data[] = $nestedData;
-    }
-
-    $json_data = array(
-        "draw"            => intval( $requestData['draw'] ),
-        "recordsTotal"    => intval( $totalData),
-        "recordsFiltered" => intval( $totalFiltered ),
-        "records"         => $data
-    );
-
-    echo json_encode($json_data);
+if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
+    echo json_encode(['error' => 'Acción no válida.']);
+    exit;
 }
 
+$requestData = $_REQUEST;
+$start = (int)($requestData['start'] ?? 0);
+$length = (int)($requestData['length'] ?? 10);
+$orderColumnIndex = (int)($requestData['order'][0]['column'] ?? 0);
+$orderDir = $requestData['order'][0]['dir'] === 'desc' ? 'DESC' : 'ASC';
+
+$initial_date = $requestData['initial_date'] ?? '';
+$final_date = $requestData['final_date'] ?? '';
+$gender = $requestData['gender'] ?? '';
+
+$whereClauses = ["p.id > 0"];
+
+if (!empty($initial_date) && !empty($final_date)) {
+    $whereClauses[] = "p.fecha BETWEEN '$initial_date' AND '$final_date'";
+}
+
+$estatusMap = ['Activa' => 1, 'Cerrada' => 2, 'Cancelada' => 0];
+if (!empty($gender) && isset($estatusMap[$gender])) {
+    $whereClauses[] = "p.estatus = {$estatusMap[$gender]}";
+}
+
+$whereSqlBase = ' WHERE ' . implode(' AND ', $whereClauses);
+$columnsOrder = [
+    0 => 'p.id',
+    1 => 'p.no_orden',
+    2 => 'p.fecha',
+    3 => 'p.hora',
+    4 => 'p.solicitada',
+    5 => 'p.unidad',
+    6 => 'p.tipo_trabajo',
+    7 => 'p.kilometraje',
+    8 => 'p.estatus'
+];
+
+$sql = "SELECT p.id FROM mantenimiento_preventivo p $whereSqlBase";
+$totalResult = mysqli_query($conection, $sql);
+$totalData = mysqli_num_rows($totalResult);
+$totalFiltered = $totalData;
+
+$searchValue = $conection->real_escape_string($requestData['search']['value'] ?? '');
+$whereSqlSearch = $whereSqlBase;
+
+if (!empty($searchValue)) {
+    $whereSqlSearch .= " AND (p.no_orden LIKE '%$searchValue%' 
+                             OR p.solicitada LIKE '%$searchValue%' 
+                             OR p.unidad LIKE '%$searchValue%')";
+}
+
+$sql = "SELECT p.id FROM mantenimiento_preventivo p $whereSqlSearch";
+$filterResult = mysqli_query($conection, $sql);
+$totalFiltered = mysqli_num_rows($filterResult);
+
+$sql = "
+    SELECT p.id, p.no_orden, p.fecha, p.hora, p.solicitada, p.unidad, p.tipo_trabajo, p.kilometraje, p.estatus 
+    FROM mantenimiento_preventivo p
+    $whereSqlSearch
+    ORDER BY {$columnsOrder[$orderColumnIndex]} $orderDir
+    LIMIT $start, $length
+";
+
+$result = mysqli_query($conection, $sql);
+$data = [];
+$count = $start;
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $estatusLabels = [
+        1 => '<span class="label label-primary">Activa</span>',
+        2 => '<span class="label label-success">Cerrada</span>',
+        3 => '<span class="label label-danger">Cancelado</span>',
+        4 => '<span class="label label-primary">Iniciado</span>',
+        5 => '<span class="label label-info">Terminado</span>',
+        0 => '<span class="label label-success">Cancelada</span>'
+    ];
+    $estatusHtml = $estatusLabels[$row['estatus']] ?? '<span class="label label-default">Desconocido</span>';
+
+    $count++;
+    $nestedData = [
+        'counter'     => $count,
+        'pedidono'    => $row["id"],
+        'nopedido'    => '<a style="text-decoration:none" href="factura/pedidonw.php?id=' . $row["id"] . '" target="_blank">' . $row["id"] . '</a>',
+        'fechaa'      => date('d/m/Y', strtotime($row["fecha"])),
+        'horaa'       => date('H:i', strtotime($row["hora"])),
+        'noorden'     => $row["no_orden"],
+        'usuario'     => $row['usuario'] ?? '',
+        'solicita'    => $row["solicitada"],
+        'unidad'      => $row["unidad"],
+        'tipojob'     => $row["tipo_trabajo"],
+        'kilometraje' => $row["kilometraje"],
+        'Datenew'     => $row["fecha"],
+        'estatusped'  => $estatusHtml
+    ];
+
+    $data[] = $nestedData;
+}
+
+// ---------- Conteo por estatus aplicando filtros existentes + búsqueda ----------
+$whereForCounts = array_filter($whereClauses, fn($clause) => stripos($clause, 'estatus') === false);
+$whereBaseCounts = ' WHERE ' . implode(' AND ', $whereForCounts);
+
+if (!empty($searchValue)) {
+    $whereBaseCounts .= " AND (p.no_orden LIKE '%$searchValue%' 
+                             OR p.solicitada LIKE '%$searchValue%' 
+                             OR p.unidad LIKE '%$searchValue%')";
+}
+
+function getCountByStatus($conection, $whereBaseCounts, $estatus)
+{
+    $sql = "SELECT COUNT(*) as total FROM mantenimiento_preventivo p $whereBaseCounts AND p.estatus = $estatus";
+    $result = mysqli_query($conection, $sql);
+    $row = mysqli_fetch_assoc($result);
+    return (int)($row['total'] ?? 0);
+}
+
+$count_activa = getCountByStatus($conection, $whereBaseCounts, 1);
+$count_cerrada = getCountByStatus($conection, $whereBaseCounts, 2);
+$count_cancelada = getCountByStatus($conection, $whereBaseCounts, 0);
+
+$json_data = [
+    "draw"            => (int)($requestData['draw'] ?? 0),
+    "recordsTotal"    => $totalData,
+    "recordsFiltered" => $totalFiltered,
+    "estatus_counts"  => [
+        "activa"    => $count_activa,
+        "cerrada"   => $count_cerrada,
+        "cancelada" => $count_cancelada
+    ],
+    "records"         => $data
+];
+
+echo json_encode($json_data);
 ?>

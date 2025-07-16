@@ -110,6 +110,7 @@ session_start();
                                     <div class="card">      
                                         <!-- /.card-header -->
                                         <div class="card-body">
+                                            
                                             <table>
                                                 <tr>
                                                     <td>
@@ -144,7 +145,47 @@ session_start();
                                             </table>   
                 
                                             <br>
-                
+                                            <div class="row mx-auto">
+                                                <div class="mb-3 font-weight-bold col-2 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto">
+                                                    <span id="activas" class="badge bg-primary"></span>
+                                                </div>
+                                                <div class="mb-3 font-weight-bold col-2 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto">
+                                                    <span id="cerradas" class="badge bg-success"></span>
+                                                </div>
+                                                <div class="mb-3 font-weight-bold col-2 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto">
+                                                    <span id="canceladas" class="badge bg-danger"></span>
+                                                </div>
+                                                <div class="mb-3 font-weight-bold col-2 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto">
+                                                    <span id="total" class="badge bg-secondary"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row mx-auto">
+                                                <div id="correctivo" class="mb-3 font-weight-bold col-2 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto">
+                                                    <h5>Correctivo</h5>
+                                                    <span id="correctivo_activas" class="badge bg-primary"></span>
+                                                    <span id="correctivo_cerrada" class="badge bg-success"></span>
+                                                    <span class="badge bg-danger"></span>
+                                                    <span id="correctivo_cancelada" class="badge bg-danger"></span>
+                                                </div>
+                                                <div id="preventivo" class="mb-3 font-weight-bold col-2 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto">
+                                                    <h5>Preventivo</h5>
+                                                    <span id="preventivo_activa" class="badge bg-primary"></span>
+                                                    <span id="preventivo_cerrada" class="badge bg-success"></span>
+                                                    <span id="preventivo_cancelada" class="badge bg-danger"></span>
+                                                </div>
+                                                <div id="incidencia" class="mb-3 font-weight-bold col-2 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto">
+                                                    <h5>Incidencia</h5>
+                                                    <span id="incidencia_activas" class="badge bg-primary"></span>
+                                                    <span id="incidencia_cerrada" class="badge bg-success"></span>
+                                                    <span id="incidencia_cancelada" class="badge bg-danger"></span>
+                                                </div>
+                                                <div id="sinClasificar" class="mb-3 font-weight-bold col-2 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto">
+                                                    <h5>Sin Clasificar</h5>
+                                                    <span id="sinClasificar_activas" class="badge bg-primary"></span>
+                                                    <span id="sinClasificar_cerrada" class="badge bg-success"></span>
+                                                    <span id="sinClasificar_cancelada" class="badge bg-danger"></span>
+                                                </div>
+                                            </div>
                                             <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
@@ -197,41 +238,74 @@ session_start();
 
  
         <script type="text/javascript">
+            $(document).ready(function() {
+                console.log("Document ready");
+                //Primera carga con los filtros vacios
+                load_data("", "", "")
+            })
 
-            load_data(); // first load
-
-            function load_data(initial_date, final_date, gender){
+            function load_data(initial_date, final_date, gender) {
                 var ajax_url = "data/datadetorders_mantto.php";
+
+                //Si ya existe la tabla la destruimos antes de inicializar
+                if($.fn.DataTable.isDataTable('#fetch_generated_wills')) {
+                    $('#fetch_generated_wills').DataTable().destroy()
+                }
+
+                //Generamos la tabla
                 $('#fetch_generated_wills').DataTable({
-                    "order": [[ 0, "desc" ]],
-                    dom: 'Bfrtip',
-                    lengthMenu: [
-                        [20, 25, 50, -1],
-                        ['20 rows', '25 rows', '50 rows', 'Show all']
-                    ],
+                    destroy: true,
+                    order: [[1, "desc"]],
+                    dom: 'Bftrip',
+                    // lengthMenu: [
+                    //     [10, 25, 50, 100, -1],
+                    //     [10, 25, 50, 100, "Todos"]
+                    // ],
                     buttons: [
+                        'copyHtml5',
                         'excelHtml5',
+                        'csvHtml5',
                         'pageLength'
                     ],
-                    "processing": true,
-                    "serverSide": true,
-                    "stateSave": true,
-                    "responsive": true,
-                    "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-                    "ajax" : {
-                        "url" : ajax_url,
-                        "dataType": "json",
-                        "type": "POST",
-                        "data" : { 
-                            "action" : "fetch_users", 
-                            "initial_date" : initial_date, 
-                            "final_date" : final_date,
-                            "gender" : gender 
+                    processing: true,
+                    serverSide: true,
+                    stateSave: true,
+                    responsive: true,
+                    ajax: {
+                        url: ajax_url,
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            action: "fetch_users",
+                            initial_date: initial_date,
+                            final_date: final_date,
+                            gender: gender
                         },
-                        "dataSrc": "records"
+                        dataSrc: function(json) {
+                            console.log("Data received:", json.tipoMantenimientoEstatus);
+                            // Aqui actualizamos los contadores antes del primer draw
+                            $('#activas').html("Activas: " + json.activas)
+                            $('#cerradas').html("Cerradas: " + json.cerradas)
+                            $('#canceladas').html("Canceladas: " + json.canceladas)
+                            $('#total').html("Total: " + (json.activas + json.cerradas + json.canceladas))
+                            const stats = json.tipoMantenimientoEstatus
+                            $('#sinClasificar_activas').html(stats.NOAPLICA.Activa)
+                            $('#sinClasificar_cerrada').html(stats.NOAPLICA.Cerrada)
+                            $('#sinClasificar_cancelada').html(stats.NOAPLICA.Cancelada)
+                            $('#correctivo_activas').html(stats.CORRECTIVO.Activa)
+                            $('#correctivo_cerrada').html(stats.CORRECTIVO.Cerrada)
+                            $('#correctivo_cancelada').html(stats.CORRECTIVO.Cancelada)
+                            $('#preventivo_activa').html(stats.PREVENTIVO.Activa)
+                            $('#preventivo_cerrada').html(stats.PREVENTIVO.Cerrada)
+                            $('#preventivo_cancelada').html(stats.PREVENTIVO.Cancelada)
+                            $('#incidencia_activas').html(stats.INCIDENTE.Activa)
+                            $('#incidencia_cerrada').html( stats.INCIDENTE.Cerrada)
+                            $('#incidencia_cancelada').html(stats.INCIDENTE.Cancelada)
+                            return json.records
+                        }
                     },
-                    "columns": [
-                        { "data" : "pedidono", "width": "3%", className: "text-right" },
+                    columns: [
+                        {data: "pedidono", width: "3%", className: "text-center"},
                         { "data" : "noorden", "width": "5%" },
                         { "data" : "fechaa", "width": "5%", className: "text-right", "orderable": false},
                         { "data" : "unidad", "width": "5%", "orderable": false},
@@ -240,7 +314,6 @@ session_start();
                         { "data" : "tipomantto", "width": "8%" },
                         { "data" : "trabsolicitado", "width": "12%" },
                         { "data" : "estatusped", "width": "8%", "orderable":false }
-                    
                         <?php 
                             if ($_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 32 ) { ?>
                                 ,{
@@ -263,14 +336,9 @@ session_start();
                                 }
                         <?php }?>       
                     ],
-                    "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
-                    "buttons": [
-                        'copyHtml5',
-                        'excelHtml5',
-                        'csvHtml5'
-                    ],
-                }); 
-            }  
+                    // sDom: "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B"
+                })
+            }
 
             $("#filter").click(function(){
                 var initial_date = $("#initial_date").val();
