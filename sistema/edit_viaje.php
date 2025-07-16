@@ -113,7 +113,7 @@ session_start();
   include "../conexion.php";
 
 
-  $sqlopr   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name_operador from empleados ORDER BY apellido_paterno";
+  $sqlopr   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name_operador from empleados WHERE estatus = 1 ORDER BY apellido_paterno";
   $queryopr = mysqli_query($conection, $sqlopr);
   $filasopr = mysqli_fetch_all($queryopr, MYSQLI_ASSOC); 
 
