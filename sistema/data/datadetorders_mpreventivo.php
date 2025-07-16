@@ -103,7 +103,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 // ---------- Conteo por estatus aplicando filtros existentes + búsqueda ----------
-$whereForCounts = array_filter($whereClauses, fn($clause) => stripos($clause, 'estatus') === false);
+$whereForCounts = array_filter($whereClauses, function ($clause) {
+    return stripos($clause, 'estatus') === false;
+});
+
 $whereBaseCounts = ' WHERE ' . implode(' AND ', $whereForCounts);
 
 if (!empty($searchValue)) {
