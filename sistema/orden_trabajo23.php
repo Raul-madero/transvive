@@ -289,6 +289,7 @@ session_start();
                             $('#canceladas').html("Canceladas: " + json.canceladas)
                             $('#total').html("Total: " + (json.activas + json.cerradas + json.canceladas))
                             const stats = json.tipoMantenimientoEstatus
+                            const safe = (obj, tipo, estatus) => (obj[tipo]?.[estatus] ?? 0);
                             $('#sinClasificar_activas').html(safe(stats.NOAPLICA.Activa))
                             $('#sinClasificar_cerrada').html(safe(stats.NOAPLICA.Cerrada))
                             $('#sinClasificar_cancelada').html(safe(stats.NOAPLICA.Cancelada))
