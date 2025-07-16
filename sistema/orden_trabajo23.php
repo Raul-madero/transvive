@@ -290,18 +290,21 @@ session_start();
                             $('#total').html("Total: " + (json.activas + json.cerradas + json.canceladas))
                             const stats = json.tipoMantenimientoEstatus
                             const safe = (obj, tipo, estatus) => (obj[tipo]?.[estatus] ?? 0);
-                            $('#sinClasificar_activas').html(safe(stats.NOAPLICA.Activa))
-                            $('#sinClasificar_cerrada').html(safe(stats.NOAPLICA.Cerrada))
-                            $('#sinClasificar_cancelada').html(safe(stats.NOAPLICA.Cancelada))
-                            $('#correctivo_activas').html(safe(stats.CORRECTIVO.Activa))
-                            $('#correctivo_cerrada').html(safe(stats.CORRECTIVO.Cerrada))
-                            $('#correctivo_cancelada').html(safe(stats.CORRECTIVO.Cancelada))
-                            $('#preventivo_activa').html(safe(stats.PREVENTIVO.Activa))
-                            $('#preventivo_cerrada').html(safe(stats.PREVENTIVO.Cerrada))
-                            $('#preventivo_cancelada').html(safe(stats.PREVENTIVO.Cancelada))
-                            $('#incidencia_activas').html(safe(stats.INCIDENTE.Activa))
-                            $('#incidencia_cerrada').html( safe(stats.INCIDENTE.Cerrada))
-                            $('#incidencia_cancelada').html(safe(stats.INCIDENTE.Cancelada))
+                            $('#sinClasificar_activas').html(safe(stats, 'NOAPLICA', 'Activa'));
+                            $('#sinClasificar_cerrada').html(safe(stats, 'NOAPLICA', 'Cerrada'));
+                            $('#sinClasificar_cancelada').html(safe(stats, 'NOAPLICA', 'Cancelada'));
+
+                            $('#correctivo_activas').html(safe(stats, 'CORRECTIVO', 'Activa'));
+                            $('#correctivo_cerrada').html(safe(stats, 'CORRECTIVO', 'Cerrada'));
+                            $('#correctivo_cancelada').html(safe(stats, 'CORRECTIVO', 'Cancelada'));
+
+                            $('#preventivo_activa').html(safe(stats, 'PREVENTIVO', 'Activa'));
+                            $('#preventivo_cerrada').html(safe(stats, 'PREVENTIVO', 'Cerrada'));
+                            $('#preventivo_cancelada').html(safe(stats, 'PREVENTIVO', 'Cancelada'));
+
+                            $('#incidencia_activas').html(safe(stats, 'INCIDENTE', 'Activa'));
+                            $('#incidencia_cerrada').html(safe(stats, 'INCIDENTE', 'Cerrada'));
+                            $('#incidencia_cancelada').html(safe(stats, 'INCIDENTE', 'Cancelada'));
                             return json.records
                         }
                     },
