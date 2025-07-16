@@ -57,6 +57,9 @@ if ($searchRaw !== '') {
         $bindTypes   .= 's';
     }
 }
+$whereClausesForType = $whereClauses;
+$whereSQLForType = 'WHERE ' . implode(' AND ', $whereClausesForType);
+
 // Filtro estatus
 if (isset($statusMap[$gender])) {
     $whereClauses[] = 'p.estatus = ?';
@@ -155,7 +158,7 @@ $maintStats = [];
 $sqlCombo = <<<SQL
 SELECT p.tipo_mantenimiento AS tipo, p.estatus, COUNT(*) AS cnt
 FROM solicitud_mantenimiento p
-{$whereSQL}
+{$whereSQLForType}
 AND p.tipo_mantenimiento IS NOT NULL AND p.tipo_mantenimiento <> ''
 GROUP BY p.tipo_mantenimiento, p.estatus
 SQL;
