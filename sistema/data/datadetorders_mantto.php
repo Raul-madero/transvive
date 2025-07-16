@@ -138,11 +138,17 @@ while ($row = $dataResult->fetch_assoc()) {
 $stmt->close();
 
 // 4) Conteos por estatus global
-$statusCounts = [];
+$statusCounts = ['Activa' => 0, 'Cerrada' => 0, 'Cancelada' => 0];
+
 foreach ($statusMap as $key => $val) {
     $stmt = $conection->prepare(
         "SELECT COUNT(*) AS cnt FROM solicitud_mantenimiento p {$whereSQL} AND p.estatus = ?"
     );
+    $stmt->bind_param($bindTypes . 'i', ...array_merge($bindParams, [$val]));
+    $stmt->execute();
+    $statusCounts[$key] = intval($stmt->get_result()->fetch_assoc()['cnt'] ?? 0);
+    $stmt->close();
+}
     $stmt->bind_param($bindTypes . 'i', ...array_merge($bindParams, [$val]));
     $stmt->execute();
     $statusCounts[$key] = intval($stmt->get_result()->fetch_assoc()['cnt'] ?? 0);
