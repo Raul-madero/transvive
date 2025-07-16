@@ -1,48 +1,39 @@
 <?php
-// fetch_solicitud_mantenimiento.php
-// Responde a DataTables con registros de solicitud_mantenimiento y conteos por estatus y tipo de mantenimiento usando mismos filtros
-
 session_start();
 require_once '../../conexion.php';
 
-// Validar acción
 if (!isset($_REQUEST['action']) || $_REQUEST['action'] !== 'fetch_users') {
     http_response_code(400);
     echo json_encode(['error' => 'Acción inválida']);
     exit;
 }
 
-// Parámetros DataTables
 $draw      = intval($_REQUEST['draw'] ?? 0);
 $start     = intval($_REQUEST['start'] ?? 0);
 $length    = intval($_REQUEST['length'] ?? 10);
 $searchRaw = trim($_REQUEST['search']['value'] ?? '');
 
-// Filtros
 $initialDate = trim($_REQUEST['initial_date'] ?? '');
 $finalDate   = trim($_REQUEST['final_date'] ?? '');
 $gender      = trim($_REQUEST['gender'] ?? '');
 
-// Mapeo estatus
 $statusMap = [
     'Activa'    => 1,
     'Cerrada'   => 2,
     'Cancelada' => 0,
 ];
 
-// Construir WHERE y parámetros
 $whereClauses = ['p.id > 0'];
 $bindParams   = [];
 $bindTypes    = '';
 
-// Rango fechas
 if ($initialDate !== '' && $finalDate !== '') {
     $whereClauses[] = 'p.fecha BETWEEN ? AND ?';
     $bindParams[]  = $initialDate;
     $bindParams[]  = $finalDate;
     $bindTypes    .= 'ss';
 }
-// Búsqueda libre
+
 if ($searchRaw !== '') {
     $like = "%{$searchRaw}%";
     $whereClauses[] = '(
@@ -57,10 +48,14 @@ if ($searchRaw !== '') {
         $bindTypes   .= 's';
     }
 }
+
+// Guarda los filtros sin estatus para contar tipo de mantenimiento correctamente
 $whereClausesForType = $whereClauses;
 $whereSQLForType = 'WHERE ' . implode(' AND ', $whereClausesForType);
+$bindParamsForType = $bindParams;
+$bindTypesForType = $bindTypes;
 
-// Filtro estatus
+// Filtro de estatus para la tabla principal
 if (isset($statusMap[$gender])) {
     $whereClauses[] = 'p.estatus = ?';
     $bindParams[]  = $statusMap[$gender];
@@ -68,7 +63,7 @@ if (isset($statusMap[$gender])) {
 }
 $whereSQL = 'WHERE ' . implode(' AND ', $whereClauses);
 
-// 1) Conteo total filtrado
+// Conteo total filtrado
 $stmt = $conection->prepare("SELECT COUNT(*) AS cnt FROM solicitud_mantenimiento p {$whereSQL}");
 if ($bindTypes) {
     $stmt->bind_param($bindTypes, ...$bindParams);
@@ -77,7 +72,7 @@ $stmt->execute();
 $recordsFiltered = intval($stmt->get_result()->fetch_assoc()['cnt'] ?? 0);
 $stmt->close();
 
-// 2) Carga de datos paginados
+// Carga de datos paginados
 $columnsOrder = [
     0 => 'p.id',
     1 => 'p.no_orden',
@@ -110,7 +105,6 @@ $stmt->bind_param($paramTypes, ...$params);
 $stmt->execute();
 $dataResult = $stmt->get_result();
 
-// 3) Formatear registros
 $data    = [];
 $counter = $start;
 $labelMap = [
@@ -140,9 +134,8 @@ while ($row = $dataResult->fetch_assoc()) {
 }
 $stmt->close();
 
-// 4) Conteos por estatus global
+// Conteos por estatus global
 $statusCounts = ['Activa' => 0, 'Cerrada' => 0, 'Cancelada' => 0];
-
 foreach ($statusMap as $key => $val) {
     $stmt = $conection->prepare(
         "SELECT COUNT(*) AS cnt FROM solicitud_mantenimiento p {$whereSQL} AND p.estatus = ?"
@@ -153,7 +146,7 @@ foreach ($statusMap as $key => $val) {
     $stmt->close();
 }
 
-// 5) Conteos por tipo y estatus de mantenimiento (excluyendo valores vacíos)
+// Conteos por tipo y estatus de mantenimiento (sin estatus filtrado)
 $maintStats = [];
 $sqlCombo = <<<SQL
 SELECT p.tipo_mantenimiento AS tipo, p.estatus, COUNT(*) AS cnt
@@ -163,15 +156,15 @@ AND p.tipo_mantenimiento IS NOT NULL AND p.tipo_mantenimiento <> ''
 GROUP BY p.tipo_mantenimiento, p.estatus
 SQL;
 $stmt = $conection->prepare($sqlCombo);
-if ($bindTypes) {
-    $stmt->bind_param($bindTypes, ...$bindParams);
+if ($bindTypesForType) {
+    $stmt->bind_param($bindTypesForType, ...$bindParamsForType);
 }
 $stmt->execute();
 $resCombo = $stmt->get_result();
 while ($r = $resCombo->fetch_assoc()) {
     $tipo    = $r['tipo'];
     if ($tipo === "NO APLICA") {
-        $tipo = 'NOAPLICA'; // Agrupar sin clasificar
+        $tipo = 'NOAPLICA';
     }
     $estatus = $r['estatus'];
     if (!isset($maintStats[$tipo])) {
@@ -185,7 +178,6 @@ while ($r = $resCombo->fetch_assoc()) {
 }
 $stmt->close();
 
-// 6) Respuesta JSON
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'draw'                      => $draw,
