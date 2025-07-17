@@ -184,15 +184,13 @@ var table = $('#example1').dataTable({
 { mData: 'Hmixto1' ,"sWidth": "20px"},
 { mData: 'dias' ,"sWidth": "20px"},
 { mData: 'Status' ,"sWidth": "20px"},
-<?php if($_SESSION['rol'] == 5): ?>
-    {
-                    "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_ruta.php?id=' + full.id +  '\'><i class="far fa-edit"></i></a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.id +  '\' data-name=\'' + full.cliente +  '\' data-ruta=\'' + full.ruta +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a>';
-    }
-<?php endif;?>             
-            
-  
-
+{
+  "render": function ( data, type, full, meta ) {
+                        <?php if($_SESSION['rol'] == 5): ?>
+          return '<a class="link_edit" style="color:#007bff;" href= \'edit_ruta.php?id=' + full.id +  '\'><i class="far fa-edit"></i></a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.id +  '\' data-name=\'' + full.cliente +  '\' data-ruta=\'' + full.ruta +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a>';
+                        <?php endif; ?>
+  }
+}
 ],
 
         "oLanguage": {

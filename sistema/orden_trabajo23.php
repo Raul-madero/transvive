@@ -236,7 +236,6 @@ session_start();
         <script src="../dist/js/adminlte.min.js"></script>
         <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 
- 
         <script type="text/javascript">
             $(document).ready(function() {
                 console.log("Document ready");

@@ -25,56 +25,52 @@ session_start();
 <!DOCTYPE html>
 <html>
 <head>
-   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TRANSVIVE | ERP</title>
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon"/>
-  <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="../dist/css/adminlte.min.css">
-  <!-- Ekko Lightbox -->
-  <link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-   <!-- Select2 -->
-  <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
-  <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-    
-       
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>TRANSVIVE | ERP</title>
+        <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+        <!-- Google Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=swap">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <!-- AdminLTE -->
+        <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+        <!-- Select2 -->
+        <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
+        <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+        <!-- Ekko Lightbox -->
+        <link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
+        <!-- overlayScrollbars -->
+        <link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+        <!-- jQuery UI -->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+        <!-- DataTables Bootstrap 4 -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- jQuery UI -->
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
+        <!-- Bootstrap -->
+        <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- DataTables Core + Bootstrap 4 -->
+        <script src="./js/jquery.dataTables.min.js"></script>
+        <script src="./js/dataTables.bootstrap4.min.js"></script>
+        <!-- RequireJS (si realmente lo usas) -->
+        <!-- <script src="./js/require.min.js"></script> -->
+        <script>
+            // requirejs.config({
+            // baseUrl: '.'
+            // });
+        </script>
 
-  
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-
-   
-<!------ Include the above in your HEAD tag ---------->
-
-    <script src="./js/jquery.dataTables.min.js"></script>
-    <script src="./js/dataTables.bootstrap4.min.js"></script>
-    
-        
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
-    
-    <script src="./js/require.min.js"></script>
-    <script>
-      requirejs.config({
-          baseUrl: '.'
-      });
-    </script>
-
-    
-    <!-- Dashboard Core -->
-</head>
+        <style>
+            th { font-size: 12px; font-weight: bold; }
+            td { font-size: 13px; }
+        </style>
+    </head>
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
 
@@ -180,7 +176,7 @@ session_start();
                 <th style="text-align: center; font-size: 12px;">Mes</th>
                 <th style="text-align: center; font-size: 12px;">Fecha</th>
                 <th style="text-align: center; font-size: 12px;">Cliente</th>
-                <th style="text-align: center; font-size: 12px;">8D</th>
+                <!-- <th style="text-align: center; font-size: 12px;">8D</th> -->
                 <th style="text-align: center; font-size: 12px;">Descripcion</th>
                 <th style="text-align: center; font-size: 12px;">Motivo</th>
                 <th style="text-align: center; font-size: 12px;">Responsable</th>
@@ -255,235 +251,153 @@ session_start();
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
-<!-- jQuery 3 -->
-
-<!-- Bootstrap 3.3.7 -->
-
-<!-- SlimScroll -->
-
-<!-- Bootstrap 3.3.7 -->
-
-
-<!-- AdminLTE App -->
-
-<!-- AdminLTE for demo purposes -->
-<!--<script src="../dist/js/demo.js"></script>-->
-<!-- page script -->
-
-
-    
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
-
-
-
- 
-    <script type="text/javascript">
-
-      load_data(); // first load
-
-      function load_data(initial_date, final_date, gender){
-        var ajax_url = "data/datadetorders_nc.php";
-
-        $('#fetch_generated_wills').DataTable({
-          "order": [[ 0, "desc" ]],
+ <!-- page script -->
+        <!-- DataTables Buttons + Export -->
+        <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+        <!-- Bootstrap Datepicker (opcional si usas datepickers visuales) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+        <!-- Select2 -->
+        <script src="../plugins/select2/js/select2.full.min.js"></script>
+        <!-- AdminLTE & overlayScrollbars -->
+        <script src="../dist/js/adminlte.min.js"></script>
+        <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
         
-    columnDefs: [{ width: 20, targets: 0, className: 'dt-right dt-head-center' },
-      { width: 80, targets: 1, className: 'dt-left dt-head-center' },
-      { width: 50, targets: 2, className: 'dt-center dt-head-center' },
-      { width: 150, targets: 3 },
-      { width: 80, targets: 4 },
-      { width: 200, targets: 5 },
-      { width: 200, targets: 6 },
-      { width: 150, targets: 7 },
-      { width: 150, targets: 8 },
-      { width: 150, targets: 9 },
-      { width: 50, targets: 10, className: 'dt-center dt-head-center' },
-      { width: 120, targets: 11 },
-      { width: 120, targets: 12 },
-      { width: 50, targets: 13, className: 'dt-center dt-head-center' },
-      { width: 60, targets: 14, className: 'dt-center dt-head-center' },
-      { width: 60, targets: 15, className: 'dt-center dt-head-center' },
-      { width: 200, targets: 16 },
-      { width: 200, targets: 17 },
-      { width: 200, targets: 18 },
-      { width: 50, targets: 19, className: 'dt-center dt-head-center' },
-      { width: 250, targets: 20 },
-      { width: 50, targets: 21, className: 'dt-center dt-head-center' },
-      { width: 200, targets: 22 },
-      { width: 60, targets: 23, className: 'dt-center dt-head-center' },
-      { width: 60, targets: 24, className: 'dt-center dt-head-center' },
-      { width: 200, targets: 25 },
-      { width: 50, targets: 26, className: 'dt-center dt-head-center' },
-      { width: 120, targets: 27 },
-      { width: 80, targets: 28 }],
-    fixedColumns: true,
-    paging: false,
-    scrollCollapse: true,
-    scrollX: true,
-    scrollY: 300,
-          dom: 'Bfrtip',
-lengthMenu: [
-[20, 25, 50, -1],
-['20 rows', '25 rows', '50 rows', 'Show all']
-],
-buttons: [
-'excelHtml5',
-'pageLength'
-],
-          "processing": true,
-          "serverSide": true,
-          "stateSave": true,
-          "responsive": true,
-          "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-          "ajax" : {
-            "url" : ajax_url,
-            "dataType": "json",
-            "type": "POST",
-            "data" : { 
-              "action" : "fetch_users", 
-              "initial_date" : initial_date, 
-              "final_date" : final_date,
-              "gender" : gender 
-              
-            },
-            "dataSrc": "records"
-          },
+        <script>
+          $(document).ready(function() {
+            load_data();
 
-          "columns": [
-            { "data" : "num_queja" },
-            { "data" : "name_mes" },
-            { "data" : "date" },
-            { "data" : "name_cliente" },
-            { "data" : "formato", orderable:false},
-            { "data" : "describe",  orderable:false },
-            { "data" : "motivonc", orderable:false },
-            { "data" : "respnc"  },
-            { "data" : "supervnc" },
-            { "data" : "operador" },
-            { "data" : "noeco" },
-            { "data" : "rutanc", orderable:false },
-            { "data" : "estacion", orderable:false },
-            { "data" : "date_incidente" },
-            { "data" : "turnoi" },
-            { "data" : "procedenc" },
-            { "data" : "porquenc", orderable:false },
-            { "data" : "analisisnc", orderable:false },
-            { "data" : "accionnc",  orderable:false },
-            { "data" : "date_accion" },
-            { "data" : "respaccion", orderable:false },
-            { "data" : "date_cierre" },
-            { "data" : "notas", orderable:false },
-            { "data" : "tipo" },
-            { "data" : "estatusped" },
-            { "data" : "causanc", orderable:false },
-            { "data" : "afectacte" },
-            { "data" : "deptoresp", orderable:false },
-            //{ "data" : "Id", "width": "8%" },  
-            
-            <?php  
-              if ($_SESSION['rol'] == 14) {
-            ?>    
-            {
-                    "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_noconformidad.php?id=' + full.num_queja +  '\'><i class="far fa-edit"></i> </a> | <a href= \'factura/form_noconformidad.php?id=' + full.num_queja + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> </a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.pedidono +  '\' data-name=\'' + full.num_queja +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-ban"></i> </a>';
-    }
-                    
-            
- }   
+            function load_data(initial_date = '', final_date = '', gender = '') {
+                const ajax_url = "data/datadetorders_nc.php";
 
-         <?php  
-       }else {
-        if ($_SESSION['rol'] == 8) {
-        ?>
-           
-         {
-                    "render": function ( data, type, full, meta ) {
-        return '<a href= \'factura/form_noconformidad.php?id=' + full.num_queja + '\'  target="_blank">&nbsp;&nbsp;&nbsp;<i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> </a>';
-    }
-                    
-            
- }   
+                // Destruir si ya existe
+                if ($.fn.DataTable.isDataTable('#fetch_generated_wills')) {
+                    $('#fetch_generated_wills').DataTable().destroy();
+                }
 
- <?php  
-} else {
-?>
-{
-                    "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_noconformidad.php?id=' + full.num_queja +  '\'><i class="far fa-edit"></i> </a> | <a href= \'factura/form_noconformidad.php?id=' + full.num_queja + '\'  target="_blank"><i class="fa fa-print" style="color:#white; font-size: 1.3em"></i> </a> ';
-    }
-                    
-            
- }   
- <?php  
-}}
-?>
-
-         
-            
-          ],
-          "sDom": "B<'row'><'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-4'i>><'row'p>B",
-    "buttons": [
-        'copyHtml5',
-        'excelHtml5',
-        'csvHtml5',     
-        {
-            extend: 'colvis',
-            postfixButtons: [ 'colvisRestore' ],
-            columns: '0,1,2,3,4,5,6'
-        }
-    ],
-         
-        }); 
-      }  
-
-      $("#filter").click(function(){
-        var initial_date = $("#initial_date").val();
-        var final_date = $("#final_date").val();
-        var gender = $("#gender").val();
-
-        if(initial_date == '' && final_date == ''){
-          $('#fetch_generated_wills').DataTable().destroy();
-          load_data("", "", gender); // filter immortalize only
-        }else{
-          var date1 = new Date(initial_date);
-          var date2 = new Date(final_date);
-          var diffTime = Math.abs(date2 - date1);
-          var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
-          if(initial_date == '' || final_date == ''){
-              $("#error_log").html("Warning: You must select both (start and end) date.</span>");
-          }else{
-            if(date1 > date2){
-                $("#error_log").html("Warning: End date should be greater then start date.");
-            }else{
-               $("#error_log").html(""); 
-               $('#fetch_generated_wills').DataTable().destroy();
-               load_data(initial_date, final_date, gender);
+                $('#fetch_generated_wills').DataTable({
+                    order: [[0, "desc"]],
+                    columnDefs: [
+                        { width: 20, targets: 0, className: 'dt-right dt-head-center' },
+                        { width: 80, targets: 1, className: 'dt-left dt-head-center' },
+                        { width: 50, targets: 2, className: 'dt-center dt-head-center' },
+                        { width: 100, targets: 3, className: 'dt-left dt-head-center' },
+                        { width: 150, targets: 4, className: 'dt-left dt-head-center' },
+                        { width: 150, targets: 5, className: 'dt-left dt-head-center' },
+                        { width: 100, targets: 6, className: 'dt-left dt-head-center' },
+                        { width: 100, targets: 7, className: 'dt-left dt-head-center' },
+                        { width: 100, targets: 8, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 9, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 10, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 11, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 12, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 13, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 14, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 15, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 16, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 17, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 18, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 19, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 20, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 21, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 22, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 23, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 24, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 25, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 26, className: 'dt-left dt-head-center' },
+                        { width: 80, targets: 27 }
+                    ],
+                    fixedColumns: true,
+                    paging: true,
+                    scrollX: true,
+                    scrollY: 300,
+                    scrollCollapse: true,
+                    dom: 'Bfrtip',
+                    buttons: ['excelHtml5', 'pageLength'],
+                    processing: true,
+                    serverSide: true,
+                    stateSave: true,
+                    lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                    ajax: {
+                        url: ajax_url,
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            action: "fetch_users",
+                            initial_date,
+                            final_date,
+                            gender
+                        },
+                        dataSrc: "records"
+                    },
+                    columns: [
+                        { data: "num_queja" },
+                        { data: "name_mes" },
+                        { data: "date" },
+                        { data: "name_cliente" },
+                        { data: "describe", orderable: false },
+                        { data: "motivonc", orderable: false },
+                        { data: "respnc" },
+                        { data: "supervnc" },
+                        { data: "operador" },
+                        { data: "noeco" },
+                        { data: "rutanc", orderable: false },
+                        { data: "estacion", orderable: false },
+                        { data: "date_incidente" },
+                        { data: "turnoi" },
+                        { data: "procedenc" },
+                        { data: "porquenc", orderable: false },
+                        { data: "analisisnc", orderable: false },
+                        { data: "accionnc", orderable: false },
+                        { data: "date_accion" },
+                        { data: "respaccion", orderable: false },
+                        { data: "date_cierre" },
+                        { data: "notas", orderable: false },
+                        { data: "tipo" },
+                        { data: "estatusped" },
+                        { data: "causanc", orderable: false },
+                        { data: "afectacte" },
+                        { data: "deptoresp", orderable: false },
+                        {
+                            render: function(data, type, full) {
+                                return full.links_buttons; // Esto lo generas en tu PHP
+                            }
+                        }
+                    ]
+                });
             }
-          }
-        }
-      });
 
-      
+            $("#filter").on('click', function() {
+                const initial_date = $("#initial_date").val();
+                const final_date = $("#final_date").val();
+                const gender = $("#gender").val();
+                let error = '';
 
-            // Datapicker 
-            $( ".datepicker" ).datepicker({
-                language: 'es',
-                "dateFormat": "yy-mm-dd",
-                changeYear: true
+                if (!initial_date || !final_date) {
+                    error = "Debes seleccionar ambas fechas.";
+                } else if (new Date(initial_date) > new Date(final_date)) {
+                    error = "La fecha final debe ser mayor a la inicial.";
+                }
+
+                if (error) {
+                    $("#error_log").html(error);
+                } else {
+                    $("#error_log").html('');
+                    load_data(initial_date, final_date, gender);
+                }
             });
 
-
-    </script>
+            $(".datepicker").datepicker({
+                language: 'es',
+                dateFormat: "yy-mm-dd",
+                changeYear: true
+            });
+        });
+      </script>
 
 
 

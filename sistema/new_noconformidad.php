@@ -33,7 +33,7 @@ session_start();
   $querycte = mysqli_query($conection, $sqlcte);
   $filascte = mysqli_fetch_all($querycte, MYSQLI_ASSOC);
 
-  $sqlsupv = "select id, idacceso, concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name_superv from supervisores ORDER BY nombres";
+  $sqlsupv = "select id, idacceso, concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as name_superv from supervisores where estatus = 1 ORDER BY nombres";
   $querysupv = mysqli_query($conection, $sqlsupv);
   $filassup = mysqli_fetch_all($querysupv, MYSQLI_ASSOC);
 
@@ -275,9 +275,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </select>
                     </div>
 
-                    <label for="inputFormato" class="col-sm-2 col-form-label">8D Disciplina</label>
+                    <label for="inputFormato" class="col-sm-2 col-form-label"></label>
                       <div class="col-sm-2">
-                       <input style="font-size: 10pt" type="text" class="form-control" id="inputFormato" name="inputFormato" >
                      </div>
                   </div>
 
@@ -294,16 +293,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div class="col-sm-10">
                       <select class="form-control" style="width: 100%; text-align: left; font-size: 10pt" id="inputMotivo" name="inputMotivo">
                        <option value="Select">- Seleccione -</option>
-                       <option value="IMPUNTUALIDAD DE RUTA">IMPUNTUALIDAD DE RUTA</option>
-                       <option value="ASPECTO DEL OPERADOR">ASPECTO DEL OPERADOR</option>
+                       <option value="ACCIDENTE">ACCIDENTE</option>
                        <option value="ACTITUD DEL OPERADOR">ACTITUD DEL OPERADOR</option>
-                       <option value="IMPRUDENCIA AL MANEJAR">IMPRUDENCIA AL MANEJAR</option>
-                       <option value="DESVIO DE RUTA">DESVIO DE RUTA</option>
-                       <option value="NO CUMPLE CON ROUTER">NO CUMPLE CON ROUTER</option>
-                       <option value="FALLA EN UNIDAD">FALLA EN UNIDAD</option>
                        <option value="ASPECTO DE LA UNIDAD">ASPECTO DE LA UNIDAD</option>
-                       <option value="OTROS">OTROS</option>
+                       <option value="CAMBIO DE UNIDAD">CAMBIO DE UNIDAD</option>
+                       <option value="DESVIO DE RUTA">DESVIO DE RUTA</option>
+                       <option value="DOCUMENTOS">DOCUMENTOS</option>
+                       <option value="FALLA EN UNIDAD">FALLA EN UNIDAD</option>
+                       <option value="FALTA DE PLANEACION">FALTA DE PLANEACION</option>
+                       <option value="FALTA DE COMUNICACION">FALTA DE COMUNICACION</option>
+                       <option value="ROTACION DE PERSONAL">ROTACION DE PERSONAL</option>
+                       <option value="FALTA DE UNIDAD">FALTA DE UNIDAD</option>
+                       <option value="FUMIGACION">FUMIGACION</option>
+                       <option value="IMPRUDENCIA AL MANEJAR">IMPRUDENCIA AL MANEJAR</option>
+                       <option value="IMPUNTUALIDAD DE RUTA">IMPUNTUALIDAD DE RUTA</option>
+                       <option value="IRRESPONSABILIDAD DEL OPERADOR">IRRESPONSABILIDAD DEL OPERADOR</option>
+                       <option value="MANTENIMIENTO DE UNIDAD">MANTENIMIENTO D EUNIDAD</option>
+                       <option value="NO CUMPLE CON ROUTER">NO CUMPLE CON ROUTER</option>
+                       <option value="NO SALE A RUTA">NO SALE A RUTA</option>
+                       <option value="VANDALISMO">VANDALISMO</option>
+                       <option value="UNIFICACION DE ROUTER">UNIFICACION DE ROUTER</option>
+                       <option value="USUARIO">USUARIO</option>
+                       <option value="OTRO">OTRO</option>
                     </select>
+                    <input type="text" class="form-control mt-2" id="inputMotivoOtro" name="inputMotivoOtro" placeholder="Especifique otro motivo..." style="display: none;">
+
 
                      </div>
                   </div>
@@ -419,15 +433,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div class="col-sm-5">
                       <select class="form-control" style="width: 100%; text-align: left; font-size: 10pt" id="inputAccion" name="inputAccion">
                        <option value="Select">- Seleccione -</option>
-                       <option value="LLAMADA DE ATENCIÓN VERBAL">LLAMADA DE ATENCIÓN VERBAL</option>
-                       <option value="SUSPENSIÓN DE BONO">SUSPENSIÓN DE BONO</option>
                        <option value="ACTA ADMINISTRATIVA">ACTA ADMINISTRATIVA</option>
-                       <option value="CARTA COMPROMISO">CARTA COMPROMISO</option>
                        <option value="BAJA DE PERSONAL">BAJA DE PERSONAL</option>
                        <option value="CAMBIO DE OPERADOR">CAMBIO DE OPERADOR</option>
-                       <option value="PAGO DE GASTOS">PAGO DE GASTOS</option>
+                       <option value="CAMBIO DE UNIDAD">CAMBIO DE UNIDAD</option>
+                       <option value="CARTA COMPROMISO">CARTA COMPROMISO</option>
+                       <option value="CONTRATACION DE PERSONAL">CONTARTACIOND E PERSONAL</option>
+                       <option value="LLAMADA DE ATENCION VERBAL">LLAMADA DE ATENCION VERBAL</option>
+                       <option value="VISITA A CLIENTE">VISITA A CLIENTE</option>
+                       <option value="PAGO D EGASTOS">PAGO DE GASTOS</option>
                        <option value="PLAN DE TRABAJO">PLAN DE TRABAJO</option>
-                       <option value="OTROS">OTROS</option>
+                       <option value="PLAN DE accion">PLAN DE ACCION</option>
+                       <option value="PLATICA CON OPERADOR(ES)">PLATICA CON OPERADOR(ES)</option>
+                       <option value="CAPACITACION">CAPOACITACION</option>
+                       <option value="UNIDAD DE APOYO">UNIDAD DE APOYO</option>
+                       <option value="ORDEN DE MANTENIMIENTO">ORDEN DE MANTENIMIENTO(REPARACION DE UNIDAD)</option>
                        <option value="N/A">N/A</option>
                     </select>
                      </div>
@@ -656,6 +676,14 @@ $('#btn_salir').click(function(e){
    
 
     });
+    $('#inputMotivo').on('change', function() {
+    if ($(this).val() === 'OTRO') {
+        $('#inputMotivoOtro').show().focus();
+    } else {
+        $('#inputMotivoOtro').hide().val('');
+    }
+});
+
     </script>
 
 <script type="text/javascript">
