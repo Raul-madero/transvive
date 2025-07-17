@@ -1,46 +1,28 @@
 <?php
 session_start();
 include '../../conexion.php';
-
-
 global $conection;
 
-if($_REQUEST['action'] == 'fetch_users'){
-
+if ($_REQUEST['action'] == 'fetch_users') {
     $requestData = $_REQUEST;
-    $start = $_REQUEST['start'];
+    $start = intval($_REQUEST['start'] ?? 0);
+    $initial_date = $_REQUEST['initial_date'] ?? "";
+    $final_date = $_REQUEST['final_date'] ?? "";
+    $gender = $_REQUEST['gender'] ?? "";
 
-    $initial_date = $_REQUEST['initial_date'];
-    $final_date = $_REQUEST['final_date'];
-    $gender = $_REQUEST['gender'];
+    $date_range = (!empty($initial_date) && !empty($final_date))
+        ? " AND fecha BETWEEN '$initial_date' AND '$final_date' " : "";
 
-    if(!empty($initial_date) && !empty($final_date)){
-        $date_range = " AND fecha BETWEEN '".$initial_date."' AND '".$final_date."' ";
-    }else{
-        $date_range = "";
-    }
-
-    if($gender != ""){
-        if ($gender == "Abierto") {
-         $gender = 1;   
-        }else {
-            if ($gender == "Cerrado") {
-              $gender = 2;
-            }else {
-                if ($gender == "Cancelada") {
-                    $gender = 0;
-                }
-            }
-        }
-
-        $gender = " AND estatus = $gender ";
+    if ($gender !== "") {
+        $estatus_map = ["Abierto" => 1, "Cerrado" => 2, "Cancelada" => 0];
+        $gender = isset($estatus_map[$gender]) ? " AND estatus = " . $estatus_map[$gender] : "";
     }
 
     $columns = ' id, no_queja, fecha, mes, cliente, f8d, descripcion, motivo, responsable, supervisor, operador, unidad, ruta, parada, fecha_incidente, turno, procede_ac, porque_procede, analisis_conclusionac, accion, fecha_accion, responsable_accion, fecha_cierre, observaciones, tipo_incidente, estatus, cuenta, causa, afecta, area_responsable ';
-    $table = ' no_conformidades ' ;
-    $where = " WHERE id > 0 ".$date_range.$gender ;
+    $table = ' no_conformidades ';
+    $where = " WHERE id > 0 " . $date_range . $gender;
 
-    $columns_order = array(
+    $columns_order = [
         0 => 'id',
         1 => 'no_queja',
         2 => 'fecha',
@@ -50,92 +32,85 @@ if($_REQUEST['action'] == 'fetch_users'){
         6 => 'operador',
         7 => 'unidad',
         8 => 'estatus'
-    );
+    ];
 
-    $sql = "SELECT ".$columns." FROM ".$table." ".$where;
+    $sql = "SELECT $columns FROM $table $where";
 
-    $result = mysqli_query($conection, $sql);
-    $totalData = mysqli_num_rows($result);
-    $totalFiltered = $totalData;
-
-    if( !empty($requestData['search']['value']) ) {
-        $sql.=" AND ( no_queja LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR cliente LIKE '%".$requestData['search']['value']."%' ";
-        $sql.=" OR unidad LIKE '%".$requestData['search']['value']."%'  )";
-       
-        
+    if (!empty($requestData['search']['value'])) {
+        $search = $conection->real_escape_string($requestData['search']['value']);
+        $sql .= " AND (no_queja LIKE '%$search%' OR cliente LIKE '%$search%' OR unidad LIKE '%$search%')";
     }
 
     $result = mysqli_query($conection, $sql);
     $totalData = mysqli_num_rows($result);
     $totalFiltered = $totalData;
 
-    $sql .= " ORDER BY ". $columns_order[$requestData['order'][0]['column']]."   ".$requestData['order'][0]['dir'];
+    $order_column = $columns_order[$requestData['order'][0]['column']] ?? 'id';
+    $order_dir = $requestData['order'][0]['dir'] ?? 'DESC';
+    $sql .= " ORDER BY $order_column $order_dir";
 
-    if($requestData['length'] != "-1"){
-        $sql .= " LIMIT ".$requestData['start']." ,".$requestData['length'];
+    if ($requestData['length'] != "-1") {
+        $length = intval($requestData['length']);
+        $sql .= " LIMIT $start, $length";
     }
 
     $result = mysqli_query($conection, $sql);
-    $data = array();
-    $counter = $start;
+    $data = [];
 
-    $count = $start;
-    while($row = mysqli_fetch_array($result)){
-         
-        
-
-        $count++;
-        $nestedData = array();
-        $time = strtotime($row["fecha"]);
-        $time2 = strtotime($row["fecha_incidente"]);
-        $time3 = strtotime($row["fecha_accion"]);
-        $time4 = strtotime($row["fecha_cierre"]);
-       
-
-        $nestedData['counter'] = $count;
-        $nestedData['pedidono'] =  $row["id"];
-        $nestedData['num_queja'] =  $row["no_queja"];
-        $nestedData['name_mes'] =  $row["mes"];  
-        $nestedData['date'] = date('d/m/Y', $time);
-        $nestedData['name_cliente'] =  $row["cliente"];
-        $nestedData['formato'] = $row["f8d"];
-        $nestedData['describe'] = $row["descripcion"];
-        $nestedData['motivonc'] = $row["motivo"];
-        $nestedData['respnc'] = $row["responsable"];
-        $nestedData['supervnc'] = $row["supervisor"];
-        $nestedData['operador'] = $row["operador"];
-        $nestedData['noeco'] = $row["unidad"];
-        $nestedData['rutanc'] = $row["ruta"];
-        $nestedData['estacion'] = $row["parada"];
-        $nestedData['date_incidente'] = date('d/m/Y', $time2);
-        $nestedData['turnoi'] = $row['turno'];
-        $nestedData['procedenc'] = $row['procede_ac'];
-        $nestedData['porquenc'] = $row['porque_procede'];
-        $nestedData['analisisnc'] = $row['analisis_conclusionac'];
-        $nestedData['accionnc'] = $row['accion'];
-        $nestedData['date_accion'] = date('d/m/Y', $time3);
-        $nestedData['respaccion'] = $row['responsable_accion'];
-        $nestedData['date_cierre'] = date('d/m/Y', $time4);
-        $nestedData['notas'] = $row["observaciones"];
-        $nestedData['tipo'] = $row["tipo_incidente"];
-        $nestedData['estatusped'] = $row["estatus"];
-        //$nestedData['nocuenta'] = $row["cuenta"];
-        $nestedData['causanc'] = $row["causa"];
-        $nestedData['afectacte'] = $row["afecta"];
-        $nestedData['deptoresp'] = $row["area_responsable"];
-
+    while ($row = mysqli_fetch_assoc($result)) {
+        $nestedData = [
+            'num_queja'    => $row['no_queja'],
+            'name_mes'     => $row['mes'],
+            'date'         => $row['fecha'] ? date('d/m/Y', strtotime($row['fecha'])) : '',
+            'name_cliente' => $row['cliente'],
+            'formato'      => $row['f8d'],
+            'describe'     => $row['descripcion'],
+            'motivonc'     => $row['motivo'],
+            'respnc'       => $row['responsable'],
+            'supervnc'     => $row['supervisor'],
+            'operador'     => $row['operador'],
+            'noeco'        => $row['unidad'],
+            'rutanc'       => $row['ruta'],
+            'estacion'     => $row['parada'],
+            'date_incidente' => $row['fecha_incidente'] ? date('d/m/Y', strtotime($row['fecha_incidente'])) : '',
+            'turnoi'       => $row['turno'],
+            'procedenc'    => $row['procede_ac'],
+            'porquenc'     => $row['porque_procede'],
+            'analisisnc'   => $row['analisis_conclusionac'],
+            'accionnc'     => $row['accion'],
+            'date_accion'  => $row['fecha_accion'] ? date('d/m/Y', strtotime($row['fecha_accion'])) : '',
+            'respaccion'   => $row['responsable_accion'],
+            'date_cierre'  => $row['fecha_cierre'] ? date('d/m/Y', strtotime($row['fecha_cierre'])) : '',
+            'notas'        => $row['observaciones'],
+            'tipo'         => $row['tipo_incidente'],
+            'estatusped'   => $row['estatus'],
+            'causanc'      => $row['causa'],
+            'afectacte'    => $row['afecta'],
+            'deptoresp'    => $row['area_responsable'],
+            'links_buttons' => build_links_buttons($_SESSION['rol'], $row['no_queja'], $row['id'])
+        ];
         $data[] = $nestedData;
     }
-    header('Content-Type: application/json; charset=utf-8');
-    $json_data = array(
-        "draw"            => intval( $requestData['draw'] ),
-        "recordsTotal"    => intval( $totalData),
-        "recordsFiltered" => intval( $totalFiltered ),
-        "records"         => $data
-    );
 
-    echo json_encode($json_data);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        "draw"            => intval($requestData['draw']),
+        "recordsTotal"    => $totalData,
+        "recordsFiltered" => $totalFiltered,
+        "records"         => $data
+    ]);
 }
 
+function build_links_buttons($rol, $no_queja, $id) {
+    if ($rol == 14) {
+        return '<a class="link_edit" href="edit_noconformidad.php?id=' . $no_queja . '" style="color:#007bff;"><i class="far fa-edit"></i></a> | ' .
+               '<a href="factura/form_noconformidad.php?id=' . $no_queja . '" target="_blank"><i class="fa fa-print" style="color:#white;font-size:1.3em;"></i></a> | ' .
+               '<a data-toggle="modal" data-target="#modalEditcliente" data-id="' . $id . '" data-name="' . $no_queja . '" href="javascript:void(0)" class="link_delete" style="color:red"><i class="fa fa-ban"></i></a>';
+    } elseif ($rol == 8) {
+        return '<a href="factura/form_noconformidad.php?id=' . $no_queja . '" target="_blank"><i class="fa fa-print" style="color:#white;font-size:1.3em;"></i></a>';
+    } else {
+        return '<a class="link_edit" href="edit_noconformidad.php?id=' . $no_queja . '" style="color:#007bff;"><i class="far fa-edit"></i></a> | ' .
+               '<a href="factura/form_noconformidad.php?id=' . $no_queja . '" target="_blank"><i class="fa fa-print" style="color:#white;font-size:1.3em;"></i></a>';
+    }
+}
 ?>
