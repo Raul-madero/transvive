@@ -104,6 +104,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <th>Mix. 1</th>
                           <th>Dias</th>
                           <th>Estatus</th>
+                          <?php if($rol == 5): ?>
+                            <th>Acciones</th>
+                          <?php endif; ?>
                           <!-- <th>Acciones</th> -->
                         </tr>
                       </thead>
