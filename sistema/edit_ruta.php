@@ -17,7 +17,7 @@ session_start();
   }
   $idrt = $_REQUEST['id'];
 
-  $sqlact= mysqli_query($conection,"SELECT id, cliente, ruta, no_eco, operador, horario1, horario2, horario3, hmixto1, hmixto2, dias, sueldo_camion, sueldo_camioneta, sueldo_semid FROM rutas WHERE id=$idrt");
+  $sqlact= mysqli_query($conection,"SELECT id, cliente, ruta, no_eco, operador, horario1, horario2, horario3, hmixto1, hmixto2, dias, sueldo_camion, sueldo_camioneta, sueldo_semid, sueldo_sprinter FROM rutas WHERE id=$idrt");
   mysqli_close($conection);
   $result_sqlact = mysqli_num_rows($sqlact);
 
@@ -40,6 +40,7 @@ session_start();
       $sdo_camion    = $data['sueldo_camion'];
       $sdo_camioneta = $data['sueldo_camioneta'];
       $sdo_semid     = $data['sueldo_semid'];
+      $sdo_sprinter  = $data['sueldo_sprinter'] ?? 0;
       
       //$user   = $_SESSION['idUser'];
       
@@ -100,7 +101,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       <?php include('includes/generalnavbar.php'); 
       
-      if ($_SESSION['rol'] == 1 || $_SESSION['rol'] == 5 ) {
+      if ($_SESSION['rol'] == 1) {
         $activo = "";
       } else { 
         $activo = "disabled";
@@ -230,12 +231,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                   <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Sueldo Camión</label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                       <input type="number" step="any" class="form-control" id="fsueldovta" name="fsueldovta" value="<?php echo $sdo_camion; ?>" <?= $activo ?>>
                     </div>
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Sueldo Camioneta</label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                       <input type="number" step="any" class="form-control" id="fsueldovtaneta" name="fsueldovtaneta" value="<?php echo $sdo_camioneta; ?>" <?= $activo ?>>
+                    </div>
+                    <label for="fsdovtasprinter" class="col-sm-2 col-form-label">Sueldo Sprinter</label>
+                    <div class="col-sm-2">
+                      <input type="number" step="any" class="form-control" id="fsdovtasprinter" name="fsdovtasprinter" value="<?php echo $sdo_sprinter; ?>" <?= $activo ?>>
                     </div>
                   </div>
 

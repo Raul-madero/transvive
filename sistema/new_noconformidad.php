@@ -438,7 +438,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        <option value="CAMBIO DE OPERADOR">CAMBIO DE OPERADOR</option>
                        <option value="CAMBIO DE UNIDAD">CAMBIO DE UNIDAD</option>
                        <option value="CARTA COMPROMISO">CARTA COMPROMISO</option>
-                       <option value="CONTRATACION DE PERSONAL">CONTARTACION DE PERSONAL</option>
+                       <option value="CONTRATACION DE PERSONAL">CONTRATACION DE PERSONAL</option>
                        <option value="LLAMADA DE ATENCION VERBAL">LLAMADA DE ATENCION VERBAL</option>
                        <option value="VISITA A CLIENTE">VISITA A CLIENTE</option>
                        <option value="PAGO D EGASTOS">PAGO DE GASTOS</option>

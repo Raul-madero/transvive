@@ -104,7 +104,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <th>Mix. 1</th>
                           <th>Dias</th>
                           <th>Estatus</th>
-                          <?php if($rol == 5): ?>
+                          <?php if($rol == 5 || $rol == 1): ?>
                             <th>Acciones</th>
                           <?php endif; ?>
                           <!-- <th>Acciones</th> -->
@@ -187,10 +187,10 @@ var table = $('#example1').dataTable({
 { mData: 'Hmixto1' ,"sWidth": "20px"},
 { mData: 'dias' ,"sWidth": "20px"},
 { mData: 'Status' ,"sWidth": "20px"}
-<?php if($rol == 5): ?>,
+<?php if($rol == 5 || $rol == 1): ?>,
   {
     "render": function ( data, type, full, meta ) {
-                          <?php if($_SESSION['rol'] == 5): ?>
+                          <?php if($_SESSION['rol'] == 5 || $rol = 1): ?>
             return '<a class="link_edit" style="color:#007bff;" href= \'edit_ruta.php?id=' + full.id +  '\'><i class="far fa-edit"></i></a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.id +  '\' data-name=\'' + full.cliente +  '\' data-ruta=\'' + full.ruta +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a>';
                           <?php endif; ?>
     }
