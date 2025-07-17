@@ -438,18 +438,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        <option value="CAMBIO DE OPERADOR">CAMBIO DE OPERADOR</option>
                        <option value="CAMBIO DE UNIDAD">CAMBIO DE UNIDAD</option>
                        <option value="CARTA COMPROMISO">CARTA COMPROMISO</option>
-                       <option value="CONTRATACION DE PERSONAL">CONTARTACIOND E PERSONAL</option>
+                       <option value="CONTRATACION DE PERSONAL">CONTARTACION DE PERSONAL</option>
                        <option value="LLAMADA DE ATENCION VERBAL">LLAMADA DE ATENCION VERBAL</option>
                        <option value="VISITA A CLIENTE">VISITA A CLIENTE</option>
                        <option value="PAGO D EGASTOS">PAGO DE GASTOS</option>
                        <option value="PLAN DE TRABAJO">PLAN DE TRABAJO</option>
                        <option value="PLAN DE accion">PLAN DE ACCION</option>
                        <option value="PLATICA CON OPERADOR(ES)">PLATICA CON OPERADOR(ES)</option>
-                       <option value="CAPACITACION">CAPOACITACION</option>
+                       <option value="CAPACITACION">CAPACITACION</option>
                        <option value="UNIDAD DE APOYO">UNIDAD DE APOYO</option>
                        <option value="ORDEN DE MANTENIMIENTO">ORDEN DE MANTENIMIENTO(REPARACION DE UNIDAD)</option>
+                       <option value="OTRO">OTRA</option>
                        <option value="N/A">N/A</option>
                     </select>
+                    <input type="text" class="form-control mt-2" id="inputAccionOtra" name="inputAccionOtra" placeholder="Especifique otra acción..." style="display: none;">
+
                      </div>
                      <label for="inputFechaccion" class="col-sm-2 col-form-label">Fecha de Acción</label>
                     <div class="col-sm-3">
@@ -681,6 +684,14 @@ $('#btn_salir').click(function(e){
         $('#inputMotivoOtro').show().focus();
     } else {
         $('#inputMotivoOtro').hide().val('');
+    }
+});
+
+$('#inputAccion').on('change', function() {
+    if ($(this).val() === 'OTRO' || $(this).val() === 'OTRA') {
+        $('#inputAccionOtra').show().focus();
+    } else {
+        $('#inputAccionOtra').hide().val('');
     }
 });
 
