@@ -308,7 +308,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        <option value="IMPRUDENCIA AL MANEJAR">IMPRUDENCIA AL MANEJAR</option>
                        <option value="IMPUNTUALIDAD DE RUTA">IMPUNTUALIDAD DE RUTA</option>
                        <option value="IRRESPONSABILIDAD DEL OPERADOR">IRRESPONSABILIDAD DEL OPERADOR</option>
-                       <option value="MANTENIMIENTO DE UNIDAD">MANTENIMIENTO D EUNIDAD</option>
+                       <option value="MANTENIMIENTO DE UNIDAD">MANTENIMIENTO DE UNIDAD</option>
                        <option value="NO CUMPLE CON ROUTER">NO CUMPLE CON ROUTER</option>
                        <option value="NO SALE A RUTA">NO SALE A RUTA</option>
                        <option value="VANDALISMO">VANDALISMO</option>
