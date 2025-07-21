@@ -177,18 +177,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
         ];
 
         $count++;
-        
-        $sql = "SELECT COUNT(id) AS count FROM orden_compra WHERE no_requisicion = " . $row['no_requisicion'];
-        $result = mysqli_query($conection, $sql);
-        $count_orden = mysqli_fetch_row($result)[0];
 
-        if($count_orden['count'] > 1) {
-            $sql = "SELECT SUM(importe) AS total FROM detalle_ordencompra WHERE folio = " . $row['no_orden'];
-            $result = mysqli_query($conection, $sql);
-            $total_orden = mysqli_fetch_row($result)[0];
-            $row['cant_autorizada'] = $total_orden['total'];
-        }
-        
         $nestedData = [
             'counter'       => $count,
             'pedidono'      => $row["id"],
