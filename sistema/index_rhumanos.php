@@ -61,7 +61,7 @@ if ($result_sql20 > 0) {
    
      <script>
 
-     alert('\t Contratos Eventuales Vencidos y/o Prontos a Vencer. \t \n\t \u00A0 \n\t Empleado: <?php echo $namecliente; ?> \n\t Fecha de vencimiento: <?php echo $newDate3; ?> ')
+     // alert('\t Contratos Eventuales Vencidos y/o Prontos a Vencer. \t \n\t \u00A0 \n\t Empleado: <?php echo $namecliente; ?> \n\t Fecha de vencimiento: <?php echo $newDate3; ?> ')
 
     </script>
   
@@ -98,7 +98,7 @@ if ($result_sql33 > 0) {
    
      <script>
 
-     alert('\t Licencias Vencidas y/o Prontas a Vencer. \t \n\t \u00A0 \n\t Empleado: <?php echo $namecliente; ?> \n\t Fecha de vencimiento: <?php echo $newDate30; ?> ')
+     // alert('\t Licencias Vencidas y/o Prontas a Vencer. \t \n\t \u00A0 \n\t Empleado: <?php echo $namecliente; ?> \n\t Fecha de vencimiento: <?php echo $newDate30; ?> ')
 
     </script>
   
