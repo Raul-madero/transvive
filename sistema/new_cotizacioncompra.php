@@ -152,9 +152,7 @@ mysqli_close($conection);
                                 <label for="inputSolicita" class="col-sm-3 col-form-label">Area Solicitante</label>
                                 <div class="col-sm-9">
                                     <?php
-                                        if($User === "Elena") {
-                                            $solicita = "Administracion";
-                                        }else if($User === "Lu"){
+                                        if($User === "Lu"){
                                             $solicita = "SGC";
                                         }else if($User === 'RMADERO') {
                                             $solicita = 'Sistemas';
@@ -168,9 +166,6 @@ mysqli_close($conection);
                                                     break;
                                                 case 6:
                                                     $solicita = "Operaciones";
-                                                    break;
-                                                case 7:
-                                                    $solicita = "Mantenimiento";
                                                     break;
                                                 case 8:
                                                     $solicita = "Operaciones";
@@ -187,7 +182,27 @@ mysqli_close($conection);
                                             }
                                         }
                                         ?>
+
+                                        <?php
+                                            if($User === "Elena"): ?>
+                                    <select name="inputSolicita" id="inputSolicita" class="select2bs4">
+                                        <option value="Administracion">Administracion</option>
+                                        <option value="Mantenimiento">Mantenimiento</option>
+                                        <option value="Administracion/Papeleria">Administracion/Papeleria</option>
+                                        <option value="Administracion/Insumos">Administracion/Insumos</option>
+                                        <option value="Administracion/Insumos">Administracion/Insumos</option>
+                                        <option value="Administracion/Combustible">Administracion/Combustible</option>
+                                        <option value="Administracion/Limpieza">Administracion/Limpieza</option>
+                                    </select>
+                                    <?php elseif($rol == 7): ?>
+                                        <select name="inputSolicita" id="inputSolicita" class="select2bs4">
+                                            <option value="Mantenimiento">Mantenimiento</option>
+                                            <option value="Taller">Taller</option>
+                                            <option value="Laminado">Laminado</option>
+                                        </select>
+                                        <?php else: ?>
                                     <input type="text" class="form-control" id="inputSolicita" name="inputSolicita" value="<?php echo $solicita; ?>" readonly/>
+                                        <?php endif; ?>
                                 </div>
                             </div>
 
