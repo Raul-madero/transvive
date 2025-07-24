@@ -192,6 +192,7 @@ mysqli_close($conection);
                                         <option value="Administracion/Insumos">Administracion/Insumos</option>
                                         <option value="Administracion/Insumos">Administracion/Insumos</option>
                                         <option value="Administracion/Combustible">Administracion/Combustible</option>
+                                        <option value="Administracion/Limpieza">Administracion/Limpieza</option>
                                     </select>
                                     <?php elseif($rol == 7): ?>
                                         <select name="inputSolicita" id="inputSolicita" class="select2bs4">
