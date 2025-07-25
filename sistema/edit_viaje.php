@@ -786,19 +786,19 @@ function enviarDatos(justificacionUnidad) {
     <script>
 $('#guardar_tipoactividad2').click(function(e) {
     e.preventDefault();
-    // let fecha = $('#inputFecha').val();
-    // const ahora = new Date();
-    // const esLunes = ahora.getDay() === 1; // 0 es domingo, 1 es lunes, etc.
-    // const fechaActual = ahora.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-    // const hora = ahora.toLocaleTimeString()
-    // if(fecha < fechaActual && hora > '09:30:00') {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Error',
-    //     text: 'Registro fuera de horario.',
-    //   });
-    //   return;
-    // }
+    let fecha = $('#inputFecha').val();
+    const ahora = new Date();
+    const esLunes = ahora.getDay() === 1; // 0 es domingo, 1 es lunes, etc.
+    const fechaActual = ahora.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    const hora = ahora.toLocaleTimeString()
+    if(fecha < fechaActual && hora > '09:30:00') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Registro fuera de horario.',
+      });
+      return;
+    }
     // console.log(hora);
     let unidad      = $('#inputTipo').val().trim();
     let unidad_ejec = $('#inputTipoejecutado').val().trim();
