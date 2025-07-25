@@ -190,7 +190,7 @@ mysqli_close($conection);
                                         <option value="Mantenimiento">Mantenimiento</option>
                                         <option value="Administracion/Papeleria">Administracion/Papeleria</option>
                                         <option value="Administracion/Insumos">Administracion/Insumos</option>
-                                        <option value="Administracion/Insumos">Administracion/Insumos</option>
+                                        <option value="Administracion/Insumos">Administracion/Oficina</option>
                                         <option value="Administracion/Combustible">Administracion/Combustible</option>
                                         <option value="Administracion/Limpieza">Administracion/Limpieza</option>
                                     </select>
