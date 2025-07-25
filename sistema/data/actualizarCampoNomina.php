@@ -15,6 +15,15 @@ if (in_array($campo, $camposPermitidos)) {
     } else {
         echo json_encode(["success" => false, "error" => $stmt->error]);
     }
+    if($campo === 'deducciones') {
+        $stmt = $conection->prepare("UPDATE nomina_temp_2025 SET efectivo = efectivo - ? WHERE id = ?");
+        $stmt->bind_param("di", $valor, $id);
+        if (!$stmt->execute()) {
+            echo json_encode(["success" => false, "error" => $stmt->error]);
+        } else {
+            echo json_encode(["success" => true]);
+        }
+    }
     $stmt->close();
 } else {
     echo json_encode(["success" => false, "error" => "Campo no permitido"]);
