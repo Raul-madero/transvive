@@ -349,8 +349,8 @@ $namerol = $filas['rol'];
 							data: { id, campo, valor: nuevoValor },
 							success: res => $('#example1').DataTable().ajax.reload(() => {
 								$('#example1').DataTable().ajax.reload(() => {
-									$('#example1').DataTable().draw(false)
-								}, false)
+									$('#example1').DataTable().draw(true)
+								}, true)
 							}),
 							error: () => alert("Error al actualizar.")
 						});
