@@ -18,9 +18,11 @@
               
               <li><a href="carga_combustible23.php" class="dropdown-item">Carga de Combustible</a></li>
               <!--
-               <li class="dropdown-divider"></li>
+               <li class="dropdown-divider"></li> -->
+               <?php if($User === "yunnuen"): ?>
                <li><a href="viajes_especiales.php" class="dropdown-item">Registro de Servicios Especiales</a></li>
-                <li class="dropdown-divider"></li>-->
+               <?php endif; ?>
+               <!-- <li class="dropdown-divider"></li>-->
                <li><a href="geo_viajes.php" class="dropdown-item">Geolocalizacion viajes</a></li>
               
              
