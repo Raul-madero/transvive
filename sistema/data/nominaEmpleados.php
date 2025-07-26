@@ -189,7 +189,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
             $total_vueltas > 0 && 
             intval($faltas)  == 0
             ) ? floatval($bono_semanal) : 0;
-        $bono_categoria = 0;
+        // $bono_categoria = 0;
 
         //Calculo de deducciones
         $deduccion = max(0, floatval($cantidad) - floatval($total_abonado));

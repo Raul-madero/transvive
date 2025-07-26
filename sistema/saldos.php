@@ -223,7 +223,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Categoria:</label>
+                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Semanal:</label>
                             <div class="col-sm-3">
                                 <input type="number" class="form-control" id="inputBonosc2" name="inputBonosc2" step="0.01" value="<?php echo $bono_cat; ?>" readonly>
                             </div>
@@ -233,7 +233,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="col-sm-3">
                                 <input type="number" class="form-control" id="inputBonos" name="inputBonos" step="0.01" value="<?php echo $bono_supervisor; ?>" readonly>
                             </div>
-                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Semanal:</label>
+                            <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Alertas:</label>
                             <div class="col-sm-3">
                                 <input type="number" class="form-control" id="inputBonosemanal" name="inputBonosemanal" step="0.01" value="<?php echo $bonosemanal; ?>" readonly>
                             </div>
