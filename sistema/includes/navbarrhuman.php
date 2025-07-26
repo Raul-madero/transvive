@@ -88,6 +88,7 @@
 
                 <li><a href="carga_importesfiscal.php" class="dropdown-item">Actualiza Importes Fiscales</a></li> 
                  <li><a href="aumento_sueldo.php" class="dropdown-item">(%) Aumento Sueldos</a></li> 
+                 <li><a href="carga_bonosemanal.php" class="dropdown-item">Carga Bono Semanal</a></li> 
                   
                 </ul>
               </li>
