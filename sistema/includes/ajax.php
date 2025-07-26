@@ -2475,16 +2475,26 @@ if($_POST['action'] == 'FindeViaje')
 
 // ***** Agrega participantes minutas //
     
-    if($_POST['action'] == 'CargaRegistroViajes'){
-        $token         = md5($_SESSION['idUser']);
+   if ($_POST['action'] == 'CargaRegistroViajes') {
+    $token = md5($_SESSION['idUser']);
 
-        $query_control = mysqli_query($conection,"CALL procesa_cargaviajes('$token')");
-        mysqli_close($conection); 
-        $result = mysqli_num_rows($query_control);   
-        $data = mysqli_fetch_assoc($query_control);
-        echo json_encode($data,JSON_UNESCAPED_UNICODE);
-       
+    $query_control = mysqli_query($conection, "INSERT INTO registro_viajes (fecha, semana, cliente, ruta, operador, unidad, tipo_viaje, num_unidad, hora_inicio, hora_fin, valor_vuelta, sueldo_vuelta, id_supervisor, jefe_operaciones, usuario_reg, fecha_carga, planeado, yearreg, usuario_id) SELECT fecha, semana, cliente, ruta, operador, unidad, tipo_viaje, num_unidad, hora_inicio, hora_fin, valor_vuelta, sueldo_vuelta, id_supervisor, jefe_operaciones, usuario_reg, fecha_carga, 1, YEAR(fecha), usuario_id FROM tempregistro_viajes");
+
+    if ($query_control) {
+        // Inserción exitosa
+        $last_id = mysqli_insert_id($conection); // Obtiene el ID del último registro insertado
+        echo json_encode(['success' => true, 'last_id' => $last_id], JSON_UNESCAPED_UNICODE);
+    } else {
+        // Error en la inserción
+        echo json_encode(['error' => 'Error al cargar registros: ' . mysqli_error($conection)], JSON_UNESCAPED_UNICODE);
     }
+}
+        // mysqli_close($conection); 
+        // $result = mysqli_num_rows($query_control);   
+        // $data = mysqli_fetch_assoc($query_control);
+        // echo json_encode($data,JSON_UNESCAPED_UNICODE);
+       
+    
           
 
 //Almacena Ruta
