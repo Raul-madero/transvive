@@ -140,7 +140,7 @@ $namerol = $filas['rol'];
                 <tr>
                   <th>Semana</th><th>Año</th><th>No.</th><th>Nombre</th><th>Cargo</th>
                   <th>IMSS</th><th>Sueldo Base</th><th>Total Vueltas</th><th>Sueldo Bruto</th><th>Sueldo Adicional</th>
-                  <th>Descuento Adeudo</th><th>Nomina Fiscal</th><th>Bono Semanal</th><th>Bono Categoria</th>
+                  <th>Descuento Adeudo</th><th>Nomina Fiscal</th><th>Bono Alertas</th><th>Bono Semanal</th>
                   <th>Bono Supervisor</th><th>Apoyo Mensual</th><th>Sueldo Total</th><th>Días Vacaciones</th>
                   <th>Pago Vacaciones</th><th>Prima Vacacional</th><th>Depósito</th><th>Efectivo</th>
                   <th>Deducción Fiscal</th><th>Caja Ahorro</th><th>Supervisor</th><th>Neto</th>

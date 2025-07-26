@@ -602,16 +602,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Clasificación Categoria:</label>
-                          <div class="col-sm-3">
+                          <!-- <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Clasificación Categoria:</label> -->
+                          <!-- <div class="col-sm-3">
                             <select class="form-control" id="inputClasifcat" name="inputClasifcat">
                               <option value="<?php echo $clasif_cat; ?>"><?php echo $clasif_cat; ?></option>
                               <option value="A">A</option>
                               <option value="AA">AA</option>
                               <option value="AAA">AAA</option>
                             </select>
-                          </div>
-                          <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Categoria:</label>
+                          </div> -->
+                          <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Semanal:</label>
                           <div class="col-sm-3">
                             <input type="number" class="form-control" id="inputBonosc2" name="inputBonosc2" step="0.01" value="<?php echo $bonosc2; ?>">
                           </div>
@@ -621,7 +621,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <div class="col-sm-3">
                             <input type="number" class="form-control" id="inputBonos" name="inputBonos" step="0.01" value="<?php echo $bonos; ?>">
                           </div>
-                          <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Semanal:</label>
+                          <label for="inputName" class="col-sm-3 col-form-label" style="text-align: left;">Bono Alertas:</label>
                           <div class="col-sm-3">
                             <input type="number" class="form-control" id="inputBonosemanal" name="inputBonosemanal" step="0.01" value="<?php echo $bonosemanal; ?>">
                           </div>
