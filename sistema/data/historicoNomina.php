@@ -28,7 +28,7 @@ if (!empty($searchValue)) {
 $columns = array('semana', 'anio', 'noempleado', 'nombre', 'cargo', 'imss', 'sueldo_base', 'supervisor', 'sueldo_bruto', 'nomina_fiscal', 'bono_semanal', 'bono_categoria', 'bono_supervisor', 'apoyo_mes', 'deposito', 'efectivo', 'deducciones', 'deduccion_fiscal', 'caja_ahorro', 'supervisor', 'neto');
 
 // Recuperar datos finales
-$sql_nomina = "SELECT id, semana, anio, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, apoyo_mes, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal, prima_vacacional, dias_vacaciones, pago_vacaciones, neto
+$sql_nomina = "SELECT id, semana, anio, noempleado, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, apoyo_mes, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal, prima_vacacional, dias_vacaciones, pago_vacaciones, neto, sueldo_adicional
                 FROM historico_nomina $whereClause 
                 GROUP BY  id, noempleado, anio, semana, nombre, no_unidad, tipo_unidad, cargo, imss, sueldo_base, total_vueltas, sueldo_bruto, nomina_fiscal, bono_semanal, bono_categoria, bono_supervisor, apoyo_mes, deposito_fiscal, efectivo, deducciones, caja_ahorro, supervisor, deduccion_fiscal, deposito_fiscal, prima_vacacional, dias_vacaciones, pago_vacaciones, neto
                 ORDER BY $columns[$orderColumn] $orderDir LIMIT $start, $length"; 
@@ -66,11 +66,11 @@ while ($row = mysqli_fetch_assoc($result_nomina)) {
 }
 $draw = $_POST['draw'] ?? 1;
 
-$total_nomina = $conection->query("SELECT SUM(deposito_fiscal + efectivo) AS total_nomina FROM historico_nomina")->fetch_assoc();
-    $total_fiscal = $conection->query("SELECT SUM(nomina_fiscal) AS total_fiscal FROM historico_nomina")->fetch_assoc();
-    $total_adeudo = $conection->query("SELECT SUM(deducciones) AS total_deducciones FROM historico_nomina")->fetch_assoc();
-    $total_caja_ahorro = $conection->query("SELECT SUM(caja_ahorro) AS total_caja FROM historico_nomina")->fetch_assoc();
-    $total_vueltas = $conection->query("SELECT SUM(total_vueltas) AS total_total_vueltas FROM historico_nomina")->fetch_assoc();
+$total_nomina = $conection->query("SELECT SUM(deposito_fiscal + efectivo + sueldo_adicional) AS total_nomina FROM nomina_temp_2025")->fetch_assoc();
+    $total_fiscal = $conection->query("SELECT SUM(nomina_fiscal) AS total_fiscal FROM nomina_temp_2025")->fetch_assoc();
+    $total_adeudo = $conection->query("SELECT SUM(deducciones) AS total_deducciones FROM nomina_temp_2025")->fetch_assoc();
+    $total_caja_ahorro = $conection->query("SELECT SUM(caja_ahorro) AS total_caja FROM nomina_temp_2025")->fetch_assoc();
+    $total_vueltas = $conection->query("SELECT COALESCE(SUM(total_vueltas), 0) AS total_total_vueltas FROM nomina_temp_2025")->fetch_assoc();
 
 echo json_encode([
     'draw' => $draw,
