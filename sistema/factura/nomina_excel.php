@@ -140,7 +140,7 @@ $query_productos = mysqli_query($conection,"SELECT * FROM nomina_temp_2025");
 $fila = 4;
 $total = 0;
 while ($row=mysqli_fetch_assoc($query_productos)) {
- $efectivo = ($row['sueldo_bruto'] - $row['nomina_fiscal']) + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['apoyo_mes'] + $row['pago_vacaciones'] + $row['prima_vacacional'] + $row['sueldo_adicional'] - $row['deducciones'] + $row['caja_ahorro'];
+ $efectivo = ($row['sueldo_bruto'] - $row['nomina_fiscal']) + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['apoyo_mes'] + $row['pago_vacaciones'] + $row['prima_vacacional'] + $row['sueldo_adicional'] - $row['deducciones'] - $row['caja_ahorro'];
   $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A'.$fila, $row['semana'])
             ->setCellValue('B'.$fila, $anio)
