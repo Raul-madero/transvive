@@ -129,17 +129,33 @@ $objPHPExcel->getActiveSheet()->getColumnDimension('X')->setWidth(10);
 $objPHPExcel->getActiveSheet()->getColumnDimension('Y')->setWidth(10);
 $objPHPExcel->getActiveSheet()->getColumnDimension('Z')->setWidth(10);
 
-$anio = date('Y');
+$anio = isset($_GET['anio']) ? intval($_GET['anio']) : date('Y');
+$semana = isset($_GET['semana']) ? intval($_GET['semana']) : date('W');
 
+// Buscar si existe una nomina para la semana y año actuales en historico_nomina
+$sql_verificar_nomina = "SELECT 1 FROM historico_nomina WHERE semana = ? AND anio = ? LIMIT 1";
+$stmt = $conection->prepare($sql_verificar_nomina);
+$stmt->bind_param('ii', $semana, $anio);
+$stmt->execute();
+$resultado_verificacion = $stmt->get_result();
 
-$query_productos = mysqli_query($conection,"SELECT * FROM nomina_temp_2025");
-        $result_detalle = mysqli_num_rows($query_productos);
-        mysqli_close($conection);             
+if (mysqli_num_rows($resultado_verificacion) > 0) {
+    $stmt = mysqli_prepare($conection, "SELECT * FROM historico_nomina WHERE semana = ? AND anio = ?");
+    mysqli_stmt_bind_param($stmt, 'ii', $semana, $anio);
+
+} else {
+    $stmt = mysqli_prepare($conection, "SELECT * FROM nomina_temp_2025");
+}
+
+mysqli_stmt_execute($stmt);
+$resultado = mysqli_stmt_get_result($stmt);
+$result_detalle = mysqli_num_rows($resultado);
+mysqli_close($conection);             
 
 // Miscellaneous glyphs, UTF-8
 $fila = 4;
 $total = 0;
-while ($row=mysqli_fetch_assoc($query_productos)) {
+while ($row=mysqli_fetch_assoc($resultado)) {
  $efectivo = ($row['sueldo_bruto'] - $row['nomina_fiscal']) + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['apoyo_mes'] + $row['pago_vacaciones'] + $row['prima_vacacional'] + $row['sueldo_adicional'] - $row['deducciones'] - $row['caja_ahorro'];
   $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A'.$fila, $row['semana'])

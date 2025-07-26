@@ -113,7 +113,7 @@ $namerol = $filas['rol'];
 			  </div>
           	</div>
         <div class="row mt-3">
-			<a href="factura/nomina_excel.php" class="text-success flex gap-2 btn btn-outline-success hover:text-dark">
+			<a href="#" id="descargarExcel" class="text-success flex gap-2 btn btn-outline-success hover:text-dark">
 				<i class="fa fa-file-excel"></i>
 				Excel
 			</a>
@@ -375,6 +375,21 @@ $namerol = $filas['rol'];
 
 			// Carga inicial sin datos
 			load_data();
+		});
+		</script>
+
+		<script>
+		$(document).ready(function () {
+			$('#descargarExcel').click(function (e) {
+				e.preventDefault();
+				let semana = $('#semana').val();
+				let anio = $('#anio').val();
+				if (semana > 0 && anio >= 2024) {
+					window.location.href = 'factura/nomina_excel.php?semana=' + semana + '&anio=' + anio;
+				} else {
+					alert("Por favor, selecciona una semana y un año válidos.");
+				}
+			});
 		});
 		</script>
 
