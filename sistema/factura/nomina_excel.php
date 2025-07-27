@@ -193,6 +193,18 @@ $fila++;
 //$objPHPExcel->setActiveSheetIndex(0)
 //            ->setCellValue('F'.$fila, $total);
 
+// Fila de totales
+$fila_total = $fila;
+$ultima_fila_datos = $fila - 1;
+
+//Columnas que se desea sumar
+$columns_to_sum = array_merge(range('H', 'X'), ['Z']);
+foreach ($columns_to_sum as $column) {
+  $objPHPExcel->getActiveSheet()->setCellValue(
+    $column . $fila_total,
+    '=SUM(' . $column . '4:' . $column . $ultima_fila_datos . ')'
+  );
+}
 // Rename worksheet
 $objPHPExcel->getActiveSheet()->setTitle('Nomina semanal');
 
