@@ -66,7 +66,7 @@ while ($row = mysqli_fetch_assoc($result_nomina)) {
 }
 $draw = $_POST['draw'] ?? 1;
 
-$total_nomina = $conection->query("SELECT SUM(deposito_fiscal + efectivo + sueldo_adicional) AS total_nomina FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
+$total_nomina = $conection->query("SELECT SUM((sueldo_bruto - nomina_fiscal) + bono_semanal + bono_supervisor + bono_categoria + apoyo_mes + pago_vacaciones + prima_vacacional +sueldo_adicional - deducciones - caja_ahorro + deposito_fiscal) AS total_nomina FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
 $total_fiscal = $conection->query("SELECT SUM(nomina_fiscal) AS total_fiscal FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
 $total_adeudo = $conection->query("SELECT SUM(deducciones) AS total_deducciones FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
 $total_caja_ahorro = $conection->query("SELECT SUM(caja_ahorro) AS total_caja FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
