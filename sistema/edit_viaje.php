@@ -791,13 +791,17 @@ $('#guardar_tipoactividad2').click(function(e) {
    const esLunes = ahora.getDay() === 1; // 0 es domingo, 1 es lunes, etc.
    const fechaActual = ahora.toISOString().split('T')[0]; // Formato YYYY-MM-DD
    const hora = ahora.toLocaleTimeString()
-   if(esLunes && fecha < fechaActual && hora > '09:30:00') {
-     Swal.fire({
-       icon: 'error',
-       title: 'Error',
-       text: 'Registro fuera de horario.',
-     });
-     return;
+   if(hora > '09:30:00') {
+    if(fecha < fechaActual) {
+      if(esLunes) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Registro fuera de horario.',
+        });
+        return;
+      }
+    }
    }
     // console.log(hora);
     let unidad      = $('#inputTipo').val().trim();
