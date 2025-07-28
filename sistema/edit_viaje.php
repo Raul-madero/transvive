@@ -794,12 +794,12 @@ $('#guardar_tipoactividad2').click(function(e) {
    if(hora > '09:30:00') {
     if(fecha < fechaActual) {
       if(esLunes) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Registro fuera de horario.',
-        });
-        return;
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Error',
+        //   text: 'Registro fuera de horario.',
+        // });
+        // return;
       }
     }
    }
