@@ -166,7 +166,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $sueldo_vueltas = floatval($empleado['sueldo_vueltas']);
         $prima_vacacional = $empleado['prima_vacacional'];
         $total_vueltas = floatval($empleado['total_vueltas']);
-        $sueldo_bruto = $dias_vacaciones_pagar > 6 ? 0 : floatval($empleado['sueldo_bruto']);
+        $sueldo_bruto = $dias_vacaciones_pagar >= 6 ? 0 : floatval($empleado['sueldo_bruto']);
         $descuento = floatval($empleado['descuento']);
         $cantidad = floatval($empleado['cantidad']);
         $total_abonado = floatval($empleado['total_abonado']);
