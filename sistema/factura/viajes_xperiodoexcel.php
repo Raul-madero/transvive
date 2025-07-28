@@ -186,7 +186,8 @@ mysqli_close($conection);
       $sueldo_vuelta = null;
       
       if (in_array($row['tipo_viaje'], ['Normal', 'Extra', 'Semidomiciliadas'])) {
-        if ($row['tipo_viaje'] == 'Semidomiciliadas') {
+        // var_dump($row);
+        if ($row['tipo_viaje'] === 'Semidomiciliadas') {
           if (!empty($row['sueldo_semi']) && $row['sueldo_semi'] != 0) {
             $sueldo_vuelta = max($row['sueldo_semi'], $row['valor_vuelta']);
           }
