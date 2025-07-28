@@ -164,7 +164,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                          
                       <div class="col-3">
-                      <a href="#" onclick="window.open ('factura/recibo_nomina.php?id='+ document.getElementById('inputTiponomina').value + 'id2='+document.getElementById('semana').value + 'id3='+document.getElementById('inputEjercicio').value );" >  
+                      <a href="#" onclick="window.open ('factura/recibo_nomina.php?id='+ document.getElementById('inputTiponomina').value + '&id2='+document.getElementById('semana').value + '&id3='+document.getElementById('inputEjercicio').value );" >  
                        
                           <button type ="button" class="btn btn-primary pull-left"><i class="fa fa-play"></i> Aceptar</button>
                         </a>

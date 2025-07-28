@@ -6,87 +6,86 @@ require '../includes/conversor.php';
 header("Content-Type: text/html; charset=iso-8859-1 ");
 class PDF extends FPDF
 {
-function Header()
-{
-//Variables para consulta
-$idoentrada=$_REQUEST['id'];
-//$nosemana=$_REQUEST['semana'];
-
-$fin = strrpos($idoentrada, "id2");
-$final = $fin - 1;
-$fecha_ini = substr($idoentrada, 0,  $fin);
-$fin2 = $fin + 4;
-$fecha_fin = substr($idoentrada, $fin2, 9);
-$finfin = strrpos($idoentrada, "id3"); 
-$final3 = $finfin + 4;
-$fecha_ejercicio = substr($idoentrada, $final3, 10);
-//Consulta sql encabezado
-//Consulta sql encabezado
-include('../../conexion.php');
-
-//Agregamos la libreria para genera códigos QR
-    //require "phpqrcode/qrlib.php";    
+    function Header()
+    {
+        //Variables para consulta
+        $idoentrada=$_REQUEST['id'];
+        $nosemana=$_REQUEST['id2'];
+        $numero_semana = intval(str_replace('Semana ', '', $nosemana));
+        $anio = intval($_REQUEST['id3']);
+        // var_dump($_REQUEST, $numero_semana);
+        
+        //Determinamos la fecha correspondiente al inicio de la semana
+        $fecha_inicio = new DateTime();
+        $fecha_inicio->setISODate($anio, $numero_semana, 1);
+        
+        //Determinamos la fecha final de la semana
+        $fecha_fin = new DateTime();
+        $fecha_fin->setISODate($anio, $numero_semana, 7);
+        
+        // $fin = strrpos($idoentrada, "id2");
+        // $final = $fin - 1;
+        // $fecha_ini = substr($idoentrada, 0,  $fin);
+        // $fecha_ejercicio = substr($idoentrada, $final3, 10);
+        // $fin2 = $fin + 4;
+        // $fecha_fin = substr($idoentrada, $fin2, 9);
+        // $finfin = strrpos($idoentrada, "id3"); 
+        // $final3 = $finfin + 4;
+        //Consulta sql encabezado
+        //Consulta sql encabezado
+        
+        include('../../conexion.php');
+        //Agregamos la libreria para genera códigos QR
+        //require "phpqrcode/qrlib.php";    
     
-    //Declaramos una carpeta temporal para guardar la imagenes generadas
-    $dir = 'temp/';
+        //Declaramos una carpeta temporal para guardar la imagenes generadas
+        $dir = 'temp/';
     
-    //Si no existe la carpeta la creamos
-    if (!file_exists($dir))
-        mkdir($dir);
+        //Si no existe la carpeta la creamos
+        if (!file_exists($dir)){
+            mkdir($dir);
+        }
     
         //Declaramos la ruta y nombre del archivo a generar
-    $filename = $dir.'test.png';
- 
+        $filename = $dir.'test.png';
+
         //Parametros de Condiguración
-    
-    
-$conection->set_charset('utf8');
-
-$query = mysqli_query($conection,"SELECT dn.id, dn.no_semana, dn.no_empleado, dn.nombre, dn.cargo, dn.viajes_especiales, dn.viajes_contrato, sm.dia_inicial, sm.dia_final FROM detalle_nomina dn INNER JOIN semanas sm ON dn.no_semana = sm.semana WHERE dn.no_semana= '$fecha_fin'");
-$result = mysqli_num_rows($query);
-$entrada = mysqli_fetch_assoc($query);
-//$encabezado = mysql_fetch_array($query1, $conexion);
-//Variables para encabezado
-    
-    $id         = $entrada['id'];
-    $semana     = $entrada['no_semana'];
-    $no_empl    = $entrada['no_empleado'];
-    $empleado   = $entrada['nombre'];
-    $cargo      = $entrada['cargo'];
-    $tot_espc   = $entrada['viajes_especiales'];
-    $tot_normal = $entrada['viajes_contrato'];
-    $fcha_ini   = $entrada['dia_inicial'];
-    $fcha_fin   = $entrada['dia_final'];
-
-   
-    $newDate = date("d-m-Y", strtotime($fcha_ini)); 
-    $newDate2 = date("d-m-Y", strtotime($fcha_fin)); 
-    
-    //$contenido = 'Certificado '.$certificado.' Almacen '.$almacen;
-   
-
-  
-
-   
-   
-//Logo
-//*$this->Image("../../images/transvive.png",12,11,48,13,"png",0,'C');
-//$this->Image("temp/test.png",12,31,35,23,"png",0,'C');
-//Arial bold 15
-$this->SetFont('Arial','',10);
-//Encabezado
-//$this->Cell(50,15,'',0,0,'r');
-$this->SetFillColor(231,233,238);
-$this->SetTextcolor(6,22,54);
-//$this->Cell(189,10,$semana,0,1,'C');
-$this->SetFont('Arial','',9);
-//$this->Cell(189,5,'Del:'. ' '. $fecha_ini . ' '. 'Al:'. ' '. $fecha_fin. ' year ' . $fecha_ejercicio ,0,1,'C');
 
 
-//$this->Cell(1,5,'',1,0,'L');
-//Encabezado de la tabla
-//$this->Cell(190,5,'DETALLE DE LA ENTRADA',1,1,'C');
-}
+        $conection->set_charset('utf8');
+
+        $query = mysqli_query($conection,"SELECT * FROM historico_nomina WHERE semana = $numero_semana AND anio = $anio");
+        $result = mysqli_num_rows($query);
+        $entrada = mysqli_fetch_assoc($query);
+        //$encabezado = mysql_fetch_array($query1, $conexion);
+        //Variables para encabezado
+            
+        $id         = $entrada['id'];
+        $semana     = $entrada['semana'];
+        $no_empl    = $entrada['noempleado'];
+        $empleado   = $entrada['nombre'];
+        $cargo      = $entrada['cargo'];
+        $tot_vueltas   = $entrada['total_vueltas'];
+        $fcha_ini   = $fecha_inicio->format('d-m-Y');
+        $fcha_final   = $fecha_fin->format('d-m-Y');
+        //Logo
+        $this->Image("../../images/transvive.png",12,11,48,13,"png",0);
+        //$this->Image("temp/test.png",12,31,35,23,"png",0,'C');
+        //Arial bold 15
+        $this->SetFont('Arial','',10);
+        //Encabezado
+        //$this->Cell(50,15,'',0,0,'r');
+        $this->SetFillColor(231,233,238);
+        $this->SetTextcolor(6,22,54);
+        //$this->Cell(189,10,$semana,0,1,'C');
+        $this->SetFont('Arial','',9);
+        //$this->Cell(189,5,'Del:'. ' '. $fecha_ini . ' '. 'Al:'. ' '. $fecha_fin. ' year ' . $fecha_ejercicio ,0,1,'C');
+
+
+        //$this->Cell(1,5,'',1,0,'L');
+        //Encabezado de la tabla
+        //$this->Cell(190,5,'DETALLE DE LA ENTRADA',1,1,'C');
+    }
 
 
 
@@ -133,25 +132,26 @@ include('../../conexion.php');
 $idoentrada=$_REQUEST['id'];
 //$nosemana=$_REQUEST['semana'];
 
-$fin = strrpos($idoentrada, "id2");
-$final = $fin - 1;
-$fecha_ini = substr($idoentrada, 0,  $fin);
-$fin2 = $fin + 4;
-$fecha_fin = substr($idoentrada, $fin2, 9);
-$finfin = strrpos($idoentrada, "id3"); 
-$final3 = $finfin + 4;
-$fecha_ejercicio = substr($idoentrada, $final3, 10);
+// $fin = strrpos($idoentrada, "id2");
+// $final = $fin - 1;
+// $fecha_ini = substr($idoentrada, 0,  $fin);
+// $fin2 = $fin + 4;
+// $fecha_fin = substr($idoentrada, $fin2, 9);
+// $finfin = strrpos($idoentrada, "id3"); 
+// $final3 = $finfin + 4;
+// $fecha_ejercicio = substr($idoentrada, $final3, 10);
 //Consulta sql encabezado
 //Consulta sql encabezado
 $pdf=new PDF();
 $pdf->AddPage('portrait','letter');
 
-if ($fecha_ini = "Semanal") {
+if ($idoentrada = "Semanal") {
  
-$query = mysqli_query($conection,"SELECT dn.id, dn.no_semana, dn.unidad, dn.nounidad, dn.no_empleado, dn.nombre, dn.cargo, dn.imss, dn.estatus, dn.deduccion_fiscal, dn.total_general, dn.caja, dn.total_nomina, dn.descuento_adeudo, dn.viajes_especiales, dn.viajes_contrato, sm.dia_inicial, sm.dia_final, dn.sueldo_bruto, dn.bono_categoria, dn.bono_supervisor, dn.descuento_adeudo, dn.bono_semanal, dn.apoyo_mensual, dn.sueldo_adicional, dn.total_especiales, dn.total_vueltas, dn.prima_vacacional, dn.vacaciones, dn.pago_fiscal FROM detalle_nomina dn INNER JOIN semanas sm ON dn.no_semana = sm.semana WHERE dn.no_semana= '$fecha_fin' and dn.yearpago = $fecha_ejercicio order by dn.no_empleado" );
+$query = mysqli_query($conection,"SELECT id, semana,  noempleado, nombre, cargo, imss, estatus, deduccion_fiscal, caja_ahorro, total_nomina, deducciones, total_vueltas, sueldo_bruto, bono_categoria, bono_supervisor, bono_semanal, apoyo_mensual, sueldo_adicional, prima_vacacional, vacaciones, deposito_fiscal FROM historico_nomina WHERE semana =  $numero_semana and yearpago = $anio order by no_empleado" );
 $result = mysqli_num_rows($query);
+$data = mysqli_fetch_assoc($query);
 
-
+var_dump($data);
 
 
 while ($row = mysqli_fetch_assoc($query)){
