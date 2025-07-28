@@ -807,7 +807,7 @@ const fechaSistema = new Date(fechaActual);
 
 // Comparar horas
 if (
-  horaStr > '09:30:00' && // Hora en formato HH:MM:SS para comparación
+  horaStr > '11:30:00' && // Hora en formato HH:MM:SS para comparación
   (fechaInput < fechaSistema) && // La fecha del input es menor que la actual
   esLunes
 ) {
