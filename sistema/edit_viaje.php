@@ -786,23 +786,38 @@ function enviarDatos(justificacionUnidad) {
     <script>
 $('#guardar_tipoactividad2').click(function(e) {
     e.preventDefault();
-   let fecha = $('#inputFecha').val();
-    const ahora = new Date();
-   const esLunes = ahora.getDay() === 1; // 0 es domingo, 1 es lunes, etc.
-   const fechaActual = ahora.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-   const hora = ahora.toLocaleTimeString()
-   if(hora > '09:30:00') {
-    if(fecha < fechaActual) {
-      if(esLunes) {
-        // Swal.fire({
-        //   icon: 'error',
-        //   title: 'Error',
-        //   text: 'Registro fuera de horario.',
-        // });
-        // return;
-      }
-    }
-   }
+    let fecha = $('#inputFecha').val();
+const ahora = new Date();
+
+// Obtener el día de la semana (0=domingo, 1=lunes...)
+const esLunes = ahora.getDay() === 1; 
+
+// Obtener la fecha actual en formato YYYY-MM-DD
+const fechaActual = ahora.toISOString().split('T')[0];
+
+// Obtener la hora en formato HH:MM:SS
+const horas = ahora.getHours().toString().padStart(2, '0');
+const minutos = ahora.getMinutes().toString().padStart(2, '0');
+const segundos = ahora.getSeconds().toString().padStart(2, '0');
+const horaStr = `${horas}:${minutos}:${segundos}`;
+
+// Fecha en formato Date
+const fechaInput = new Date(fecha);
+const fechaSistema = new Date(fechaActual);
+
+// Comparar horas
+if (
+  horaStr > '09:30:00' && // Hora en formato HH:MM:SS para comparación
+  (fechaInput < fechaSistema) && // La fecha del input es menor que la actual
+  esLunes
+) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: 'Registro fuera de horario.',
+  });
+  return;
+}
     // console.log(hora);
     let unidad      = $('#inputTipo').val().trim();
     let unidad_ejec = $('#inputTipoejecutado').val().trim();
