@@ -78,7 +78,7 @@ function dia15EntreFechas($fecha_inicio, $fecha_fin) {
 
 function insertar_nomina($conection, $data) {
      // Verificar si el cargo es 'OPERADOR' y el total_vueltas es 0
-    if ($data['cargo'] === 'OPERADOR' && $data['total_vueltas'] == 0) {
+    if ($data['cargo'] === 'OPERADOR' && $data['dias_vacaciones'] == 0 && $data['total_vueltas'] == 0) {
         // Si las condiciones se cumplen, no se hace la inserción
         return; // o puedes usar exit() si quieres detener la ejecución completamente
     }

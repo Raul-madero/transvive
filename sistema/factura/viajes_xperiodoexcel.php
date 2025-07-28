@@ -184,8 +184,6 @@ mysqli_close($conection);
       $mes = date("m", $fechames);
       
       $sueldo_vuelta = null;
-
-if (in_array($row['tipo_viaje'], ['Normal', 'Extra', 'Semidomiciliadas'])) {
   
   if ($row['tipo_viaje'] === 'Semidomiciliadas') {
     if (!empty($row['sueldo_semi']) && $row['sueldo_semi'] != 0) {
@@ -223,9 +221,6 @@ if (in_array($row['tipo_viaje'], ['Normal', 'Extra', 'Semidomiciliadas'])) {
       : $sueldo_base;
   }
 
-} else {
-  $sueldo_vuelta = $row['sueldo_vuelta'] ?? 0;
-}
 
 $total_vuelta = $row['valor_vuelta'] * $sueldo_vuelta;
               
