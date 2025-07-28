@@ -139,17 +139,6 @@ SELECT
     fi.neto
 
 FROM empleados e
--- LEFT JOIN alertas al 
---     ON al.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno) COLLATE utf8mb4_general_ci
---     AND DATE(al.fecha) BETWEEN '{fecha_fin}' AND '{fecha_limite_alertas}'
-
--- LEFT JOIN incidencias inc 
---     ON inc.empleado = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
---     AND (
---         (inc.fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}') 
---         OR (inc.fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
---     )
-
 LEFT JOIN registro_viajes rv 
     ON rv.operador = CONCAT_WS(' ', e.nombres, e.apellido_paterno, e.apellido_materno)
     AND DATE(rv.fecha) BETWEEN '{fecha_inicio}' AND '{fecha_fin}'
