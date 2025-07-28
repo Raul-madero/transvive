@@ -9,11 +9,11 @@ class PDF extends FPDF
     function Header()
     {
         //Variables para consulta
-        $idoentrada=$_REQUEST['id'];
-        $nosemana=$_REQUEST['id2'];
+        $idoentrada = $_REQUEST['id'];
+        $nosemana = $_REQUEST['id2'];
         $numero_semana = intval(str_replace('Semana ', '', $nosemana));
         $anio = intval($_REQUEST['id3']);
-        // var_dump($_REQUEST, $numero_semana);
+        // var_dump($_REQUEST, $numero_semana, $idoentrada);
         
         //Determinamos la fecha correspondiente al inicio de la semana
         $fecha_inicio = new DateTime();
@@ -54,12 +54,23 @@ class PDF extends FPDF
 
         $conection->set_charset('utf8');
 
-        $query = mysqli_query($conection,"SELECT * FROM historico_nomina WHERE semana = $numero_semana AND anio = $anio");
-        $result = mysqli_num_rows($query);
-        $entrada = mysqli_fetch_assoc($query);
+        
+       $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ?");
+       $stmt->bind_param("ii", $numero_semana, $anio);
+       if (!$stmt->execute()) {
+        echo $stmt->error;
+       }else{
+        $resultado = $stmt->get_result();
+        var_dump($numero_filas);
+       }
+       if($resultado && $resultado->num_rows > 0){
+        $entrada = $resultado->fetch_assoc();
+       }else{
+        $entrada = null;
+       }
         //$encabezado = mysql_fetch_array($query1, $conexion);
         //Variables para encabezado
-            
+        // var_dump( $entrada);
         $id         = $entrada['id'];
         $semana     = $entrada['semana'];
         $no_empl    = $entrada['noempleado'];
@@ -146,8 +157,8 @@ $pdf=new PDF();
 $pdf->AddPage('portrait','letter');
 
 if ($idoentrada = "Semanal") {
- 
-$query = mysqli_query($conection,"SELECT id, semana,  noempleado, nombre, cargo, imss, estatus, deduccion_fiscal, caja_ahorro, total_nomina, deducciones, total_vueltas, sueldo_bruto, bono_categoria, bono_supervisor, bono_semanal, apoyo_mensual, sueldo_adicional, prima_vacacional, vacaciones, deposito_fiscal FROM historico_nomina WHERE semana =  $numero_semana and yearpago = $anio order by no_empleado" );
+ $numero_semana = $_REQ
+$query = mysqli_query($conection,"SELECT id, semana,  noempleado, nombre, cargo, imss, estatus, deduccion_fiscal, caja_ahorro, total_nomina, deducciones, total_vueltas, sueldo_bruto, bono_categoria, bono_supervisor, bono_semanal, apoyo_mensual, sueldo_adicional, prima_vacacional, vacaciones, deposito_fiscal FROM historico_nomina WHERE semana =  $numero_semana and anio = $anio order by no_empleado" );
 $result = mysqli_num_rows($query);
 $data = mysqli_fetch_assoc($query);
 

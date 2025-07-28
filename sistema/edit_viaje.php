@@ -784,144 +784,144 @@ function enviarDatos(justificacionUnidad) {
     </script>  
 
     <script>
-$('#guardar_tipoactividad2').click(function(e) {
-    e.preventDefault();
-    let fecha = $('#inputFecha').val();
-const ahora = new Date();
+		$('#guardar_tipoactividad2').click(function(e) {
+			e.preventDefault();
+			let fecha = $('#inputFecha').val();
+			const ahora = new Date();
 
-// Obtener el día de la semana (0=domingo, 1=lunes...)
-const esLunes = ahora.getDay() === 1; 
+			// Obtener el día de la semana (0=domingo, 1=lunes...)
+			const esLunes = ahora.getDay() === 1; 
 
-// Obtener la fecha actual en formato YYYY-MM-DD
-const fechaActual = ahora.toISOString().split('T')[0];
+			// Obtener la fecha actual en formato YYYY-MM-DD
+			const fechaActual = ahora.toISOString().split('T')[0];
 
-// Obtener la hora en formato HH:MM:SS
-const horas = ahora.getHours().toString().padStart(2, '0');
-const minutos = ahora.getMinutes().toString().padStart(2, '0');
-const segundos = ahora.getSeconds().toString().padStart(2, '0');
-const horaStr = `${horas}:${minutos}:${segundos}`;
+			// Obtener la hora en formato HH:MM:SS
+			const horas = ahora.getHours().toString().padStart(2, '0');
+			const minutos = ahora.getMinutes().toString().padStart(2, '0');
+			const segundos = ahora.getSeconds().toString().padStart(2, '0');
+			const horaStr = `${horas}:${minutos}:${segundos}`;
 
-// Fecha en formato Date
-const fechaInput = new Date(fecha);
-const fechaSistema = new Date(fechaActual);
+			// Fecha en formato Date
+			const fechaInput = new Date(fecha);
+			const fechaSistema = new Date(fechaActual);
 
-// Comparar horas
-if (
-  horaStr > '09:30:00' && // Hora en formato HH:MM:SS para comparación
-  (fechaInput < fechaSistema) && // La fecha del input es menor que la actual
-  esLunes
-) {
-  Swal.fire({
-    icon: 'error',
-    title: 'Error',
-    text: 'Registro fuera de horario.',
-  });
-  return;
-}
-    // console.log(hora);
-    let unidad      = $('#inputTipo').val().trim();
-    let unidad_ejec = $('#inputTipoejecutado').val().trim();
+			// Comparar horas
+			if (
+			horaStr > '09:30:00' && // Hora en formato HH:MM:SS para comparación
+			(fechaInput < fechaSistema) && // La fecha del input es menor que la actual
+			esLunes
+			) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Registro fuera de horario.',
+			});
+			return;
+			}
+			// console.log(hora);
+			let unidad      = $('#inputTipo').val().trim();
+			let unidad_ejec = $('#inputTipoejecutado').val().trim();
 
-    if (unidad !== unidad_ejec) {
-        $('#modalJustificaUnidad').modal('show');
-        return;
-    }
+			if (unidad !== unidad_ejec) {
+				$('#modalJustificaUnidad').modal('show');
+				return;
+			}
 
-    enviarDatosUnidad2('');
-});
+			enviarDatosUnidad2('');
+		});
 
-$('#btnConfirmaJustificacion').click(function () {
-    let justificacion = $('#inputJustificacion').val().trim();
-    if (justificacion === '') {
-        Swal.fire('Campo requerido', 'Debe ingresar la justificación del cambio de unidad.', 'warning');
-        return;
-    }
+		$('#btnConfirmaJustificacion').click(function () {
+			let justificacion = $('#inputJustificacion').val().trim();
+			if (justificacion === '') {
+				Swal.fire('Campo requerido', 'Debe ingresar la justificación del cambio de unidad.', 'warning');
+				return;
+			}
 
-    $('#modalJustificaUnidad').modal('hide');
-    enviarDatosUnidad2(justificacion);
-});
-function enviarDatosUnidad2(justificacionUnidad) {
-    let Id           = $('#inputId').val();
-    let fecha        = $('#inputFecha').val();
-    let semana       = $('#inputSemana').val();
-    let cliente      = $('#frazonsoc').val();
-    let ruta         = $('#fpedido').val();
-    let operador     = $('#foperador').val();
-    let tipo         = $('#inputTipo').val();
-    let unidad_ejec  = $('#inputTipoejecutado').val();
-    let tipoviaje    = $('#inputTipoviaje').val();
-    let noeco        = $('#inputNounidad').val();
-    let nopersonas   = $('#inputNopersonas').val();
-	let nopersonasfin = $('#inputNopersonasFin').val();
-    let horarios     = $('#fhorario').val();
-    let hora_real    = $('#fhorarioreal').val();
-    let turno        = $('#inputTurno').val();
-    let tipovuelta   = $('#inputTipovta').val();
-    let sueldovuelta = $('#inputSueldovta').val();
-    let elsuperv     = $('#fsuperv').val();
-    let notas        = $('#inputNotas').val(); 
-    let action       = 'EditaAlmacenaViaje';
+			$('#modalJustificaUnidad').modal('hide');
+			enviarDatosUnidad2(justificacion);
+		});
+		function enviarDatosUnidad2(justificacionUnidad) {
+			let Id           = $('#inputId').val();
+			let fecha        = $('#inputFecha').val();
+			let semana       = $('#inputSemana').val();
+			let cliente      = $('#frazonsoc').val();
+			let ruta         = $('#fpedido').val();
+			let operador     = $('#foperador').val();
+			let tipo         = $('#inputTipo').val();
+			let unidad_ejec  = $('#inputTipoejecutado').val();
+			let tipoviaje    = $('#inputTipoviaje').val();
+			let noeco        = $('#inputNounidad').val();
+			let nopersonas   = $('#inputNopersonas').val();
+			let nopersonasfin = $('#inputNopersonasFin').val();
+			let horarios     = $('#fhorario').val();
+			let hora_real    = $('#fhorarioreal').val();
+			let turno        = $('#inputTurno').val();
+			let tipovuelta   = $('#inputTipovta').val();
+			let sueldovuelta = $('#inputSueldovta').val();
+			let elsuperv     = $('#fsuperv').val();
+			let notas        = $('#inputNotas').val(); 
+			let action       = 'EditaAlmacenaViaje';
 
-    $.ajax({
-        url: 'includes/ajax.php',
-        type: "POST",
-        async : true,
-        data: {
-            action: action,
-            Id: Id,
-            fecha: fecha,
-            semana: semana,
-            cliente: cliente,
-            ruta: ruta,
-            operador: operador,
-            tipo: tipo,
-            unidad_ejec: unidad_ejec,
-            tipoviaje: tipoviaje,
-            noeco: noeco,
-            nopersonas: nopersonas,
-			nopersonasfin: nopersonasfin,
-            horarios: horarios,
-            hora_real: hora_real,
-            turno: turno,
-            tipovuelta: tipovuelta,
-            sueldovuelta: sueldovuelta,
-            elsuperv: elsuperv,
-            notas: notas,
-            justificacionUnidad: justificacionUnidad
-        },
-        success: function(response) {
-            if (response != 'error') {
-                let info = JSON.parse(response);
-                let mensaje = info.mensaje;
-                if (mensaje === undefined) {
-                    Swal.fire({
-                        title: "Exito!",
-                        text: "REGISTRO DE VIAJE ALMACENADO CORRECTAMENTE",
-                        icon: 'success'
-                    }).then(resultado => {
-                        location.href = 'viajes23.php';
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: mensaje,
-                    });
-                }
-            } else {
-                Swal.fire({
-                    icon: 'info',
-                    title: '',
-                    text: 'Capture los datos requeridos',
-                });
-                $("#inputTipovta").focus();
-            }
-        },
-        error: function(error) {
-            console.error('Error AJAX', error);
-        }
-    });
-}
+			$.ajax({
+				url: 'includes/ajax.php',
+				type: "POST",
+				async : true,
+				data: {
+					action: action,
+					Id: Id,
+					fecha: fecha,
+					semana: semana,
+					cliente: cliente,
+					ruta: ruta,
+					operador: operador,
+					tipo: tipo,
+					unidad_ejec: unidad_ejec,
+					tipoviaje: tipoviaje,
+					noeco: noeco,
+					nopersonas: nopersonas,
+					nopersonasfin: nopersonasfin,
+					horarios: horarios,
+					hora_real: hora_real,
+					turno: turno,
+					tipovuelta: tipovuelta,
+					sueldovuelta: sueldovuelta,
+					elsuperv: elsuperv,
+					notas: notas,
+					justificacionUnidad: justificacionUnidad
+				},
+				success: function(response) {
+					if (response != 'error') {
+						let info = JSON.parse(response);
+						let mensaje = info.mensaje;
+						if (mensaje === undefined) {
+							Swal.fire({
+								title: "Exito!",
+								text: "REGISTRO DE VIAJE ALMACENADO CORRECTAMENTE",
+								icon: 'success'
+							}).then(resultado => {
+								location.href = 'viajes23.php';
+							});
+						} else {
+							Swal.fire({
+								icon: 'error',
+								title: 'Oops...',
+								text: mensaje,
+							});
+						}
+					} else {
+						Swal.fire({
+							icon: 'info',
+							title: '',
+							text: 'Capture los datos requeridos',
+						});
+						$("#inputTipovta").focus();
+					}
+				},
+				error: function(error) {
+					console.error('Error AJAX', error);
+				}
+			});
+		}
 
     </script>  
 
