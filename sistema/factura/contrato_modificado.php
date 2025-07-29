@@ -93,9 +93,10 @@ function generarContratoEmpleado($nombreEmpleado) {
 
     $noempleado = intval($data['noempleado']);
 
-    $query_max_fecha = mysqli_query($conection, "SELECT MAX(fecha_inicial) as max_fecha FROM detalle_contratos WHERE no_empleado = $noempleado");
+    $query_max_fecha = mysqli_query($conection, "SELECT MAX(fecha_inicial) as max_fecha, MAX(fecha_final) as max_fecha_final FROM detalle_contratos WHERE no_empleado = $noempleado");
     $row_max = mysqli_fetch_assoc($query_max_fecha);
     $fecha_detalle_max = $row_max['max_fecha'] ?? null;
+    $fecha_detalle_max_final = $row_max['max_fecha_final'] ?? null;
 
     $fecha_contrato_base = ($data['fecha_reingreso'] && $data['fecha_reingreso'] > '1900-01-01') ? $data['fecha_reingreso'] : $data['fecha_contrato'];
 
@@ -108,7 +109,7 @@ function generarContratoEmpleado($nombreEmpleado) {
     $fecha_final = (new DateTime($fecha_contrato))->modify('+30 days')->format('Y-m-d');
 
     $mesMen    = formatear_fecha($fecha_contrato);
-    $mesMay    = formatear_fecha($fecha_final);
+    $mesMay    = formatear_fecha(($fecha_detalle_max_final) ? $fecha_detalle_max_final : $fecha_final);
     $Diaactual = formatear_fecha(date('Y-m-d'));
 
     $salario_letra = numtoletras($data['salarioxdia']);
