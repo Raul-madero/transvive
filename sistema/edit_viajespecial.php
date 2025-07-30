@@ -307,6 +307,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        <option value="Camioneta">Camioneta</option>
                        <option value="Automovil">Automovil</option>
                        <option value="Sprinter">Sprinter</option>
+                       <option value="Sprinter">JAC</option>
                        <option value="Unidad Externa">Unidad Externa</option>
                        
                     </select>
@@ -809,7 +810,7 @@ $('#btn_salir').click(function(e){
              {
               $('#inputSueldovta').val('180.00');
              }else {
-               if (optipo == 'Camioneta') 
+               if (optipo == 'Camioneta' || optipo == 'JAC') 
                {
                   $('#inputSueldovta').val('120.00');
                }else {

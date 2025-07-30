@@ -1,4 +1,140 @@
 <?php
+require('../fpdf/fpdf.php');
+require('../includes/conversor.php');
+require('../../conexion.php');
+
+header("Content-Type: text/html; charset=iso-8859-1");
+
+// Clase PDF
+class PDF extends FPDF {
+    function Header() {
+        $this->Image("../../images/transvive.png", 12, 11, 48, 13, "png", 0);
+        $this->SetFont('Arial', '', 10);
+        $this->SetFillColor(231, 233, 238);
+        $this->SetTextColor(6, 22, 54);
+    }
+
+    function Footer() {
+        $this->SetY(-10);
+        $this->SetTextColor(0, 0, 0);
+        $this->SetFont('Arial', 'I', 8);
+        $this->Cell(0, 10, utf8_decode('Página ') . $this->PageNo(), 0, 0, 'C');
+    }
+}
+
+// Inicializar PDF
+$pdf = new PDF();
+$pdf->AddPage('P', 'Letter');
+
+$conection->set_charset('utf8');
+
+$tipo = $_REQUEST['tipo'] ?? 'Semanal';
+$semana = $_REQUEST['id2'] ?? '';
+$anio = $_REQUEST['id3'] ?? '';
+$id = $_REQUEST['id'] ?? '';
+
+// Validaciones iniciales
+if (empty($tipo) || empty($anio)) {
+    die("Faltan parámetros requeridos");
+}
+
+// Ejecutar según tipo
+switch (strtolower($tipo)) {
+    case 'semanal':
+        generarReciboSemanal($pdf, $conection, $semana, $anio);
+        break;
+    case 'quincenal':
+        generarReciboQuincenal($pdf, $conection, $id);
+        break;
+    case 'especial':
+        generarReciboEspecial($pdf, $conection, $id);
+        break;
+    default:
+        die("Tipo de recibo no válido");
+}
+
+$pdf->Output();
+
+
+function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
+    $numeroSemana = intval(str_replace('Semana ', '', $semanaTexto));
+
+    $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado");
+    $stmt->bind_param("ii", $numeroSemana, $anio);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 0) {
+        $pdf->Cell(189, 10, 'No hay datos para la semana seleccionada.', 0, 1, 'C');
+        return;
+    }
+
+    $fechaInicio = new DateTime();
+    $fechaInicio->setISODate($anio, $numeroSemana, 1);
+    $fechaFin = new DateTime();
+    $fechaFin->setISODate($anio, $numeroSemana, 7);
+    $periodo = 'Del: ' . $fechaInicio->format('d/m/Y') . ' al: ' . $fechaFin->format('d/m/Y');
+
+    while ($row = $result->fetch_assoc()) {
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Ln(5);
+        $pdf->Cell(189, 5, utf8_decode("Recibo de Pago - Semana $numeroSemana"), 0, 1, 'C');
+        $pdf->Cell(189, 5, utf8_decode("Empleado: {$row['noempleado']} - {$row['nombre']}"), 0, 1, 'L');
+        $pdf->Cell(189, 5, utf8_decode($periodo), 0, 1, 'L');
+        $pdf->Ln(2);
+
+        // Tabla
+        $pdf->Cell(60, 5, 'Percepciones', 1, 0, 'C');
+        $pdf->Cell(60, 5, 'Deducciones', 1, 1, 'C');
+
+        $pdf->Cell(60, 5, 'Sueldo Bruto: $' . number_format($row['sueldo_bruto'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Deducciones: $' . number_format($row['deducciones'], 2), 0, 1);
+
+        $pdf->Cell(60, 5, 'Bonos: $' . number_format($row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Caja Ahorro: $' . number_format($row['caja_ahorro'], 2), 0, 1);
+
+        $pdf->Ln(3);
+        $pdf->Cell(189, 5, utf8_decode('Recibí conforme.'), 0, 1, 'L');
+        $pdf->Cell(189, 10, '_________________________', 0, 1, 'R');
+        $pdf->Cell(189, 5, 'Firma', 0, 1, 'R');
+        $pdf->Ln(5);
+    }
+}
+
+
+function generarReciboQuincenal($pdf, $conection, $idCompleto) {
+    // Aquí separas fechas y año desde $idCompleto si así los manejas
+    // o mejor usa `$_REQUEST['quincena']`, `$_REQUEST['anio']`, etc.
+
+    // Simulación
+    $stmt = $conection->query("SELECT * FROM historico_nomina WHERE tipo_recibo = 'Quincenal' ORDER BY no_empleado");
+    while ($row = $stmt->fetch_assoc()) {
+        $pdf->Cell(189, 5, 'Recibo Quincenal de: ' . $row['nombre'], 0, 1, 'L');
+        $pdf->Cell(60, 5, 'Sueldo Bruto: $' . number_format($row['sueldo_bruto'], 2), 0, 1);
+        $pdf->Cell(60, 5, 'Deducciones: $' . number_format($row['deducciones'], 2), 0, 1);
+        $pdf->Ln(5);
+    }
+}
+
+
+function generarReciboEspecial($pdf, $conection, $idCompleto) {
+    // Lógica similar: parseas fechas o valores del ID y generas recibos
+
+    $stmt = $conection->query("SELECT * FROM historico_nomina WHERE tipo_recibo = 'Especial' ORDER BY no_empleado");
+    while ($row = $stmt->fetch_assoc()) {
+        $pdf->Cell(189, 5, 'Recibo Especial - Aguinaldo: ' . $row['year_pago'], 0, 1, 'C');
+        $pdf->Cell(189, 5, 'Empleado: ' . $row['empleado'], 0, 1, 'L');
+        $pdf->Cell(60, 5, 'Importe Aguinaldo: $' . number_format($row['importe_aguinaldo'], 2), 0, 1);
+        $pdf->Cell(60, 5, 'Impuesto: $' . number_format($row['impuesto_fiscal'], 2), 0, 1);
+        $pdf->Ln(5);
+    }
+}
+
+
+
+
+
+<!-- <?php
 
 include('../fpdf/fpdf.php');
 require '../includes/conversor.php';
@@ -22,16 +158,6 @@ class PDF extends FPDF
         $fecha_fin = new DateTime();
         $fecha_fin->setISODate($anio, $numero_semana, 7);
         
-        // $fin = strrpos($idoentrada, "id2");
-        // $final = $fin - 1;
-        // $fecha_ini = substr($idoentrada, 0,  $fin);
-        // $fecha_ejercicio = substr($idoentrada, $final3, 10);
-        // $fin2 = $fin + 4;
-        // $fecha_fin = substr($idoentrada, $fin2, 9);
-        // $finfin = strrpos($idoentrada, "id3"); 
-        // $final3 = $finfin + 4;
-        //Consulta sql encabezado
-        //Consulta sql encabezado
         
         include('../../conexion.php');
         //Agregamos la libreria para genera códigos QR
@@ -716,4 +842,4 @@ $pdf->Ln(40);
 
 // $pdf->Image("$imagen",10,30,189,150,'png');
 $pdf->Output();
-?>
+?> -->
