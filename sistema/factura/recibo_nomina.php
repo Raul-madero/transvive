@@ -130,7 +130,7 @@ function generarReciboEspecial($pdf, $conection, $idCompleto) {
     }
 }
 
-
+?>
 
 
 
