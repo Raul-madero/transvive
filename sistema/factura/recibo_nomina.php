@@ -98,6 +98,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(189, 10, '_________________________', 0, 1, 'R');
         $pdf->Cell(189, 5, 'Firma', 0, 1, 'R');
         $pdf->Ln(5);
+        $pdf->AddPage();
     }
 }
 
