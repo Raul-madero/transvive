@@ -77,7 +77,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
 
     while ($row = $result->fetch_assoc()) {
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Ln(5);
+        $pdf->Ln(12);
         $pdf->Cell(189, 5, utf8_decode("Recibo de Pago - Semana $numeroSemana"), 0, 1, 'C');
         $pdf->Cell(189, 5, utf8_decode("Empleado: {$row['noempleado']} - {$row['nombre']}"), 0, 1, 'L');
         $pdf->Cell(189, 5, utf8_decode($periodo), 0, 1, 'L');
