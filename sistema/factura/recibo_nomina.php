@@ -432,7 +432,7 @@ $final3 = $finfin + 4;
 $fecha_ejercicio2 = substr($idoentrada, $final3, 10);
 //$pdf->Cell(189,5,'Del:'. ' '. $fecha_ini . ' '. 'Al:'. ' '. $fecha_fin2. ' year ' . $fecha_ejercicio2 ,0,1,'C');
 
-$query = mysqli_query($conection,"SELECT dn.id, dn.no_quincena, dn.yearpago, dn.no_empleado, dn.nombre, dn.puesto, dn.estatus, dn.sueldo_bruto, dn.sueldo_diario, dn.dias_laborados, dn.sueldo_total, dn.bono, dn.bono_mensual, dn.apoyo_alimenticio, dn.subtotal, dn.caja_ahorro, dn.prestamo_deuda, dn.vacaciones, dn.prima_vacacional, dn.dias_vacaciones, dn.sueldo_quincenal, dn.sueldo_fiscal, dn.impuesto_fiscal, dn.total_efectivo, dn.deposito, sm.dia_inicial, sm.dia_final FROM detalle_temp_nominaquincena dn INNER JOIN quincenas sm ON dn.no_quincena = sm.quincena WHERE dn.no_quincena= '$fecha_fin2' and dn.yearpago = $fecha_ejercicio2 order by dn.no_empleado" );
+$query = mysqli_query($conection,"SELECT * FROM historico_nomina WHERE semana =  $numero_semana and anio = $anio order by noempleado" );
 $result = mysqli_num_rows($query);
 
 
@@ -593,7 +593,7 @@ $final3 = $finfin + 4;
 $fecha_ejercicio3 = substr($idoentrada, $final3, 10);
 //$pdf->Cell(189,5,'Del:'. ' '. $fecha_ini . ' '. 'Al:'. ' '. $fecha_fin3. ' year ' . $fecha_ejercicio3 ,0,1,'C');
 
-$query = mysqli_query($conection,"SELECT dn.id, dn.no_empleado, dn.empleado, dn.cargo, dn.fecha_ingreso, dn.fecha_pago, dn.year_pago, dn.dias_aguinaldo, dn.dias_derecho, dn.salario_diario, dn.importe_aguinaldo, dn.importe_fiscal, dn.impuesto_fiscal, dn.deposito, dn.pago_efectivo FROM detalle_temp_nomespecial dn WHERE dn.fecha_pago= '$fecha_fin3' and dn.year_pago = $fecha_ejercicio3 order by dn.no_empleado" );
+$query = mysqli_query($conection,"SELECT * FROM historico_nomina WHERE semana =  $numero_semana and anio = $anio order by noempleado" );
 $result = mysqli_num_rows($query);
 
 
