@@ -61,7 +61,7 @@ class PDF extends FPDF
         echo $stmt->error;
        }else{
         $resultado = $stmt->get_result();
-        var_dump($numero_filas);
+        // var_dump($numero_filas);
        }
        if($resultado && $resultado->num_rows > 0){
         $entrada = $resultado->fetch_assoc();
@@ -157,32 +157,31 @@ $pdf=new PDF();
 $pdf->AddPage('portrait','letter');
 
 if ($idoentrada = "Semanal") {
- $numero_semana = $_REQ
-$query = mysqli_query($conection,"SELECT id, semana,  noempleado, nombre, cargo, imss, estatus, deduccion_fiscal, caja_ahorro, total_nomina, deducciones, total_vueltas, sueldo_bruto, bono_categoria, bono_supervisor, bono_semanal, apoyo_mensual, sueldo_adicional, prima_vacacional, vacaciones, deposito_fiscal FROM historico_nomina WHERE semana =  $numero_semana and anio = $anio order by no_empleado" );
-$result = mysqli_num_rows($query);
-$data = mysqli_fetch_assoc($query);
+    $nosemana = $_REQUEST['id2'];
+    $numero_semana = intval(str_replace('Semana ', '', $nosemana));
+    $anio = intval($_REQUEST['id3']);
 
-var_dump($data);
+    $query = mysqli_query($conection,"SELECT * FROM historico_nomina WHERE semana =  $numero_semana and anio = $anio order by noempleado" );
+    $result = mysqli_num_rows($query);
+    $data = mysqli_fetch_assoc($query);
+
+    var_dump($data);
 
 
 while ($row = mysqli_fetch_assoc($query)){
 //$encabezado = mysql_fetch_array($query1, $conexion);
 //Variables para encabezado
     $id          = $row['id'];
-    $nosemana    = $row['no_semana'];
-    $unidad      = $row['unidad'];
-    $nounidad    = $row['nounidad'];
-    $noempleado  = $row['no_empleado'];
+    $nosemana    = $row['semana'];
+    $noempleado  = $row['noempleado'];
     $nombre      = $row['nombre'];
     $cargo       = $row['cargo'];
-    $imss        = $row['imss'];
-    $supervisor  = $row['estatus'];
-    $vespeciales = $row['viajes_especiales'];
-    $vcontratos  = $row['viajes_contrato'];
-    $sueldobruto = $row['sueldo_bruto'];
+    $imss        = intval($row['imss']) == 1 ? 'ASEGURADO' : 'NO ASEGURADO';
+    $total_vueltas = $row['total_vueltas'];
+    $sueldo_vueltas = $row['sueldo_bruto'];
     $dedfiscal   = $row['deduccion_fiscal'];
-    $totgeneral  = $row['total_general'];
-    $cajaahorro  = $row['caja'];
+    $totgeneral  = $row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'];
+    $cajaahorro  = $row['caja_ahorro'];
     $totnomina   = $row['total_nomina'];
     $dedgeneral  = $row['descuento_adeudo'];
     $bonocategoria  = $row['bono_categoria'];
