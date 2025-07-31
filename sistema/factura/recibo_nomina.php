@@ -115,10 +115,10 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(60, 5, 'Prima Vacacional: $' . number_format($row['prima_vacacional'], 2), 0, 0);
 
         $pdf->Ln(10);
-        $pdf->Cell(189, 5, utf8_decode('Total Percepciones: $' . number_format($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'], 2)), 0, 1, 'C');
+        $pdf->Cell(189, 5, utf8_decode('Total Percepciones: $' . number_format($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'], 2)), 0, 1, 'L');
+        $pdf->Cell(60, 5,'Total Deducciones: $' . number_format($row['deducciones'], 2), 0, 1, 'R');
         $pdf->Ln(5);
-        $pdf->Cell(60, 5,'Total Deducciones: $' . number_format($row['deducciones'], 2), 0, 1);
-        $pdf->Ln(5);
+        $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(60, 5,'Total Neto: $' . number_format($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'] - $row['deducciones'], 2), 0, 1);
 
         $pdf->Ln(10);
