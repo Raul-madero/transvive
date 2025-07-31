@@ -93,10 +93,9 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(60, 5, 'Vueltas Totales: ' . number_format($row['total_vueltas'], 2), 0, 0);
         $pdf->Cell(60, 5, 'Deduccion por Adeudo: $' . number_format($row['deducciones'], 2), 0, 1);
 
-        $pdf->Cell(60, 5, 'Bonos: $' . number_format($row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'], 2), 0, 0);
         $pdf->Cell(60, 5, 'Caja Ahorro: $' . number_format($row['caja_ahorro'], 2), 0, 1);
 
-        $pdf->Cell(60, 5, 'Sueldo Bruto: $' . number_format($row['sueldo_bruto'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Pago Total Vueltas: $' . number_format($row['sueldo_bruto'], 2), 0, 0);
         $pdf->Cell(60, 5, 'Deduccion Fiscal: $' . number_format($row['deduccion_fiscal'], 2), 0, 1);
 
         $pdf->Cell(60, 5, 'Sueldo Adicional: $' . number_format($row['sueldo_adicional'], 2), 0, 0);
@@ -109,7 +108,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Ln(5);
         $pdf->Cell(60, 5, 'Bono Alertas: $' . number_format($row['bono_semanal'], 2), 0, 0);
         $pdf->Ln(5);
-        $pdf->Cell(60, 5, 'Apoyo Mensual: $' . number_format($row['apoyo_mes'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Vales de Despensa: $' . number_format($row['apoyo_mes'], 2), 0, 0);
         $pdf->Ln(5);
         $pdf->Cell(60, 5, 'Dias de Vacaciones: ' . number_format($row['dias_vacaciones'], 2), 0, 0);
         $pdf->Ln(5);
@@ -125,6 +124,11 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Ln(5);
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(60, 5,'Total Neto: $' . number_format($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'] - $row['deducciones'] - $row['caja_ahorro'] - $row['deduccion_fiscal'], 2), 0, 1);
+
+        $pdf->Ln(10);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(60, 5, utf8_decode('Deposito Fiscal: $' . number_format($row['deposito_fiscal'], 2)), 0, 0, 'L');
+        $pdf->Cell(60, 5,'Deposito Efectivo: $' . number_format($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'] - $row['deducciones'] - $row['caja_ahorro'] - $row['deduccion_fiscal'] - $row['deposito_fiscal'], 2), 0, 1, 'R');
 
         $pdf->Ln(10);
         $pdf->SetFont('Arial', '', 8);
