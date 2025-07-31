@@ -27,7 +27,7 @@ SELECT
             OR (fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
         ) AND tipo_incidencia = 'Falta Justificada'
     ) AS faltas,
-    COUNT(DISTINCT CASE WHEN inc.tipo_incidencia = 'Falta Injustificada' THEN inc.id END) AS faltas,
+    -- COUNT(DISTINCT CASE WHEN inc.tipo_incidencia = 'Falta Injustificada' THEN inc.id END) AS faltas,
 
     (
         SELECT COALESCE(SUM(
