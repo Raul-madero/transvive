@@ -87,11 +87,29 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(60, 5, 'Percepciones', 1, 0, 'C');
         $pdf->Cell(60, 5, 'Deducciones', 1, 1, 'C');
 
-        $pdf->Cell(60, 5, 'Sueldo Bruto: $' . number_format($row['sueldo_bruto'], 2), 0, 0);
-        $pdf->Cell(60, 5, 'Deducciones: $' . number_format($row['deducciones'], 2), 0, 1);
+        $pdf->Cell(60, 5, 'Vueltas Totales: ' . number_format($row['total_vueltas'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Deduccion por Adeudo: $' . number_format($row['deducciones'], 2), 0, 1);
 
         $pdf->Cell(60, 5, 'Bonos: $' . number_format($row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'], 2), 0, 0);
         $pdf->Cell(60, 5, 'Caja Ahorro: $' . number_format($row['caja_ahorro'], 2), 0, 1);
+
+        $pdf->Cell(60, 5, 'Sueldo Bruto: $' . number_format($row['sueldo_bruto'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Deduccion Fiscal: $' . number_format($row['deduccion_fiscal'], 2), 0, 1);
+
+        $pdf->Cell(60, 5, 'Sueldo Adicional: $' . number_format($row['sueldo_adicional'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Caja de Ahorro: $' . number_format($row['caja_ahorro'], 2), 0, 1);
+        
+        $pdf->Cell(60, 5, 'Bono Semanal: $' . number_format($row['bono_categoria'], 2), 0, 0);
+
+        $pdf->Cell(60, 5, 'Bono Supervisor: $' . number_format($row['bono_supervisor'], 2), 0, 0);
+
+        
+        
+        $pdf->Cell(60, 5, 'Bono Alertas: $' . number_format($row['bono_semanal'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Apoyo Mensual: $' . number_format($row['apoyo_mes'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Dias de Vacaciones: ' . number_format($row['dias_vacaciones'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Pago Vacaciones: $' . number_format($row['pago_vacaciones'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Prima Vacacional: $' . number_format($row['prima_vacacional'], 2), 0, 0);
 
         $pdf->Ln(3);
         $pdf->Cell(189, 5, utf8_decode('Recibí conforme.'), 0, 1, 'L');
