@@ -100,8 +100,6 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(60, 5, 'Deduccion Fiscal: $' . number_format($row['deduccion_fiscal'], 2), 0, 1);
 
         $pdf->Ln(5);
-        $pdf->Cell(60, 5, 'Caja de Ahorro: $' . number_format($row['caja_ahorro'], 2), 0, 0);
-        $pdf->Ln(5);
         $pdf->Cell(60, 5, 'Bono Semanal: $' . number_format($row['bono_categoria'], 2), 0, 0);
         $pdf->Ln(5);
         $pdf->Cell(60, 5, 'Bono Supervisor: $' . number_format($row['bono_supervisor'], 2), 0, 0);
