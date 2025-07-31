@@ -501,7 +501,7 @@ function validateFilter(initial, final) {
 }
 </script>
 
-<?php elseif ($_SESSION['rol'] == 8 || $user === 'yunnuen'): ?>
+<?php elseif ($_SESSION['rol'] == 8 || $User === 'yunnuen'): ?>
 <!-- ROL: Jefe de Operaciones -->
 <script>
 $(function () {
