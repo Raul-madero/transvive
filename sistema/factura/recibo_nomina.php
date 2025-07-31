@@ -84,9 +84,12 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Ln(2);
 
         // Tabla
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->SetFillColor(231, 233, 238);
         $pdf->Cell(60, 5, 'Percepciones', 1, 0, 'C');
         $pdf->Cell(60, 5, 'Deducciones', 1, 1, 'C');
 
+        $pdf->SetFont('Arial', '', 8);
         $pdf->Cell(60, 5, 'Vueltas Totales: ' . number_format($row['total_vueltas'], 2), 0, 0);
         $pdf->Cell(60, 5, 'Deduccion por Adeudo: $' . number_format($row['deducciones'], 2), 0, 1);
 
