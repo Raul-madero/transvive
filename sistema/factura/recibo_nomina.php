@@ -93,12 +93,12 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(60, 5, 'Vueltas Totales: ' . number_format($row['total_vueltas'], 2), 0, 0);
         $pdf->Cell(60, 5, 'Deduccion por Adeudo: $' . number_format($row['deducciones'], 2), 0, 1);
 
+        $pdf->Cell(60, 5, 'Pago Total Vueltas: $' . number_format($row['sueldo_bruto'], 2), 0, 0);
         $pdf->Cell(60, 5, 'Caja Ahorro: $' . number_format($row['caja_ahorro'], 2), 0, 1);
 
-        $pdf->Cell(60, 5, 'Pago Total Vueltas: $' . number_format($row['sueldo_bruto'], 2), 0, 0);
+        $pdf->Cell(60, 5, 'Sueldo Adicional: $' . number_format($row['sueldo_adicional'], 2), 0, 0);
         $pdf->Cell(60, 5, 'Deduccion Fiscal: $' . number_format($row['deduccion_fiscal'], 2), 0, 1);
 
-        $pdf->Cell(60, 5, 'Sueldo Adicional: $' . number_format($row['sueldo_adicional'], 2), 0, 0);
         $pdf->Ln(5);
         $pdf->Cell(60, 5, 'Caja de Ahorro: $' . number_format($row['caja_ahorro'], 2), 0, 0);
         $pdf->Ln(5);
