@@ -241,7 +241,7 @@ $cancelados = fetch_value("SELECT COUNT(valor_vuelta) FROM registro_viajes WHERE
                                     </thead>
                                 </table>
 
-                            <?php elseif ($_SESSION['rol'] == 8): ?>
+                            <?php elseif ($_SESSION['rol'] == 8 || $User === 'yunnuen'): ?>
                                 <!-- Vista para Jefe de Operaciones -->
                                 <table id="fetch_generated_willss" class="table table-hover table-striped table-bordered dt-responsive" width="100%">
                                     <thead>
@@ -501,7 +501,7 @@ function validateFilter(initial, final) {
 }
 </script>
 
-<?php elseif ($_SESSION['rol'] == 8): ?>
+<?php elseif ($_SESSION['rol'] == 8 || $user === 'yunnuen'): ?>
 <!-- ROL: Jefe de Operaciones -->
 <script>
 $(function () {
