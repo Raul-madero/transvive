@@ -14,7 +14,7 @@ session_start();
   header('Location: ../index.php');
 }
 
-  $sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados ORDER BY nombres";
+  $sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados WHERE estatus = 1 ORDER BY nombres";
   $queryoper = mysqli_query($conection, $sqloper);
   $filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
 
