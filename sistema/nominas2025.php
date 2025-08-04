@@ -328,7 +328,7 @@ $namerol = $filas['rol'];
 						let total = settings.json?.totales?.total_nomina || 0;
 						$('#total').text("Total de la Nómina: " + formatoMoneda(parseFloat(total)));
 						let total_efectivo = settings.json?.total_efectivo?.total_efectivo || 0;
-						$('#total_efectivo').text("Total en Efectivo: " + total_efectivo);
+						$('#total_efectivo').text("Total en Efectivo: " + formatoMoneda(parseFloat(total_efectivo)));
 						let total_vueltas = settings.json?.total_vueltas?.total_total_vueltas || 0;
 						$('#total_vueltas').text("Total de Vueltas: " + total_vueltas);
 						let total_adeudo = settings.json?.total_adeudo?.total_deducciones || 0;
