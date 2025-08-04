@@ -267,7 +267,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
     $total_fiscal = $conection->query("SELECT SUM(nomina_fiscal) AS total_fiscal FROM nomina_temp_2025")->fetch_assoc();
     $total_adeudo = $conection->query("SELECT SUM(deducciones) AS total_deducciones FROM nomina_temp_2025")->fetch_assoc();
     $total_caja_ahorro = $conection->query("SELECT SUM(caja_ahorro) AS total_caja FROM nomina_temp_2025")->fetch_assoc();
-    $total_efectivo = $conection->query("SELECT SUM((sueldo_bruto - nomina_fiscal) + bono_semanal + bono_supervisor + bono_categoria + apoyo_mes + pago_vacaciones + prima_vacacional +sueldo_adicional - deducciones - caja_ahorro + deposito_fiscal) AS total_efectivo FROM nomina_temp_2025")->fetch_assoc();
+    $total_efectivo = $conection->query("SELECT SUM((sueldo_bruto - nomina_fiscal) + bono_semanal + bono_supervisor + bono_categoria + apoyo_mes + pago_vacaciones + prima_vacacional +sueldo_adicional - deducciones - caja_ahorro) AS total_efectivo FROM nomina_temp_2025")->fetch_assoc();
     $total_vueltas = $conection->query("SELECT COALESCE(SUM(total_vueltas), 0) AS total_total_vueltas FROM nomina_temp_2025")->fetch_assoc();
 
     echo json_encode([
