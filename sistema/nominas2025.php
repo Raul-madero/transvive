@@ -324,6 +324,7 @@ $namerol = $filas['rol'];
 						}
 					],
 					drawCallback: function (settings) {
+						console.log(settings.json)
 						let total = settings.json?.totales?.total_nomina || 0;
 						$('#total').text("Total de la Nómina: " + formatoMoneda(parseFloat(total)));
 						let total_efectivo = settings.json?.total_efectivo?.total_efectivo || 0;
