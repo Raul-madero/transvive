@@ -151,9 +151,9 @@ $namerol = $filas['rol'];
                 <tr>
                   <th>Semana</th><th>Año</th><th>No.</th><th>Nombre</th><th>Cargo</th>
                   <th>IMSS</th><th>Sueldo Base</th><th>Total Vueltas</th><th>Sueldo Bruto</th><th>Sueldo Adicional</th>
-                  <th>Descuento Adeudo</th><th>Nomina Fiscal</th><th>Bono Alertas</th><th>Bono Semanal</th>
+                  <th>Descuento Adeudo</th><th>Efectivo</th><th>Depósito</th><th>Nomina Fiscal</th><th>Bono Alertas</th><th>Bono Semanal</th>
                   <th>Bono Supervisor</th><th>Apoyo Mensual</th><th>Sueldo Total</th><th>Días Vacaciones</th>
-                  <th>Pago Vacaciones</th><th>Prima Vacacional</th><th>Depósito</th><th>Efectivo</th>
+                  <th>Pago Vacaciones</th><th>Prima Vacacional</th>
                   <th>Deducción Fiscal</th><th>Caja Ahorro</th><th>Supervisor</th><th>Neto</th>
                 </tr>
               </thead>
@@ -215,8 +215,8 @@ $namerol = $filas['rol'];
 					processing: true,
 					serverSide: true,
 					stateSave: true,
-					responsive: false,
-					autoWidth: true,
+					responsive: true,
+					autoWidth: false,
 					columnDefs: [
 						{ targets: '_all', className: 'text-center align-middle' },
 						{ targets: [0, 1, 2, 3], responsivePriority: 1 },
@@ -279,6 +279,22 @@ $namerol = $filas['rol'];
 								$(td).addClass('editable-deducciones').attr('data-id', rowData.id).text(renderMoneda(cellData));
 							}
 						},
+						{
+							data: null,
+							render: (data) => formatoMoneda(
+								(parseFloat(data.sueldo_bruto || 0) - parseFloat(data.nomina_fiscal || 0)) +
+								parseFloat(data.bono_semanal || 0) +
+								parseFloat(data.bono_supervisor || 0) +
+								parseFloat(data.bono_categoria || 0) +
+								parseFloat(data.apoyo_mes || 0) +
+								parseFloat(data.pago_vacaciones || 0) +
+								parseFloat(data.sueldo_adicional || 0) +
+								parseFloat(data.prima_vacacional || 0) -
+								parseFloat(data.deducciones || 0) -
+								parseFloat(data.caja_ahorro || 0)
+							)
+						},
+						{ data: "deposito_fiscal", render: renderMoneda },
 						{ data: "nomina_fiscal", render: renderMoneda },
 						{ data: "bono_semanal", render: renderMoneda },
 						{ data: "bono_categoria", render: renderMoneda },
@@ -298,22 +314,6 @@ $namerol = $filas['rol'];
 						{ data: "dias_vacaciones" },
 						{ data: "pago_vacaciones", render: renderMoneda },
 						{ data: "prima_vacacional", render: renderMoneda },
-						{ data: "deposito_fiscal", render: renderMoneda },
-						{
-							data: null,
-							render: (data) => formatoMoneda(
-								(parseFloat(data.sueldo_bruto || 0) - parseFloat(data.nomina_fiscal || 0)) +
-								parseFloat(data.bono_semanal || 0) +
-								parseFloat(data.bono_supervisor || 0) +
-								parseFloat(data.bono_categoria || 0) +
-								parseFloat(data.apoyo_mes || 0) +
-								parseFloat(data.pago_vacaciones || 0) +
-								parseFloat(data.sueldo_adicional || 0) +
-								parseFloat(data.prima_vacacional || 0) -
-								parseFloat(data.deducciones || 0) -
-								parseFloat(data.caja_ahorro || 0)
-							)
-						},
 						{ data: "deduccion_fiscal", render: renderMoneda },
 						{ data: "caja_ahorro", render: renderMoneda },
 						{ data: "supervisor" },
