@@ -44,6 +44,16 @@ $namerol = $filas['rol'];
 		box-sizing: border-box;
 	}
 
+	#example1 {
+		font-size: 11px;
+		table-layout: auto;
+	}
+
+	#example1 th, #example1 td {
+		padding: 4px 6px;
+		white-space: nowrap;
+	}
+
 	table.dataTable td,
 	table.dataTable th {
 		vertical-align: middle;
@@ -136,7 +146,7 @@ $namerol = $filas['rol'];
 				<div id="total_caja_ahorro" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
 				<div id="total_adeudo" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
 			</div>
-            <table id="example1" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+            <table id="example1" class="table table-sm table-striped table-bordered dt-responsive nowrap" style="width:100%">
               <thead>
                 <tr>
                   <th>Semana</th><th>Año</th><th>No.</th><th>Nombre</th><th>Cargo</th>
@@ -205,8 +215,8 @@ $namerol = $filas['rol'];
 					processing: true,
 					serverSide: true,
 					stateSave: true,
-					responsive: true,
-					autoWidth: false,
+					responsive: false,
+					autoWidth: true,
 					columnDefs: [
 						{ targets: '_all', className: 'text-center align-middle' },
 						{ targets: [0, 1, 2, 3], responsivePriority: 1 },
