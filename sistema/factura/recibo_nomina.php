@@ -120,7 +120,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
 
         $pdf->Ln(5);
         $pdf->SetFont('Arial', 'B', 12);
-        $pdf->Cell(60, 5,'Total Neto: $' . number_format($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'] + $row['prima_vacacional'] + $row['pago_vacaciones'] - ($row['deducciones'] + $row['caja_ahorro'] + $row['deduccion_fiscal']), 2), 0, 1);
+        $pdf->Cell(60, 5,'Total Neto: $' . number_format(($row['sueldo_bruto'] - $row['nomina_fiscal']) + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'] + $row['prima_vacacional'] + $row['pago_vacaciones'] - ($row['deducciones'] + $row['caja_ahorro'] + $row['deduccion_fiscal']), 2), 0, 1);
 
         $pdf->Ln(10);
         $pdf->SetFont('Arial', '', 10);
