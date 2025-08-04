@@ -1,211 +1,168 @@
 <?php
 include "../conexion.php";
 session_start();
-  $User=$_SESSION['user'];
-  $rol=$_SESSION['rol'];
-  $sql = "select * from rol where idrol =$rol ";
-  $query = mysqli_query($conection, $sql);
-  $filas = mysqli_fetch_assoc($query); 
+	$User=$_SESSION['user'];
+	$rol=$_SESSION['rol'];
+	$sql = "select * from rol where idrol =$rol ";
+	$query = mysqli_query($conection, $sql);
+	$filas = mysqli_fetch_assoc($query); 
 
-  $namerol = $filas['rol'];
-  if (!isset($_SESSION['idUser'])) {
-  header('Location: ../index.php');
-}
+	$namerol = $filas['rol'];
+	if (!isset($_SESSION['idUser'])) {
+		header('Location: ../index.php');
+	}
 
-  $sqloper   = "select no_prov, nombre from proveedores where estatus = 1 ORDER BY nombre";
-  $queryoper = mysqli_query($conection, $sqloper);
-  $filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
+	$sqloper   = "select no_prov, nombre from proveedores where estatus = 1 ORDER BY nombre";
+	$queryoper = mysqli_query($conection, $sqloper);
+	$filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
 
-  $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
-  $queryrecb = mysqli_query($conection, $sqlrecb);
-  $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
+	$sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
+	$queryrecb = mysqli_query($conection, $sqlrecb);
+	$filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
 
-  $sqlprod   = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
-  $queryprod = mysqli_query($conection, $sqlprod);
-  $filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
+	$sqlprod   = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
+	$queryprod = mysqli_query($conection, $sqlprod);
+	$filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
 
-  $sqlprodnm = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
-  $queryprodnm = mysqli_query($conection, $sqlprodnm);
-  $filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
+	$sqlprodnm = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
+	$queryprodnm = mysqli_query($conection, $sqlprodnm);
+	$filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
 
-  $sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
-  $queryprov = mysqli_query($conection, $sqlprov);
-  $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
+	$sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
+	$queryprov = mysqli_query($conection, $sqlprov);
+	$filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
 
-  $sqlsmant  = "select no_orden from solicitud_mantenimiento where estatus = 1";
-  $querysmant = mysqli_query($conection, $sqlsmant);
-  $filasmant = mysqli_fetch_all($querysmant, MYSQLI_ASSOC); 
+	$sqlsmant  = "select no_orden from solicitud_mantenimiento where estatus = 1";
+	$querysmant = mysqli_query($conection, $sqlsmant);
+	$filasmant = mysqli_fetch_all($querysmant, MYSQLI_ASSOC); 
 
-  $sqlumed = "select * from unidades_medida ORDER BY descripcion";
-  $queryumed = mysqli_query($conection, $sqlumed);
-  $filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
-
-  //mysqli_close($conection);
+	$sqlumed = "select * from unidades_medida ORDER BY descripcion";
+	$queryumed = mysqli_query($conection, $sqlumed);
+	$filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TRANSVIVE | ERP</title>
-  <link rel="icon" href="../images/favicon.ico" type="image/x-icon"/>
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="../dist/css/adminlte.min.css">
-  <!-- Ekko Lightbox -->
-  <link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-   <!-- Select2 -->
-  <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
-  <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-  <style>
-    .hidden {
-      display: none;
-    }
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TRANSVIVE | ERP</title>
+	<link rel="icon" href="../images/favicon.ico" type="image/x-icon"/>
+	<!-- Google Font: Source Sans Pro -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+	<!-- Font Awesome Icons -->
+	<link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="../dist/css/adminlte.min.css">
+	<!-- Ekko Lightbox -->
+	<link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
+	<!-- overlayScrollbars -->
+	<link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+	<!-- Select2 -->
+	<link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
+	<link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+	<style>
+		.hidden {
+			display: none;
+		}
 
-     input[type="number"] {
-      -moz-appearance: textfield; /* Firefox */
-      appearance: textfield; /* Chrome, Safari, Edge */
-    }
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+		input[type="number"] {
+			-moz-appearance: textfield; /* Firefox */
+			appearance: textfield; /* Chrome, Safari, Edge */
+		}
+		input[type="number"]::-webkit-inner-spin-button,
+		input[type="number"]::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
 
-    .table-responsive {
-  overflow-x: auto;
-}
-.table-responsive td {
-  max-width: 100%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-  </style>
+		.table-responsive {
+			overflow-x: auto;
+		}
+		.table-responsive td {
+			max-width: 100%;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+  	</style>
 </head>
 <body class="hold-transition layout-top-nav">
-<div class="wrapper">
-   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+	<div class="wrapper">
+   		<nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+    		<div class="container">
+				<a href="salir.php" class="navbar-brand">
+					<span class="brand-text font-weight-light"><img src="../images/logo_easy.png" alt="TRANSVIVE CRM"></span>
+				</a>
+      			<button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        			<span class="navbar-toggler-icon"></span>
+      			</button>
+     			<?php include('includes/generalnavbar.php') ?>
+      			<?php include('includes/nav.php') ?>
+    		</div>
+  		</nav>
+      	<!-- Content Wrapper. Contains page content -->
+  		<div class="content-wrapper">
+    		<section class="content-header">
+      			<div class="container-fluid">
+        			<div class="row">
+          				<div class="col-sm-6">
+          				</div>
+        			</div>
+      			</div>
+    		</section>
+    		<center>
+         		<?php
+					date_default_timezone_set('America/Mexico_City');
+					$fcha = date("Y-m-d");
+     			?>  
+     			<!-- Horizontal Form -->
 
-    <div class="container">
-      <a href="salir.php" class="navbar-brand">
-        <span class="brand-text font-weight-light"><img src="../images/logo_easy.png" alt="TRANSVIVE CRM"></span>
-      </a>
+     			<div class="col-md-9">
+     				<div class="card card-secondary">
+              			<div class="card-header">
+                			<h3 class="card-title">Evaluaciónde Proveedores (Servicios)</h3>
+              			</div>
+              			<div class="card-body">
+              				<div class="card-header p-2">
+								<!-- /.card-header -->
+								<!-- form start -->
+              					<form class="form-horizontal">
+              						<div class="form-group row">
+                    					<div class="col-sm-10">
+                    					</div>
+                  					</div>
 
-      <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+                  					<div class="form-group row" style="text-align:left;">
+                    					<label for="inputEmail3" class="col-sm-3 col-form-label">Tipo de valoración</label>
+                    					<div class="col-sm-4">
+                       						<select class="form-control" style="width: 100%; text-align: left" id="inputTipo" name="inputTipo"  onchange="toggleTableVisibility()">
+                       							<option value="">- Seleccione -</option>
+												<option value="SELECCIÓN">SELECCIÓN</option>
+												<option value="EVALUACIÓN">EVALUACIÓN</option>
+												<option value="RE-EVALUACION">RE-EVALUACIÓN</option>
+                     						</select>
+                    					</div>
+                    					<label for="inputEmail3" class="col-sm-2 col-form-label">Fecha</label>
+                    					<div class="col-sm-3">
+                      						<input type="date" class="form-control" id="inputFecha" name="inputFecha" value="<?php echo $fcha;?>">
+                    					</div>
+                  					</div>
 
-     <?php include('includes/generalnavbar.php') ?>
-      <?php include('includes/nav.php') ?>
-
-    </div>
-  </nav>
-
-  <!-- Navbar -->
- 
-  <!-- /.navbar -->
-
-  <!-- Content Wrapper. Contains page content -->
- 
-    <!-- /.content-header -->
-
-    <!-- Main content -->
-      <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-6">
-          
-          </div>
-         
-        </div>
-      </div>
-    </section>
-    <center>
-         
-       <?php
-         /*           
-          include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT * FROM folios where serie = 'RQ'");
-          $result_folio = mysqli_num_rows($query_folio);
-
-          $folioe = mysqli_fetch_array($query_folio);
-          $nuevofolio=$folioe["folio"]+1; 
-
-          $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'RQ'");
-          
-
-          mysqli_close($conection);*/
-        ?>  
-         <?php
-         date_default_timezone_set('America/Mexico_City');
-         $fcha = date("Y-m-d");
-     ?>  
-
-     
-
-     <!-- Horizontal Form -->
-
-     <div class="col-md-9">
-     <div class="card card-secondary">
-              <div class="card-header">
-                <h3 class="card-title">Evaluaciónde Proveedores (Servicios)</h3>
-              </div>
-              <div class="card-body">
-              <div class="card-header p-2">
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form class="form-horizontal">
-              <div class="form-group row">
-                    <div class="col-sm-10">
-                    </div>
-                  </div>
-
-                  <div class="form-group row" style="text-align:left;">
-                    
-
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Tipo de valoración</label>
-                    <div class="col-sm-4">
-                       <select class="form-control" style="width: 100%; text-align: left" id="inputTipo" name="inputTipo"  onchange="toggleTableVisibility()">
-                       <option value="">- Seleccione -</option>
-                        <option value="SELECCIÓN">SELECCIÓN</option>
-                        <option value="EVALUACIÓN">EVALUACIÓN</option>
-                        <option value="RE-EVALUACIÓN">RE-EVALUACIÓN</option>
-                     </select>
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha</label>
-                    <div class="col-sm-3">
-                      <input type="date" class="form-control" id="inputFecha" name="inputFecha" value="<?php echo $fcha;?>">
-                    </div>
-                  </div>
-
-                  <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Nombre del Proveedor</label>
-                    <div class="col-sm-9">
-                      <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProveedor" name="inputProveedor">
-                      <option value="">- Seleccione -</option>
-                       <?php foreach ($filasoper as $oppv): //llenar las opciones del primer select ?>
-                       <option value="<?= $oppv['no_prov'] ?>"><?= $oppv['nombre'] ?></option>  
-                       <?php endforeach; ?>
-                    </select>
-                    </div>
-                  </div>
-                    <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Producto y/o Servicio</label>
-                    <div class="col-sm-9">
-                      <input type="text" class="form-control" id="inputProducto" name="inputProducto">
-                     
+                  					<div class="form-group row" style="text-align:left;">
+                    					<label for="inputEmail3" class="col-sm-3 col-form-label">Nombre del Proveedor</label>
+                    					<div class="col-sm-9">
+                      						<select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProveedor" name="inputProveedor">
+                      							<option value="">- Seleccione -</option>
+                       							<?php foreach ($filasoper as $oppv): //llenar las opciones del primer select ?>
+                       								<option value="<?= $oppv['no_prov'] ?>"><?= $oppv['nombre'] ?></option>  
+                       							<?php endforeach; ?>
+                    						</select>
+                    					</div>
+                  					</div>
+                    				<div class="form-group row" style="text-align:left;">
+                    					<label for="inputEmail3" class="col-sm-3 col-form-label">Producto y/o Servicio</label>
+                    					<div class="col-sm-9">
+                      						<input type="text" class="form-control" id="inputProducto" name="inputProducto">
                     </div>
                   </div>
 
@@ -375,9 +332,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </select>
                     </div>
                   </div>
-
-                  <div class="form-group row" style="text-align:center;">
-                    <label for="inputEmail3" class="col-sm-12 col-form-label">Historial de desempeño:</label>
+                  <div>
+                    
+                    <div class="form-group row" style="text-align:center;">
+                      <label for="inputEmail3" class="col-sm-12 col-form-label">Historial de desempeño:</label>
+                      
                     
                   </div>
 
@@ -409,6 +368,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-sm-2">
                       <input type="number" class="form-control" id="historial3" name="historial3" min="0" step="1" oninput="validateInput(this)"  value="0">
                     </div>
+                  </div>
                   </div>
 
  <div id="tableContainerFour" class="col-sm-12">
@@ -493,75 +453,63 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
- 
 
+<script>
+  $(document).ready(function() {
+    // Código a ejecutar cuando el documento esté listo
+    $('#inputProveedor').on('change', function() {
+      var selectedValue = $(this).val();
+      let tipoEval = $('#inputTipo').val();
+
+      if( tipoEval === 'RE-EVALUACION') {
+        $.ajax({
+          url: 'data/historial_eval_servicio.php',
+          type: 'POST',
+          data: { proveedor: selectedValue },
+          success: function(response) {
+            console.log(response.ultima_evaluacion);
+            let evaluacion = response.ultima_evaluacion
+            let fecha = evaluacion.fecha_eval
+            let calificacion = evaluacion.calificacion_total
+            let fechaHist1 = evaluacion.fecha_hist1
+            let fechaHist2 = evaluacion.fecha_hist2
+            let fechaHist3 = evaluacion.fecha_hist3
+            let califHist1 = evaluacion.historia1
+            let califHist2 = evaluacion.historia2 
+            let califHist3 = evaluacion.historia3 
+
+          }
+        })
+      }
+      // Aquí puedes hacer algo con el valor seleccionado, como mostrarlo en la consola
+    });
+  });
+</script>
  <script>
-
 $('#btn_salir').click(function(e){
         e.preventDefault();
-
-            
         Swal
     .fire({
         title: "DESEA SALIR!",
         text: "",
         icon: 'info',
-
         showCancelButton: true,
         confirmButtonText: "Regresar",
-        cancelButtonText: "Salir",
-       
-
-       
+        cancelButtonText: "Salir"
     })
      .then(resultado => {
         if (resultado.value) {
-            // Hicieron click en "Sí"
-             //*location.href = 'lista_ncplantasa.php';
-             console.log("Alerta cerrada");
+              console.log("Alerta cerrada");
         } else {
-            // Dijeron que no
-            //*location.reload();
-          /* var norecibo  = $('#inputFolio').val();
-            var action = 'procesarSalirCortizacioncp';
-                       
-            $.ajax({
-                url: 'includes/ajax.php',
-                type: "POST",
-                async : true,
-                data: {action:action, norecibo:norecibo},
-
-                success: function(response)
-                {
-                    
-                    if(response != 'error')
-                    {
-                      var info = JSON.parse(response);
-                      console.log(response); */
-                      location.href = 'evalua_proveservicios.php';
-                       //*location.reload();
-
-               /*
-                        
-                    }else{
-                        console.log('no data');
-                    }
-                },
-                error: function(error){                
-                }
-            });*/
+              location.href = 'evalua_proveservicios.php';
         }
     });
-
-   
-
     });
     </script>
 
 <script>
    $('#guardar_tipoactividad').click(function(e){
         e.preventDefault();
-
        var tipo_eval     = $('#inputTipo').val();
        var fecha         = $('#inputFecha').val();
        var proveedor     = $('#inputProveedor').val();

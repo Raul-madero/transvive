@@ -127,8 +127,9 @@ $namerol = $filas['rol'];
         <div class="card">
           <div class="card-body">
 			<div class="row mx-auto">
-				<div id="total" class="mb-3 font-weight-bold col-5 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
-				<div id="total_vueltas" class="mb-3 font-weight-bold col-5 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
+				<div id="total" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
+				<div id="total_efectivo" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
+				<div id="total_vueltas" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
 			</div>
 			<div class="row mx-auto">
 				<div id="total_fiscal" class="mb-3 font-weight-bold col-3 text-center border border-3 border-primary bg-light rounded-pill p-2 text-dark mx-auto"></div>
@@ -187,6 +188,7 @@ $namerol = $filas['rol'];
 					let table = $('#example1').DataTable();
 					table.clear().draw();
 					$('#total').text("Total de la Nómina: $0.00");
+					$('#total_efectivo').text("Total en Efectivo: 0.00");
 					$('#total_vueltas').text("Total Vueltas: 0.00");
 					$('#total_fiscal').text("Total Nomina Fiscal: $0.00");
 					$('#total_caja_ahorro').text("Total Caja Ahorro: $0.00");
@@ -227,7 +229,16 @@ $namerol = $filas['rol'];
 						{ data: "semana" },
 						{ data: "anio" },
 						{ data: "noempleado" },
-						{ data: "nombre" },
+						{ 
+							data: null, 
+							render: function(data) {
+								if(data.efectivo < 0) {
+									return `<span style="color: red;">${data.nombre}</span>`;
+								}else {
+									return data.nombre;
+								}
+							}  
+						},
 						{ data: "cargo" },
 						{
 							data: null,
@@ -315,6 +326,8 @@ $namerol = $filas['rol'];
 					drawCallback: function (settings) {
 						let total = settings.json?.totales?.total_nomina || 0;
 						$('#total').text("Total de la Nómina: " + formatoMoneda(parseFloat(total)));
+						let total_efectivo = settings.json?.total_efectivo?.total_efectivo || 0;
+						$('#total_efectivo').text("Total en Efectivo: " + total_efectivo);
 						let total_vueltas = settings.json?.total_vueltas?.total_total_vueltas || 0;
 						$('#total_vueltas').text("Total de Vueltas: " + total_vueltas);
 						let total_adeudo = settings.json?.total_adeudo?.total_deducciones || 0;
