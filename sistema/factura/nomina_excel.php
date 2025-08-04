@@ -174,7 +174,7 @@ while ($row=mysqli_fetch_assoc($resultado)) {
             ->setCellValue('N'.$fila, $row['bono_categoria'])
             ->setCellValue('O'.$fila, $row['bono_supervisor'])
             ->setCellValue('P'.$fila, $row['apoyo_mes'])
-            ->setCellValue('Q'.$fila, $row['sueldo_total'])
+            ->setCellValue('Q'.$fila, $row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['prima_vacacional'] + $row['pago_vacaciones'] + $row['sueldo_adicional'] + $row['apoyo_mes'])
             ->setCellValue('R'.$fila, $row['dias_vacaciones'])
             ->setCellValue('S'.$fila, $row['pago_vacaciones'])
             ->setCellValue('T'.$fila, $row['prima_vacacional'])
