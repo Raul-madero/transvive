@@ -4971,7 +4971,9 @@ if($_POST['action'] == 'BajaRefaccion')
 
 //*Almacena Proveedor
 if ($_POST['action'] == 'AlmacenaProveedor') {
-    if (empty($_POST['noprov']) || empty($_POST['nameprov']) || empty($_POST['razonsoc'])) {
+    header('Content-Type: application/json; charset=utf-8');
+
+    if (empty($_POST['noprov']) || empty($_POST['razonsoc'])) {
         echo json_encode(['status' => 'error', 'message' => 'Campos obligatorios faltantes']);
         exit;
     }
@@ -4998,23 +5000,56 @@ if ($_POST['action'] == 'AlmacenaProveedor') {
     $email_conta  = $_POST['emailconta'] ?? "";
     $credito      = $_POST['credito'] ?? "";
     $condicionesc = $_POST['condicionesc'] ?? "";
-    $limite       = (int)$_POST['limite']; // Asegurar que es un número entero
-    $usuario      = (int)$_SESSION['idUser']; // Asegurar que es un número entero
+    $limite       = (int)$_POST['limite'];
+    $usuario      = (int)$_SESSION['idUser'];
 
-    // Consulta preparada para evitar inyección SQL
     $sql = "INSERT INTO proveedores 
-            (no_prov, nombre_corto, calle, colonia, ciudad, municipio, estado, cod_postal, pais, telefono, contacto, correo, giro, movil, servicio, sitio, nombre, rfc, contacto_conta, email_conta, credito, condiciones_credito, limite_credito, usuario_id) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        (no_prov, nombre_corto, calle, colonia, ciudad, municipio, estado, cod_postal, pais, telefono, contacto, correo, giro, movil, servicio, sitio, nombre, rfc, contacto_conta, email_conta, credito, condiciones_credito, limite_credito, usuario_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = mysqli_prepare($conection, $sql)) {
         mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssssii",
-            $noprov, $nameprov, $callenum, $colonia, $ciudad, $municipio, $estado, $codpostal, $pais, $phone, 
-            $contacto, $email, $giro, $phonecontac, $servicio, $sitioweb, $razonsoc, $rfccte, $cont_conta, 
+            $noprov, $nameprov, $callenum, $colonia, $ciudad, $municipio, $estado, $codpostal, $pais, $phone,
+            $contacto, $email, $giro, $phonecontac, $servicio, $sitioweb, $razonsoc, $rfccte, $cont_conta,
             $email_conta, $credito, $condicionesc, $limite, $usuario
         );
 
         if (mysqli_stmt_execute($stmt)) {
-            echo json_encode(['status' => 'success', 'message' => 'Proveedor agregado correctamente']);
+            $idProveedor = mysqli_insert_id($conection);
+
+            $uploadBase = __DIR__ . '/../uploads/';
+
+            // Archivo CSF
+            if (isset($_FILES['archivo_csf']) && $_FILES['archivo_csf']['error'] == 0) {
+                $csfFolder = $uploadBase . 'csf/';
+                if (!file_exists($csfFolder)) mkdir($csfFolder, 0777, true);
+                $nombreArchivo = uniqid('csf_') . '_' . basename($_FILES['archivo_csf']['name']);
+                $rutaDestino = $csfFolder . $nombreArchivo;
+                if (move_uploaded_file($_FILES['archivo_csf']['tmp_name'], $rutaDestino)) {
+                    $rutaRelativa = 'uploads/csf/' . $nombreArchivo;
+                    $stmt_csf = mysqli_prepare($conection, "INSERT INTO proveedor_csf (proveedor_id, nombre_archivo, ruta, fecha_subida) VALUES (?, ?, ?, NOW())");
+                    mysqli_stmt_bind_param($stmt_csf, "iss", $idProveedor, $nombreArchivo, $rutaRelativa);
+                    mysqli_stmt_execute($stmt_csf);
+                    mysqli_stmt_close($stmt_csf);
+                }
+            }
+
+            // Archivo Clabe
+            if (isset($_FILES['archivo_clabe']) && $_FILES['archivo_clabe']['error'] == 0) {
+                $clabeFolder = $uploadBase . 'clabe/';
+                if (!file_exists($clabeFolder)) mkdir($clabeFolder, 0777, true);
+                $nombreArchivo = uniqid('clabe_') . '_' . basename($_FILES['archivo_clabe']['name']);
+                $rutaDestino = $clabeFolder . $nombreArchivo;
+                if (move_uploaded_file($_FILES['archivo_clabe']['tmp_name'], $rutaDestino)) {
+                    $rutaRelativa = 'uploads/clabe/' . $nombreArchivo;
+                    $stmt_clabe = mysqli_prepare($conection, "INSERT INTO proveedor_clabe (proveedor_id, nombre_archivo, ruta, fecha_subida) VALUES (?, ?, ?, NOW())");
+                    mysqli_stmt_bind_param($stmt_clabe, "iss", $idProveedor, $nombreArchivo, $rutaRelativa);
+                    mysqli_stmt_execute($stmt_clabe);
+                    mysqli_stmt_close($stmt_clabe);
+                }
+            }
+
+            echo json_encode(['status' => 'success', 'message' => 'Proveedor y archivos almacenados correctamente']);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Error al insertar proveedor']);
         }
@@ -5030,12 +5065,17 @@ if ($_POST['action'] == 'AlmacenaProveedor') {
 
 //*Almacena Edicion Proveedor
 if ($_POST['action'] == 'AlmacenaEditProveedor') {
+
+    header('Content-Type: application/json; charset=utf-8');
+
+    // Validación de campos requeridos
     if (empty($_POST['noprov']) || empty($_POST['nameprov']) || empty($_POST['razonsoc'])) {
         echo json_encode(['status' => 'error', 'message' => 'Campos obligatorios faltantes']);
         exit;
     }
 
-    $idp          = (int)$_POST['idprov']; // Asegurar que es un número entero
+    // Variables recibidas
+    $idp          = (int)$_POST['idprov'];
     $noprov       = $_POST['noprov'];
     $nameprov     = $_POST['nameprov'];
     $callenum     = $_POST['callenum'];
@@ -5061,7 +5101,7 @@ if ($_POST['action'] == 'AlmacenaEditProveedor') {
     $limite       = (int)$_POST['limitec'];
     $usuario      = (int)$_SESSION['idUser'];
 
-    // Consulta preparada para mayor seguridad
+    // Actualización de proveedor
     $sql = "UPDATE proveedores 
             SET no_prov = ?, nombre_corto = ?, calle = ?, colonia = ?, ciudad = ?, municipio = ?, 
                 estado = ?, cod_postal = ?, pais = ?, telefono = ?, contacto = ?, correo = ?, 
@@ -5077,49 +5117,98 @@ if ($_POST['action'] == 'AlmacenaEditProveedor') {
             $email_conta, $credito, $condicionesc, $limite, $usuario, $idp
         );
 
-        if (mysqli_stmt_execute($stmt)) {
-            if (mysqli_affected_rows($conection) > 0) {
-                echo json_encode(['status' => 'success', 'message' => 'Proveedor actualizado correctamente']);
-            } else {
-                echo json_encode(['status' => 'info', 'message' => 'No hubo cambios en la información']);
-            }
-        } else {
+        if (!mysqli_stmt_execute($stmt)) {
             echo json_encode(['status' => 'error', 'message' => 'Error al actualizar proveedor']);
+            mysqli_stmt_close($stmt);
+            mysqli_close($conection);
+            exit;
         }
-
         mysqli_stmt_close($stmt);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Error en la preparación de la consulta']);
+        mysqli_close($conection);
+        exit;
+    }
+
+    // Carpeta base de uploads
+    $uploadBase = __DIR__ . '/../uploads/';
+    if (!file_exists($uploadBase)) {
+        mkdir($uploadBase, 0777, true);
+    }
+
+    // Guardar archivo CSF
+    if (isset($_FILES['archivo_csf']) && $_FILES['archivo_csf']['error'] == 0) {
+        $csfFolder = $uploadBase . 'csf/';
+        if (!file_exists($csfFolder)) {
+            mkdir($csfFolder, 0777, true);
+        }
+
+        $nombreNuevo = uniqid('csf_') . '_' . basename($_FILES['archivo_csf']['name']);
+        $rutaRelativa = 'uploads/csf/' . $nombreNuevo;
+        $rutaDestino = $csfFolder . $nombreNuevo;
+
+        // Buscar si ya existe un archivo CSF para este proveedor
+        $queryCsf = mysqli_query($conection, "SELECT ruta FROM proveedor_csf WHERE proveedor_id = $idp LIMIT 1");
+        if ($queryCsf && mysqli_num_rows($queryCsf) > 0) {
+            $row = mysqli_fetch_assoc($queryCsf);
+            $rutaAntigua = __DIR__ . '/../' . $row['ruta'];
+            if (file_exists($rutaAntigua)) {
+                unlink($rutaAntigua); // Eliminar archivo anterior
+            }
+            // Actualizar registro
+            $stmt_update = mysqli_prepare($conection, "UPDATE proveedor_csf SET nombre_archivo = ?, ruta = ?, fecha_subida = NOW() WHERE proveedor_id = ?");
+            mysqli_stmt_bind_param($stmt_update, "ssi", $nombreNuevo, $rutaRelativa, $idp);
+            mysqli_stmt_execute($stmt_update);
+            mysqli_stmt_close($stmt_update);
+        } else {
+            // Insertar nuevo
+            if (move_uploaded_file($_FILES['archivo_csf']['tmp_name'], $rutaDestino)) {
+                $stmt_csf = mysqli_prepare($conection, "INSERT INTO proveedor_csf (proveedor_id, nombre_archivo, ruta, fecha_subida) VALUES (?, ?, ?, NOW())");
+                mysqli_stmt_bind_param($stmt_csf, "iss", $idp, $nombreNuevo, $rutaRelativa);
+                mysqli_stmt_execute($stmt_csf);
+                mysqli_stmt_close($stmt_csf);
+            }
+        }
+    }
+
+    // Guardar archivo Clabe
+    if (isset($_FILES['archivo_clabe']) && $_FILES['archivo_clabe']['error'] == 0) {
+        $clabeFolder = $uploadBase . 'clabe/';
+        if (!file_exists($clabeFolder)) {
+            mkdir($clabeFolder, 0777, true);
+        }
+
+        $nombreNuevo = uniqid('clabe_') . '_' . basename($_FILES['archivo_clabe']['name']);
+        $rutaRelativa = 'uploads/clabe/' . $nombreNuevo;
+        $rutaDestino = $clabeFolder . $nombreNuevo;
+
+        $queryClabe = mysqli_query($conection, "SELECT ruta FROM proveedor_clabe WHERE proveedor_id = $idp LIMIT 1");
+        if ($queryClabe && mysqli_num_rows($queryClabe) > 0) {
+            $row = mysqli_fetch_assoc($queryClabe);
+            $rutaAntigua = __DIR__ . '/../' . $row['ruta'];
+            if (file_exists($rutaAntigua)) {
+                unlink($rutaAntigua); // Eliminar archivo anterior
+            }
+            $stmt_update = mysqli_prepare($conection, "UPDATE proveedor_clabe SET nombre_archivo = ?, ruta = ?, fecha_subida = NOW() WHERE proveedor_id = ?");
+            mysqli_stmt_bind_param($stmt_update, "ssi", $nombreNuevo, $rutaRelativa, $idp);
+            mysqli_stmt_execute($stmt_update);
+            mysqli_stmt_close($stmt_update);
+        } else {
+            if (move_uploaded_file($_FILES['archivo_clabe']['tmp_name'], $rutaDestino)) {
+                $stmt_clabe = mysqli_prepare($conection, "INSERT INTO proveedor_clabe (proveedor_id, nombre_archivo, ruta, fecha_subida) VALUES (?, ?, ?, NOW())");
+                mysqli_stmt_bind_param($stmt_clabe, "iss", $idp, $nombreNuevo, $rutaRelativa);
+                mysqli_stmt_execute($stmt_clabe);
+                mysqli_stmt_close($stmt_clabe);
+            }
+        }
     }
 
     mysqli_close($conection);
+    echo json_encode(['status' => 'success', 'message' => 'Proveedor y archivos guardados correctamente']);
     exit;
 }
 
-
-
-//****************************//
-        //Cancelar Requisicion
-//    if($_POST['action'] == 'procesarSalirCortizacioncp'){
-
-                          
-//         $norecibo  = $_POST['norecibo'];
-//         $token       = md5($_SESSION['idUser']);
-//         $usuario     = $_SESSION['idUser'];
-
-//         $query_procesarcf = mysqli_query($conection,"CALL salir_cotizacioncompra($norecibo, '$token')");
-//         $result_procesarcf = mysqli_num_rows($query_procesarcf);
-                
-//         if($result_procesarcf > 0){
-//             $data = mysqli_fetch_assoc($query_procesarcf);
-//                     echo json_encode($data,JSON_UNESCAPED_UNICODE);
-//         }else{
-//                     echo "error";
-//         }
-            
-//     }   
-
-// Buscar Cliente para Pedido
+        // Buscar Cliente para Pedido
         if($_POST['action'] == 'searchRefaccionesmov')
         {
             if(!empty($_POST['op'])){
