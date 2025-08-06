@@ -54,32 +54,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <?php
-       if ($_SESSION['rol'] == 1) {
-        include('includes/navbar.php');
-      }else {
-        if ($_SESSION['rol'] == 6) {
-          include('includes/navbaroperac.php');
-        }else {
-          if ($_SESSION['rol'] == 8) {
-            include('includes/navbarjefeoper.php');
-          }else {
-            if ($_SESSION['rol'] == 9) {
-              include('includes/navbargrcia.php');
-            }else {
-              if ($_SESSION['rol'] == 14) {
-               include('includes/navbarcalidad.php');
-              }else {
-                if ($_SESSION['rol'] == 16) {
-                  include('includes/navbarcompras.php');
-                }else {
-                  include('includes/navbar.php'); 
-                }
-              }
-            }   
-          }  
-        }
-      } ?>
+      <?php include('includes/generalnavbar.php') ?>
       <?php include('includes/nav.php') ?>
       
     </div>
@@ -209,7 +184,7 @@ var table = $('#example1').dataTable({
 { mData: 'Status' , "sWidth": "5%"},
 {
                     "render": function ( data, type, full, meta ) {
-        return '<a class="link_edit" style="color:#007bff;" href= \'edit_proveedor.php?id=' + full.id +  '\'><i class="far fa-edit"></i> Editar</a> | <!--<a data-toggle="modal" data-target="#modalSubecontrato"  data-id=\'' + full.id +  '\' data-name=\'' + full.nombre +  '\' href="javascript:void(0)" class="link_delete"  ><i class="fa fa-arrow-circle-up" aria-hidden="true"></i>&nbsp;&nbsp;</a>  <a href=\'visorpdf_contrato.php?id= ' + full.id + '\' target="_blank"><i class="fa fa-search" aria-hidden="true"></i> </a> Contrato | --><a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.id +  '\' data-name=\'' + full.nombre +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="far fa-trash-alt"></i> Baja</a>';
+        return '<a class="link_edit" style="color:#007bff;" href= \'edit_proveedor.php?id=' + full.id +  '\' title=\'Editar\'><i class="far fa-edit"></i></a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.id +  '\' data-name=\'' + full.nombre +  '\' href="javascript:void(0)" class="link_delete" style="color:red" title="Baja"><i class="far fa-trash-alt"></i></a> | <a href="ver_csf.php?id=' + full.id + '" target="_blank" style="color:orange;" title="Ver CSF"><i class="far fa-file"></i></a> |  <a href="ver_clabe.php?id=' + full.id + '" target="_blank" style="color:green;" title="Ver CLABE"><i class="far fa-file"></i></a>';
     }
                     
             
