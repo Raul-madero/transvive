@@ -13715,55 +13715,63 @@ if($_POST['action'] == 'EliminaEvaluametro')
 } 
 
 //Almacena Evaluacion de Producto
-if($_POST['action'] == 'AlmacenaEvaluaservicio')
-{
-    // var_dump($_POST);
-    if(empty($_POST['fecha']) || empty($_POST['tipo_eval']) || empty($_POST['proveedor'] || ['producto']) )
-    {
-       echo 'error';
-    }else{
+if ($_POST['action'] == 'AlmacenaEvaluaservicio') {
 
-        $tipo_eval   = $_POST['tipo_eval'];
-        $fecha       = $_POST['fecha'];
-        $proveedor   = $_POST['proveedor'];
-        $producto    = $_POST['producto'];
-        $consulta    = $_POST['consulta'];
-        $fecha_h1    = $_POST['fecha_h1'];
-        $historial1  = $_POST['historial_h1'];
-        $fecha_h2    = $_POST['fecha_h2'];
-        $historial2  = $_POST['historial_h2'];
-        $fecha_h3    = $_POST['fecha_h3'];
-        $historial3  = $_POST['historial_h3'];
-        $tot_compras = $_POST['tot_compras'];
-        $tot_calidad = $_POST['tot_calidad'];
-        $calif_total = $_POST['calif_total'];
-        $estatusc    = $_POST['estatusc'];
-        $acciones    = $_POST['acciones'];
-        $precios     = $_POST['precio'];
-        $documenta   = $_POST['documenta'];
-        $credito     = $_POST['credito'];
-        $tiempo_res  = $_POST['tiempo_res'];        
-        $calidads    = $_POST['calidad_se'];
+    if (
+        empty($_POST['fecha']) || 
+        empty($_POST['tipo_eval']) || 
+        empty($_POST['proveedor']) || 
+        empty($_POST['producto'])
+    ) {
+        echo json_encode(["status" => "error", "message"=> "Capture los datos requeridos"]);
+        exit;
+    }
 
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
+    // Escapar valores para seguridad
+    $tipo_eval   = mysqli_real_escape_string($conection, $_POST['tipo_eval']);
+    $fecha       = mysqli_real_escape_string($conection, $_POST['fecha']);
+    $proveedor   = mysqli_real_escape_string($conection, $_POST['proveedor']);
+    $producto    = mysqli_real_escape_string($conection, $_POST['producto']);
+    $consulta    = mysqli_real_escape_string($conection, $_POST['consulta']);
+    $fecha_h1    = mysqli_real_escape_string($conection, $_POST['fecha_h1']);
+    $historial1  = mysqli_real_escape_string($conection, $_POST['historial_h1']);
+    $fecha_h2    = mysqli_real_escape_string($conection, $_POST['fecha_h2']);
+    $historial2  = mysqli_real_escape_string($conection, $_POST['historial_h2']);
+    $fecha_h3    = mysqli_real_escape_string($conection, $_POST['fecha_h3']);
+    $historial3  = mysqli_real_escape_string($conection, $_POST['historial_h3']);
+    $tot_compras = mysqli_real_escape_string($conection, $_POST['tot_compras']);
+    $tot_calidad = mysqli_real_escape_string($conection, $_POST['tot_calidad']);
+    $calif_total = mysqli_real_escape_string($conection, $_POST['calif_total']);
+    $estatusc    = mysqli_real_escape_string($conection, $_POST['estatusc']);
+    $acciones    = mysqli_real_escape_string($conection, $_POST['acciones']);
+    $precios     = mysqli_real_escape_string($conection, $_POST['precio']);
+    $documenta   = mysqli_real_escape_string($conection, $_POST['documenta']);
+    $credito     = mysqli_real_escape_string($conection, $_POST['credito']);
+    $tiempo_res  = mysqli_real_escape_string($conection, $_POST['tiempo_res']);        
+    $calidads    = mysqli_real_escape_string($conection, $_POST['calidad_se']);
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_evaluaservicio('$tipo_eval', '$fecha', $proveedor, '$producto', '$consulta', '$fecha_h1', $historial1, '$fecha_h2', $historial2, '$fecha_h3', $historial3, $tot_compras, $tot_calidad, $calif_total, '$estatusc', '$acciones', $precios, $documenta, $credito, $tiempo_res, $calidads, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
-        }
-    
+    $usuario     = $_SESSION['idUser'];
+
+    // INSERT
+    $sql = "INSERT INTO evaluaciones_servicios (
+        tipo_evaluacion, fecha_eval, cveproveedor, producto, consulta, precios_competitivos, documentacion, credito, 
+        tiempo_respuesta, calidad_servicio, fecha_hist1, historia1, fecha_hist2, historia2, fecha_hist3, historia3, 
+        calificacion_compras, calificacion_calidad, calificacion_total, resultado, acciones, id_usuario
+    ) VALUES (
+        '$tipo_eval', '$fecha', '$proveedor', '$producto', '$consulta', '$precios', '$documenta', '$credito', 
+        '$tiempo_res', '$calidads', '$fecha_h1', '$historial1', '$fecha_h2', '$historial2', '$fecha_h3', '$historial3', 
+        '$tot_compras', '$tot_calidad', '$calif_total', '$estatusc', '$acciones', '$usuario'
+    )";
+
+    if (mysqli_query($conection, $sql)) {
+        echo json_encode(["message" => "Evaluación almacenada correctamente", "status" => "success"]);
+    } else {
+        echo json_encode(["mesage" => "No se pudo guardar la evaluación", "status"=> "error"]);
+    }
+
     mysqli_close($conection);
-  }
-   
     exit;
 }
-
 
 //Almacena Edicion Evaluacion Servicios
 if($_POST['action'] == 'AlmacenaEditEvaluaservicio')

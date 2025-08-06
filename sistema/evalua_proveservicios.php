@@ -14,13 +14,6 @@ session_start();
   if (!isset($_SESSION['idUser'])) {
   header('Location: ../index.php');
 }
-  
-  //*include "../conexion.php";
-  //*$sqledo = "select estado from estados ORDER BY estado";
-  //*$queryedo = mysqli_query($conection, $sqledo);
-  //*$filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); 
-
- 
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,11 +58,11 @@ session_start();
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     
-    <script src="./js/require.min.js"></script>
+    <!-- <script src="./js/require.min.js"></script> -->
     <script>
-      requirejs.config({
-          baseUrl: '.'
-      });
+      // requirejs.config({
+      //     baseUrl: '.'
+      // });
     </script>
 
     <style type="text/css">
@@ -204,28 +197,7 @@ session_start();
      <?php include "includes/footer.php"; ?>
   </footer>
 
-  <!-- Control Sidebar -->
-
-  <!-- /.control-sidebar -->
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
-
 </div>
-<!-- ./wrapper -->
-
-<!-- jQuery 3 -->
-
-<!-- Bootstrap 3.3.7 -->
-
-<!-- SlimScroll -->
-
-<!-- Bootstrap 3.3.7 -->
-
-
-<!-- AdminLTE App -->
-
-<!-- AdminLTE for demo purposes -->
-<!--<script src="../dist/js/demo.js"></script>-->
 <!-- page script -->
 
 
@@ -301,12 +273,12 @@ buttons: [
     "buttons": [
         'copyHtml5',
         'excelHtml5',
-        'csvHtml5',     
-        {
-            extend: 'colvis',
-            postfixButtons: [ 'colvisRestore' ],
-            columns: '0,1,2,3,4,5,6'
-        }
+        'csvHtml5'     
+        // {
+        //     extend: 'colvis',
+        //     postfixButtons: [ 'colvisRestore' ],
+        //     columns: '0,1,2,3,4,5,6'
+        // }
     ],
          
         }); 
@@ -569,14 +541,6 @@ function actualizarLaPagina(){
         </div> 
         
 
-        <!--<div class="form-group row">
-           <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">Imagen:</label>
-           <div class="col-sm-10">
-              <input type="file" class="form-control" id="image" name="image" multiple>
-           </div>
-        </div>-->
-
-    
       <div class="modal-footer">
         <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-success pull-right" href="#" id="copiaVuelta"><i class="fa fa-save"></i>&nbsp;Copiar Cotizacion</button>

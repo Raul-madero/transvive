@@ -134,9 +134,9 @@ session_start();
 									<div class="col-sm-4">
 										<select class="form-control" style="width: 100%; text-align: left" id="inputTipo" name="inputTipo"  onchange="toggleTableVisibility()">
 											<option value="">- Seleccione -</option>
-											<option value="SELECCIÓN">SELECCIÓN</option>
-											<option value="EVALUACIÓN">EVALUACIÓN</option>
-											<option value="RE-EVALUACION">RE-EVALUACIÓN</option>
+											<option value="SELECCION">SELECCIÓN</option>
+											<option value="EVALUACION">EVALUACIÓN</option>
+											<option value="RE-EVALUACION">RE-EVALUACION</option>
 										</select>
 									</div>
 									<label for="inputEmail3" class="col-sm-2 col-form-label">Fecha</label>
@@ -470,6 +470,7 @@ session_start();
 	<script>
    		$('#guardar_tipoactividad').click(function(e){
        	 	e.preventDefault();
+
 			var tipo_eval     = $('#inputTipo').val();
 			var fecha         = $('#inputFecha').val();
 			var proveedor     = $('#inputProveedor').val();
@@ -487,7 +488,7 @@ session_start();
 			var estatusc      = $('#estatusc').val();
 			var acciones      = $('#inputAcciones').val();
 
-			if (tipo_eval == 'SELECCIÓN') {
+			if (tipo_eval == 'SELECCION') {
 				var precio     = $('#input1').val();;
 				var documenta  = $('#input2').val();
 				var credito    = $('#input3').val();
@@ -506,22 +507,17 @@ session_start();
 				url: 'includes/ajax.php',
 				type: "POST",
 				async : true,
+				dataType: 'json',
 				data: {action:action, tipo_eval, fecha:fecha, proveedor:proveedor, producto:producto, consulta:consulta, fecha_h1:fecha_h1, historial_h1:historial_h1, fecha_h2:fecha_h2, historial_h2:historial_h2, fecha_h3:fecha_h3, historial_h3:historial_h3, tot_compras:tot_compras, tot_calidad:tot_calidad, calif_total:calif_total, estatusc:estatusc, acciones:acciones, precio:precio, documenta:documenta, credito:credito, tiempo_res:tiempo_res, calidad_se:calidad_se },
 
 				success: function(response)
                 {
-                	if(response != 'error')
-                    {
-                        console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                        if ($mensaje === undefined)
-                        {
+					console.log(response)
+                	if(response.status === "success") {
                             Swal
                          	.fire({
                           		title: "Exito!",
-                          		text: "EVALUACION DE SERVICIO ALMACENADA CORRECTAMENTE",
+                          		text: response.message,
                           		icon: 'success'
                        		})
                         	.then(resultado => {
@@ -535,21 +531,16 @@ session_start();
                         		}
                         	});
 						}else {  
+							console.log(response)
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: $mensaje,
+                            text: response.message,
                             })
                         }
-                    }else{
-                        Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                        })
-                    }
 				},
 				error: function(error) {
+					console.log(error)
 				}
             });
     	});
@@ -564,7 +555,7 @@ session_start();
       		var select = document.getElementById('inputTipo');
       		var selectedValue = select.value;
 
-      		if (selectedValue === 'SELECCIÓN') {
+      		if (selectedValue === 'SELECCION') {
         		container.classList.remove('hidden');
         		containertwo.classList.add('hidden');
         		containerFive.classList.add('hidden');
