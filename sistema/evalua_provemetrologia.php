@@ -180,6 +180,7 @@ session_start();
                 <th style="text-align: center; font-size: 12px;">Producto</th>
                 <th style="text-align: center; font-size: 12px;">Calificacion</th>
                 <th style="text-align: center; font-size: 12px;">Estatus</th>
+                <th style="text-align: center; font-size: 12px;">Tipo</th>
                 <th style="text-align: center; font-size: 12px;">Accion</th>
               </tr>
             </thead>
@@ -286,6 +287,7 @@ buttons: [
             { "data" : "producto", "width": "20%" },            
             { "data" : "estatusped", "width": "8%", className: "text-center", "orderable":false},
             { "data" : "fechainicio", "width": "15%", className: "text-center", "orderable":false},
+            { "data" : "tipo_evaluacion", "width": "15%", className: "text-center", "orderable":false},
             {
                     "render": function ( data, type, full, meta ) {
         return '<a class="link_edit" style="color:#007bff;" href= \'edit_evaluaprovmetro.php?id=' + full.folio +  '\'><i class="far fa-edit"></i> Edit</a> |<a href= \'factura/rep_evaluametro.php?id=' + full.folio + '\'  target="_blank">&nbsp; <i class="fa fa-print" ></i> Print</a> | <a data-toggle="modal" data-target="#modalEditcliente"  data-id=\'' + full.folio +  '\' data-name=\'' + full.atiende +  '\' href="javascript:void(0)" class="link_delete" style="color:red" ><i class="fa fa-trash"></i> Delete</a>';
