@@ -109,7 +109,7 @@ session_start();
           				</div>
         			</div>
       			</div>
-    		</section>
+    		</section> <!-- / .content-header -->
     		<center>
          		<?php
 					date_default_timezone_set('America/Mexico_City');
@@ -122,597 +122,518 @@ session_start();
               			<div class="card-header">
                 			<h3 class="card-title">Evaluaciónde Proveedores (Servicios)</h3>
               			</div>
+						<!-- /.card-header -->
               			<div class="card-body">
-              				<div class="card-header p-2">
-								<!-- /.card-header -->
-								<!-- form start -->
-              					<form class="form-horizontal">
-              						<div class="form-group row">
-                    					<div class="col-sm-10">
-                    					</div>
-                  					</div>
+							<form class="form-horizontal">
+								<div class="form-group row">
+									<div class="col-sm-10">
+									</div>
+								</div>
+								<div class="form-group row" style="text-align:left;">
+									<label for="inputEmail3" class="col-sm-3 col-form-label">Tipo de valoración</label>
+									<div class="col-sm-4">
+										<select class="form-control" style="width: 100%; text-align: left" id="inputTipo" name="inputTipo"  onchange="toggleTableVisibility()">
+											<option value="">- Seleccione -</option>
+											<option value="SELECCIÓN">SELECCIÓN</option>
+											<option value="EVALUACIÓN">EVALUACIÓN</option>
+											<option value="RE-EVALUACION">RE-EVALUACIÓN</option>
+										</select>
+									</div>
+									<label for="inputEmail3" class="col-sm-2 col-form-label">Fecha</label>
+									<div class="col-sm-3">
+										<input type="date" class="form-control" id="inputFecha" name="inputFecha" value="<?php echo $fcha;?>">
+									</div>
+								</div>
 
-                  					<div class="form-group row" style="text-align:left;">
-                    					<label for="inputEmail3" class="col-sm-3 col-form-label">Tipo de valoración</label>
-                    					<div class="col-sm-4">
-                       						<select class="form-control" style="width: 100%; text-align: left" id="inputTipo" name="inputTipo"  onchange="toggleTableVisibility()">
-                       							<option value="">- Seleccione -</option>
-												<option value="SELECCIÓN">SELECCIÓN</option>
-												<option value="EVALUACIÓN">EVALUACIÓN</option>
-												<option value="RE-EVALUACION">RE-EVALUACIÓN</option>
-                     						</select>
-                    					</div>
-                    					<label for="inputEmail3" class="col-sm-2 col-form-label">Fecha</label>
-                    					<div class="col-sm-3">
-                      						<input type="date" class="form-control" id="inputFecha" name="inputFecha" value="<?php echo $fcha;?>">
-                    					</div>
-                  					</div>
+								<div class="form-group row" style="text-align:left;">
+									<label for="inputEmail3" class="col-sm-3 col-form-label">Nombre del Proveedor</label>
+									<div class="col-sm-9">
+										<select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProveedor" name="inputProveedor">
+											<option value="">- Seleccione -</option>
+											<?php foreach ($filasoper as $oppv): //llenar las opciones del primer select ?>
+												<option value="<?= $oppv['no_prov'] ?>"><?= $oppv['nombre'] ?></option>  
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row" style="text-align:left;">
+									<label for="inputEmail3" class="col-sm-3 col-form-label">Producto y/o Servicio</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="inputProducto" name="inputProducto">
+									</div>
+								</div>
 
-                  					<div class="form-group row" style="text-align:left;">
-                    					<label for="inputEmail3" class="col-sm-3 col-form-label">Nombre del Proveedor</label>
-                    					<div class="col-sm-9">
-                      						<select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProveedor" name="inputProveedor">
-                      							<option value="">- Seleccione -</option>
-                       							<?php foreach ($filasoper as $oppv): //llenar las opciones del primer select ?>
-                       								<option value="<?= $oppv['no_prov'] ?>"><?= $oppv['nombre'] ?></option>  
-                       							<?php endforeach; ?>
-                    						</select>
-                    					</div>
-                  					</div>
-                    				<div class="form-group row" style="text-align:left;">
-                    					<label for="inputEmail3" class="col-sm-3 col-form-label">Producto y/o Servicio</label>
-                    					<div class="col-sm-9">
-                      						<input type="text" class="form-control" id="inputProducto" name="inputProducto">
-                    </div>
-                  </div>
+								<div id="tableContainerOne" class="hidden" class="col-sm-12">
+									<div class="row">    
+										<table class="table table-striped" >
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col" style="width: 5%;">No.</th>
+													<th scope="col" style="width: 10%">Área</th>
+													<th scope="col" style="width: 30%">Criterios</th>
+													<th scope="col" style="width: 10%">Parámetro</th>
+													<th scope="col" style="width: 20%">Calificacion</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>1. </td>
+													<td>COMPRAS</td>
+													<td>PRECIO</td>
+													<td>1 - 30</td>
+													<td><input type="number" id="input1" name="input1" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
+												<tr>
+													<td>2. </td>
+													<td>COMPRAS</td>
+													<td>DOCUMENTACIÓN</td>
+													<td>1 - 10</td>
+													<td><input type="number" id="input2" name="input2" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
+												<tr>
+													<td>3. </td>
+													<td>COMPRAS</td>
+													<td>CRÉDITO</td>
+													<td>1 - 10</td>
+													<td><input type="number" id="input3" name="input3" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
+												<tr>
+													<td>4. </td>
+													<td>COMPRAS</td>
+													<td>TIEMPO DE RESPUESTA</td>
+													<td>1 - 50</td>
+													<td><input type="number" id="input4" name="input4" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
 
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- / #tableContainerOne -->
 
-                  <div id="tableContainerOne" class="hidden" class="col-sm-12">
-                       
+								<div id="tableContainerTwo" class="hidden" class="col-sm-12">
+									<div class="row">      
+										<table class="table table-striped">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col" style="width: 5%;">No.</th>
+													<th scope="col" style="width: 10%">Área</th>
+													<th scope="col" style="width: 30%">Criterios</th>
+													<th scope="col" style="width: 10%">Parámetro</th>
+													<th scope="col" style="width: 20%">Calificacion</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>1. </td>
+													<td>COMPRAS</td>
+													<td>PRECIO</td>
+													<td>1 - 20</td>
+													<td><input type="number" id="input5" name="input5" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
+												<tr>
+													<td>2. </td>
+													<td>COMPRAS</td>
+													<td>DOCUMENTACIÓN</td>
+													<td>1 - 10</td>
+													<td><input type="number" id="input6" name="input6" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
+												<tr>
+													<td>3. </td>
+													<td>COMPRAS</td>
+													<td>CRÉDITO</td>
+													<td>1 - 10</td>
+													<td><input type="number" id="input7" name="input7" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
+												<tr>
+													<td>4. </td>
+													<td>COMPRAS</td>
+													<td>TIEMPO DE RESPUESTA</td>
+													<td>1 - 30</td>
+													<td><input type="number" id="input8" name="input8" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
+												<tr>
+													<td>5. </td>
+													<td>COMPRAS</td>
+													<td>CALIDAD DEL SERVICIO (EVIDENCIA)</td>
+													<td>1 - 30</td>
+													<td><input type="number" id="input9" name="input9" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- / #tableContainerTwo -->
+								
+								<div id="tableContainerThree" class="hidden" class="col-sm-12">
+									<div class="row">      
+										<table class="table table-striped">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col" style="width: 5%;">No.</th>
+													<th scope="col" style="width: 10%">Área</th>
+													<th scope="col" style="width: 30%">Criterios</th>
+													<th scope="col" style="width: 10%">Parámetro</th>
+													<th scope="col" style="width: 20%">Calificacion</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>1. </td>
+													<td>CALIDAD</td>
+													<td>CONDICIONES DE EMPAQUE</td>
+													<td>1 - 10</td>
+													<td><input type="number" id="input11" name="input11" min="0" step="1" oninput="validateInput(this)" value="0"></td>
+												</tr>
+												<tr>
+													<td>2. </td>
+													<td>CALIDAD</td>
+													<td>RECHAZO</td>
+													<td>1 - 50</td>
+													<td><input type="number" id="input12" name="input12" min="0" step="1" oninput="validateInput(this)"  value="0"></td>
+												</tr>
+												<tr>
+													<td>3. </td>
+													<td>CALIDAD</td>
+													<td>IDENTIFICACIÓN (nombre de producto, marca y proveedor)</td>
+													<td>1 - 5</td>
+													<td><input type="number" id="input13" name="input13" min="0" step="1" oninput="validateInput(this)"  value="0"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- / #tableContainerThree -->
+								<div class="form-group row" style="text-align:left;">
+									<label for="inputEmail3" class="col-sm-3 col-form-label">Para consultas dudas con:</label>
+									<div class="col-sm-9">
+										<select class="form-control" style="width: 100%; text-align: left" id="inputConsulta" name="inputConsulta">
+											<option value="compras@transvivegdl.com">compras@transvivegdl.com</option>  
+					
+										</select>
+									</div>
+								</div>
+								<!-- / .form-group.consulta -->
+								<div id="tableContainerFive" class="hidden" class="col-12">
+									<div class="form-group row" style="text-align:center;">
+										<label for="inputEmail3" class="col-sm-12 col-form-label">Historial de desempeño:</label>
+										</div>
+									<div class="form-group row" style="text-align:left;">
+										<label for="inputEmail3" class="col-sm-3 col-form-label">Historial de desempeño:</label>
+										<div class="col-sm-3">
+											<input type="date" class="form-control" id="inputFechah1" name="inputFechah1">
+										</div>
+										<div class="col-sm-2">
+												<input type="number" class="form-control" id="historial1" name="historial1" min="0" step="1" oninput="validateInput(this)" value="0">
+										</div>
+									</div>
+									<!-- / row historial1 -->
+									<div class="form-group row" style="text-align:left;">
+										<label for="inputEmail3" class="col-sm-3 col-form-label">Historial de desempeño:</label>
+										<div class="col-sm-3">
+											<input type="date" class="form-control" id="inputFechah2" name="inputFechah2">
+										</div>
+										<div class="col-sm-2">
+											<input type="number" class="form-control" id="historial2" name="historial2" min="0" step="1" oninput="validateInput(this)"  value="0">
+										</div>
+									</div>
+									<!-- / row historial2 -->
+									<div class="form-group row" style="text-align:left;">
+										<label for="inputEmail3" class="col-sm-3 col-form-label">Historial de desempeño:</label>
+										<div class="col-sm-3">
+											<input type="date" class="form-control" id="inputFechah3" name="inputFechah3">
+										</div>
+										<div class="col-sm-2">
+											<input type="number" class="form-control" id="historial3" name="historial3" min="0" step="1" oninput="validateInput(this)"  value="0">
+										</div>
+									</div>
+									<!-- / row historial3 -->
+								</div>
+								<!-- / #tableContainerFive -->
 
-<div class="row">    
-<table class="table table-striped" >
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col" style="width: 5%;">No.</th>
-        <th scope="col" style="width: 10%">Área</th>
-        <th scope="col" style="width: 30%">Criterios</th>
-        <th scope="col" style="width: 10%">Parámetro</th>
-        <th scope="col" style="width: 20%">Calificacion</th>
-      </tr>
-    </thead>
-    <tbody>
+								<div id="tableContainerFour" class="col-sm-12">
+									<div class="row">      
+										<table class="table-responsive table  " >
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col" style="width: 10%;">Compras</th>
+													<th scope="col" style="width: 10%">Calidad</th>
+													<th scope="col" style="width: 10%">Total</th>
+													<th scope="col" style="width: 20%">Minima aprobatoria</th>
+													<th scope="col" style="width: 10%">Estatus</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td style="text-align: center;"><input type="number" step="1" name="califcompras" id="califcompras" value="0" readonly></td>
+													<td style="text-align: center;"><input type="number" step="1" name="califcalidad" id="califcalidad" value="0" readonly></td>
+													<td style="text-align: center;"><input type="number" step="1" name="califtotal" id="califtotal" value="0" readonly></td>
+													<td style="text-align: center;">80</td>
+													<td style="text-align: center;"><input type="text" name="estatusc" id="estatusc" readonly></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- / #tableContainerFour -->
+								<div class="form-group row" style="text-align:left;">
+									<label for="inputEmail3" class="col-sm-3 col-form-label">Acciones a seguir:</label>
+									<div class="col-sm-9">
+										<textarea class="form-control" id="inputAcciones" name="inputAcciones" rows="1"></textarea>
+									</div>
+								</div>
+								<div class="form-group row" style="text-align:right;">
+									<div class="offset-sm-2 col-sm-10">
+										<button type="button" class="btn btn-secondary" id="btn_salir">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
+										<button type="submit" class="btn btn-success" id="guardar_tipoactividad">Guardar</button>
+									</div>
+								</div>
+							</form>
+						</div>
+						<!-- /.card-body -->
+     				</div>
+					<!-- /.card -->
+     			</div>
+			</center>
+		</div>
+    	<!-- /.content-wrapper -->
+  		<?php include('includes/footer.php') ?>
+	</div>
+	<!-- ./wrapper -->
+	
+	<!-- REQUIRED SCRIPTS -->
+	
+	<!-- jQuery -->
+	<script src="../plugins/jquery/jquery.min.js"></script>
+	<!-- Bootstrap 4 -->
+	<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="../dist/js/adminlte.min.js"></script>
+	<!-- Select2 -->
+	<script src="../plugins/select2/js/select2.full.min.js"></script>
+	<!-- Sweetalert -->
+	<script src="js/sweetalert2.all.min.js"></script>
+	
+	<!-- Script para llenar las fechas de evaluaciones previas (si aplica) -->
+	<script>
+  		$(document).ready(function() {
+    		$('#inputProveedor').on('change', function() {
+      			var selectedValue = $(this).val();
+      			let tipoEval = $('#inputTipo').val();
 
-<tr>
-  <td>1. </td>
-  <td>COMPRAS</td>
-  <td>PRECIO</td>
-  <td>1 - 30</td>
-  <td><input type="number" id="input1" name="input1" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-<tr>
-  <td>2. </td>
-  <td>COMPRAS</td>
-  <td>DOCUMENTACIÓN</td>
-  <td>1 - 10</td>
-  <td><input type="number" id="input2" name="input2" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-<tr>
-  <td>3. </td>
-  <td>COMPRAS</td>
-  <td>CRÉDITO</td>
-  <td>1 - 10</td>
-  <td><input type="number" id="input3" name="input3" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-<tr>
-  <td>4. </td>
-  <td>COMPRAS</td>
-  <td>TIEMPO DE RESPUESTA</td>
-  <td>1 - 50</td>
-  <td><input type="number" id="input4" name="input4" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-  
-    </tbody>
- </table>
-</div>
-                     
-</div>
-
-
-<div id="tableContainerTwo" class="hidden" class="col-sm-12">
-                       
-
-<div class="row">      
-<table class="table table-striped">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col" style="width: 5%;">No.</th>
-        <th scope="col" style="width: 10%">Área</th>
-        <th scope="col" style="width: 30%">Criterios</th>
-        <th scope="col" style="width: 10%">Parámetro</th>
-        <th scope="col" style="width: 20%">Calificacion</th>
-      </tr>
-    </thead>
-    <tbody>
-
-<tr>
-  <td>1. </td>
-  <td>COMPRAS</td>
-  <td>PRECIO</td>
-  <td>1 - 20</td>
-  <td><input type="number" id="input5" name="input5" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-<tr>
-  <td>2. </td>
-  <td>COMPRAS</td>
-  <td>DOCUMENTACIÓN</td>
-  <td>1 - 10</td>
-  <td><input type="number" id="input6" name="input6" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-<tr>
-  <td>3. </td>
-  <td>COMPRAS</td>
-  <td>CRÉDITO</td>
-  <td>1 - 10</td>
-  <td><input type="number" id="input7" name="input7" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-<tr>
-  <td>4. </td>
-  <td>COMPRAS</td>
-  <td>TIEMPO DE RESPUESTA</td>
-  <td>1 - 30</td>
-  <td><input type="number" id="input8" name="input8" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-
-<tr>
-  <td>5. </td>
-  <td>COMPRAS</td>
-  <td>CALIDAD DEL SERVICIO (EVIDENCIA)</td>
-  <td>1 - 30</td>
-  <td><input type="number" id="input9" name="input9" min="0" step="1" oninput="validateInput(this)" onblur="updateSum()" value="0"></td>
-</tr>
-
-  
-    </tbody>
- </table>
-</div>
-
-</div>
-
-<div id="tableContainerTree" class="hidden" class="col-sm-12">
-                       
-<div class="row">      
-<table class="table table-striped">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col" style="width: 5%;">No.</th>
-        <th scope="col" style="width: 10%">Área</th>
-        <th scope="col" style="width: 30%">Criterios</th>
-        <th scope="col" style="width: 10%">Parámetro</th>
-        <th scope="col" style="width: 20%">Calificacion</th>
-      </tr>
-    </thead>
-    <tbody>
-
-<tr>
-  <td>1. </td>
-  <td>CALIDAD</td>
-  <td>CONDICIONES DE EMPAQUE</td>
-  <td>1 - 10</td>
-  <td><input type="number" id="input11" name="input11" min="0" step="1" oninput="validateInput(this)" value="0"></td>
-</tr>
-<tr>
-  <td>2. </td>
-  <td>CALIDAD</td>
-  <td>RECHAZO</td>
-  <td>1 - 50</td>
-  <td><input type="number" id="input12" name="input12" min="0" step="1" oninput="validateInput(this)"  value="0"></td>
-</tr>
-<tr>
-  <td>3. </td>
-  <td>CALIDAD</td>
-  <td>IDENTIFICACIÓN (nombre de producto, marca y proveedor)</td>
-  <td>1 - 5</td>
-  <td><input type="number" id="input13" name="input13" min="0" step="1" oninput="validateInput(this)"  value="0"></td>
-</tr>
-
-    </tbody>
- </table>
-</div>
-</div>                      
-               
-
-                  <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Para consultas dudas con:</label>
-                    <div class="col-sm-9">
-                      <select class="form-control" style="width: 100%; text-align: left" id="inputConsulta" name="inputConsulta">
-                      
-                       <option value="compras@transvivegdl.com">compras@transvivegdl.com</option>  
-                      
-                    </select>
-                    </div>
-                  </div>
-                  <div>
-                    
-                    <div class="form-group row" style="text-align:center;">
-                      <label for="inputEmail3" class="col-sm-12 col-form-label">Historial de desempeño:</label>
-                      
-                    
-                  </div>
-
-                  <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Historial de desempeño:</label>
-                   <div class="col-sm-3">
-                      <input type="date" class="form-control" id="inputFechah1" name="inputFechah1">
-                    </div>
-                    <div class="col-sm-2">
-                      <input type="number" class="form-control" id="historial1" name="historial1" min="0" step="1" oninput="validateInput(this)" value="0">
-                    </div>
-                  </div>
-
-                  <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Historial de desempeño:</label>
-                   <div class="col-sm-3">
-                      <input type="date" class="form-control" id="inputFechah2" name="inputFechah2">
-                    </div>
-                    <div class="col-sm-2">
-                      <input type="number" class="form-control" id="historial2" name="historial2" min="0" step="1" oninput="validateInput(this)"  value="0">
-                    </div>
-                  </div>
-
-                  <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Historial de desempeño:</label>
-                   <div class="col-sm-3">
-                      <input type="date" class="form-control" id="inputFechah3" name="inputFechah3">
-                    </div>
-                    <div class="col-sm-2">
-                      <input type="number" class="form-control" id="historial3" name="historial3" min="0" step="1" oninput="validateInput(this)"  value="0">
-                    </div>
-                  </div>
-                  </div>
-
- <div id="tableContainerFour" class="col-sm-12">
-                       
-<div class="row">      
-<table class="table-responsive table  " >
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col" style="width: 10%;">Compras</th>
-        <th scope="col" style="width: 10%">Calidad</th>
-        <th scope="col" style="width: 10%">Total</th>
-        <th scope="col" style="width: 20%">Minima aprobatoria</th>
-        <th scope="col" style="width: 10%">Estatus</th>
-      </tr>
-    </thead>
-    <tbody>
-
-<tr>
-  <td style="text-align: center;"><input type="number" step="1" name="califcompras" id="califcompras" value="0" readonly></td>
-  <td style="text-align: center;"><input type="number" step="1" name="califcalidad" id="califcalidad" value="0" readonly></td>
-  <td style="text-align: center;"><input type="number" step="1" name="califtotal" id="califtotal" value="0" readonly></td>
-  <td style="text-align: center;">80</td>
-  <td style="text-align: center;"><input type="text" name="estatusc" id="estatusc" readonly></td>
-</tr>
-
-
-
-    </tbody>
- </table>
-</div>
-</div>             
-
-
- <div class="form-group row" style="text-align:left;">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Acciones a seguir:</label>
-                    <div class="col-sm-9">
-                     <textarea class="form-control" id="inputAcciones" name="inputAcciones" rows="1"></textarea>
-                    </div>
-                  </div>
-
-                  
-
-                <!-- /.card-body -->
-                <div class="form-group row" style="text-align:right;">
-                        <div class="offset-sm-2 col-sm-10">
-                          <button type="button" class="btn btn-secondary" id="btn_salir">Cancelar</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                          <button type="submit" class="btn btn-success" id="guardar_tipoactividad">Guardar</button>
-                        </div>
-                      </div>
-                <!-- /.card-footer -->
-              </form>
-            </div>
-     </div>
-     </div>
-   </div>  
-</center>
-    
-    <!-- /.content -->
-
-
-
-  <!-- /.content-wrapper -->
-  
-  <!-- Control Sidebar -->
-  
-  <!-- /.control-sidebar -->
-
-  <!-- Main Footer -->
-  <?php include('includes/footer.php') ?>
-</div>
-<!-- ./wrapper -->
-
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
-<script src="../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../dist/js/adminlte.min.js"></script>
-<!-- Select2 -->
-<script src="../plugins/select2/js/select2.full.min.js"></script>
-<!-- AdminLTE for demo purposes
-<script src="../dist/js/demo.js"></script> -->
-
-<script>
-  $(document).ready(function() {
-    // Código a ejecutar cuando el documento esté listo
-    $('#inputProveedor').on('change', function() {
-      var selectedValue = $(this).val();
-      let tipoEval = $('#inputTipo').val();
-
-      if( tipoEval === 'RE-EVALUACION') {
-        $.ajax({
-          url: 'data/historial_eval_servicio.php',
-          type: 'POST',
-          data: { proveedor: selectedValue },
-          success: function(response) {
-            console.log(response.ultima_evaluacion);
-            let evaluacion = response.ultima_evaluacion
-            let fecha = evaluacion.fecha_eval
-            let calificacion = evaluacion.calificacion_total
-            let fechaHist1 = evaluacion.fecha_hist1
-            let fechaHist2 = evaluacion.fecha_hist2
-            let fechaHist3 = evaluacion.fecha_hist3
-            let califHist1 = evaluacion.historia1
-            let califHist2 = evaluacion.historia2 
-            let califHist3 = evaluacion.historia3 
-
-          }
-        })
-      }
+      			if( tipoEval === 'RE-EVALUACION') {
+        			$.ajax({
+          				url: 'data/historial_eval_servicio.php',
+          				type: 'POST',
+          				data: { proveedor: selectedValue },
+          				success: function(response) {
+            				console.log(response.ultima_evaluacion);
+            				let evaluacion = response.ultima_evaluacion
+							$('#inputFechah1').val(evaluacion.fecha_eval)
+							$('#inputFechah2').val(evaluacion.fecha_hist1)
+							$('#inputFechah3').val(evaluacion.fecha_hist2)
+							$('#historial1').val(evaluacion.calificacion_total)
+							$('#historial2').val(evaluacion.historia1)
+							$('#historial3').val(evaluacion.historia2)
+          				}
+       				})
+      			}
       // Aquí puedes hacer algo con el valor seleccionado, como mostrarlo en la consola
-    });
-  });
-</script>
- <script>
-$('#btn_salir').click(function(e){
-        e.preventDefault();
-        Swal
-    .fire({
-        title: "DESEA SALIR!",
-        text: "",
-        icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: "Regresar",
-        cancelButtonText: "Salir"
-    })
-     .then(resultado => {
-        if (resultado.value) {
-              console.log("Alerta cerrada");
-        } else {
-              location.href = 'evalua_proveservicios.php';
-        }
-    });
-    });
+    		});
+  		});
+	</script>
+
+	<!-- Manejo del boton cancelar -->
+ 	<script>
+		$('#btn_salir').click(function(e){
+        	e.preventDefault();
+        	Swal
+    		.fire({
+        		title: "DESEA SALIR!",
+        		text: "",
+        		icon: 'info',
+        		showCancelButton: true,
+        		confirmButtonText: "Regresar",
+        		cancelButtonText: "Salir"
+    		})
+     		.then(resultado => {
+        		if (resultado.value) {
+              		console.log("Alerta cerrada");
+        		} else {
+              		location.href = 'evalua_proveservicios.php';
+        		}
+    		});
+    	});
     </script>
 
-<script>
-   $('#guardar_tipoactividad').click(function(e){
-        e.preventDefault();
-       var tipo_eval     = $('#inputTipo').val();
-       var fecha         = $('#inputFecha').val();
-       var proveedor     = $('#inputProveedor').val();
-       var producto      = $('#inputProducto').val();
-       var consulta      = $('#inputConsulta').val();
-       var fecha_h1      = $('#inputFechah1').val() ? $('#inputFecha1').val() : new Date().toISOString().slice(0, 10);
-       var historial_h1  = $('#historial1').val();
-       var fecha_h2      = $('#inputFechah2').val() ? $('#inputFecha2').val() : new Date().toISOString().slice(0, 10);
-       var historial_h2  = $('#historial2').val();
-       var fecha_h3      = $('#inputFechah3').val() ? $('#inputFecha3').val() : new Date().toISOString().slice(0, 10);
-       var historial_h3  = $('#historial3').val();
-       var tot_compras   = $('#califcompras').val();
-       var tot_calidad   = $('#califcalidad').val();
-       var calif_total   = $('#califtotal').val();
-       var estatusc      = $('#estatusc').val();
-       var acciones      = $('#inputAcciones').val();
+	<!-- Manejo del boton de guardar -->
+	<script>
+   		$('#guardar_tipoactividad').click(function(e){
+       	 	e.preventDefault();
+			var tipo_eval     = $('#inputTipo').val();
+			var fecha         = $('#inputFecha').val();
+			var proveedor     = $('#inputProveedor').val();
+			var producto      = $('#inputProducto').val();
+			var consulta      = $('#inputConsulta').val();
+			var fecha_h1      = $('#inputFechah1').val() ? $('#inputFechah1').val() : new Date().toISOString().slice(0, 10);
+			var historial_h1  = $('#historial1').val();
+			var fecha_h2      = $('#inputFechah2').val() ? $('#inputFechah2').val() : new Date().toISOString().slice(0, 10);
+			var historial_h2  = $('#historial2').val();
+			var fecha_h3      = $('#inputFechah3').val() ? $('#inputFechah3').val() : new Date().toISOString().slice(0, 10);
+			var historial_h3  = $('#historial3').val();
+			var tot_compras   = $('#califcompras').val();
+			var tot_calidad   = $('#califcalidad').val();
+			var calif_total   = $('#califtotal').val();
+			var estatusc      = $('#estatusc').val();
+			var acciones      = $('#inputAcciones').val();
 
-       if (tipo_eval == 'SELECCIÓN') {
-        var precio     = $('#input1').val();;
-        var documenta  = $('#input2').val();
-        var credito    = $('#input3').val();
-        var tiempo_res = $('#input4').val();
-        var calidad_se = 0;
-       }else {
-        var precio = $('#input5').val();
-        var documenta  = $('#input6').val();
-        var credito    = $('#input7').val();
-        var tiempo_res = $('#input8').val();
-        var calidad_se = $('#input9').val();
-       }
-   
-     
-       var action       = 'AlmacenaEvaluaservicio';
+			if (tipo_eval == 'SELECCIÓN') {
+				var precio     = $('#input1').val();;
+				var documenta  = $('#input2').val();
+				var credito    = $('#input3').val();
+				var tiempo_res = $('#input4').val();
+				var calidad_se = 0;
+       		}else {
+				var precio = $('#input5').val();
+				var documenta  = $('#input6').val();
+				var credito    = $('#input7').val();
+				var tiempo_res = $('#input8').val();
+				var calidad_se = $('#input9').val();
+       		}
+       		var action       = 'AlmacenaEvaluaservicio';
 
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, tipo_eval, fecha:fecha, proveedor:proveedor, producto:producto, consulta:consulta, fecha_h1:fecha_h1, historial_h1:historial_h1, fecha_h2:fecha_h2, historial_h2:historial_h2, fecha_h3:fecha_h3, historial_h3:historial_h3, tot_compras:tot_compras, tot_calidad:tot_calidad, calif_total:calif_total, estatusc:estatusc, acciones:acciones, precio:precio, documenta:documenta, credito:credito, tiempo_res:tiempo_res, calidad_se:calidad_se },
+        	$.ajax({
+				url: 'includes/ajax.php',
+				type: "POST",
+				async : true,
+				data: {action:action, tipo_eval, fecha:fecha, proveedor:proveedor, producto:producto, consulta:consulta, fecha_h1:fecha_h1, historial_h1:historial_h1, fecha_h2:fecha_h2, historial_h2:historial_h2, fecha_h3:fecha_h3, historial_h3:historial_h3, tot_compras:tot_compras, tot_calidad:tot_calidad, calif_total:calif_total, estatusc:estatusc, acciones:acciones, precio:precio, documenta:documenta, credito:credito, tiempo_res:tiempo_res, calidad_se:calidad_se },
 
-                    success: function(response)
+				success: function(response)
+                {
+                	if(response != 'error')
                     {
-                      if(response != 'error')
-                        {
-                         console.log(response);
+                        console.log(response);
                         var info = JSON.parse(response);
                         console.log(info);
                         $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
+                        if ($mensaje === undefined)
+                        {
                             Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "EVALUACION DE SERVICIO ALMACENADA CORRECTAMENTE",
-                          icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //generarimpformulaPDF(info.folio);
-                        location.href = 'evalua_proveservicios.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'evalua_proveservicios.php';
-                        }
-                        });
-
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
+                         	.fire({
+                          		title: "Exito!",
+                          		text: "EVALUACION DE SERVICIO ALMACENADA CORRECTAMENTE",
+                          		icon: 'success'
+                       		})
+                        	.then(resultado => {
+                      			 if (resultado.value) {
+                        			//generarimpformulaPDF(info.folio);
+                        			location.href = 'evalua_proveservicios.php';
+                        		} else {
+                          			// Dijeron que no
+                          			location.reload();
+                         			location.href = 'evalua_proveservicios.php';
+                        		}
+                        	});
+						}else {  
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
                             text: $mensaje,
                             })
                         }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
+                    }else{
+                        Swal.fire({
                             icon: 'info',
                             title: '',
                             text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
+                        })
+                    }
+				},
+				error: function(error) {
+				}
+            });
+    	});
+    </script>
 
-               });
+	<!-- Ocultar cierto contenido dependiendo de las selecciones -->
+	<script>
+    	function toggleTableVisibility() {
+      		var container = document.getElementById('tableContainerOne');
+      		var containertwo = document.getElementById('tableContainerTwo');
+      		var containerFive = document.getElementById('tableContainerFive')
+      		var select = document.getElementById('inputTipo');
+      		var selectedValue = select.value;
 
-    });
+      		if (selectedValue === 'SELECCIÓN') {
+        		container.classList.remove('hidden');
+        		containertwo.classList.add('hidden');
+        		containerFive.classList.add('hidden');
+      		} else if(selectedValue === 'EVALUACION'){
+        		container.classList.add('hidden');
+        		containertwo.classList.remove('hidden');
+        		containerFive.classList.add('hidden');
+      		}else if(selectedValue === 'RE-EVALUACION'){
+        		container.classList.add('hidden');
+        		containertwo.classList.remove('hidden');
+        		containerFive.classList.remove('hidden');
+      		}
+    	}
+  	</script> 
 
-    </script>  
-<script src="js/sweetalert2.all.min.js"></script>   
-<!-- Page specific script -->
+	<!-- Calcular la suma de los inputs -->
+  	<script>
+     	function validateInput(input) {
+      		// Reemplazar todo lo que no sea dígito
+      		input.value = input.value.replace(/[^0-9]/g, '');
+    	} 
 
-<script>
-   document.querySelector('.main-header').classList.add('disabled-nav');
-</script>   
+    	function updateSum() {
+     		// alert('Function called'); // Verifica si esta alerta aparece
+      		// Obtener los valores de los inputs
+      		var input1  = document.getElementById('input1').value;
+			var input2  = document.getElementById('input2').value;
+			var input3  = document.getElementById('input3').value;
+			var input4  = document.getElementById('input4').value;
+			var input5  = document.getElementById('input5').value;
+			var input6  = document.getElementById('input6').value;
+			var input7  = document.getElementById('input7').value;
+			var input8  = document.getElementById('input8').value;
+			var input9  = document.getElementById('input9').value;
+			var num1  = parseFloat(input1) || 0;
+			var num2  = parseFloat(input2) || 0;
+			var num3  = parseFloat(input3) || 0;
+			var num4  = parseFloat(input4) || 0;
+			var num5  = parseFloat(input5) || 0;
+			var num6  = parseFloat(input6) || 0;
+			var num7  = parseFloat(input7) || 0;
+			var num8  = parseFloat(input8) || 0;
+			var num9  = parseFloat(input9) || 0;
+      		var sum = num1 + num2 + num3 + num4 + num5 + num6 + num7 + num8 + num9 ;
+      		var sumtotal = sum ;
 
-<script>
-    function toggleTableVisibility() {
-      var container = document.getElementById('tableContainerOne');
-      var containertwo = document.getElementById('tableContainerTwo');
-      var select = document.getElementById('inputTipo');
-      var selectedValue = select.value;
+      		if (sumtotal >= 80 ) {
+        		var resultado = 'APROBADO';
+      		}else {
+        		var resultado = 'NO APROBADO';
+      		}
 
-      if (selectedValue === 'SELECCIÓN') {
-        container.classList.remove('hidden');
-        containertwo.classList.add('hidden');
-
-      } else {
-        container.classList.add('hidden');
-        containertwo.classList.remove('hidden');
-      }
-    }
-  </script> 
-
-  <script>
-     function validateInput(input) {
-      // Reemplazar todo lo que no sea dígito
-      input.value = input.value.replace(/[^0-9]/g, '');
-    } 
-
-    function updateSum() {
-     // alert('Function called'); // Verifica si esta alerta aparece
-      // Obtener los valores de los inputs
-      var input1  = document.getElementById('input1').value;
-      var input2  = document.getElementById('input2').value;
-      var input3  = document.getElementById('input3').value;
-      var input4  = document.getElementById('input4').value;
-      var input5  = document.getElementById('input5').value;
-      var input6  = document.getElementById('input6').value;
-      var input7  = document.getElementById('input7').value;
-      var input8  = document.getElementById('input8').value;
-      var input9  = document.getElementById('input9').value;
-      
-      //alert(input1);
-      // Convertir los valores a números (en caso de que sean vacíos o no numéricos, se usan 0)
-      
-      var num1  = parseFloat(input1) || 0;
-      var num2  = parseFloat(input2) || 0;
-      var num3  = parseFloat(input3) || 0;
-      var num4  = parseFloat(input4) || 0;
-      var num5  = parseFloat(input5) || 0;
-      var num6  = parseFloat(input6) || 0;
-      var num7  = parseFloat(input7) || 0;
-      var num8  = parseFloat(input8) || 0;
-      var num9  = parseFloat(input9) || 0;
-
- 
-    /*
-      var num5 = parseFloat(input5) || 0;
-      var num6 = parseFloat(input6) || 0;
-    */
-      // Calcular la suma
-      if (true) {}
-      var sum = num1 + num2 + num3 + num4 + num5 + num6 + num7 + num8 + num9 ;
-      var sumtotal = sum ;
-
-      if (sumtotal >= 80 ) {
-        var resultado = 'APROBADO';
-      }else {
-        var resultado = 'NO APROBADO';
-      }
-
-      // Mostrar el resultado en el input 'result'
-      document.getElementById('califcompras').value = sum;
-      document.getElementById('califtotal').value = sumtotal;
-      document.getElementById('estatusc').value = resultado;
-
-    }
-  </script>
+			// Mostrar el resultado en el input 'result'
+			document.getElementById('califcompras').value = sum;
+			document.getElementById('califtotal').value = sumtotal;
+			document.getElementById('estatusc').value = resultado;
+    	}
+  	</script>
   
-
-<script>
-    document.addEventListener("DOMContentLoaded", function(){
-      // Invocamos cada 5 segundos ;)
-      const milisegundos = 5 *1000;
-      setInterval(function(){
-      // No esperamos la respuesta de la petición porque no nos importa
-         fetch("./refrescar.php");
-      },milisegundos);
-    });
-</script>
-<style>
-.disabled-nav {
-  pointer-events: none; /* Deshabilita clics y otros eventos */
-  opacity: 0.5; /* Efecto visual de estar deshabilitado */
-}
-</style>
-
+  	<!-- Refrescar la página cada 5 segundos -->
+	<script>
+    	document.addEventListener("DOMContentLoaded", function(){
+      	// Invocamos cada 5 segundos ;)
+			const milisegundos = 5 *1000;
+			setInterval(function(){
+				// No esperamos la respuesta de la petición porque no nos importa
+				fetch("./refrescar.php");
+			},milisegundos);
+    	});
+	</script>
 </body>
 </html>
