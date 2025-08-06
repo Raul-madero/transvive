@@ -13717,7 +13717,7 @@ if($_POST['action'] == 'EliminaEvaluametro')
 //Almacena Evaluacion de Producto
 if($_POST['action'] == 'AlmacenaEvaluaservicio')
 {
-    var_dump($_POST);
+    // var_dump($_POST);
     if(empty($_POST['fecha']) || empty($_POST['tipo_eval']) || empty($_POST['proveedor'] || ['producto']) )
     {
        echo 'error';
