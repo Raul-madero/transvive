@@ -12,8 +12,6 @@ session_start();
   $sqlopr   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as empleado from empleados where estatus = 1 ORDER BY apellido_paterno";
   $queryopr = mysqli_query($conection, $sqlopr);
   $filasopr = mysqli_fetch_all($queryopr, MYSQLI_ASSOC); 
-
-
   /*$sqledo = "select estado from estados ORDER BY estado";
   $queryedo = mysqli_query($conection, $sqledo);
   $filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); */
@@ -156,13 +154,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                   <div class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Inicial:</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                       <input type="date" class="form-control" id="inputFechaini" name="inputFechaini" onchange="myFunctionDate()">
                     </div>
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Final:</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                       <input type="date" class="form-control" id="inputFechafin" name="inputFechafin" onchange="myFunctionDateTwo()">
                     </div>
+                    <label for="txt_diasvac" class="col-sm-2 col-form-label">Dias:</label>
                     <div class="col-sm-2">
                       <input type="text" class="form-control" id="txt_diasvac" name="txt_diasvac">  
                     </div>
@@ -219,258 +218,233 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../dist/js/adminlte.min.js"></script>
 <!-- Select2 -->
 <script src="../plugins/select2/js/select2.full.min.js"></script>
+<!-- SweetAlert2 -->
+ <script src="js/sweetalert2.all.min.js"></script> 
 
 <script>
-function myFunctionDate() {
-    var x = document.getElementById("inputFechaini").value;
-    var y = document.getElementById("inputFechafin").value;
+// =====================
+// Utilidades de fechas
+// =====================
+function parseLocalDate(yyyy_mm_dd) {
+  // Evita desfases por zona horaria
+  return new Date(yyyy_mm_dd + 'T00:00:00');
+}
 
-    if(y === ''){
-        document.getElementById('inputFechafin').value = x;
-    }else{
-       //var num1 = new Number(x);
-       //var num2 = new Number(y);
-       if(x > document.getElementById("inputFechafin").value){
-         document.getElementById('inputFechafin').value = x;
-       }else{
-         document.getElementById('inputFechaini').value = x; 
-       }    
-   }
+function normalizeRange() {
+  const $ini = $('#inputFechaini');
+  const $fin = $('#inputFechafin');
+
+  const vIni = $ini.val();
+  const vFin = $fin.val();
+
+  if (!vIni && !vFin) return;
+
+  // Si no hay fin, igualarlo a inicio
+  if (vIni && !vFin) {
+    $fin.val(vIni);
+    return;
+  }
+
+  // Si no hay inicio pero hay fin, igualarlo a fin (opcional)
+  if (!vIni && vFin) {
+    $('#inputFechaini').val(vFin);
+    return;
+  }
+
+  // Si ambos existen, asegurar inicio <= fin
+  const dIni = parseLocalDate(vIni);
+  const dFin = parseLocalDate(vFin);
+
+  if (dFin < dIni) {
+    $fin.val(vIni);
+  }
+}
+
+function recalcDays() {
+  const out = $('#txt_diasvac');
+  const vIni = $('#inputFechaini').val();
+  const vFin = $('#inputFechafin').val();
+
+  if (!vIni || !vFin) { out.val(''); return; }
+
+  const dIni = parseLocalDate(vIni);
+  const dFin = parseLocalDate(vFin);
+
+  if (isNaN(dIni) || isNaN(dFin) || dFin < dIni) { out.val(''); return; }
+
+  // Todos los días incluyendo ambos extremos (sin excluir fines de semana)
+  const totalDias = Math.round((dFin - dIni) / (1000 * 60 * 60 * 24)) + 1;
+  out.val(totalDias);
 }
 </script>
 
 <script>
-function myFunctionDateTwo() {
-   var x = document.getElementById("inputFechaini").value;
-   var y = document.getElementById("inputFechafin").value;
-   //var num1 = new Number(x);
-   //var num2 = new Number(y);
+// =====================
+// Eventos de fechas
+// =====================
+$(document).ready(function () {
+  // Cada vez que cambie inicio/fin, normalizamos y recalculamos
+  $('#inputFechaini, #inputFechafin').on('change', function () {
+    normalizeRange();
+    recalcDays();
+  });
 
-    if(y > document.getElementById("inputFechaini").value){
-       $('#inputFechafin').val(document.getElementById("inputFechafin").value);
-    }else {
-        $('#inputFechafin').val(document.getElementById("inputFechaini").value);
-    }
-}
+  // Si usabas llamadas inline a estas funciones, las dejamos como "wrappers"
+  window.myFunctionDate = function () {
+    normalizeRange();
+    recalcDays();
+  };
+  window.myFunctionDateTwo = function () {
+    normalizeRange();
+    recalcDays();
+  };
+});
 </script>
 
-<!-- AdminLTE for demo purposes
-<script src="../dist/js/demo.js"></script> -->
 <script>
-$(document).ready(function(){
-     $('#inputFechaini').change(function(){ 
+// =====================
+// Botón salir (SweetAlert2)
+// =====================
+$(document).ready(function () {
+  $('#btn_salir').on('click', function (e) {
+    e.preventDefault();
 
-     fecha1 = document.getElementById("inputFechaini").value; 
-     fecha2 = document.getElementById("inputFechafin").value;
-   
-     var date1 = Date.parse(fecha1);
-     var date2 = Date.parse(fecha2); 
-     var diff = date2 - date1;
-     var masDay = 1;
-     var diasv = (diff/(1000*60*60*24)) ;
-     var ndiasv = diasv + masDay;
+    Swal.fire({
+      title: 'DESEA SALIR!',
+      text: '',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Regresar',
+      cancelButtonText: 'Salir'
+    }).then((resultado) => {
+      if (resultado.value) {
+        console.log('Alerta cerrada');
+      } else {
+        location.href = 'incidencias.php';
+      }
+    });
+  });
+});
+</script>
 
-    inicio = new Date(fecha1); //Fecha inicial
-    fin = new Date(fecha2); //Fecha final
-    timeDiff = Math.abs(fin.getTime() - inicio.getTime());
-    diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); //Días entre las dos fechas
-    var cuentaFinde = 0; //Número de Sábados y Domingos
-    var array = new Array(diffDays);
-    diffDays2 = diffDays + 1;
+<script>
+// =====================
+// Guardar incidencia (AJAX)
+// =====================
+$(document).ready(function () {
+  $('#guardar_tipoactividad').on('click', function (e) {
+    e.preventDefault();
 
-    for (var i=0; i < diffDays2; i++) 
-    {
-        //0 => Domingo - 6 => Sábado
-        if (inicio.getDay() == 0  ) {
-            cuentaFinde++;
+    const tincidencia  = $('#inputIncidencia').val();
+    const empleado     = $('#inputEmpleado').val();
+    const diasderecho  = $('#inputDiasderecho').val();
+    const diastomar    = $('#inputDiastomar').val();
+    const fechaini     = $('#inputFechaini').val();
+    const fechafin     = $('#inputFechafin').val();
+    const diasvac      = $('#txt_diasvac').val();
+    const notas        = $('#inputNotas').val();
+    const action       = 'AlmacenaIncidencia';
+
+    // Validaciones mínimas en cliente
+    if (!tincidencia || !empleado || !fechaini || !fechafin || !diasvac) {
+      Swal.fire({ icon: 'info', title: '', text: 'Capture los datos requeridos' });
+      return;
+    }
+
+    $.ajax({
+      url: 'includes/ajax.php',
+      type: 'POST',
+      data: {
+        action, tincidencia, empleado,
+        diastomar, diasderecho, fechaini, fechafin, diasvac, notas
+      },
+      success: function (response) {
+        if (response === 'error') {
+          Swal.fire({ icon: 'info', title: '', text: 'Capture los datos requeridos' });
+          return;
         }
-        inicio.setDate(inicio.getDate() + 1);
-        //alert(cuentaFinde);
-    }
 
-    if (cuentaFinde > 0) {
-      alert("Dias Domingos " + cuentaFinde);
-     }
-  
-     //alert(cuentaFinde);
-     document.getElementById("txt_diasvac").value = ndiasv - cuentaFinde;    
-
-    
-         
-     });
- });
-</script>
-
-<script>
-$(document).ready(function(){
-     $('#inputFechafin').change(function(){ 
-
-     fecha1 = document.getElementById("inputFechaini").value; 
-     fecha2 = document.getElementById("inputFechafin").value;
-   
-     var date1 = Date.parse(fecha1);
-     var date2 = Date.parse(fecha2); 
-     var diff = date2 - date1;
-     var masDay = 1;
-     var diasv = (diff/(1000*60*60*24));
-     var ndiasv = diasv + masDay;
-
-     inicio = new Date(fecha1); //Fecha inicial
-    fin = new Date(fecha2); //Fecha final
-    timeDiff = Math.abs(fin.getTime() - inicio.getTime());
-    diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); //Días entre las dos fechas
-    var cuentaFinde = 0; //Número de Sábados y Domingos
-    var array = new Array(diffDays);
-    diffDays2 = diffDays + 1;
-
-    for (var i=0; i < diffDays2; i++) 
-    {
-        //0 => Domingo - 6 => Sábado
-        if (inicio.getDay() == 0  ) {
-            cuentaFinde++;
+        let info;
+        try {
+          info = JSON.parse(response);
+        } catch (e) {
+          // Si el backend devuelve algo que no es JSON, aún tratamos el caso como éxito
+          info = {};
         }
-        inicio.setDate(inicio.getDate() + 1);
-        //alert(cuentaFinde);
-    }
-     if (cuentaFinde > 0) {
-      alert("Dias Domingos " + cuentaFinde);
-     }
-     //alert(cuentaFinde);
-     document.getElementById("txt_diasvac").value = ndiasv - cuentaFinde;
-    
-         
-     });
- });
-</script>
 
-
-<script>
-
-$('#btn_salir').click(function(e){
-        e.preventDefault();
-
-            
-        Swal
-    .fire({
-        title: "DESEA SALIR!",
-        text: "",
-        icon: 'info',
-
-        showCancelButton: true,
-        confirmButtonText: "Regresar",
-        cancelButtonText: "Salir",
-       
-
-       
-    })
-     .then(resultado => {
-        if (resultado.value) {
-            // Hicieron click en "Sí"
-             //*location.href = 'motivo_perdida.php';
-             console.log("Alerta cerrada");
+        const mensaje = info?.mensaje;
+        if (mensaje === undefined) {
+          Swal.fire({
+            title: 'Éxito!',
+            text: 'INCIDENCIA ALMACENADA CORRECTAMENTE',
+            icon: 'success'
+          }).then((resultado) => {
+            if (resultado.value) {
+              location.href = 'incidencias.php';
+            } else {
+              location.reload();
+            }
+          });
         } else {
-            // Dijeron que no
-            //*location.reload();
-            location.href = 'incidencias.php';
+          Swal.fire({ icon: 'error', title: 'Oops...', text: mensaje });
         }
+      },
+      error: function () {
+        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo procesar la solicitud.' });
+      }
     });
-
-   
-
-    });
-    </script>
+  });
+});
+</script>
 
 <script>
-   $('#guardar_tipoactividad').click(function(e){
-        e.preventDefault();
+// =====================
+// Carga de datos por empleado
+// =====================
+$(document).ready(function () {
+  $('#inputEmpleado').on('change', function () {
+    const op = $(this).val();
+    const tipoincidencia = $('#inputIncidencia').val();
 
-       var tincidencia  = $('#inputIncidencia').val();
-       var empleado     = $('#inputEmpleado').val();
-       var diasderecho  = $('#inputDiasderecho').val();
-       var diastomar    = $('#inputDiastomar').val();
-       var fechaini     = $('#inputFechaini').val();
-       var fechafin     = $('#inputFechafin').val();
-       var diasvac      = $('#txt_diasvac').val();
-       var notas        = $('#inputNotas').val();
+    // Mostrar/ocultar bloque de vacaciones
+    if (tipoincidencia === 'Vacaciones') {
+      document.getElementById('diasvacaciones').style.display = '';
+    } else {
+      document.getElementById('diasvacaciones').style.display = 'none';
+    }
 
-       var action       = 'AlmacenaIncidencia';
-
-        $.ajax({
-                    url: 'includes/ajax.php',
-                    type: "POST",
-                    async : true,
-                    data: {action:action, tincidencia:tincidencia, empleado:empleado, diastomar:diastomar, diasderecho:diasderecho, fechaini:fechaini, fechafin:fechafin, diasvac:diasvac, notas:notas},
-
-                    success: function(response)
-                    {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
-                          title: "Exito!",
-                          text: "INCIDENCIA ALMACENADA CORRECTAMENTE",
-                          icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
-                        .then(resultado => {
-                       if (resultado.value) {
-                        //* generarimpformulaPDF(info.folio);
-                        location.href = 'incidencias.php';
-                       
-                        } else {
-                          // Dijeron que no
-                          location.reload();
-                         location.href = 'incidencias.php';
-                        }
-                        });
-
-
-                         }else {  
-                            
-                            //swal('Mensaje del sistema', $mensaje, 'warning');
-                            //location.reload();
-                            Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: $mensaje,
-                            })
-                        }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
-                 },
-                 error: function(error) {
-                 }
-
-               });
-
+    $.ajax({
+      url: 'includes/ajax.php',
+      type: 'POST',
+      data: { action: 'searchDiasvacac', op, tipoincidencia },
+      success: function (response) {
+        if (response == 0) {
+          $('#inputDiasderecho').val('0');
+          $('#inputDiastomar').val('0');
+          $('#inputDiaspendientes').val('0');
+        } else {
+          let data;
+          try {
+            data = $.parseJSON(response);
+          } catch (e) {
+            data = null;
+          }
+          if (data) {
+            $('#inputDiasderecho').val(data.tomardias ?? '0');
+            $('#inputDiastomar').val(data.diastomados ?? '0');
+            $('#inputDiaspendientes').val(data.pendientes ?? '0');
+          }
+        }
+      }
     });
+  });
+});
+</script>
 
-    </script>  
-<script src="js/sweetalert2.all.min.js"></script> 
-
-
-<!-- Page specific script -->
 <script>
+  // ==================
+  // Inicializacion de select2
+  // ==================
   $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
@@ -479,178 +453,8 @@ $('#btn_salir').click(function(e){
     $('.select2bs4').select2({
       theme: 'bootstrap4'
     })
-
-    //Datemask dd/mm/yyyy
-    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-    //Datemask2 mm/dd/yyyy
-    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-    //Money Euro
-    $('[data-mask]').inputmask()
-
-    //Date picker
-    $('#reservationdate').datetimepicker({
-        format: 'L'
-    });
-
-    //Date and time picker
-    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-    //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-    //Date range as a button
-    $('#daterange-btn').daterangepicker(
-      {
-        ranges   : {
-          'Today'       : [moment(), moment()],
-          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        startDate: moment().subtract(29, 'days'),
-        endDate  : moment()
-      },
-      function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-      }
-    )
-
-    //Timepicker
-    $('#timepicker').datetimepicker({
-      format: 'LT'
-    })
-
-    //Bootstrap Duallistbox
-    $('.duallistbox').bootstrapDualListbox()
-
-    //Colorpicker
-    $('.my-colorpicker1').colorpicker()
-    //color picker with addon
-    $('.my-colorpicker2').colorpicker()
-
-    $('.my-colorpicker2').on('colorpickerChange', function(event) {
-      $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-    })
-
-    $("input[data-bootstrap-switch]").each(function(){
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    })
-
   })
-  // BS-Stepper Init
-  document.addEventListener('DOMContentLoaded', function () {
-    window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-  })
-
-  // DropzoneJS Demo Code Start
-  Dropzone.autoDiscover = false
-
-  // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-  var previewNode = document.querySelector("#template")
-  previewNode.id = ""
-  var previewTemplate = previewNode.parentNode.innerHTML
-  previewNode.parentNode.removeChild(previewNode)
-
-  var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "/target-url", // Set the url
-    thumbnailWidth: 80,
-    thumbnailHeight: 80,
-    parallelUploads: 20,
-    previewTemplate: previewTemplate,
-    autoQueue: false, // Make sure the files aren't queued until manually added
-    previewsContainer: "#previews", // Define the container to display the previews
-    clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-  })
-
-  myDropzone.on("addedfile", function(file) {
-    // Hookup the start button
-    file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) }
-  })
-
-  // Update the total progress bar
-  myDropzone.on("totaluploadprogress", function(progress) {
-    document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-  })
-
-  myDropzone.on("sending", function(file) {
-    // Show the total progress bar when upload starts
-    document.querySelector("#total-progress").style.opacity = "1"
-    // And disable the start button
-    file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-  })
-
-  // Hide the total progress bar when nothing's uploading anymore
-  myDropzone.on("queuecomplete", function(progress) {
-    document.querySelector("#total-progress").style.opacity = "0"
-  })
-
-  // Setup the buttons for all transfers
-  // The "add files" button doesn't need to be setup because the config
-  // `clickable` has already been specified.
-  document.querySelector("#actions .start").onclick = function() {
-    myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-  }
-  document.querySelector("#actions .cancel").onclick = function() {
-    myDropzone.removeAllFiles(true)
-  }
-  // DropzoneJS Demo Code End
 </script> 
-
-<script>
-$(document).ready(function(){
-     $('#inputEmpleado').change(function(){ 
-      var op = $(this).val();
-      var tipoincidencia  = $('#inputIncidencia').val();
-
-      if (tipoincidencia == "Vacaciones") {
-        document.getElementById("diasvacaciones").style.display = "";
-      }else {
-        document.getElementById("diasvacaciones").style.display = "none";
-      }
-    var action = 'searchDiasvacac';
-    $.ajax({
-            url: 'includes/ajax.php',
-            type: "POST",
-            async : true,
-            data: {action:action, op:op, tipoincidencia:tipoincidencia},
-            success: function(response)
-            {
-                // console.log(response);
-                if(response == 0){
-                    //$('#idcliente').val('');
-                    $('#inputDiasderecho').val('0');
-                    $('#inputDiastomar').val('0');
-                    $('#inputDiaspendientes').val('0');
-                  
-                  
-                }else{
-                    var data = $.parseJSON(response);
-                   
-                    $('#inputDiasderecho').val(data.tomardias);
-                    $('#inputDiastomar').val(data.diastomados);
-                    $('#inputDiaspendientes').val(data.pendientes);
-                    //$('#rfc_cliente').val(data.rfc);
-                   
-                }
-            },
-            error: function(error) {
-
-            }
-
-        });
-         
-     });
- });
-</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function(){

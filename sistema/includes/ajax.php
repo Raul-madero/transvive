@@ -2752,37 +2752,78 @@ if ($_POST['action'] == 'AddDetallemantto') {
         } 
 
 //Agregar Productos a Entrada
-if($_POST['action'] == 'AlmacenaIncidencia')
-{
-    if(empty($_POST['tincidencia']) || empty($_POST['empleado']) || empty($_POST['diasvac']))
-    {
-        echo 'error';
-    }else {    
-        $incidencia  = $_POST['tincidencia'];
-        $empleado    = $_POST['empleado'];
-        $diastomar   = $_POST['diastomar'];
-        $diasderecho = $_POST['diasderecho'];
-        $fecha_ini   = $_POST['fechaini'];
-        $fecha_fin   = $_POST['fechafin'];
-        $dias_vac    = $_POST['diasvac'];
-        $notas       = $_POST['notas'];
-
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
- 
-        $query_procesar = mysqli_query($conection,"CALL procesar_incidencia('$incidencia', '$empleado', $diasderecho, $diastomar, '$fecha_ini', '$fecha_fin', $dias_vac, '$notas', $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'AlmacenaIncidencia') {
+    var_dump($_POST);
+    // Validar campos requeridos
+    $required = ['tincidencia','empleado','diastomar','diasderecho','fechaini','fechafin','diasvac'];
+    foreach ($required as $r) {
+        if (!isset($_POST[$r]) || $_POST[$r] === '') {
+            echo json_encode(["Error" => "Faltan campos requeridos"]); 
+            exit;
         }
-    
-    mysqli_close($conection);
-
     }
+
+    // Sanitizar / tipar
+    $incidencia  = trim($_POST['tincidencia']);     // string
+    $empleado    = trim($_POST['empleado']);        // si en realidad es ID, cámbialo a (int)
+    $diastomar   = (int) $_POST['diastomar'];
+    $diasderecho = (int) $_POST['diasderecho'];
+    $fecha_ini   = trim($_POST['fechaini']);        // 'YYYY-mm-dd' idealmente
+    $fecha_fin   = trim($_POST['fechafin']);        // 'YYYY-mm-dd'
+    $dias_vac    = (int) $_POST['diasvac']; 
+    $notas       = trim($_POST['notas'] ?? '');
+    $usuario     = (int) ($_SESSION['idUser'] ?? 0);
+
+    if ($usuario <= 0) {
+        echo 'error'; // sesión no válida
+        exit;
+    }
+
+    // Preparar INSERT
+    $sql = "INSERT INTO incidencias
+            (tipo_incidencia, empleado, dias_derecho, dias_tomados, fecha_inicial, fecha_final, valor, observaciones, usuario_id)
+            VALUES (?,?,?,?,?,?,?,?,?)";
+
+    if ($stmt = mysqli_prepare($conection, $sql)) {
+        // Tipos: s=string, i=int, d=double
+        // OJO: si 'empleado' es un ID INT en tu schema, cambia el segundo 's' por 'i' y castea $empleado a (int)
+        mysqli_stmt_bind_param($stmt, "ssiissisi",
+            $incidencia,   // s
+            $empleado,     // s (o i si es ID)
+            $diasderecho,  // i
+            $diastomar,    // i
+            $fecha_ini,    // s
+            $fecha_fin,    // s
+            $dias_vac,     // i
+            $notas,        // s
+            $usuario       // i
+        );
+
+        if (mysqli_stmt_execute($stmt)) {
+            $id = mysqli_insert_id($conection);
+            echo json_encode([
+                'ok' => true,
+                'id' => $id,
+                'message' => 'Incidencia almacenada'
+            ], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode([
+                'ok' => false,
+                'error' => 'db_execute',
+                'message' => mysqli_error($conection)
+            ], JSON_UNESCAPED_UNICODE);
+        }
+
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode([
+            'ok' => false,
+            'error' => 'db_prepare',
+            'message' => mysqli_error($conection)
+        ], JSON_UNESCAPED_UNICODE);
+    }
+
+    mysqli_close($conection);
     exit;
 }
 
