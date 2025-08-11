@@ -114,9 +114,11 @@ SELECT
                     CASE
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' AND IFNULL(r.sueldo_camion, 0) > 0 THEN GREATEST(r.sueldo_camion, e.sueldo_camion) * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamioneta\\b' AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN GREATEST(r.sueldo_camioneta, e.sueldo_camioneta) * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bjac\\b' AND IFNULL(r.sueldo_camioneta, 0) > 0 THEN GREATEST(r.sueldo_camioneta, e.sueldo_camioneta) * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bsprinter\\b' AND IFNULL(r.sueldo_sprinter, 0) > 0 THEN GREATEST(r.sueldo_sprinter, e.sueldo_sprinter) * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamion\\b' THEN e.sueldo_camion * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bcamioneta\\b' THEN e.sueldo_camioneta * rv.valor_vuelta
+                        WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bjac\\b' THEN e.sueldo_camioneta * rv.valor_vuelta
                         WHEN LOWER(rv.unidad_ejecuta) REGEXP '\\bsprinter\\b' THEN e.sueldo_sprinter * rv.valor_vuelta
                         ELSE e.sueldo_base * rv.valor_vuelta
                     END
