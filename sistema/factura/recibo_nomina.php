@@ -74,11 +74,13 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
     $fechaFin = new DateTime();
     $fechaFin->setISODate($anio, $numeroSemana, 7);
     $periodo = 'Del: ' . $fechaInicio->format('d/m/Y') . ' al: ' . $fechaFin->format('d/m/Y');
+    $fechaInicial = $fechaInicio->format('Y-m-d');
+    $fechaFinal = $fechaFin->format('Y-m-d');
 
     while ($row = $result->fetch_assoc()) {
         $sqlVueltas = "SELECT cliente, ruta, valor_vuelta, unidad_ejecuta FROM registro_viajes WHERE operador = ? AND fecha BETWEEN ? AND ? AND valor_vuelta > 0 ORDER BY fecha ASC";
         $stmtVueltas = $conection->prepare($sqlVueltas);
-        $stmtVueltas->bind_param("sss", $row['nombre'], $fecha_inicio->format('Y-m-d'), $fecha_fin->format('Y-m-d'));
+        $stmtVueltas->bind_param("sss", $row['nombre'], $fechaInicial, $fechaFinal);
         $stmtVueltas->execute();
         $resultVueltas = $stmtVueltas->get_result();
 
