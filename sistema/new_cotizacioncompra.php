@@ -188,6 +188,7 @@ mysqli_close($conection);
                                     <select name="inputSolicita" id="inputSolicita" class="select2bs4">
                                         <option value="Administracion">Administracion</option>
                                         <option value="Mantenimiento">Mantenimiento</option>
+                                        <option value="Almacen">Almacen</option>
                                         <option value="Administracion/Papeleria">Administracion/Papeleria</option>
                                         <option value="Administracion/Insumos">Administracion/Insumos</option>
                                         <option value="Administracion/Insumos">Administracion/Oficina</option>
