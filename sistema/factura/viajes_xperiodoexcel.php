@@ -184,42 +184,55 @@ mysqli_close($conection);
       $mes = date("m", $fechames);
       
       $sueldo_vuelta = null;
-  
-  if ($row['tipo_viaje'] === 'Semidomiciliadas') {
-    if (!empty($row['sueldo_semi']) && $row['sueldo_semi'] != 0) {
-      $sueldo_vuelta = max($row['sueldo_semi'], $row['valor_vuelta']);
-    }
-  } else {
-    $unidad = $row['unidad_ejecuta'];
-    
-    switch ($unidad) {
-      case 'Camion':
-        $sueldo_base = $row['sueldo_camion'] ?? 0;
-        $sueldo_ruta = $row['sueldo_ruta_camion'] ?? 0;
-        break;
 
-      case 'Sprinter':
-        $sueldo_base = $row['sueldo_sprinter'] ?? 0;
-        $sueldo_ruta = $row['sueldo_ruta_sprinter'] ?? 0;
-        break;
-
-      case 'Camioneta':
-      case 'Unidad Externa':
-      case 'JAC':
-      case 'Automovil':
-        $sueldo_base = $row['sueldo_camioneta'] ?? 0;
-        $sueldo_ruta = $row['sueldo_ruta_camioneta'] ?? 0;
-        break;
-
-      default:
-        $sueldo_base = 0;
-        $sueldo_ruta = 0;
-    }
-
-    $sueldo_vuelta = (!empty($sueldo_ruta) && $sueldo_ruta != 0)
-      ? max($sueldo_base, $sueldo_ruta)
-      : $sueldo_base;
-  }
+      if (in_array($row['tipo_viaje'], ['Normal', 'Extra', 'Semidomiciliadas'])) {
+          switch ($row['unidad_ejecuta']) {
+              case 'Camion':
+                  if (!empty($row['sueldo_ruta_camion']) && $row['sueldo_ruta_camion'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camion'], $row['sueldo_ruta_camion']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camion'];
+                  }
+                  break;
+              case 'Camioneta':
+                  if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camioneta'];
+                  }
+                  break;
+              case 'Unidad Externa':
+                  if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camioneta'];
+                  }
+                  break;
+              case 'JAC':
+                  if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camioneta'];
+                  }
+                  break;
+              case 'Sprinter':
+                  if (!empty($row['sueldo_ruta_sprinter']) && $row['sueldo_ruta_sprinter'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_sprinter'], $row['sueldo_ruta_sprinter']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_sprinter'];
+                  }
+                  break;
+              case 'Automovil':
+                if (!empty($row['sueldo_ruta_camioneta']) && $row['sueldo_ruta_camioneta'] != 0) {
+                      $sueldo_vuelta = max($row['sueldo_camioneta'], $row['sueldo_ruta_camioneta']);
+                  }else {
+                      $sueldo_vuelta = $row['sueldo_camioneta'];
+                  }
+                  break;
+          }
+      } else {
+          $sueldo_vuelta = $row['sueldo_vuelta'];
+      }
 
 
 $total_vuelta = $row['valor_vuelta'] * $sueldo_vuelta;
@@ -299,6 +312,7 @@ $total_vuelta = $row['valor_vuelta'] * $sueldo_vuelta;
           <td><?php echo $row['hora_fin']; ?></td>
           <td><?php echo $row['hora_llegadareal']; ?></td>
           <td><?php echo number_format($row['valor_vuelta'],2); ?></td>
+
           <td><?php echo number_format($sueldo_vuelta,2); ?></td>
           <td><?php echo number_format($total_vuelta,2); ?></td>
           <td><?php echo strtoupper($row['tipo_viaje']); ?></td>

@@ -12,6 +12,7 @@ session_start();
   header('Location: ../index.php');
 }
 
+
   $fechaActual = date('Y-m-d h:i:s');
   $fechaSegundos = strtotime($fechaActual);
   $anio =  date("Y", $fechaSegundos);
