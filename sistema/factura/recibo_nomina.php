@@ -140,8 +140,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(189, 10, '_________________________', 0, 1, 'R');
         $pdf->Cell(189, 5, 'Firma', 0, 1, 'R');
         $pdf->Ln(5);
-        $pdf->AddPage();
-
+        
         $pdf->Ln(10);
         // Encabezado tabla de vueltas
         $pdf->SetFont('Arial', 'B', 9);
@@ -150,9 +149,9 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(60, 6, utf8_decode('Ruta'), 1, 0, 'C', true);
         $pdf->Cell(30, 6, utf8_decode('Unidad'), 1, 0, 'C', true);
         $pdf->Cell(30, 6, utf8_decode('Valor'), 1, 1, 'C', true);
-
+        
         $pdf->SetFont('Arial', '', 8);
-
+        
         if ($resultVueltas->num_rows > 0) {
             while ($rowV = $resultVueltas->fetch_assoc()) {
                 $pdf->Cell(60, 6, utf8_decode($rowV['cliente']), 1);
@@ -163,6 +162,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         } else {
             $pdf->Cell(180, 6, utf8_decode('No se registraron vueltas en este periodo.'), 1, 1, 'C');
         }
+        $pdf->AddPage();
     }
 }
 
