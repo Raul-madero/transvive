@@ -76,6 +76,13 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
     $periodo = 'Del: ' . $fechaInicio->format('d/m/Y') . ' al: ' . $fechaFin->format('d/m/Y');
 
     while ($row = $result->fetch_assoc()) {
+        $sqlVueltas = "SELECT cliente, ruta, valor_vuelta, unidad_ejecuta FROM registro_viajes WHERE operador = ? AND fecha BETWEEN $fechaInicio AND $fechaFin AND valor_vuelta > 0 ORDER BY fecha ASC";
+        $stmtVueltas = $conection->prepare($sqlVueltas);
+        $stmtVueltas->bind_param("sss", $row['nombre'], $row['fecha_inicio'], $row['fecha_fin']);
+        $stmtVueltas->execute();
+        $resultVueltas = $stmtVueltas->get_result();
+
+
         $pdf->SetFont('Arial', '', 8);
         $pdf->Ln(12);
         $pdf->Cell(189, 5, utf8_decode("Recibo de Pago - Semana $numeroSemana"), 0, 1, 'C');
@@ -134,6 +141,28 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(189, 5, 'Firma', 0, 1, 'R');
         $pdf->Ln(5);
         $pdf->AddPage();
+
+        $pdf->Ln(10);
+        // Encabezado tabla de vueltas
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->Cell(60, 6, utf8_decode('Cliente'), 1, 0, 'C', true);
+        $pdf->Cell(60, 6, utf8_decode('Ruta'), 1, 0, 'C', true);
+        $pdf->Cell(30, 6, utf8_decode('Unidad'), 1, 0, 'C', true);
+        $pdf->Cell(30, 6, utf8_decode('Valor'), 1, 1, 'C', true);
+
+        $pdf->SetFont('Arial', '', 8);
+
+        if ($resultVueltas->num_rows > 0) {
+            while ($rowV = $resultVueltas->fetch_assoc()) {
+                $pdf->Cell(60, 6, utf8_decode($rowV['cliente']), 1);
+                $pdf->Cell(60, 6, utf8_decode($rowV['ruta']), 1);
+                $pdf->Cell(30, 6, utf8_decode($rowV['unidad_ejecuta']), 1);
+                $pdf->Cell(30, 6, '$' . number_format($rowV['valor_vuelta'], 2), 1, 1, 'R');
+            }
+        } else {
+            $pdf->Cell(180, 6, utf8_decode('No se registraron vueltas en este periodo.'), 1, 1, 'C');
+        }
     }
 }
 
