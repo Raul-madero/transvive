@@ -78,7 +78,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
     while ($row = $result->fetch_assoc()) {
         $sqlVueltas = "SELECT cliente, ruta, valor_vuelta, unidad_ejecuta FROM registro_viajes WHERE operador = ? AND fecha BETWEEN ? AND ? AND valor_vuelta > 0 ORDER BY fecha ASC";
         $stmtVueltas = $conection->prepare($sqlVueltas);
-        $stmtVueltas->bind_param("sss", $row['nombre'], $fecha_inicio, $fecha_fin);
+        $stmtVueltas->bind_param("sss", $row['nombre'], $fecha_inicio->format('Y-m-d'), $fecha_fin->format('Y-m-d'));
         $stmtVueltas->execute();
         $resultVueltas = $stmtVueltas->get_result();
 
@@ -157,7 +157,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
                 $pdf->Cell(60, 6, utf8_decode($rowV['cliente']), 1);
                 $pdf->Cell(60, 6, utf8_decode($rowV['ruta']), 1);
                 $pdf->Cell(30, 6, utf8_decode($rowV['unidad_ejecuta']), 1);
-                $pdf->Cell(30, 6, '$' . number_format($rowV['valor_vuelta'], 2), 1, 1, 'R');
+                $pdf->Cell(30, 6, number_format($rowV['valor_vuelta'], 2), 1, 1, 'R');
             }
         } else {
             $pdf->Cell(180, 6, utf8_decode('No se registraron vueltas en este periodo.'), 1, 1, 'C');
