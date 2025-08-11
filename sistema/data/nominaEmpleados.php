@@ -173,7 +173,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         // if($imss == 1 && is_null($empleado['pago_fiscal'])) {
         //     $pago_fiscal = 2240;
         // }
-        // // $pago_fiscal = floatval($empleado['pago_fiscal']);
+        $pago_fiscal = floatval($empleado['pago_fiscal']);
         $deduccion_fiscal = floatval($empleado['deduccion_fiscal']);
         $neto = floatval($empleado['neto']);
 
