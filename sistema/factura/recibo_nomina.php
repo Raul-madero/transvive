@@ -122,7 +122,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Ln(5);
         $pdf->Cell(60, 5, 'Prima Vacacional: $' . number_format($row['prima_vacacional'], 2), 0, 0);
 
-        $pdf->Ln(10);
+        $pdf->Ln(5);
         $pdf->SetFont('Arial', '', 10);
         $pdf->Cell(60, 5, utf8_decode('Total Percepciones: $' . number_format($row['sueldo_bruto'] + $row['sueldo_adicional'] + $row['bono_categoria'] + $row['bono_supervisor'] + $row['bono_semanal'] + $row['apoyo_mes'] + $row['prima_vacacional'] + $row['pago_vacaciones'], 2)), 0, 0, 'L');
         $pdf->Cell(60, 5,'Total Deducciones: $' . number_format($row['deducciones'] + $row['caja_ahorro'] + $row['deduccion_fiscal'], 2), 0, 1, 'R');
@@ -131,19 +131,19 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(60, 5,'Total Neto: $' . number_format($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'] + $row['prima_vacacional'] + $row['pago_vacaciones'] - $row['deducciones'] - $row['caja_ahorro'] - $row['deduccion_fiscal'], 2), 0, 1);
 
-        $pdf->Ln(10);
+        $pdf->Ln(5);
         $pdf->SetFont('Arial', '', 10);
         $pdf->Cell(60, 5, utf8_decode('Deposito Fiscal: $' . number_format($row['deposito_fiscal'], 2)), 0, 0, 'L');
         $pdf->Cell(60, 5,'Deposito Efectivo: $' . number_format($row['sueldo_bruto'] + $row['bono_semanal'] + $row['bono_supervisor'] + $row['bono_categoria'] + $row['sueldo_adicional'] + $row['apoyo_mes'] + $row['prima_vacacional'] + $row['pago_vacaciones'] - $row['deducciones'] - $row['caja_ahorro'] - $row['deduccion_fiscal'] - $row['deposito_fiscal'], 2), 0, 1, 'R');
 
-        $pdf->Ln(10);
+        $pdf->Ln(5);
         $pdf->SetFont('Arial', '', 8);
         $pdf->Cell(189, 5, utf8_decode('Recibí conforme.'), 0, 1, 'L');
         $pdf->Cell(189, 10, '_________________________', 0, 1, 'R');
         $pdf->Cell(189, 5, 'Firma', 0, 1, 'R');
         $pdf->Ln(5);
         
-        $pdf->Ln(10);
+        $pdf->Ln(5);
         // Encabezado tabla de vueltas
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->SetFillColor(200, 200, 200);
