@@ -25,7 +25,7 @@ SELECT
         AND (
             (fecha_inicial BETWEEN '{fecha_inicio}' AND '{fecha_fin}') 
             OR (fecha_final BETWEEN '{fecha_inicio}' AND '{fecha_fin}')
-        ) AND tipo_incidencia = 'Falta Justificada'
+        ) AND tipo_incidencia = 'Falta Injustificada'
     ) AS faltas,
     
 
