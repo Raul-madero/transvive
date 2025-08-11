@@ -135,7 +135,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         die(json_encode(['error' => 'Error en consulta empleados: ' . $conection->error]));
     }
     while ($empleado = $result_empleados->fetch_assoc()) {
-        var_dump($empleado); // Para depuración
+        // var_dump($empleado); // Para depuración
         $noempleado = $empleado['noempleado'];
         $sueldo_base = floatval($empleado['sueldo_base']);
         $operador = $empleado['operador'];
