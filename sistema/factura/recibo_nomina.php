@@ -156,7 +156,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
         $pdf->Cell(60, 6, utf8_decode('Cliente'), 1, 0, 'C', true);
         $pdf->Cell(60, 6, utf8_decode('Ruta'), 1, 0, 'C', true);
         $pdf->Cell(30, 6, utf8_decode('Unidad'), 1, 0, 'C', true);
-        $pdf->Cell(30, 6, utf8_decode('Valor'), 1, 1, 'C', true);
+        $pdf->Cell(30, 6, utf8_decode('Tipo Vuelta'), 1, 1, 'C', true);
         
         $pdf->SetFont('Arial', '', 8);
         
@@ -165,7 +165,7 @@ function generarReciboSemanal($pdf, $conection, $semanaTexto, $anio) {
                 $pdf->Cell(60, 6, utf8_decode($rowV['cliente']), 1);
                 $pdf->Cell(60, 6, utf8_decode($rowV['ruta']), 1);
                 $pdf->Cell(30, 6, utf8_decode($rowV['unidad_ejecuta']), 1);
-                $pdf->Cell(30, 6, number_format($rowV['valor_vuelta'], 2), 1, 1, 'R');
+                $pdf->Cell(30, 6, utf8_decode($row['valor_vuelta'] == 1 ? "Completa" : "Media"), 1, 1, 'R');
             }
         } else {
             $pdf->Cell(180, 6, utf8_decode('No se registraron vueltas en este periodo.'), 1, 1, 'C');
