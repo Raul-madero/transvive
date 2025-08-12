@@ -202,7 +202,7 @@ $cancelados = fetch_value("SELECT COUNT(valor_vuelta) FROM registro_viajes WHERE
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h3 class="card-title">Viajes</h3>
-                            <?php if (in_array($_SESSION['rol'], [1, 9, 8])): ?>
+                            <?php if (in_array($_SESSION['rol'], [1, 9, 8, 15])): ?>
                                 <a href="new_viaje.php" class="btn btn-success btn-sm ml-2">Crea Nuevo <i class="fas fa-plus"></i></a>
                             <?php endif; ?>
                             <a href="factura/viajes_excel.php" class="btn btn-secondary btn-sm ml-2">Excel <i class="fas fa-file-excel"></i></a>
