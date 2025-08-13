@@ -49,10 +49,12 @@ const SMTP_NAME = 'Nomina Transvive';
 function mailerBase() {
     $mail = new PHPMailer();          // v5.x
     $mail->isSMTP();
-    $mail->Host       = SMTP_HOST;    // smtp.office365.com
+    $mail->Host       = gethostbyname(SMTP_HOST);    // smtp.office365.com
     $mail->Port       = SMTP_PORT;    // 587
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = 'STARTTLS';   
+    $mail->SMTPSecure = 'STARTTLS';
+    $mail->SMTPAutoTLS = true;
+    $mail->AuthType    = 'LOGIN';  
     $mail->Username   = SMTP_USER;    // = FROM en O365
     $mail->Password   = SMTP_PASSWORD;
 
