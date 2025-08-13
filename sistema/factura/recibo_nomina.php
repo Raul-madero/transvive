@@ -7,7 +7,7 @@ require('../PHPMailer/PHPMailerAutoload.php');
 set_time_limit(0);
 ini_set('max_execution_time', 0);
 
-header("Content-Type: text/html; charset=iso-8859-1");
+header("Content-Type: text/html; charset=utf-8");
 
 // Clase PDF
 class PDF extends FPDF {
@@ -25,10 +25,6 @@ class PDF extends FPDF {
         $this->Cell(0, 10, utf8_decode('Página ') . $this->PageNo(), 0, 0, 'C');
     }
 }
-
-// Inicializar PDF
-$pdf = new PDF();
-$pdf->AddPage('P', 'Letter');
 
 $conection->set_charset('utf8');
 
@@ -50,20 +46,34 @@ const SMTP_PASSWORD = 'RVwsrPKyu';
 const SMTP_FROM = 'rh@transvivegdl.com.mx';
 const SMTP_NAME = 'Nomina Transvive';
 
-function mailerBase(): PHPMailer {
-    $mail = new PHPMailer;
+function mailerBase() {
+    $mail = new PHPMailer();          // v5.x
     $mail->isSMTP();
-    $mail->Host       = 'smtp.office365.com';
-    $mail->Port       = 587;
+    $mail->Host       = SMTP_HOST;    // smtp.office365.com
+    $mail->Port       = SMTP_PORT;    // 587
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = 'STARTTLS';
-    $mail->Username   = 'rh@transvivegdl.com.mx';
-    $mail->Password   = 'RVwsrPKyu';
-    $mail->setFrom('rh@transvivegdl.com.mx', 'Ventas Transvive');
-    $mail->addReplyTo('rh@transvivegdl.com.mx', 'Encuesta Enviada');
-    $mail->CharSet = 'UTF-8';
-    $mail->Timeout = 20;
-    $mail->SMTPKeepAlive = true;
+    $mail->SMTPSecure = 'tls';        // <— NO 'STARTTLS' en v5
+    $mail->Username   = SMTP_USER;    // = FROM en O365
+    $mail->Password   = SMTP_PASSWORD;
+
+    // Office 365 suele requerir que From == Username (o alias permitido)
+    $mail->setFrom(SMTP_FROM, SMTP_NAME);
+    $mail->addReplyTo(SMTP_FROM, SMTP_NAME);
+
+    // TLS 1.2 + performance
+    $mail->CharSet       = 'UTF-8';
+    $mail->Timeout       = 20;        // seg. por intento
+    $mail->SMTPKeepAlive = true;      // 1 sola conexión para todos
+    $mail->SMTPOptions   = array('ssl' => array(
+        'crypto_method' =>
+            STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT |
+            STREAM_CRYPTO_METHOD_TLS_CLIENT
+    ));
+
+    // DEBUG (solo mientras pruebes)
+    // $mail->SMTPDebug = 3;
+    // $mail->Debugoutput = function($str,$level){ error_log("SMTP[$level] $str"); };
+
     return $mail;
 }
 
@@ -196,14 +206,17 @@ function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
 }
 
 /** Envía el correo con el PDF adjunto */
-function enviarRecibo(string $emailDestino, string $nombreEmpleado, string $pdfData, string $nombreAdjunto, string $asunto, string $cuerpoHTML): array {
-        $m = mailerBase();
-        $m->addAddress($emailDestino, $nombreEmpleado);
-        $m->Subject = $asunto;
-        $m->isHTML(true);
-        $m->Body = $cuerpoHTML;
-        $m->AltBody = strip_tags(str_replace('<br>', "\n", $cuerpoHTML));
-        $m->addStringAttachment($pdfData, $nombreAdjunto, 'base64', 'application/pdf');
+function enviarRecibo(PHPMailer $m, string $emailDestino, string $nombreEmpleado, string $pdfData, string $nombreAdjunto, string $asunto, string $cuerpoHTML): array {
+    $m->clearAddresses();
+    $m->clearAttachments();
+
+    $m->addAddress($emailDestino, $nombreEmpleado);
+    $m->Subject = $asunto;
+    $m->isHTML(true);
+    $m->Body = $cuerpoHTML;
+    $m->AltBody = strip_tags(str_replace('<br>', "\n", $cuerpoHTML));
+    $m->addStringAttachment($pdfData, $nombreAdjunto, 'base64', 'application/pdf');
+
     if (!$m->send()) {
         return ['ok' => false, 'msg' => $m->ErrorInfo ?: 'Fallo desconocido'];
     }
@@ -276,7 +289,7 @@ switch (strtolower($tipo)) {
                        <p>Saludos.</p>";
 
             $nombreAdj = "Recibo_Semana_{$numeroSemana}_{$row['noempleado']}.pdf";
-            $r = enviarRecibo($email, $row['nombre'], $pdfData, $nombreAdj, $asunto, $cuerpo);
+            $r = enviarRecibo($mailer, $email, $row['nombre'], $pdfData, $nombreAdj, $asunto, $cuerpo);
 
             if ($r['ok']) {
                 $resultadosEnvio['enviados']++;
@@ -289,9 +302,13 @@ switch (strtolower($tipo)) {
             }
 
             // Evita rate-limit del servidor SMTP si hace falta
-            usleep(250000); // 250ms (ajusta según necesidad)
+            usleep(1000000); // 1000ms (ajusta según necesidad)
         }
 
+        if (method_exists($mailer, 'smtpClose')) {
+            $mailer->smtpClose();
+        }
+        
         echo json_encode($resultadosEnvio, JSON_UNESCAPED_UNICODE);
         break;
     }
