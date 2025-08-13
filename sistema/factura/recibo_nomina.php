@@ -58,7 +58,7 @@ function mailerBase(): PHPMailer {
     $mail->Password   = 'RVwsrPKyu';
     $mail->setFrom('rh@transvivegdl.com.mx', 'Ventas Transvive');
     $mail->addReplyTo('rh@transvivegdl.com.mx', 'Encuesta Enviada');
-    return $m;
+    return $mail;
 }
 
 // **
