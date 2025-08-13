@@ -55,7 +55,7 @@ function mailerBase(): PHPMailer {
     $m->SMTPAuth = true;
     $m->User = SMTP_USER;
     $m->Pass = SMTP_PASSWORD;
-    $m->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $m->SMTPSecure = 'STARTTLS';
     $m->Port = SMTP_PORT;
     $m->CharSet = 'UTF-8';
     $m->setFrom(SMTP_FROM, SMTP_NAME);
