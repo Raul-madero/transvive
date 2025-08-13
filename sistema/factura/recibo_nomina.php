@@ -52,7 +52,7 @@ function mailerBase() {
     $mail->Host       = SMTP_HOST;    // smtp.office365.com
     $mail->Port       = SMTP_PORT;    // 587
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = 'tls';        // <— NO 'STARTTLS' en v5
+    $mail->SMTPSecure = 'STARTTLS';   
     $mail->Username   = SMTP_USER;    // = FROM en O365
     $mail->Password   = SMTP_PASSWORD;
 
@@ -64,15 +64,15 @@ function mailerBase() {
     $mail->CharSet       = 'UTF-8';
     $mail->Timeout       = 20;        // seg. por intento
     $mail->SMTPKeepAlive = true;      // 1 sola conexión para todos
-    $mail->SMTPOptions   = array('ssl' => array(
-        'crypto_method' =>
-            STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT |
-            STREAM_CRYPTO_METHOD_TLS_CLIENT
-    ));
+    // $mail->SMTPOptions   = array('ssl' => array(
+    //     'crypto_method' =>
+    //         STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT |
+    //         STREAM_CRYPTO_METHOD_TLS_CLIENT
+    // ));
 
     // DEBUG (solo mientras pruebes)
-    // $mail->SMTPDebug = 3;
-    // $mail->Debugoutput = function($str,$level){ error_log("SMTP[$level] $str"); };
+    $mail->SMTPDebug = 3;
+    $mail->Debugoutput = function($str,$level){ error_log("SMTP[$level] $str"); };
 
     return $mail;
 }
