@@ -4,6 +4,9 @@ require('../includes/conversor.php');
 require('../../conexion.php');
 require('../PHPMailer/PHPMailerAutoload.php');
 
+set_time_limit(0);
+ini_set('max_execution_time', 0);
+
 header("Content-Type: text/html; charset=iso-8859-1");
 
 // Clase PDF
@@ -58,6 +61,9 @@ function mailerBase(): PHPMailer {
     $mail->Password   = 'RVwsrPKyu';
     $mail->setFrom('rh@transvivegdl.com.mx', 'Ventas Transvive');
     $mail->addReplyTo('rh@transvivegdl.com.mx', 'Encuesta Enviada');
+    $mail->CharSet = 'UTF-8';
+    $mail->Timeout = 20;
+    $mail->SMTPKeepAlive = true;
     return $mail;
 }
 
@@ -223,7 +229,7 @@ switch (strtolower($tipo)) {
         $fechaFinDB = $ff->format('Y-m-d');
 
         // Empleados de la semana
-        $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado");
+        $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado LIMIT 1");
         $stmt->bind_param("ii", $numeroSemana, $anio);
         $stmt->execute();
         $rs = $stmt->get_result();
@@ -238,6 +244,8 @@ switch (strtolower($tipo)) {
                        WHERE operador = ? AND fecha BETWEEN ? AND ? AND valor_vuelta > 0
                        ORDER BY fecha ASC";
         $stmtVueltas = $conection->prepare($sqlVueltas);
+
+        $mailer = mailerBase();
 
         while ($row = $rs->fetch_assoc()) {
             $resultadosEnvio['total']++;
