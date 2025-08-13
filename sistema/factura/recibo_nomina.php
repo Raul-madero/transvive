@@ -41,9 +41,9 @@ if (empty($tipo) || empty($anio)) {
 // Configuracion de PHPMAiler
 const SMTP_HOST = 'smtp.office365.com';
 const SMTP_PORT = 587;
-const SMTP_USER = 'rh@transvivegdl.com.mx';
-const SMTP_PASSWORD = 'RVwsrPKyu';
-const SMTP_FROM = 'rh@transvivegdl.com.mx';
+const SMTP_USER = 'auxiliar.rh@transvivegdl.com.mx';
+const SMTP_PASSWORD = 'ZkKHfzKheT';
+const SMTP_FROM = 'auxiliar.rh@transvivegdl.com.mx';
 const SMTP_NAME = 'Nomina Transvive';
 
 function mailerBase() {
