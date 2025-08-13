@@ -191,7 +191,6 @@ function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
 
 /** Envía el correo con el PDF adjunto */
 function enviarRecibo(string $emailDestino, string $nombreEmpleado, string $pdfData, string $nombreAdjunto, string $asunto, string $cuerpoHTML): array {
-    try {
         $m = mailerBase();
         $m->addAddress($emailDestino, $nombreEmpleado);
         $m->Subject = $asunto;
@@ -199,11 +198,10 @@ function enviarRecibo(string $emailDestino, string $nombreEmpleado, string $pdfD
         $m->Body = $cuerpoHTML;
         $m->AltBody = strip_tags(str_replace('<br>', "\n", $cuerpoHTML));
         $m->addStringAttachment($pdfData, $nombreAdjunto, 'base64', 'application/pdf');
-        $m->send();
-        return ['ok' => true, 'msg' => 'Enviado'];
-    } catch (Exception $e) {
-        return ['ok' => false, 'msg' => $e->getMessage()];
+    if (!$m->send()) {
+        return ['ok' => false, 'msg' => $m->ErrorInfo ?: 'Fallo desconocido'];
     }
+    return ['ok' => true, 'msg' => 'Enviado'];
 }
 
 // ------------------ Flujo principal ------------------
