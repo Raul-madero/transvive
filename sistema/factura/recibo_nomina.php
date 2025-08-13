@@ -204,7 +204,7 @@ function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
     //     }
     // }
     // return null;
-    return 'r.madero.ramirez@gmail.com';
+    return 'auxiliar.rh@transvivegdl.com.mx';
 }
 
 /** Envía el correo con el PDF adjunto */
@@ -244,7 +244,7 @@ switch (strtolower($tipo)) {
         $fechaFinDB = $ff->format('Y-m-d');
 
         // Empleados de la semana
-        $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado LIMIT 1");
+        $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado");
         $stmt->bind_param("ii", $numeroSemana, $anio);
         $stmt->execute();
         $rs = $stmt->get_result();
