@@ -13,11 +13,6 @@ session_start();
   $querycte = mysqli_query($conection, $sqlcte);
   $filascte = mysqli_fetch_all($querycte, MYSQLI_ASSOC);
 
-
-  /*$sqledo = "select estado from estados ORDER BY estado";
-  $queryedo = mysqli_query($conection, $sqledo);
-  $filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); */
-
   mysqli_close($conection);
 ?>
 
