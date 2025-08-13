@@ -204,7 +204,7 @@ function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
     //     }
     // }
     // return null;
-    return 'auxiliar.rh@transvivegdl.com.mx';
+    return 'rh@transvivegdl.com.mx';
 }
 
 /** Envía el correo con el PDF adjunto */
