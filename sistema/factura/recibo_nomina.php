@@ -48,17 +48,16 @@ const SMTP_FROM = 'rh@transvivegdl.com.mx';
 const SMTP_NAME = 'Nomina Transvive';
 
 function mailerBase(): PHPMailer {
-    $m = new PHPMailer(true);
-    //$m->SMTPDebug =2; //Descomenta para ver detalles
-    $m->isSMTP();
-    $m->Host = SMTP_HOST;
-    $m->SMTPAuth = true;
-    $m->User = SMTP_USER;
-    $m->Pass = SMTP_PASSWORD;
-    $m->SMTPSecure = 'STARTTLS';
-    $m->Port = SMTP_PORT;
-    $m->CharSet = 'UTF-8';
-    $m->setFrom(SMTP_FROM, SMTP_NAME);
+    $mail = new PHPMailer;
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.office365.com';
+    $mail->Port       = 587;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = 'STARTTLS';
+    $mail->Username   = 'ventas@transvivegdl.com.mx';
+    $mail->Password   = 'RVwsrPKyu';
+    $mail->setFrom('rh@transvivegdl.com.mx', 'Ventas Transvive');
+    $mail->addReplyTo('rh@transvivegdl.com.mx', 'Encuesta Enviada');
     return $m;
 }
 

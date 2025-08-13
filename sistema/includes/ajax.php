@@ -1051,7 +1051,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             $mail->addReplyTo('ventas@transvivegdl.com.mx', 'Encuesta Enviada');
             $mail->addAddress($correo, $nombre);
             $mail->addCC('ejecutivo@transvivegdl.com.mx');
-            $mail->addCC('ejecutivo@transvivegdl.com.mx');
+            // $mail->addCC('ejecutivo@transvivegdl.com.mx');
             // $mail->addBCC('raul.madero.ramirez@gmail.com');
             $mail->Subject = $asunto;
             $mail->Body    = $msjBody;
