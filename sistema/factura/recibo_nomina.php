@@ -175,18 +175,19 @@ function pdfReciboSemanalComoString(array $row, mysqli_result $vueltas, int $num
 
 /** Obtiene email del empleado por noempleado (ajusta nombres de tabla/campo si difieren) */
 function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
-    $sql = "SELECT COALESCE(correo) AS email FROM empleados WHERE noempleado = ? LIMIT 1";
-    if ($st = $db->prepare($sql)) {
-        $st->bind_param('i', $noempleado);
-        $st->execute();
-        $res = $st->get_result();
-        if ($res && $fila = $res->fetch_assoc()) {
-            // $email = trim((string)$fila['email']);
-            $email = 'r.madero.ramirez@gmail.com';
-            return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
-        }
-    }
-    return null;
+    // $sql = "SELECT COALESCE(correo) AS email FROM empleados WHERE noempleado = ? LIMIT 1";
+    // if ($st = $db->prepare($sql)) {
+    //     $st->bind_param('i', $noempleado);
+    //     $st->execute();
+    //     $res = $st->get_result();
+    //     if ($res && $fila = $res->fetch_assoc()) {
+    //         // $email = trim((string)$fila['email']);
+    //         $email = 'r.madero.ramirez@gmail.com';
+    //         return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
+    //     }
+    // }
+    // return null;
+    return 'r.madero.ramirez@gmail.com';
 }
 
 /** Envía el correo con el PDF adjunto */
