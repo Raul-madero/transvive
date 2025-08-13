@@ -192,19 +192,19 @@ function pdfReciboSemanalComoString(array $row, mysqli_result $vueltas, int $num
 
 /** Obtiene email del empleado por noempleado (ajusta nombres de tabla/campo si difieren) */
 function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
-    // $sql = "SELECT COALESCE(correo) AS email FROM empleados WHERE noempleado = ? LIMIT 1";
-    // if ($st = $db->prepare($sql)) {
-    //     $st->bind_param('i', $noempleado);
-    //     $st->execute();
-    //     $res = $st->get_result();
-    //     if ($res && $fila = $res->fetch_assoc()) {
-    //         // $email = trim((string)$fila['email']);
-    //         $email = 'r.madero.ramirez@gmail.com';
-    //         return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
-    //     }
-    // }
-    // return null;
-    return 'rh@transvivegdl.com.mx';
+    $sql = "SELECT COALESCE(correo) AS email FROM empleados WHERE noempleado = ? LIMIT 1";
+    if ($st = $db->prepare($sql)) {
+        $st->bind_param('i', $noempleado);
+        $st->execute();
+        $res = $st->get_result();
+        if ($res && $fila = $res->fetch_assoc()) {
+            $email = trim((string)$fila['email']);
+            // $email = 'r.madero.ramirez@gmail.com';
+            return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
+        }
+    }
+    return null;
+    // return 'rh@transvivegdl.com.mx';
 }
 
 /** Envía el correo con el PDF adjunto */
@@ -244,7 +244,7 @@ switch (strtolower($tipo)) {
         $fechaFinDB = $ff->format('Y-m-d');
 
         // Empleados de la semana
-        $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado LIMIT 1");
+        $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado");
         $stmt->bind_param("ii", $numeroSemana, $anio);
         $stmt->execute();
         $rs = $stmt->get_result();
