@@ -56,7 +56,7 @@ function mailerBase(): PHPMailer {
     $mail->Host       = 'smtp.office365.com';
     $mail->Port       = 587;
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = 'tls';
+    $mail->SMTPSecure = 'STARTTLS';
     $mail->Username   = 'rh@transvivegdl.com.mx';
     $mail->Password   = 'RVwsrPKyu';
     $mail->setFrom('rh@transvivegdl.com.mx', 'Ventas Transvive');
