@@ -1,4 +1,12 @@
 <?php
+ini_set('display_errors', 1);              // Puedes poner 0 en producción
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Log a archivo (útil en IIS/Plesk)
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/php_error.log');
+
 require('../fpdf/fpdf.php');
 require('../includes/conversor.php');
 require('../../conexion.php');
