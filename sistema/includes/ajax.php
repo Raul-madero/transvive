@@ -653,104 +653,166 @@ if ($_POST['action'] == 'AlmacenaAdeudo') {
 //Agregar Productos a Entrada
 if ($_POST['action'] == 'AlmacenaEmpleado') {
     if (!empty($_POST['name']) && !empty($_POST['paterno']) && !empty($_POST['materno'])) {
-        // include "../conexion.php";
+        // var_dump($_POST);
+        // Helpers
+        $val      = fn($k) => trim((string)($_POST[$k] ?? ''));         // siempre string para trim
+        $valNull  = fn($k) => (($v = $val($k)) === '') ? null : $v;     // null si viene vacío
+        $intVal   = fn($k) => is_numeric($_POST[$k] ?? null) ? (int)$_POST[$k] : 0;
+        $floatVal = fn($k) => is_numeric($_POST[$k] ?? null) ? (float)$_POST[$k] : 0.0;
 
-        // Validación y limpieza de datos
-        $noempleado   = (int) $_POST['noempleado'];
-        $name         = mysqli_real_escape_string($conection, $_POST['name']);
-        $paterno      = mysqli_real_escape_string($conection, $_POST['paterno']);
-        $materno      = mysqli_real_escape_string($conection, $_POST['materno']);
-        $cargo        = mysqli_real_escape_string($conection, $_POST['cargo']);
-        $telefono     = !empty($_POST['telefono']) ? "'" . mysqli_real_escape_string($conection, $_POST['telefono']) . "'" : "NULL";
-        $rfc          = mysqli_real_escape_string($conection, $_POST['rfccte']);
-        $unidad       = mysqli_real_escape_string($conection, $_POST['unidad']);
-        $nounidad     = mysqli_real_escape_string($conection, $_POST['nounidad']);
-        $tipo_lic     = mysqli_real_escape_string($conection, $_POST['tipo_lic']);
-        $nolicencia   = mysqli_real_escape_string($conection, $_POST['nolicencia']);
-        $fecha_vence  = !empty($_POST['fvencimiento']) ? "'" . $_POST['fvencimiento'] . "'" : "NULL";
-        $supervisor   = mysqli_real_escape_string($conection, $_POST['supervisor']);
-        $tipocontrato = mysqli_real_escape_string($conection, $_POST['tipocontrato']);
-        $contrato     = !empty($_POST['fcontrato']) ? "'" . $_POST['fcontrato'] . "'" : "NULL";
-        $fincontrato  = !empty($_POST['vencontrato']) ? "'" . $_POST['vencontrato'] . "'" : "NULL";
 
-        // Números decimales y enteros (convertir explícitamente)
-        $imss         = (float) $_POST['imss'];
-        $salariodia   = (float) $_POST['salariodia'];
-        $sueldobase   = (float) $_POST['sueldobase'];
-        $sueldo       = (float) $_POST['sueldo'];
-        $sueldob2     = (float) $_POST['sueldob2'];
-        $vdgmv        = (float) $_POST['vdgmv'];
-        $vdgao        = (float) $_POST['vdgao'];
-        $sprinter     = (float) $_POST['sprinter'];
-        $sauto        = (float) $_POST['sueldo_auto'];
-        $ssemi        = (float) $_POST['ssemi'];
-        $deuda        = (float) $_POST['deuda'];
-        $descuento    = (float) $_POST['descuento'];
-        $adeudo       = (float) $_POST['adeudo'];
-        $saldo_adeudo = (float) $_POST['saldo_adeudo'];
-        $bono         = (float) $_POST['bonos'];
-        $bonoc2       = (float) $_POST['bonosc2'];
-        $bonosemana   = (float) $_POST['bonosemanal'];
-        $apoyomes     = (float) $_POST['apoyomes'];
-        $vales        = (float) $_POST['vales'];
-        $caja         = (float) $_POST['caja'];
-        $vacaciones   = (float) $_POST['vacaciones'];
-        $efectivo     = (float) $_POST['efectivo'];
-        $desc_fiscal  = (float) $_POST['descfiscal'];
-        $salxdia      = (float) $_POST['salxdia'];
-        $sueldoauto   = (float) $_POST['sueldoauto'];
-        $sdosprinter  = (float) $_POST['sdosprinter'];
+        $noempleado   = $intVal('noempleado');
+        $name         = $val('name');
+        $paterno      = $val('paterno');
+        $materno      = $val('materno');
+        $sexo         = $val('sexo');
+        $fechanac     = $valNull('fechanac');
+        $edad         = $intVal('edad');
+        $edocivil     = $val('edocivil');
+        $domicilio    = $val('domicilio');
+        $estudios     = $val('estudios');
+        $cargo        = $val('cargo');
+        $telefono     = $valNull('telefono');
+        $correo       = $valNull('correo');
+        $rfc          = $val('rfc');
+        $curp         = $val('elcurp');
+        $nombre_emergencia     = $val('nombreEmergencia');
+        $telefono_emergencia   = $val('telefonoEmergencia');
+        $parentesco   = $val('parentesco');
+        
+        $tipo_lic     = $val('tipoLic');
+        $no_licencia  = $val('nolicencia');
+        $fecha_vence  = $valNull('fvencimiento');
+        $supervisor   = $val('supervisor');
+        
+        $tipo_contrato     = $val('tipoContrato');
+        $fecha_contrato    = $valNull('fechaContrato');
+        $fin_contrato      = $valNull('venContrato');
+        $imss              = $floatVal('imss');
+        $fecha_alta_imss   = $valNull('fchaAltaimss');
+        $noss              = $val('noss');
+        $salario_diario    = $floatVal('salarioDiario');
+        $salario_promedio  = $floatVal('salarioPromedio');
+        $sueldo_base       = $floatVal('sueldoBase');
+        $sueldo_camion     = $floatVal('sueldoCamion');
+        $sueldo_camioneta  = $floatVal('sueldoCamioneta');
+        $sueldo_auto       = $floatVal('sueldoAuto');
+        $sueldo_sprinter   = $floatVal('sueldoSprinter');
+        
+        $tipo_nomina       = $val('tipoNomina');
+        $bono_supervisor   = $floatVal('bonoSupervisor');
+        $caja_ahorro       = $floatVal('cajaAhorro');
 
-        // Cadenas opcionales
-        $clasificacat = mysqli_real_escape_string($conection, $_POST['clasificacat']);
-        $sexo         = mysqli_real_escape_string($conection, $_POST['sexo']);
-        $fechanac     = !empty($_POST['fechanac']) ? "'" . $_POST['fechanac'] . "'" : "NULL";
-        $edad         = (int) $_POST['edad'];
-        $edocivil     = mysqli_real_escape_string($conection, $_POST['edocivil']);
-        $domicilio    = mysqli_real_escape_string($conection, $_POST['domicilio']);
-        $estudios     = mysqli_real_escape_string($conection, $_POST['estudios']);
-        $contactoe    = mysqli_real_escape_string($conection, $_POST['contactoe']);
-        $elcurp       = mysqli_real_escape_string($conection, $_POST['elcurp']);
-        $fchaaltaimss = !empty($_POST['fchaaltaimss']) ? "'" . $_POST['fchaaltaimss'] . "'" : "NULL";
-        $noss         = mysqli_real_escape_string($conection, $_POST['noss']);
-        $comentarios  = mysqli_real_escape_string($conection, $_POST['comentarios']);
-        $tipo_nomina  = mysqli_real_escape_string($conection, $_POST['tipo_nomina']);
+        // $unidad       = trim($f('unidad'));
+        // $nounidad     = trim($f('nounidad'));
 
-        // Datos de sesión
+        // // Numéricos (usa 0 si viene vacío)
+        // $vdgmv        = (float) ($f('vdgmv') ?? 0);
+        // $vdgao        = (float) ($f('vdgao') ?? 0);
+        // $sprinter     = (float) ($f('sprinter') ?? 0);
+        // $sauto        = (float) ($f('sueldo_auto') ?? 0);
+        // $ssemi        = (float) ($f('ssemi') ?? 0);
+        // $deuda        = (float) ($f('deuda') ?? 0);
+        // $descuento    = (float) ($f('descuento') ?? 0);
+        // $adeudo       = (float) ($f('adeudo') ?? 0);
+        // $saldo_adeudo = (float) ($f('saldo_adeudo') ?? 0);
+        // $bono         = (float) ($f('bonos') ?? 0);
+        // $bonoc2       = (float) ($f('bonosc2') ?? 0);
+        // $bonosemana   = (float) ($f('bonosemanal') ?? 0);
+        // $apoyomes     = (float) ($f('apoyomes') ?? 0);
+        // $vales        = (float) ($f('vales') ?? 0);
+        // $caja         = (float) ($f('caja') ?? 0);
+        // $vacaciones   = (float) ($f('vacaciones') ?? 0);
+        // $efectivo     = (float) ($f('efectivo') ?? 0);
+        // $desc_fiscal  = (float) ($f('descfiscal') ?? 0);
+        // $sueldoauto   = (float) ($f('sueldoauto') ?? 0);
+        // $sdosprinter  = (float) ($f('sdosprinter') ?? 0);
+
+        // // Cadenas opcionales
+        // $clasificacat = trim($f('clasificacat') ?? '');
+        // $contactoe    = trim($f('contactoe') ?? '');
+        // $comentarios  = trim($f('comentarios') ?? '');
+
+        // Sesión
         $usuario = $_SESSION['idUser'];
 
-        // Llamada al procedimiento almacenado
-        $query_procesar = mysqli_query($conection, "CALL procesar_empleado(
-            $noempleado, '$name', '$paterno', '$materno', '$cargo', $telefono, '$rfc', '$unidad', '$nounidad',
-            '$tipo_lic', '$nolicencia', $fecha_vence, '$supervisor', '$tipocontrato', $contrato, $fincontrato,
-            $imss, $salariodia, $sueldobase, $sueldo, $sueldob2, $vdgmv, $vdgao, $sprinter, $sauto, $ssemi,
-            $deuda, $descuento, $adeudo, $saldo_adeudo, $bono, '$clasificacat', $bonoc2, $bonosemana, $apoyomes,
-            $vales, $caja, $vacaciones, $efectivo, '$tipo_nomina', $desc_fiscal, '$sexo', $fechanac, $edad,
-            '$edocivil', '$domicilio', '$estudios', '$contactoe', '$elcurp', $fchaaltaimss, '$noss', $salxdia,
-            $sueldoauto, $sdosprinter, '$comentarios', $usuario
-        )");
+        // IMPORTANTE: usa placeholders en TODO el INSERT (agregué columna correo)
+        $sql = "
+            INSERT INTO empleados (
+                noempleado, nombres, apellido_paterno, apellido_materno, sexo, date_nacimiento, edad, estado_civil, domicilio, estudios, cargo, telefono, correo, rfc, curp, nombre_emergencia, telefono_emergencia, parentesco,
+                tipo_licencia, no_licencia, fecha_vencimiento, supervisor,
+                tipo_contrato, fecha_contrato, fecha_fincontrato, imss, fecha_altaimss, numeross, salario_diario, salarioxdia, sueldo_base, sueldo_camion, sueldo_camioneta, sueldo_coche, sueldo_sprinter,
+                tipo_nomina, bono_supervisor, caja_ahorro,
+                usuario_id
+            ) VALUES (
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?,
+                ?
+            )
+        ";
 
-        // Verificar errores en la consulta
-        if (!$query_procesar) {
-            die("Error en el procedimiento almacenado: " . mysqli_error($conection));
+        $stmt = $conection->prepare($sql);
+        if (!$stmt) {
+            http_response_code(500);
+            die("Error al preparar el INSERT: " . $conection->error);
         }
 
-        // Procesar resultados del procedimiento almacenado
-        $result_detalle = mysqli_num_rows($query_procesar);
-        if ($result_detalle > 0) {
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data, JSON_UNESCAPED_UNICODE);
-        } else {
-            echo "error";
+        // Mapa de tipos (i=int, d=double, s=string, s también para fechas/NULL)
+        // $types =
+        //     "isssssss" .  // noempleado,i + 7 strings (nombres..rfc + correo)
+        //     "sssssss"  .  // tipo_unidad..supervisor
+        //     "ss"       .  // tipo_contrato, fecha_contrato
+        //     "d"        .  // fecha_fincontrato (lo tratamos como s, pero para consistencia usa 's' abajo)
+        //     "" ;
+
+        // Para evitar errores, definimos los tipos EXACTOS a continuación, alineados a los valores:
+        $types =
+            "i" .                       // noempleado
+            "sssssisssssssssss " .      // nombres, paterno, materno, sexo, date_nacimiento, edad, estado_civil, domicilio, estudios, cargo, telefono, correo, rfc, curp, nombre_emergencia, telefono_emergencia, parentesco
+            "ssss" .                    // tipo_licencia, no_licencia, fecha_vencimiento, supervisor
+            "ss" .                      // tipo_contrato, fecha_contrato
+            "s" .                       // fecha_fincontrato
+            "isiddddddd" .              // imss, fecha_altaimss, numeross, salarioxdia, salario_diario, sueldo_base, sueldo_camion, sueldo_camioneta, sueldo_coche, sueldo_sprinter
+            "sdd" .                     // tipo_nomina, bono_supervisor, caja_ahorro
+            "i";                        // usuario_id
+
+        // Quita espacios de $types
+        $types = preg_replace('/\s+/', '', $types);
+
+        // Valores en el MISMO orden que el SQL:
+        $values = [
+            $noempleado, $name, $paterno, $materno, $sexo, $fechanac, $edad, $edocivil, $domicilio, $estudios, $cargo, $telefono, $correo, $rfc, $curp, $nombre_emergencia, $telefono_emergencia, $parentesco, $tipo_lic, $no_licencia, $fecha_vence, $supervisor, $tipo_contrato, $fecha_contrato, $fin_contrato, $imss, $fecha_alta_imss, $noss, $salario_diario, $salario_promedio, $sueldo_base, $sueldo_camion, $sueldo_camioneta, $sueldo_auto, $sueldo_sprinter, $tipo_nomina, $bono_supervisor, $caja_ahorro, $usuario
+        ];
+
+        // bind_param requiere variables por referencia
+        $bindParams = [$types];
+        foreach ($values as $k => $v) { $bindParams[] = &$values[$k]; }
+
+        if (!call_user_func_array([$stmt, 'bind_param'], $bindParams)) {
+            http_response_code(500);
+            die("Error en bind_param: " . $stmt->error);
         }
 
+        if (!$stmt->execute()) {
+            http_response_code(500);
+            die("Error al ejecutar INSERT: " . $stmt->error);
+        }
+
+        // Éxito
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'ok' => true,
+            'id' => $stmt->insert_id
+        ], JSON_UNESCAPED_UNICODE);
+
+        $stmt->close();
         mysqli_close($conection);
     } else {
-        echo 'error: campos obligatorios vacíos.';
+        echo json_encode(['error' => 'campos obligatorios vacíos.']);
     }
     exit;
 }
-
 
 //Almacena Unidad Nueva
 if($_POST['action'] == 'AlmacenaUnidad')
