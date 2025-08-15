@@ -653,14 +653,22 @@ if ($_POST['action'] == 'AlmacenaAdeudo') {
 //Agregar Productos a Entrada
 if ($_POST['action'] == 'AlmacenaEmpleado') {
     if (!empty($_POST['name']) && !empty($_POST['paterno']) && !empty($_POST['materno'])) {
-        // var_dump($_POST);
-        // Helpers
-        $val      = fn($k) => trim((string)($_POST[$k] ?? ''));         // siempre string para trim
-        $valNull  = fn($k) => (($v = $val($k)) === '') ? null : $v;     // null si viene vacío
-        $intVal   = fn($k) => is_numeric($_POST[$k] ?? null) ? (int)$_POST[$k] : 0;
-        $floatVal = fn($k) => is_numeric($_POST[$k] ?? null) ? (float)$_POST[$k] : 0.0;
+        // Helpers compatibles con PHP 7.0–7.3 (sin arrow functions)
+        $val = function ($k) {
+            return trim((string)($_POST[$k] ?? '')); // siempre string para trim
+        };
+        $valNull = function ($k) use ($val) {
+            $v = $val($k);
+            return ($v === '') ? null : $v;          // null si viene vacío
+        };
+        $intVal = function ($k) {
+            return is_numeric($_POST[$k] ?? null) ? (int)$_POST[$k] : 0;
+        };
+        $floatVal = function ($k) {
+            return is_numeric($_POST[$k] ?? null) ? (float)$_POST[$k] : 0.0;
+        };
 
-
+        // Datos Generales
         $noempleado   = $intVal('noempleado');
         $name         = $val('name');
         $paterno      = $val('paterno');
@@ -676,15 +684,19 @@ if ($_POST['action'] == 'AlmacenaEmpleado') {
         $correo       = $valNull('correo');
         $rfc          = $val('rfc');
         $curp         = $val('elcurp');
-        $nombre_emergencia     = $val('nombreEmergencia');
-        $telefono_emergencia   = $val('telefonoEmergencia');
+        $nombre_emergencia   = $val('nombreEmergencia');
+        $telefono_emergencia = $val('telefonoEmergencia');
         $parentesco   = $val('parentesco');
-        
+
+        // Datos Operativos
         $tipo_lic     = $val('tipoLic');
         $no_licencia  = $val('nolicencia');
         $fecha_vence  = $valNull('fvencimiento');
         $supervisor   = $val('supervisor');
-        
+
+        // Datos Nómina
+        // Nota: asegúrate que el front envía estas llaves EXACTAS:
+        // 'tipoContrato', 'fechaContrato', 'venContrato', 'fchaAltaimss'
         $tipo_contrato     = $val('tipoContrato');
         $fecha_contrato    = $valNull('fechaContrato');
         $fin_contrato      = $valNull('venContrato');
@@ -692,51 +704,22 @@ if ($_POST['action'] == 'AlmacenaEmpleado') {
         $fecha_alta_imss   = $valNull('fchaAltaimss');
         $noss              = $val('noss');
         $salario_diario    = $floatVal('salarioDiario');
-        $salario_promedio  = $floatVal('salarioPromedio');
+        $salario_promedio  = $floatVal('salarioPromedio'); // mapeado a salarioxdia
         $sueldo_base       = $floatVal('sueldoBase');
         $sueldo_camion     = $floatVal('sueldoCamion');
         $sueldo_camioneta  = $floatVal('sueldoCamioneta');
         $sueldo_auto       = $floatVal('sueldoAuto');
         $sueldo_sprinter   = $floatVal('sueldoSprinter');
-        
+
+        // Datos pago Nómina
         $tipo_nomina       = $val('tipoNomina');
         $bono_supervisor   = $floatVal('bonoSupervisor');
         $caja_ahorro       = $floatVal('cajaAhorro');
 
-        // $unidad       = trim($f('unidad'));
-        // $nounidad     = trim($f('nounidad'));
-
-        // // Numéricos (usa 0 si viene vacío)
-        // $vdgmv        = (float) ($f('vdgmv') ?? 0);
-        // $vdgao        = (float) ($f('vdgao') ?? 0);
-        // $sprinter     = (float) ($f('sprinter') ?? 0);
-        // $sauto        = (float) ($f('sueldo_auto') ?? 0);
-        // $ssemi        = (float) ($f('ssemi') ?? 0);
-        // $deuda        = (float) ($f('deuda') ?? 0);
-        // $descuento    = (float) ($f('descuento') ?? 0);
-        // $adeudo       = (float) ($f('adeudo') ?? 0);
-        // $saldo_adeudo = (float) ($f('saldo_adeudo') ?? 0);
-        // $bono         = (float) ($f('bonos') ?? 0);
-        // $bonoc2       = (float) ($f('bonosc2') ?? 0);
-        // $bonosemana   = (float) ($f('bonosemanal') ?? 0);
-        // $apoyomes     = (float) ($f('apoyomes') ?? 0);
-        // $vales        = (float) ($f('vales') ?? 0);
-        // $caja         = (float) ($f('caja') ?? 0);
-        // $vacaciones   = (float) ($f('vacaciones') ?? 0);
-        // $efectivo     = (float) ($f('efectivo') ?? 0);
-        // $desc_fiscal  = (float) ($f('descfiscal') ?? 0);
-        // $sueldoauto   = (float) ($f('sueldoauto') ?? 0);
-        // $sdosprinter  = (float) ($f('sdosprinter') ?? 0);
-
-        // // Cadenas opcionales
-        // $clasificacat = trim($f('clasificacat') ?? '');
-        // $contactoe    = trim($f('contactoe') ?? '');
-        // $comentarios  = trim($f('comentarios') ?? '');
-
         // Sesión
         $usuario = $_SESSION['idUser'];
 
-        // IMPORTANTE: usa placeholders en TODO el INSERT (agregué columna correo)
+        // SQL con placeholders
         $sql = "
             INSERT INTO empleados (
                 noempleado, nombres, apellido_paterno, apellido_materno, sexo, date_nacimiento, edad, estado_civil, domicilio, estudios, cargo, telefono, correo, rfc, curp, nombre_emergencia, telefono_emergencia, parentesco,
@@ -758,37 +741,36 @@ if ($_POST['action'] == 'AlmacenaEmpleado') {
             die("Error al preparar el INSERT: " . $conection->error);
         }
 
-        // Mapa de tipos (i=int, d=double, s=string, s también para fechas/NULL)
-        // $types =
-        //     "isssssss" .  // noempleado,i + 7 strings (nombres..rfc + correo)
-        //     "sssssss"  .  // tipo_unidad..supervisor
-        //     "ss"       .  // tipo_contrato, fecha_contrato
-        //     "d"        .  // fecha_fincontrato (lo tratamos como s, pero para consistencia usa 's' abajo)
-        //     "" ;
-
-        // Para evitar errores, definimos los tipos EXACTOS a continuación, alineados a los valores:
+        // Tipos EXACTOS (39 params) alineados a los valores de abajo:
+        // 1:i, 2-6:s, 7:i, 8-18:s×11, 19-22:s×4, 23-25:s×3, 26:d, 27:s, 28:s,
+        // 29-35:d×7, 36:s, 37-38:d×2, 39:i
         $types =
-            "i" .                       // noempleado
-            "sssssisssssssssss " .      // nombres, paterno, materno, sexo, date_nacimiento, edad, estado_civil, domicilio, estudios, cargo, telefono, correo, rfc, curp, nombre_emergencia, telefono_emergencia, parentesco
-            "ssss" .                    // tipo_licencia, no_licencia, fecha_vencimiento, supervisor
-            "ss" .                      // tipo_contrato, fecha_contrato
-            "s" .                       // fecha_fincontrato
-            "isiddddddd" .              // imss, fecha_altaimss, numeross, salarioxdia, salario_diario, sueldo_base, sueldo_camion, sueldo_camioneta, sueldo_coche, sueldo_sprinter
-            "sdd" .                     // tipo_nomina, bono_supervisor, caja_ahorro
-            "i";                        // usuario_id
+            "i" .           // noempleado
+            "sssss" .       // nombres..date_nacimiento
+            "i" .           // edad
+            "sssssssssss" . // estado_civil..parentesco (11 s)
+            "ssss" .        // tipo_licencia..supervisor
+            "sss" .         // tipo_contrato..fecha_fincontrato
+            "d" .           // imss
+            "s" .           // fecha_altaimss
+            "s" .           // numeross
+            "ddddddd" .     // salario_diario..sueldo_sprinter (7 d)
+            "s" .           // tipo_nomina
+            "dd" .          // bono_supervisor, caja_ahorro
+            "i";            // usuario_id
 
-        // Quita espacios de $types
-        $types = preg_replace('/\s+/', '', $types);
-
-        // Valores en el MISMO orden que el SQL:
+        // Valores en el MISMO orden del SQL
         $values = [
-            $noempleado, $name, $paterno, $materno, $sexo, $fechanac, $edad, $edocivil, $domicilio, $estudios, $cargo, $telefono, $correo, $rfc, $curp, $nombre_emergencia, $telefono_emergencia, $parentesco, $tipo_lic, $no_licencia, $fecha_vence, $supervisor, $tipo_contrato, $fecha_contrato, $fin_contrato, $imss, $fecha_alta_imss, $noss, $salario_diario, $salario_promedio, $sueldo_base, $sueldo_camion, $sueldo_camioneta, $sueldo_auto, $sueldo_sprinter, $tipo_nomina, $bono_supervisor, $caja_ahorro, $usuario
+            $noempleado, $name, $paterno, $materno, $sexo, $fechanac, $edad, $edocivil, $domicilio, $estudios, $cargo, $telefono, $correo, $rfc, $curp, $nombre_emergencia, $telefono_emergencia, $parentesco,
+            $tipo_lic, $no_licencia, $fecha_vence, $supervisor,
+            $tipo_contrato, $fecha_contrato, $fin_contrato, $imss, $fecha_alta_imss, $noss, $salario_diario, $salario_promedio, $sueldo_base, $sueldo_camion, $sueldo_camioneta, $sueldo_auto, $sueldo_sprinter,
+            $tipo_nomina, $bono_supervisor, $caja_ahorro,
+            $usuario
         ];
 
-        // bind_param requiere variables por referencia
+        // bind_param (por referencia)
         $bindParams = [$types];
         foreach ($values as $k => $v) { $bindParams[] = &$values[$k]; }
-
         if (!call_user_func_array([$stmt, 'bind_param'], $bindParams)) {
             http_response_code(500);
             die("Error en bind_param: " . $stmt->error);
@@ -799,17 +781,14 @@ if ($_POST['action'] == 'AlmacenaEmpleado') {
             die("Error al ejecutar INSERT: " . $stmt->error);
         }
 
-        // Éxito
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode([
-            'ok' => true,
-            'id' => $stmt->insert_id
-        ], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['ok' => true, 'id' => $stmt->insert_id], JSON_UNESCAPED_UNICODE);
 
         $stmt->close();
         mysqli_close($conection);
     } else {
-        echo json_encode(['error' => 'campos obligatorios vacíos.']);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['error' => 'campos obligatorios vacíos.'], JSON_UNESCAPED_UNICODE);
     }
     exit;
 }
