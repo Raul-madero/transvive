@@ -13640,9 +13640,9 @@ if($_POST['action'] == 'BajaProveedor')
 //Almacena Evaluacion de Producto
 if($_POST['action'] == 'AlmacenaEvaluaproducto')
 {
-    if(empty($_POST['fecha']) || empty($_POST['tipo_eval']) || empty($_POST['proveedor'] || ['producto']) )
+    if(empty($_POST['fecha']) || empty($_POST['tipo_eval']) || empty($_POST['proveedor']) || empty($_POST['producto']) )
     {
-       echo 'error';
+       echo json_encode(["status" => "Error", "message" => "Faltan datos obligatorios"]);
     }else{
 
         $tipo_eval   = $_POST['tipo_eval'];
@@ -13671,17 +13671,25 @@ if($_POST['action'] == 'AlmacenaEvaluaproducto')
         $token       = md5($_SESSION['idUser']);
         $usuario     = $_SESSION['idUser'];
 
-        $query_procesar = mysqli_query($conection,"CALL procesar_evaluaproducto('$tipo_eval', '$fecha', $proveedor, '$producto', '$consulta', '$fecha_h1', $historial1, '$fecha_h2', $historial2, '$fecha_h3', $historial3, $tot_compras, $tot_calidad, $calif_total, '$estatusc', '$acciones', $tiempo_res, $documenta, $credito, $precios, $emergencia, $servicios, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+        $sql = "INSERT INTO evaluaciones_productos (tipo_evaluacion, fecha_eval, cveproveedor, producto, consulta, fecha_hist1, historia1, fecha_hist2, historia2, fecha_hist3, historia3, calificacion_compras, calificacion_calidad, calificacion_total, resultado, acciones, tiempo_respuesta, documentacion, credito, precios_competitivos, respuesta_emergencias, servicio_domicilio, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conection->prepare($sql);
+        $stmt->bind_param('ssisssisisiiiissiiiiiii', $tipo_eval, $fecha, $proveedor, $producto, $consulta, $fecha_h1, $historial1, $fecha_h2, $historial2, $fecha_h3, $historial3, $tot_compras, $tot_calidad, $calif_total, $estatusc, $acciones, $tiempo_res, $documenta, $credito, $precios, $emergencia, $servicios, $usuario);
+        if($stmt->execute()) {
+            echo json_encode(["status" => "Ok", "message" => "Se inserto correctamente la evaluacion"]);
+        }else {
+            echo json_encode(["status" => "Error", "message" => "Error al insertar la evaluacion " . $stmt->error()]);
         }
+
+//         $result_detalle = mysqli_num_rows($query_procesar);
+        
+//         if($result_detalle > 0){
+//             $data = mysqli_fetch_assoc($query_procesar);
+//             echo json_encode($data,JSON_UNESCAPED_UNICODE);
+//         }else{
+//             echo "error";
+//         }
     
-    mysqli_close($conection);
+//     mysqli_close($conection);
   }
    
     exit;

@@ -1,46 +1,22 @@
 <?php
 include "../conexion.php";
 session_start();
-  $User=$_SESSION['user'];
-  $rol=$_SESSION['rol'];
-  $sql = "select * from rol where idrol =$rol ";
-  $query = mysqli_query($conection, $sql);
-  $filas = mysqli_fetch_assoc($query); 
+$User=$_SESSION['user'];
+$rol=$_SESSION['rol'];
+$sql = "select * from rol where idrol =$rol ";
+$query = mysqli_query($conection, $sql);
+$filas = mysqli_fetch_assoc($query); 
 
-  $namerol = $filas['rol'];
+$namerol = $filas['rol'];
   if (!isset($_SESSION['idUser'])) {
   header('Location: ../index.php');
 }
 
-  $sqloper   = "select no_prov, nombre from proveedores where estatus = 1 ORDER BY nombre";
-  $queryoper = mysqli_query($conection, $sqloper);
-  $filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
+$sql_proveedor   = "select no_prov, nombre from proveedores where estatus = 1 ORDER BY nombre";
+$queri_proveedor = mysqli_query($conection, $sql_proveedor);
+$filas_proveedor = mysqli_fetch_all($queri_proveedor, MYSQLI_ASSOC);
 
-  $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
-  $queryrecb = mysqli_query($conection, $sqlrecb);
-  $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC); 
-
-  $sqlprod   = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
-  $queryprod = mysqli_query($conection, $sqlprod);
-  $filasprod = mysqli_fetch_all($queryprod, MYSQLI_ASSOC);
-
-  $sqlprodnm = "select id, codigo, descripcion, marca from refacciones where estatus = 1 ORDER BY descripcion";
-  $queryprodnm = mysqli_query($conection, $sqlprodnm);
-  $filasprodnm = mysqli_fetch_all($queryprodnm, MYSQLI_ASSOC);
-
-  $sqlprov   = "select id, no_prov, nombre from proveedores where estatus = 1";
-  $queryprov = mysqli_query($conection, $sqlprov);
-  $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC); 
-
-  $sqlsmant  = "select no_orden from solicitud_mantenimiento where estatus = 1";
-  $querysmant = mysqli_query($conection, $sqlsmant);
-  $filasmant = mysqli_fetch_all($querysmant, MYSQLI_ASSOC); 
-
-  $sqlumed = "select * from unidades_medida ORDER BY descripcion";
-  $queryumed = mysqli_query($conection, $sqlumed);
-  $filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
-
-  //mysqli_close($conection);
+//mysqli_close($conection);
 ?>
 
 <!DOCTYPE html>
@@ -105,7 +81,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <span class="navbar-toggler-icon"></span>
       </button>
 
-     <?php include('includes/generalnavbar.php') ?>
+      <?php include('includes/generalnavbar.php') ?>
       <?php include('includes/nav.php') ?>
 
     </div>
@@ -132,22 +108,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
       </div>
     </section>
-    <center>
-         
-       <?php
-         /*           
-          include "../conexion.php";
-          $query_folio = mysqli_query($conection,"SELECT * FROM folios where serie = 'RQ'");
-          $result_folio = mysqli_num_rows($query_folio);
-
-          $folioe = mysqli_fetch_array($query_folio);
-          $nuevofolio=$folioe["folio"]+1; 
-
-          $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'RQ'");
-          
-
-          mysqli_close($conection);*/
-        ?>  
+    <center> 
          <?php
          date_default_timezone_set('America/Mexico_City');
          $fcha = date("Y-m-d");
@@ -179,9 +140,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-sm-4">
                        <select class="form-control" style="width: 100%; text-align: left" id="inputTipo" name="inputTipo"  onchange="toggleTableVisibility()">
                        <option value="">- Seleccione -</option>
-                        <option value="SELECCIÓN">SELECCIÓN</option>
-                        <option value="EVALUACIÓN">EVALUACIÓN</option>
-                        <option value="RE-EVALUACIÓN">RE-EVALUACIÓN</option>
+                        <option value="SELECCION">SELECCIÓN</option>
+                        <option value="EVALUACION">EVALUACIÓN</option>
+                        <option value="RE-EVALUACION">RE-EVALUACIÓN</option>
                      </select>
                     </div>
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha</label>
@@ -195,8 +156,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="col-sm-9">
                       <select class="form-control select2bs4" style="width: 100%; text-align: left" id="inputProveedor" name="inputProveedor">
                       <option value="">- Seleccione -</option>
-                       <?php foreach ($filasoper as $oppv): //llenar las opciones del primer select ?>
-                       <option value="<?= $oppv['no_prov'] ?>"><?= $oppv['nombre'] ?></option>  
+                       <?php foreach ($filas_proveedor as $prov): //llenar las opciones del primer select ?>
+                        <option value="<?= $prov['no_prov'] ?>"><?= $prov['nombre'] ?></option>  
                        <?php endforeach; ?>
                     </select>
                     </div>
@@ -382,7 +343,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </select>
                     </div>
                   </div>
-
+                   <div class="hidden" id="tablaHistorial">     
                   <div class="form-group row" style="text-align:center;">
                     <label for="inputEmail3" class="col-sm-12 col-form-label">Historial de desempeño:</label>
                     
@@ -398,7 +359,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                   </div>
 
-                  <div class="form-group row" style="text-align:left;">
+                  <div id="historial2" class="hidden" class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Historial de desempeño:</label>
                    <div class="col-sm-3">
                       <input type="date" class="form-control" id="inputFechah2" name="inputFechah2">
@@ -408,7 +369,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                   </div>
 
-                  <div class="form-group row" style="text-align:left;">
+                  <div id="historial3" class="hidden" class="form-group row" style="text-align:left;">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Historial de desempeño:</label>
                    <div class="col-sm-3">
                       <input type="date" class="form-control" id="inputFechah3" name="inputFechah3">
@@ -417,6 +378,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <input type="number" class="form-control" id="historial3" name="historial3" min="0" step="1" oninput="validateInput(this)"  value="0">
                     </div>
                   </div>
+                       </div>
 
  <div id="tableContainerFour" class="col-sm-12">
                        
@@ -517,46 +479,12 @@ $('#btn_salir').click(function(e){
         showCancelButton: true,
         confirmButtonText: "Regresar",
         cancelButtonText: "Salir",
-       
-
-       
     })
      .then(resultado => {
         if (resultado.value) {
-            // Hicieron click en "Sí"
-             //*location.href = 'lista_ncplantasa.php';
              console.log("Alerta cerrada");
         } else {
-            // Dijeron que no
-            //*location.reload();
-          /* var norecibo  = $('#inputFolio').val();
-            var action = 'procesarSalirCortizacioncp';
-                       
-            $.ajax({
-                url: 'includes/ajax.php',
-                type: "POST",
-                async : true,
-                data: {action:action, norecibo:norecibo},
-
-                success: function(response)
-                {
-                    
-                    if(response != 'error')
-                    {
-                      var info = JSON.parse(response);
-                      console.log(response); */
                       location.href = 'evalua_proveproductos.php';
-                       //*location.reload();
-
-               /*
-                        
-                    }else{
-                        console.log('no data');
-                    }
-                },
-                error: function(error){                
-                }
-            });*/
         }
     });
 
@@ -613,66 +541,40 @@ $('#btn_salir').click(function(e){
 
                     success: function(response)
                     {
-                      if(response != 'error')
-                        {
-                         console.log(response);
-                        var info = JSON.parse(response);
-                        console.log(info);
-                        $mensaje=(info.mensaje);
-                          if ($mensaje === undefined)
-                          {
-                            Swal
-                         .fire({
+                      console.log(response.status)
+                      var info = JSON.parse(response);
+                      if(info.status != 'Error') {
+                        
+                        console.log(info.status);
+                        Swal.fire({
                           title: "Exito!",
-                          text: "EVALUACION DE PRODUCTO ALMACENADA CORRECTAMENTE",
+                          text: info.message,
                           icon: 'success',
-
-                          //showCancelButton: true,
-                          //confirmButtonText: "Regresar",
-                          //cancelButtonText: "Salir",
-       
-                       })
+                        })
                         .then(resultado => {
-                       if (resultado.value) {
-                        //generarimpformulaPDF(info.folio);
-                        location.href = 'evalua_proveproductos.php';
-                       
-                        } else {
+                          console.log(resultado)
+                          if (resultado.value) {
+                          //generarimpformulaPDF(info.folio);
+                          location.href = 'evalua_proveproductos.php';
+                          } else {
                           // Dijeron que no
                           location.reload();
                          location.href = 'evalua_proveproductos.php';
                         }
                         });
-
-
                          }else {  
-                            
                             //swal('Mensaje del sistema', $mensaje, 'warning');
                             //location.reload();
                             Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: $mensaje,
+                            text: info.message,
                             })
                         }
-
-                                                        
-    
-                        }else{
-                          Swal.fire({
-                            icon: 'info',
-                            title: '',
-                            text: 'Capture los datos requeridos',
-                            })
-        
-                        }
-                        //viewProcesar();
                  },
                  error: function(error) {
                  }
-
                });
-
     });
 
     </script>  
@@ -680,8 +582,44 @@ $('#btn_salir').click(function(e){
 <!-- Page specific script -->
 
 <script>
-   document.querySelector('.main-header').classList.add('disabled-nav');
+  //  document.querySelector('.main-header').classList.add('disabled-nav');
 </script>   
+
+<script>
+  $(document).ready(function() {
+    $('#inputTipo').on('change', function() {
+      let selectedValue = $(this).val();
+      let tablaHistorial = $('#tablaHistorial');
+      tablaHistorial.toggleClass('hidden', selectedValue !== 'RE-EVALUACION')
+    })
+  })
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('#inputProveedor').on('change', function() {
+      let proveedor = $(this).val();
+      // console.log(proveedor)
+      let action = 'busquedaEvaluacionProductos'
+      let url = 'data/busquedaEvaluaciones.php'
+
+      $.ajax({
+        url: url,
+        type: "POST",
+        async : true,
+        data: {action:action, proveedor:proveedor},
+        success: function(response) {
+          console.log(response)
+          if(response != 'error')
+          {
+            var info = JSON.parse(response);
+            // console.log(info);
+          }
+        }
+      })
+    })
+  })
+</script>
 
 <script>
     function toggleTableVisibility() {
