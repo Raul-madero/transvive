@@ -169,11 +169,12 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $descuento = floatval($empleado['descuento']);
         $cantidad = floatval($empleado['cantidad']);
         $total_abonado = floatval($empleado['total_abonado']);
-        // $pago_fiscal = 0;
-        // if($imss == 1 && is_null($empleado['pago_fiscal'])) {
-        //     $pago_fiscal = 2240;
-        // }
-        $pago_fiscal = floatval($empleado['pago_fiscal']);
+        $pago_fiscal = 0;
+        if($imss == 1 && is_null($empleado['pago_fiscal'])) {
+            $pago_fiscal = 2240;
+        }else {
+            $pago_fiscal = floatval($empleado['pago_fiscal']);
+        }
         $deduccion_fiscal = floatval($empleado['deduccion_fiscal']);
         $neto = floatval($empleado['neto']);
 
