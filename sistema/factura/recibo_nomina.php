@@ -47,7 +47,7 @@ define('SMTP_USER', 'auxiliar.rh@transvivegdl.com.mx');        // From en O365
 define('SMTP_FROM', 'auxiliar.rh@transvivegdl.com.mx');        // Debe ser el mismo usuario o alias permitido
 define('SMTP_NAME', 'Nomina Transvive');
 // Usa variable de entorno si está disponible; si no, reemplaza el placeholder:
-define('SMTP_PASSWORD', getenv('SMTP_PASSWORD') ?: 'PON_AQUI_TU_PASSWORD');
+define('SMTP_PASSWORD', 'ZkKHfzKheT');
 
 // Correo que recibirá el paquete consolidado (o pásalo como $_REQUEST['resumen_to'])
 define('RESUMEN_TO', 'rh@transvivegdl.com.mx');
@@ -58,7 +58,7 @@ function mailerBase() {
     $mail->Host       = SMTP_HOST;
     $mail->Port       = SMTP_PORT;
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = 'tls';        // PHPMailer 5 => 'tls'
+    $mail->SMTPSecure = 'STARTTLS';        // PHPMailer 5 => 'tls'
     $mail->SMTPAutoTLS = true;
     // $mail->AuthType    = 'LOGIN';  // Opcional, LOGIN es el default
 
