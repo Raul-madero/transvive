@@ -56,7 +56,7 @@ $total_nomina = $conection->query("SELECT SUM(sueldo_bruto + bono_semanal + bono
 $total_fiscal = $conection->query("SELECT SUM(nomina_fiscal) AS total_fiscal FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
 $total_adeudo = $conection->query("SELECT SUM(deducciones) AS total_deducciones FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
 $total_caja_ahorro = $conection->query("SELECT SUM(caja_ahorro) AS total_caja FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
-$total_efectivo = $conection->query("SELECT SUM((sueldo_bruto) + bono_semanal + bono_supervisor + bono_categoria + apoyo_mes + pago_vacaciones + prima_vacacional +sueldo_adicional - deducciones - caja_ahorro) AS total_efectivo FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
+$total_efectivo = $conection->query("SELECT SUM((sueldo_bruto - nomina_fiscal) + bono_semanal + bono_supervisor + bono_categoria + apoyo_mes + pago_vacaciones + prima_vacacional +sueldo_adicional - deducciones - caja_ahorro) AS total_efectivo FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
 $total_vueltas = $conection->query("SELECT COALESCE(SUM(total_vueltas), 0) AS total_total_vueltas FROM historico_nomina WHERE semana = $semana AND anio = $anio")->fetch_assoc();
 
 echo json_encode([
