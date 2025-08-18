@@ -21,9 +21,9 @@ if (isset($_FILES["name"]) && is_uploaded_file($_FILES["name"]["tmp_name"])) {
     if (($handle = fopen($file_tmp, "r")) !== false) {
         fgetcsv($handle, 4096, ",", '"', "\\"); // Saltar encabezado
 
-            if (count($data) >= 2) {
-                $noempleado = intval($data[0]);
-                $correo = $data[1];
+            if (count($handle) >= 2) {
+                $noempleado = intval($handle[0]);
+                $correo = $handle[1];
 
                 $actualizarCorreo = "UPDATE empleados SET correo = ? WHERE noempleado = ?";
                 $stmt = $conection->prepare($actualizarCorreo);
@@ -38,7 +38,7 @@ if (isset($_FILES["name"]) && is_uploaded_file($_FILES["name"]["tmp_name"])) {
                         'linea' => $linea,
                         'tipo' => 'SQL',
                         'detalle' => $stmt->error,
-                        'datos' => implode(' | ', $data)
+                        'datos' => implode(' | ', $handle)
                     ];
                 }
             } else {
@@ -46,8 +46,8 @@ if (isset($_FILES["name"]) && is_uploaded_file($_FILES["name"]["tmp_name"])) {
                 $errores[] = [
                     'linea' => $linea,
                     'tipo' => 'Formato',
-                    'detalle' => 'Número de columnas insuficientes (' . count($data) . ')',
-                    'datos' => implode(' | ', $data)
+                    'detalle' => 'Número de columnas insuficientes (' . count($handle) . ')',
+                    'datos' => implode(' | ', $handle)
                 ];
             }
 

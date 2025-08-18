@@ -143,7 +143,7 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $imss = $empleado['imss'];
         $bono_categoria = $empleado['bono_categoria'];
         $bono_supervisor = $empleado['bono_supervisor'];
-        $bono_semanal = $empleado['bono_semanal'];
+        $bono_semanal = 100;
         $fecha_contrato = null;
 
         if (esFechaValidaContrato($empleado['fecha_reingreso'])) {
