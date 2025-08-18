@@ -338,8 +338,13 @@ switch (strtolower($tipo)) {
             $mailer->smtpClose();
         }
 
-        echo json_encode($resultadosEnvio, JSON_UNESCAPED_UNICODE);
-        break;
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="'.$nombreAll.'"');
+        echo $pdfAllData;
+        exit;
+
+        // echo json_encode($resultadosEnvio, JSON_UNESCAPED_UNICODE);
+        // break;
     }
 
     case 'quincenal': {
