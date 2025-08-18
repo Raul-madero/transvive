@@ -186,7 +186,8 @@ function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
         $st->execute();
         $res = $st->get_result();
         if ($res && $fila = $res->fetch_assoc()) {
-            $email = trim((string)$fila['email']);
+            $correo = trim((string)$fila['email']);
+            $email = "raul.madero.ramirez@gmail.com";
             return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
         }
     }
