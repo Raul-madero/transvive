@@ -1,15 +1,16 @@
 <?php
 require('../fpdf/fpdf.php');
 require('../includes/conversor.php');
-require('../../conexion.php');
+require('../../conexion.php');           // debe exponer $conection (mysqli)
 require('../PHPMailer/PHPMailerAutoload.php');
 
 set_time_limit(0);
 ini_set('max_execution_time', 0);
+date_default_timezone_set('America/Mexico_City');
 
-header("Content-Type: text/html; charset=utf-8");
+header("Content-Type: application/json; charset=utf-8");
 
-// Clase PDF
+// -------------------- Clase PDF (encabezado/pie) --------------------
 class PDF extends FPDF {
     function Header() {
         $this->Image("../../images/transvive.png", 12, 11, 48, 13, "png", 0);
@@ -17,7 +18,6 @@ class PDF extends FPDF {
         $this->SetFillColor(231, 233, 238);
         $this->SetTextColor(6, 22, 54);
     }
-
     function Footer() {
         $this->SetY(-10);
         $this->SetTextColor(0, 0, 0);
@@ -26,84 +26,67 @@ class PDF extends FPDF {
     }
 }
 
-$conection->set_charset('utf8');
+$conection->set_charset('utf8mb4');
 
-$tipo = $_REQUEST['tipo'] ?? 'Semanal';
-$semana = $_REQUEST['id2'] ?? '';
-$anio = $_REQUEST['id3'] ?? '';
-$id = $_REQUEST['id'] ?? '';
+// -------------------- Parámetros de entrada --------------------
+$tipo   = isset($_REQUEST['tipo']) ? (string)$_REQUEST['tipo'] : 'Semanal';
+$semana = isset($_REQUEST['id2'])  ? (string)$_REQUEST['id2']  : '';
+$anio   = isset($_REQUEST['id3'])  ? (int)$_REQUEST['id3']     : 0;
+$id     = isset($_REQUEST['id'])   ? (string)$_REQUEST['id']   : '';
 
-// Validaciones iniciales
-if (empty($tipo) || empty($anio)) {
-    die("Faltan parámetros requeridos");
+if (empty($tipo) || $anio <= 0) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Faltan parámetros requeridos (tipo/anio)'], JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
-// Configuracion de PHPMAiler
-const SMTP_HOST = 'smtp.office365.com';
-const SMTP_PORT = 587;
-const SMTP_USER = 'auxiliar.rh@transvivegdl.com.mx';
-const SMTP_PASSWORD = 'ZkKHfzKheT';
-const SMTP_FROM = 'auxiliar.rh@transvivegdl.com.mx';
-const SMTP_NAME = 'Nomina Transvive';
+// -------------------- Config SMTP --------------------
+define('SMTP_HOST', 'smtp.office365.com');
+define('SMTP_PORT', 587);
+define('SMTP_USER', 'auxiliar.rh@transvivegdl.com.mx');        // From en O365
+define('SMTP_FROM', 'auxiliar.rh@transvivegdl.com.mx');        // Debe ser el mismo usuario o alias permitido
+define('SMTP_NAME', 'Nomina Transvive');
+// Usa variable de entorno si está disponible; si no, reemplaza el placeholder:
+define('SMTP_PASSWORD', getenv('SMTP_PASSWORD') ?: 'PON_AQUI_TU_PASSWORD');
+
+// Correo que recibirá el paquete consolidado (o pásalo como $_REQUEST['resumen_to'])
+define('RESUMEN_TO', 'rh@transvivegdl.com.mx');
 
 function mailerBase() {
-    $mail = new PHPMailer();          // v5.x
+    $mail = new PHPMailer();          // PHPMailer v5.x
     $mail->isSMTP();
-    $mail->Host       = SMTP_HOST;    // smtp.office365.com
-    $mail->Port       = SMTP_PORT;    // 587
+    $mail->Host       = SMTP_HOST;
+    $mail->Port       = SMTP_PORT;
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = 'STARTTLS';
+    $mail->SMTPSecure = 'tls';        // PHPMailer 5 => 'tls'
     $mail->SMTPAutoTLS = true;
-    $mail->AuthType    = 'LOGIN';  
-    $mail->Username   = SMTP_USER;    // = FROM en O365
+    // $mail->AuthType    = 'LOGIN';  // Opcional, LOGIN es el default
+
+    $mail->Username   = SMTP_USER;
     $mail->Password   = SMTP_PASSWORD;
 
-    // Office 365 suele requerir que From == Username (o alias permitido)
     $mail->setFrom(SMTP_FROM, SMTP_NAME);
     $mail->addReplyTo(SMTP_FROM, SMTP_NAME);
 
-    // TLS 1.2 + performance
     $mail->CharSet       = 'UTF-8';
-    $mail->Timeout       = 20;        // seg. por intento
-    $mail->SMTPKeepAlive = true;      // 1 sola conexión para todos
-    // $mail->SMTPOptions   = array('ssl' => array(
-    //     'crypto_method' =>
-    //         STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT |
-    //         STREAM_CRYPTO_METHOD_TLS_CLIENT
-    // ));
+    $mail->Timeout       = 20;
+    $mail->SMTPKeepAlive = true;
 
-    // DEBUG (solo mientras pruebes)
-    $mail->SMTPDebug = 3;
-    $mail->Debugoutput = function($str,$level){ error_log("SMTP[$level] $str"); };
+    // Producción: sin debug para no romper JSON
+    $mail->SMTPDebug  = 0;
 
     return $mail;
 }
 
-// **
-//  * Genera el PDF de un empleado y lo devuelve como string binario.
-//  * $row = fila de historico_nomina del empleado.
-//  * $vueltas = resultado de SELECT de vueltas del periodo (mysqli_result).
-//  * $numeroSemana, $periodo = textos para el encabezado.
-//  */
-function pdfReciboSemanalComoString(array $row, mysqli_result $vueltas, int $numeroSemana, string $periodo): string {
-    $pdf = new class extends FPDF {
-        function Header() {
-            $this->Image("../../images/transvive.png", 12, 11, 48, 13, "png", 0);
-            $this->SetFont('Arial','',10);
-            $this->SetFillColor(231,233,238);
-            $this->SetTextColor(6,22,54);
-        }
-        function Footer() {
-            $this->SetY(-10);
-            $this->SetTextColor(0,0,0);
-            $this->SetFont('Arial','I',8);
-            $this->Cell(0,10,utf8_decode('Página ') . $this->PageNo(),0,0,'C');
-        }
-    };
-
+// -------------------- Helpers de PDF --------------------
+/**
+ * Dibuja un recibo (2 páginas) en la instancia de FPDF que se le pase.
+ * $vueltasRows: arreglo asociativo con las vueltas del periodo.
+ */
+function dibujarReciboEnPDF(FPDF $pdf, array $row, array $vueltasRows, int $numeroSemana, string $periodo): void {
+    // -------- Portada / totales ----------
     $pdf->AddPage('P','Letter');
 
-    // -------- Portada / totales ----------
     $pdf->SetFont('Arial','',8);
     $pdf->Ln(12);
     $pdf->Cell(189,5,utf8_decode("Recibo de Pago - Semana $numeroSemana"),0,1,'C');
@@ -117,25 +100,25 @@ function pdfReciboSemanalComoString(array $row, mysqli_result $vueltas, int $num
     $pdf->Cell(60,5,'Deducciones',1,1,'C');
 
     $pdf->SetFont('Arial','',8);
-    $pdf->Cell(60,5,'Vueltas Totales: ' . number_format($row['total_vueltas'], 2),0,0);
-    $pdf->Cell(60,5,'Deduccion por Adeudo: $' . number_format($row['deducciones'], 2),0,1);
+    $pdf->Cell(60,5,'Vueltas Totales: ' . number_format((float)$row['total_vueltas'], 2),0,0);
+    $pdf->Cell(60,5,'Deduccion por Adeudo: $' . number_format((float)$row['deducciones'], 2),0,1);
 
-    $pdf->Cell(60,5,'Pago Total Vueltas: $' . number_format($row['sueldo_bruto'], 2),0,0);
-    $pdf->Cell(60,5,'Caja Ahorro: $' . number_format($row['caja_ahorro'], 2),0,1);
+    $pdf->Cell(60,5,'Pago Total Vueltas: $' . number_format((float)$row['sueldo_bruto'], 2),0,0);
+    $pdf->Cell(60,5,'Caja Ahorro: $' . number_format((float)$row['caja_ahorro'], 2),0,1);
 
-    $pdf->Cell(60,5,'Sueldo Adicional: $' . number_format($row['sueldo_adicional'], 2),0,0);
-    $pdf->Cell(60,5,'Deduccion Fiscal: $' . number_format($row['deduccion_fiscal'], 2),0,1);
+    $pdf->Cell(60,5,'Sueldo Adicional: $' . number_format((float)$row['sueldo_adicional'], 2),0,0);
+    $pdf->Cell(60,5,'Deduccion Fiscal: $' . number_format((float)$row['deduccion_fiscal'], 2),0,1);
 
-    $pdf->Cell(60,5,'Bono Semanal: $' . number_format($row['bono_categoria'], 2),0,1);
-    $pdf->Cell(60,5,'Bono Supervisor: $' . number_format($row['bono_supervisor'], 2),0,1);
-    $pdf->Cell(60,5,'Bono Alertas: $' . number_format($row['bono_semanal'], 2),0,1);
-    $pdf->Cell(60,5,'Vales de Despensa: $' . number_format($row['apoyo_mes'], 2),0,1);
-    $pdf->Cell(60,5,'Dias de Vacaciones: ' . number_format($row['dias_vacaciones'], 2),0,1);
-    $pdf->Cell(60,5,'Pago Vacaciones: $' . number_format($row['pago_vacaciones'], 2),0,1);
-    $pdf->Cell(60,5,'Prima Vacacional: $' . number_format($row['prima_vacacional'], 2),0,1);
+    $pdf->Cell(60,5,'Bono Semanal: $' . number_format((float)$row['bono_categoria'], 2),0,1);
+    $pdf->Cell(60,5,'Bono Supervisor: $' . number_format((float)$row['bono_supervisor'], 2),0,1);
+    $pdf->Cell(60,5,'Bono Alertas: $' . number_format((float)$row['bono_semanal'], 2),0,1);
+    $pdf->Cell(60,5,'Vales de Despensa: $' . number_format((float)$row['apoyo_mes'], 2),0,1);
+    $pdf->Cell(60,5,'Dias de Vacaciones: ' . number_format((float)$row['dias_vacaciones'], 2),0,1);
+    $pdf->Cell(60,5,'Pago Vacaciones: $' . number_format((float)$row['pago_vacaciones'], 2),0,1);
+    $pdf->Cell(60,5,'Prima Vacacional: $' . number_format((float)$row['prima_vacacional'], 2),0,1);
 
-    $percepciones = $row['sueldo_bruto'] + $row['sueldo_adicional'] + $row['bono_categoria'] + $row['bono_supervisor'] + $row['bono_semanal'] + $row['apoyo_mes'] + $row['prima_vacacional'] + $row['pago_vacaciones'];
-    $deducciones  = $row['deducciones'] + $row['caja_ahorro'] + $row['deduccion_fiscal'];
+    $percepciones = (float)$row['sueldo_bruto'] + (float)$row['sueldo_adicional'] + (float)$row['bono_categoria'] + (float)$row['bono_supervisor'] + (float)$row['bono_semanal'] + (float)$row['apoyo_mes'] + (float)$row['prima_vacacional'] + (float)$row['pago_vacaciones'];
+    $deducciones  = (float)$row['deducciones'] + (float)$row['caja_ahorro'] + (float)$row['deduccion_fiscal'];
     $neto         = $percepciones - $deducciones;
 
     $pdf->Ln(3);
@@ -149,8 +132,8 @@ function pdfReciboSemanalComoString(array $row, mysqli_result $vueltas, int $num
 
     $pdf->Ln(4);
     $pdf->SetFont('Arial','',10);
-    $pdf->Cell(60,5,utf8_decode('Depósito Fiscal: $' . number_format($row['deposito_fiscal'], 2)),0,0,'L');
-    $pdf->Cell(60,5,'Depósito Efectivo: $' . number_format($neto - $row['deposito_fiscal'], 2),0,1,'R');
+    $pdf->Cell(60,5,utf8_decode('Depósito Fiscal: $' . number_format((float)$row['deposito_fiscal'], 2)),0,0,'L');
+    $pdf->Cell(60,5,'Depósito Efectivo: $' . number_format($neto - (float)$row['deposito_fiscal'], 2),0,1,'R');
 
     $pdf->Ln(5);
     $pdf->SetFont('Arial','',8);
@@ -175,8 +158,8 @@ function pdfReciboSemanalComoString(array $row, mysqli_result $vueltas, int $num
     $pdf->Cell(30,6,utf8_decode('Valor'),1,1,'C',true);
 
     $pdf->SetFont('Arial','',8);
-    if ($vueltas->num_rows > 0) {
-        while ($v = $vueltas->fetch_assoc()) {
+    if (!empty($vueltasRows)) {
+        foreach ($vueltasRows as $v) {
             $pdf->Cell(60,6,utf8_decode($v['cliente']),1);
             $pdf->Cell(60,6,utf8_decode($v['ruta']),1);
             $pdf->Cell(30,6,utf8_decode($v['unidad_ejecuta']),1);
@@ -185,38 +168,41 @@ function pdfReciboSemanalComoString(array $row, mysqli_result $vueltas, int $num
     } else {
         $pdf->Cell(180,6,utf8_decode('No se registraron vueltas en este periodo.'),1,1,'C');
     }
-
-    // Devuelve el PDF como string (adjunto)
-    return $pdf->Output('S'); // S = return the document as a string
 }
 
-/** Obtiene email del empleado por noempleado (ajusta nombres de tabla/campo si difieren) */
+/** Devuelve el PDF individual como string (para adjuntar al mail del empleado). */
+function pdfReciboSemanalComoString(array $row, array $vueltasRows, int $numeroSemana, string $periodo): string {
+    $pdf = new PDF();
+    dibujarReciboEnPDF($pdf, $row, $vueltasRows, $numeroSemana, $periodo);
+    return $pdf->Output('S');
+}
+
+// -------------------- Helpers de datos/correo --------------------
+/** Obtiene email del empleado por noempleado; retorna null si no es válido. */
 function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
-    $sql = "SELECT COALESCE(correo) AS email FROM empleados WHERE noempleado = ? LIMIT 1";
+    $sql = "SELECT COALESCE(correo, '') AS email FROM empleados WHERE noempleado = ? LIMIT 1";
     if ($st = $db->prepare($sql)) {
         $st->bind_param('i', $noempleado);
         $st->execute();
         $res = $st->get_result();
         if ($res && $fila = $res->fetch_assoc()) {
             $email = trim((string)$fila['email']);
-            // $email = 'r.madero.ramirez@gmail.com';
             return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
         }
     }
     return null;
-    // return 'rh@transvivegdl.com.mx';
 }
 
-/** Envía el correo con el PDF adjunto */
-function enviarRecibo(PHPMailer $m, string $emailDestino, string $nombreEmpleado, string $pdfData, string $nombreAdjunto, string $asunto, string $cuerpoHTML): array {
+/** Envía un correo con un adjunto PDF (string). Retorna ['ok'=>bool, 'msg'=>string]. */
+function enviarRecibo(PHPMailer $m, string $emailDestino, string $nombreDestino, string $pdfData, string $nombreAdjunto, string $asunto, string $cuerpoHTML): array {
     $m->clearAddresses();
     $m->clearAttachments();
 
-    $m->addAddress($emailDestino, $nombreEmpleado);
+    $m->addAddress($emailDestino, $nombreDestino);
     $m->Subject = $asunto;
     $m->isHTML(true);
     $m->Body = $cuerpoHTML;
-    $m->AltBody = strip_tags(str_replace('<br>', "\n", $cuerpoHTML));
+    $m->AltBody = strip_tags(preg_replace('/<br\s*\/?>/i', "\n", $cuerpoHTML));
     $m->addStringAttachment($pdfData, $nombreAdjunto, 'base64', 'application/pdf');
 
     if (!$m->send()) {
@@ -225,47 +211,69 @@ function enviarRecibo(PHPMailer $m, string $emailDestino, string $nombreEmpleado
     return ['ok' => true, 'msg' => 'Enviado'];
 }
 
-// ------------------ Flujo principal ------------------
-$resultadosEnvio = ['total' => 0, 'enviados' => 0, 'errores' => []];
+// -------------------- Ejecución principal --------------------
+$resultadosEnvio = [
+    'total'           => 0,
+    'enviados'        => 0,
+    'errores'         => [],
+    'resumen_enviado' => false,
+];
 
 switch (strtolower($tipo)) {
     case 'semanal': {
-        // Semana en número
+        // Semana como número
         $numeroSemana = (int)intval(str_replace('Semana ', '', (string)$semana));
-        if ($numeroSemana <= 0) exit('Semana inválida.');
+        if ($numeroSemana <= 0) {
+            echo json_encode(['error' => 'Semana inválida.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
 
-        // Periodo (Lunes a Domingo)
+        // Periodo Lunes-Domingo
         $fi = new DateTime();
         $fi->setISODate($anio, $numeroSemana, 1);
         $ff = new DateTime();
         $ff->setISODate($anio, $numeroSemana, 7);
+
         $periodo    = 'Del: ' . $fi->format('d/m/Y') . ' al: ' . $ff->format('d/m/Y');
         $fechaIniDB = $fi->format('Y-m-d');
         $fechaFinDB = $ff->format('Y-m-d');
 
         // Empleados de la semana
         $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado");
+        if (!$stmt) {
+            echo json_encode(['error' => 'Error preparando consulta de nómina: ' . $conection->error], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
         $stmt->bind_param("ii", $numeroSemana, $anio);
         $stmt->execute();
         $rs = $stmt->get_result();
 
         if (!$rs || $rs->num_rows === 0) {
-            exit('No hay datos para la semana seleccionada.');
+            echo json_encode(['error' => 'No hay datos para la semana seleccionada.'], JSON_UNESCAPED_UNICODE);
+            exit;
         }
 
-        // Preparar consulta de vueltas
+        // Consulta de vueltas
         $sqlVueltas = "SELECT cliente, ruta, valor_vuelta, unidad_ejecuta
                        FROM registro_viajes
                        WHERE operador = ? AND fecha BETWEEN ? AND ? AND valor_vuelta > 0
                        ORDER BY fecha ASC";
         $stmtVueltas = $conection->prepare($sqlVueltas);
+        if (!$stmtVueltas) {
+            echo json_encode(['error' => 'Error preparando consulta de vueltas: ' . $conection->error], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
 
+        // Mailer una sola conexión SMTP
         $mailer = mailerBase();
+
+        // PDF consolidado con TODOS los recibos
+        $pdfAll = new PDF();
 
         while ($row = $rs->fetch_assoc()) {
             $resultadosEnvio['total']++;
 
-            // Buscar email del empleado
+            // Email del empleado
             $email = obtenerEmailEmpleado($conection, $row['noempleado']);
             if (!$email) {
                 $resultadosEnvio['errores'][] = [
@@ -276,15 +284,20 @@ switch (strtolower($tipo)) {
                 continue;
             }
 
-            // Vueltas del periodo para ese empleado (usa nombre exacto de tu campo en registro_viajes)
+            // Vueltas del periodo -> lo convertimos en arreglo para reusar 2 veces
+            // OJO: si en tu tabla registro_viajes el campo operador NO es el nombre,
+            // cámbialo por el que corresponda (por ejemplo, noempleado).
             $stmtVueltas->bind_param("sss", $row['nombre'], $fechaIniDB, $fechaFinDB);
             $stmtVueltas->execute();
-            $vueltas = $stmtVueltas->get_result();
+            $resV = $stmtVueltas->get_result();
+            $vueltasRows = $resV ? $resV->fetch_all(MYSQLI_ASSOC) : [];
 
-            // Generar PDF (string)
-            $pdfData = pdfReciboSemanalComoString($row, $vueltas, $numeroSemana, $periodo);
+            // 1) Agregar al PDF CONSOLIDADO
+            dibujarReciboEnPDF($pdfAll, $row, $vueltasRows, $numeroSemana, $periodo);
 
-            // Enviar
+            // 2) Generar PDF individual y enviar al empleado
+            $pdfData = pdfReciboSemanalComoString($row, $vueltasRows, $numeroSemana, $periodo);
+
             $asunto = "Recibo de Nómina - Semana {$numeroSemana} ({$periodo})";
             $cuerpo = "<p>Hola <strong>{$row['nombre']}</strong>,</p>
                        <p>Adjunto encontrarás tu recibo de nómina correspondiente a la <strong>Semana {$numeroSemana}</strong> ({$periodo}).</p>
@@ -303,30 +316,42 @@ switch (strtolower($tipo)) {
                 ];
             }
 
-            // Evita rate-limit del servidor SMTP si hace falta
-            usleep(1000000); // 1000ms (ajusta según necesidad)
+            // Pausa breve para evitar límites de tasa SMTP si es necesario
+            usleep(300000); // 300 ms
         }
+
+        // Enviar PDF consolidado a RH/Contabilidad
+        $pdfAllData = $pdfAll->Output('S');
+        $asuntoAll  = "Paquete de Recibos - Semana {$numeroSemana} ({$periodo})";
+        $cuerpoAll  = "<p>Se adjunta el <strong>paquete consolidado</strong> con todos los recibos de la Semana {$numeroSemana} ({$periodo}).</p>";
+        $nombreAll  = "Recibos_Semana_{$numeroSemana}_Consolidado.pdf";
+
+        $correoResumen = isset($_REQUEST['resumen_to']) && filter_var($_REQUEST['resumen_to'], FILTER_VALIDATE_EMAIL)
+            ? $_REQUEST['resumen_to']
+            : RESUMEN_TO;
+
+        $rAll = enviarRecibo($mailer, (string)$correoResumen, 'Recursos Humanos', $pdfAllData, $nombreAll, $asuntoAll, $cuerpoAll);
+        $resultadosEnvio['resumen_enviado'] = $rAll['ok'] ? true : ('ERROR: ' . $rAll['msg']);
 
         if (method_exists($mailer, 'smtpClose')) {
             $mailer->smtpClose();
         }
-        
+
         echo json_encode($resultadosEnvio, JSON_UNESCAPED_UNICODE);
         break;
     }
 
     case 'quincenal': {
-        // Implementa lógica similar: obtener empleados de la quincena,
-        // generar PDF por empleado y enviar (puedes reusar pdfReciboSemanalComoString creando otra función para el formato quincenal).
-        exit('Pendiente: implementar envío quincenal análogo.');
+        echo json_encode(['error' => 'Pendiente: implementar envío quincenal análogo.'], JSON_UNESCAPED_UNICODE);
+        break;
     }
 
     case 'especial': {
-        // Implementa lógica similar para especiales (aguinaldo, etc.)
-        exit('Pendiente: implementar envío especial análogo.');
+        echo json_encode(['error' => 'Pendiente: implementar envío especial análogo.'], JSON_UNESCAPED_UNICODE);
+        break;
     }
 
     default:
         http_response_code(400);
-        exit('Tipo de recibo no válido.');
+        echo json_encode(['error' => 'Tipo de recibo no válido.'], JSON_UNESCAPED_UNICODE);
 }
