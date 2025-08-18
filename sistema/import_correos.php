@@ -4,61 +4,101 @@ session_start();
 $conection->set_charset('utf8mb4');
 date_default_timezone_set('America/Mexico_City');
 
-if (!isset($_SESSION['idUser'])) {
-    die("Error: Sesión no iniciada.");
-}
-
-$ok = 0;
-$error = 0;
-$errores = []; // <-- Aquí guardamos los errores
-$usuario = $_SESSION['idUser'];
-
-$conection->query("TRUNCATE importes_fiscales");
-
 if (isset($_FILES["name"]) && is_uploaded_file($_FILES["name"]["tmp_name"])) {
     $file_tmp = $_FILES["name"]["tmp_name"];
 
     if (($handle = fopen($file_tmp, "r")) !== false) {
-        fgetcsv($handle, 4096, ",", '"', "\\"); // Saltar encabezado
+        // Saltar encabezado
+        fgetcsv($handle, 4096, ",", '"', "\\");
 
-            if (count($handle) >= 2) {
-                $noempleado = intval($handle[0]);
-                $correo = $handle[1];
+        $linea = 2; // comenzamos a contar desde la 2 (después del encabezado)
+        $stmt = $conection->prepare("UPDATE empleados SET correo = ? WHERE noempleado = ?");
+        if (!$stmt) {
+            $errores[] = ['linea' => '-', 'tipo' => 'SQL', 'detalle' => 'No se pudo preparar el UPDATE: ' . $conection->error, 'datos' => ''];
+        } else {
+            // Bind por referencia (se actualizarán en cada vuelta)
+            $correo = '';
+            $noempleado = 0;
+            $stmt->bind_param("si", $correo, $noempleado);
 
-                $actualizarCorreo = "UPDATE empleados SET correo = ? WHERE noempleado = ?";
-                $stmt = $conection->prepare($actualizarCorreo);
+            // Leer cada fila del CSV
+            while (($row = fgetcsv($handle, 4096, ",", '"', "\\")) !== false) {
+                // Validar número de columnas
+                if (count($row) < 2) {
+                    $error++;
+                    $errores[] = [
+                        'linea'  => $linea,
+                        'tipo'   => 'Formato',
+                        'detalle'=> 'Número de columnas insuficientes (' . count($row) . ')',
+                        'datos'  => implode(' | ', $row)
+                    ];
+                    $linea++;
+                    continue;
+                }
 
-                $stmt->bind_param("si", $noempleado, $correo);
+                // Mapear: data[0] = noempleado, data[1] = correo
+                $noempleado = is_numeric($row[0]) ? (int)$row[0] : 0;
+                $correo     = trim((string)$row[1]);
 
+                // Validaciones básicas
+                if ($noempleado <= 0) {
+                    $error++;
+                    $errores[] = [
+                        'linea'  => $linea,
+                        'tipo'   => 'Dato',
+                        'detalle'=> 'noempleado inválido',
+                        'datos'  => implode(' | ', $row)
+                    ];
+                    $linea++;
+                    continue;
+                }
+
+                if ($correo === '' || !filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+                    // Si quieres permitir correos no válidos, quita esta validación
+                    $error++;
+                    $errores[] = [
+                        'linea'  => $linea,
+                        'tipo'   => 'Dato',
+                        'detalle'=> 'correo vacío o inválido',
+                        'datos'  => implode(' | ', $row)
+                    ];
+                    $linea++;
+                    continue;
+                }
+
+                // Ejecutar UPDATE
                 if ($stmt->execute()) {
                     $ok++;
                 } else {
                     $error++;
                     $errores[] = [
-                        'linea' => $linea,
-                        'tipo' => 'SQL',
-                        'detalle' => $stmt->error,
-                        'datos' => implode(' | ', $handle)
+                        'linea'  => $linea,
+                        'tipo'   => 'SQL',
+                        'detalle'=> $stmt->error,
+                        'datos'  => implode(' | ', $row)
                     ];
                 }
-            } else {
-                $error++;
-                $errores[] = [
-                    'linea' => $linea,
-                    'tipo' => 'Formato',
-                    'detalle' => 'Número de columnas insuficientes (' . count($handle) . ')',
-                    'datos' => implode(' | ', $handle)
-                ];
+
+                $linea++;
             }
 
-            $linea++;
+            $stmt->close();
         }
 
         fclose($handle);
-        $stmt->close();
     } else {
         $errores[] = ['linea' => '-', 'tipo' => 'Archivo', 'detalle' => 'No se pudo abrir el archivo', 'datos' => ''];
     }
+} else {
+    $errores[] = ['linea' => '-', 'tipo' => 'Archivo', 'detalle' => 'No se recibió archivo válido', 'datos' => ''];
+}
+
+// (Opcional) Resumen
+echo "Actualizados OK: {$ok}<br>Con error: {$error}<br>";
+if (!empty($errores)) {
+    echo "<pre>" . htmlspecialchars(print_r($errores, true), ENT_QUOTES, 'UTF-8') . "</pre>";
+}
+
 ?>
 
 <!DOCTYPE html>
