@@ -272,8 +272,8 @@
                   
                   <li><a href="evalua_proveproductos.php" class="dropdown-item">Evaluación Proveedores (Productos) </a></li>
                   <li><a href="evalua_provemetrologia.php" class="dropdown-item">Evaluación Proveedores (Metrología)</a></li>
+                  <li><a href="evalua_proveservicios.php" class="dropdown-item">Evaluación de Proveedores (Servicios)</a></li>
                  
-                   
                 </ul>
               </li>
             
