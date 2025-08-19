@@ -786,38 +786,43 @@ function enviarDatos(justificacionUnidad) {
     <script>
 		$('#guardar_tipoactividad2').click(function(e) {
 			e.preventDefault();
-			let fecha = $('#inputFecha').val();
-			const ahora = new Date();
+			const fechaStr = $('#inputFecha').val();
+  if (!fechaStr) { 
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Selecciona una fecha.' });
+    return;
+  }
 
-			// Obtener el día de la semana (0=domingo, 1=lunes...)
-			const esLunes = ahora.getDay() === 1; 
+  // --- Hora actual (local) ---
+  const ahora = new Date();
+  const esLunes = ahora.getDay() === 1;   // 0=Dom, 1=Lun...
+  const horas   = ahora.getHours();
+  const minutos = ahora.getMinutes();
+  const segundos = ahora.getSeconds();
 
-			// Obtener la fecha actual en formato YYYY-MM-DD
-			const fechaActual = ahora.toISOString().split('T')[0];
+  // Compara horas como números (no strings)
+  const ahoraSeg = horas * 3600 + minutos * 60 + segundos;
+  const limiteSeg = 9 * 3600 + 30 * 60;   // 09:30:00
 
-			// Obtener la hora en formato HH:MM:SS
-			const horas = ahora.getHours().toString().padStart(2, '0');
-			const minutos = ahora.getMinutes().toString().padStart(2, '0');
-			const segundos = ahora.getSeconds().toString().padStart(2, '0');
-			const horaStr = `${horas}:${minutos}:${segundos}`;
+  // --- Fecha del input (local, SIN UTC) ---
+  // input type="date" devuelve YYYY-MM-DD
+  const [y, m, d] = fechaStr.split('-').map(Number);
+  const fechaInput = new Date(y, m - 1, d);            // local midnight
+  fechaInput.setHours(0, 0, 0, 0);
 
-			// Fecha en formato Date
-			const fechaInput = new Date(fecha);
-			const fechaSistema = new Date(fechaActual);
+  // --- "Hoy" local a medianoche ---
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
 
-			// Comparar horas
-			if (
-			horaStr > '09:30:00' && // Hora en formato HH:MM:SS para comparación
-			fechaInput < fechaSistema && // La fecha del input es menor que la actual
-			esLunes
-			) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Error',
-				text: 'Registro fuera de horario.',
-			});
-			return;
-			}
+  // Condición: después de 09:30 del lunes y la fecha del input es menor que hoy
+  if (esLunes && (ahoraSeg > limiteSeg) && (fechaInput < hoy)) {
+    // e.preventDefault(); // solo bloquea cuando NO debe pasar
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Registro fuera de horario.',
+    });
+    return;
+  }
 			// console.log(hora);
 			let unidad      = $('#inputTipo').val().trim();
 			let unidad_ejec = $('#inputTipoejecutado').val().trim();
