@@ -16,6 +16,10 @@ session_start();
   $fechaSegundos = strtotime($fechaActual);
   $anio =  date("Y", $fechaSegundos);
 
+  $sql = 'SELECT noempleado, CONCAT_WS(" ", nombres, apellido_paterno, apellido_materno) AS nombre FROM empleados WHERE estatus = 1 ORDER BY noempleado ASC';
+  $query = mysqli_query($conection, $sql);
+  $filas = mysqli_fetch_assoc($query);
+
   mysqli_close($conection);
 ?>
 
@@ -43,6 +47,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
    <!-- Select2 -->
   <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.full.min.js"></script>
 </head>
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
@@ -122,7 +129,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-3" hidden>
+                            <div class="row">
+  <div class="col-6">
+    <label for="empleadoSelect">Enviar solo a:</label>
+    <select id="empleadoSelect" style="width:100%">
+      <option value="">--Seleccione--</option>
+      <?php foreach($filas as $empleado): ?>
+        <option value="<?php echo $empleado['noempleado']; ?>">
+          <?php echo $empleado['nombre']; ?>
+        </option>
+        <?php endforeach; ?>
+    </select>
+    <small class="text-muted">Déjalo vacío para “Todos”.</small>
+  </div>
+</div>
+                            <!-- <div class="col-3" hidden>
                                 <div class="form-group">
                                     <label>Imprimir Empleados Total = 0:</label>
                                      <select class="form-control" style="width: 100%; text-align: left" id="importeCero" name="importeCero">
@@ -130,7 +151,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         <option value="NO">NO</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <!--
                             <div class="col-3">
                                 <div class="form-group">
@@ -153,7 +174,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <div class="col-3">
                       <a href="#" onclick="window.open ('factura/recibo_nomina.php?id='+ document.getElementById('inputTiponomina').value + '&id2='+document.getElementById('semana').value + '&id3='+document.getElementById('inputEjercicio').value );" >  
                        
-                          <button type ="button" class="btn btn-primary pull-left"><i class="fa fa-play"></i> Aceptar</button>
+                          <button type ="button" class="btn btn-success pull-left"><i class="fa fa-share"></i> Enviar</button>
+                        </a>
+                      <a href="#" onclick="window.open ('factura/recibo_nomina.php?id='+ document.getElementById('inputTiponomina').value + '&id2='+document.getElementById('semana').value + '&id3='+document.getElementById('inputEjercicio').value + '&mostrar=1 );" >  
+                       
+                          <button type ="button" class="btn btn-primary pull-left"><i class="fa fa-eye"></i> Mostrar</button>
                         </a>
                       </div>
                     <div class="col-3">

@@ -808,7 +808,7 @@ function enviarDatos(justificacionUnidad) {
 			// Comparar horas
 			if (
 			horaStr > '09:30:00' && // Hora en formato HH:MM:SS para comparación
-			(fechaInput < fechaSistema) && // La fecha del input es menor que la actual
+			fechaInput < fechaSistema && // La fecha del input es menor que la actual
 			esLunes
 			) {
 			Swal.fire({
