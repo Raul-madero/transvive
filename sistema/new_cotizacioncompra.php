@@ -176,6 +176,9 @@ mysqli_close($conection);
                                                 case 14:
                                                     $solicita = "Calidad";
                                                     break;
+                                                case 17:
+                                                    $solicita = "Ventas";
+                                                    break;
                                                 default:
                                                     $solicita = "Compras";
                                                     break;
