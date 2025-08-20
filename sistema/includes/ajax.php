@@ -5813,6 +5813,8 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                             $mail->addAddress('gerenciaop@transvivegdl.com.mx');
                             $mail->addCC('sistemas@transvivegdl.com.mx');
                             $mail->SetCharset = 'UTF-8';
+                            $mail->Encoding = 'base64';         // o 'quoted-printable'
+                            $mail->isHTML(true);
                             $mail->Subject = "Nueva Requisición Generada";
                             $mail->Body = $mensaje;
 
@@ -12371,6 +12373,8 @@ if($_POST['action'] == 'AddProdnuevo')
                                 $mail->addAddress('ejecutivo@transvivegdl.com.mx');
                                 $mail->addCC('sistemas@transvivegdl.com.mx');
                                 $mail->SetCharset = 'UTF-8';
+                                $mail->Encoding = 'base64'; 
+                                $mail->isHTML(true);
                                 $mail->Subject = "Nueva Requisición Generada";
                                 $mail->Body = $mensaje;
 
