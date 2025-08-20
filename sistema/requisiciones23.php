@@ -219,7 +219,7 @@ session_start();
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23 || $_SESSION['idUser'] == 39):?>
+<?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23 || $_SESSION['idUser'] == 39 || $_SESSION['idUser'] == 32):?>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -330,7 +330,54 @@ session_start();
                                 if (full.estatus == 1) {
                                     //Si el usuario es Raul o Itzu
                                      <?php
-                                        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3 || $_SESSION['idUser'] == 39) {
+                                        if ($_SESSION['idUser'] == 39) {
+                                    ?>
+                                    actions =
+                                        `
+                                        <a href='factura/requisicion.php?id=${full.Folio}' target='_blank' title="Ver Requisicion">
+                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
+                                        </a>
+                                        |
+                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion" 
+                                            data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}" class="text-success" title="Autorizar">
+                                            <i class="fa fa-thumbs-up" title="Autorizar Requisicion" style="font-size:.8rem;"></i>
+                                        </a> 
+                                        `
+                                        //Si el rol de usuario es compras o administrador
+                                    <?php
+                                        }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) {
+                                    ?>
+                                        actions = 
+                                            `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}" title="Editar Requisicion">
+                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
+                                            </a> |
+                                            <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
+                                                <i class="fa fa-print" style="font-size:.8rem;" title="Imprimir Requisicion"></i>
+                                            </a> |
+                                            <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
+                                                <i class="fa fa-ban" style="font-size:.8rem;"></i>
+                                            </a> |
+                                            <a data-toggle="modal" data-target="#modalBorra" data-id="${full.Folio}" data-name="${full.arear}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisicion">
+                                                <i class="fa fa-trash" style="font-size:.8rem;"></i>
+                                            </a>
+                                            `;
+                                            //El resto de los usuarios
+                                        <?php
+                                            }else {
+                                        ?>
+                                        actions = 
+                                            `
+                                                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" title="Imprimir Requisicion">
+                                                    <i class="fa fa-print" style="font-size: .8rem;"></i>
+                                                </a>
+                                            `;
+                                <?php
+                                    }
+                                ?>
+                                }else if (full.estatus == 9) {
+                                    //Si el usuario es Raul o Itzu
+                                     <?php
+                                        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3 ) {
                                     ?>
                                     actions =
                                         `

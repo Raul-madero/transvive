@@ -5715,7 +5715,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
     require '../PHPMailer/PHPMailerAutoload.php'; // PHPMailer
 
     // Verificación de campos obligatorios
-    if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) || empty($_POST['montoaut'])) {
+    if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) || empty($_POST['montoaut']) || $_POST['montoaut'] <= 0 || empty($_POST['notas'])) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
         exit;
     }
@@ -12304,13 +12304,37 @@ if($_POST['action'] == 'AddProdnuevo')
         $firmareq  = mysqli_real_escape_string($conection, $_POST['firmareq']); // Sanear cadena
 
         // Verificar si ya fue autorizada
-        $sql = "SELECT COUNT(*) as total FROM requisicion_compra WHERE no_requisicion = $noreq AND estatus = 2";
+        $sql = "SELECT estatus FROM requisicion_compra WHERE no_requisicion = $noreq AND estatus = 2";
         $result = mysqli_query($conection, $sql);
         $row = mysqli_fetch_assoc($result);
-
-        if ($row['total'] > 0) {
+        var_dump($row);
+        if ($row['estatus'] == 2) {
             echo "Requisición ya fue autorizada.";
             exit;
+        }else if($row['estatus'] == 9){
+            // Obtener firma autorizada del sistema
+        $sql = "SELECT firma_autoriza FROM perfil_empresa LIMIT 1";
+        $result = mysqli_query($conection, $sql);
+        $data = mysqli_fetch_assoc($result);
+
+        $firma_autoriza = $data['firma_autoriza'];
+
+        // Validar si la firma enviada es la correcta
+        if ($firma_autoriza === $firmareq) {
+            $sql = "UPDATE requisicion_compra 
+                    SET firma_autoriza = '$firmareq', estatus = 2
+                    WHERE no_requisicion = $noreq";
+
+            if (mysqli_query($conection, $sql)) {
+                echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
+            }
+        } else {
+            echo json_encode(['success' => false, 'mensaje' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
+        }
+
+        mysqli_close($conection);
         }
 
         // Obtener firma autorizada del sistema

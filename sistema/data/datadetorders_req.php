@@ -172,8 +172,9 @@ if ($_REQUEST['action'] == 'fetch_users') {
             4 => '<span class="badge bg-warning">Facturado</span>',
             5 => '<span class="badge bg-info">Pagado</span>',
             6 => '<span class="badge bg-dark">Recibido</span>',
-            7 => '<span class="badge bg-info">Facturado OC</span>',
-            8 => '<span class="badge bg-danger">Por Pagar</span>',
+            7 => '<span class="badge bg-gradient-info">Facturado OC</span>',
+            8 => '<span class="badge bg-gradient-danger">Por Pagar</span>',
+            9 => '<span class="badge bg-gradient-warning">Pre Autorizada</span>'
         ];
 
         $count++;
