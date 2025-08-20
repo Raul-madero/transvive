@@ -5807,7 +5807,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                             $mail->SMTPAutoTLS = true;
                             // *** Usar variables de entorno para credenciales ***
                             $mail->Username   = 'compras@transvivegdl.com.mx';
-                            $mail->Password   = 'Feb241981@';
+                            $mail->Password   = 'AWATHsjvb6hW8qe';
                             $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
                             $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
                             $mail->addAddress('gerenciaop@transvivegdl.com.mx');
@@ -12365,7 +12365,7 @@ if($_POST['action'] == 'AddProdnuevo')
                             $mail->SMTPAutoTLS = true;
                             // *** Usar variables de entorno para credenciales ***
                             $mail->Username   = 'compras@transvivegdl.com.mx';
-                            $mail->Password   = 'Feb241981@';
+                            $mail->Password   = 'AWATHsjvb6hW8qe';
                             $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
                             $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
                             $mail->addAddress('ejecutivo@transvivegdl.com.mx');
