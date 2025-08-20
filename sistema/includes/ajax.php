@@ -12308,7 +12308,7 @@ if($_POST['action'] == 'AddProdnuevo')
         $firmareq  = mysqli_real_escape_string($conection, $_POST['firmareq']); // Sanear cadena
 
         // Verificar si ya fue autorizada
-        $sql = "SELECT estatus FROM requisicion_compra WHERE no_requisicion = $noreq AND estatus = 2";
+        $sql = "SELECT estatus FROM requisicion_compra WHERE no_requisicion = $noreq";
         $result = mysqli_query($conection, $sql);
         $row = mysqli_fetch_assoc($result);
         var_dump($row);
