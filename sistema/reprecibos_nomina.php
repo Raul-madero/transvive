@@ -172,10 +172,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                          
                       <div class="col-3">
-                      <a href="#" onclick="window.open ('factura/recibo_nomina.php?id='+ document.getElementById('inputTiponomina').value + '&id2='+document.getElementById('semana').value + '&id3='+document.getElementById('inputEjercicio').value );" >  
-                       
-                          <button type ="button" class="btn btn-success pull-left"><i class="fa fa-share"></i> Enviar</button>
-                        </a>
+                      <a href="#" onclick="
+                        let empleado = document.getElementById('empleadoSelect').value;
+                        let url = 'factura/recibo_nomina.php?id=' + document.getElementById('inputTiponomina').value +
+                                  '&id2=' + document.getElementById('semana').value +
+                                  '&id3=' + document.getElementById('inputEjercicio').value;
+                        if (empleado) { // si seleccionó alguien, se añade
+                          url += '&noempleado=' + empleado;
+                        }
+                        window.open(url);
+                      ">
+                        <button type="button" class="btn btn-success pull-left"><i class="fa fa-share"></i> Enviar</button>
+                      </a>
+
                       <a href="#" onclick="window.open ('factura/recibo_nomina.php?id='+ document.getElementById('inputTiponomina').value + '&id2='+document.getElementById('semana').value + '&id3='+document.getElementById('inputEjercicio').value + '&mostrar=1 );" >  
                        
                           <button type ="button" class="btn btn-primary pull-left"><i class="fa fa-eye"></i> Mostrar</button>

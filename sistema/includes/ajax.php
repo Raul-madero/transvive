@@ -355,38 +355,90 @@ if($_POST['action'] == 'infoBorraMiActividad')
                 }  
                 
     //Agregar Productos a Entrada
-if($_POST['action'] == 'AlmacenaUsuario')
-{
-    if(!empty($_POST['name']) || !empty($_POST['usuario']) || !empty($_POST['passw']) || !empty($_POST['rol']) )
-    {
-        
-        $name    = $_POST['name'];
-        $mail    = $_POST['mail'];
-        $user    = $_POST['usuario'];
-        $passw   = md5($_POST['passw']);
-        $rol     = $_POST['rol'];
-
-        $token       = md5($_SESSION['idUser']);
-        $usuario     = $_SESSION['idUser'];
-
-        $query_procesar = mysqli_query($conection,"CALL procesar_usuario('$name', '$mail', '$user', '$passw', $rol, $usuario)");
-        $result_detalle = mysqli_num_rows($query_procesar);
-        
-        if($result_detalle > 0){
-            $data = mysqli_fetch_assoc($query_procesar);
-            echo json_encode($data,JSON_UNESCAPED_UNICODE);
-        }else{
-            echo "error";
+    if ($_POST['action'] === 'AlmacenaUsuario') {
+        // session_start();
+        // include "../conexion.php"; // Asegúrate de tener $conection (mysqli)
+        $conection->set_charset('utf8mb4');
+    
+        // Normaliza/valida entradas
+        $name  = isset($_POST['name'])    ? trim((string)$_POST['name'])    : '';
+        $mail  = isset($_POST['mail'])    ? trim((string)$_POST['mail'])    : '';
+        $user  = isset($_POST['usuario']) ? trim((string)$_POST['usuario']) : '';
+        $pass  = isset($_POST['passw'])   ? (string)$_POST['passw']         : '';
+        $rol   = isset($_POST['rol'])     ? (int)$_POST['rol']              : 0;
+    
+        // Validaciones
+        if ($name === '' || $user === '' || $pass === '' || $rol === 0) {
+            echo json_encode(['ok' => false, 'error' => 'Faltan campos obligatorios.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        if ($mail !== '' && !filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['ok' => false, 'error' => 'Correo no válido.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        if (!isset($_SESSION['idUser'])) {
+            echo json_encode(['ok' => false, 'error' => 'Sesión no iniciada.'], JSON_UNESCAPED_UNICODE);
+            exit;
         }
     
-    mysqli_close($conection);
-
-    }else{
-        echo 'error';
+        $usuarioRegistra = (int)$_SESSION['idUser'];
+        $hash = md5($pass);
+    
+        try {
+            // Revisa duplicados (usuario o correo)
+            $sqlCheck = "SELECT idusuario FROM usuario WHERE usuario = ? LIMIT 1";
+            $stmt = $conection->prepare($sqlCheck);
+            if (!$stmt) {
+                throw new Exception("Error prepare check: " . $conection->error);
+            }
+            $stmt->bind_param('s', $user);
+            $stmt->execute();
+            $stmt->store_result();
+    
+            if ($stmt->num_rows > 0) {
+                $stmt->close();
+                echo json_encode(['ok' => false, 'error' => 'Usuario o correo ya registrados.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            $stmt->close();
+    
+            // Inserta
+            $sqlIns = "INSERT INTO usuario (nombre, correo, usuario, clave, rol, id_reg) 
+                       VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $conection->prepare($sqlIns);
+            if (!$stmt) {
+                throw new Exception("Error prepare insert: " . $conection->error);
+            }
+            $stmt->bind_param('ssssii', $name, $mail, $user, $hash, $rol, $usuarioRegistra);
+            $stmt->execute();
+    
+            if ($stmt->affected_rows <= 0) {
+                throw new Exception("No se pudo insertar el usuario.");
+            }
+    
+            $newId = $stmt->insert_id;
+            $stmt->close();
+            $conection->close();
+    
+            echo json_encode([
+                'ok' => true,
+                'data' => [
+                    'id'      => $newId,
+                    'nombre'  => $name,
+                    'correo'  => $mail,
+                    'usuario' => $user,
+                    'rol'     => $rol,
+                    'id_reg'  => $usuarioRegistra
+                ]
+            ], JSON_UNESCAPED_UNICODE);
+        } catch (Throwable $e) {
+            // Si quieres, loggea $e->getMessage()
+            echo json_encode(['ok' => false, 'error' => 'Error al guardar el usuario.' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
+        }
+    
+        exit;
     }
-    exit;
- 
-}   
+      
 
 //Agregar Productos a Entrada
 if($_POST['action'] == 'AlmacenaEditUsuario')
@@ -5663,11 +5715,11 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
     require '../PHPMailer/PHPMailerAutoload.php'; // PHPMailer
 
     // Verificación de campos obligatorios
-    if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita'])) {
+    if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) || empty($_POST['montoaut'])) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
         exit;
     }
-
+    
     // Validación y saneamiento de entradas
     $folio        = isset($_POST['folio']) ? intval($_POST['folio']) : 0;
     $fecha        = isset($_POST['fecha']) ? trim($_POST['fecha']) : '';
@@ -5677,6 +5729,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
     $monto_aut    = isset($_POST['montoaut']) ? floatval($_POST['montoaut']) : 0.0;
     $notas        = isset($_POST['notas']) ? trim($_POST['notas']) : '';
     $usuario      = isset($_SESSION['idUser']) ? intval($_SESSION['idUser']) : 0;
+    $rol          = isset($_SESSION['rol']) ? intval($_SESSION['rol']) : 0;  
 
     // Validación de datos requeridos
     if ($folio === 0 || $fecha === '' || $tipo === '' || $areasolicita === '') {
@@ -5741,6 +5794,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
 
                     if (mysqli_stmt_execute($stmt_detalle)) {
                         if (mysqli_affected_rows($conection) > 0) {
+                            //Verificar que la requisicion sea de mantenimiento
                             // Si los detalles se insertaron correctamente, enviar el correo
                             $mensaje = "Se generó una nueva Requisición: $folio \n\nFavor de revisar.\n\nGracias.";
 
@@ -5750,17 +5804,13 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                             $mail->Host       = 'smtp.office365.com';
                             $mail->Port       = 587;
                             $mail->SMTPAuth   = true;
-                            $mail->SMTPSecure = 'STARTTLS';
+                            $mail->SMTPSecure = 'tls';
 
                             // *** Usar variables de entorno para credenciales ***
                             $mail->Username   = getenv('SMTP_USER') ?: 'compras@transvivegdl.com.mx';
                             $mail->Password   = getenv('SMTP_PASS') ?: 'Feb241981@';
-
-                            $mail->setFrom('compras@transvivegdl.com.mx', 'Compras');
-                            // $mail->addAddress('direccion@transvivegdl.com.mx', 'Raúl Gutiérrez');
-                            // $mail->addCC('ejecutivo@transvivegdl.com.mx');
-                            $mail->addBCC('raul.madero.ramirez@gmail.com');
-
+                            $mail->addAddress('gerenciaop@transvivegdl.com.mx');
+                            $mail->addCC('sistemas@transvivegdl.com.mx');
                             $mail->Subject = "Nueva Requisición Generada";
                             $mail->Body = $mensaje;
 
@@ -12264,7 +12314,7 @@ if($_POST['action'] == 'AddProdnuevo')
         }
 
         // Obtener firma autorizada del sistema
-        $sql = "SELECT firma_autoriza FROM perfil_empresa LIMIT 1";
+        $sql = "SELECT pre_autorizacion FROM perfil_empresa LIMIT 1";
         $result = mysqli_query($conection, $sql);
         $data = mysqli_fetch_assoc($result);
 
@@ -12273,11 +12323,34 @@ if($_POST['action'] == 'AddProdnuevo')
         // Validar si la firma enviada es la correcta
         if ($firma_autoriza === $firmareq) {
             $sql = "UPDATE requisicion_compra 
-                    SET firma_autoriza = '$firmareq', estatus = 2 
+                    SET firma_autoriza = '$firmareq', estatus = 9
                     WHERE no_requisicion = $noreq";
 
             if (mysqli_query($conection, $sql)) {
-                echo json_encode(['success' => true, 'mensaje' => 'Requisición autorizada'], JSON_UNESCAPED_UNICODE);
+                $mensaje = "Se Pre-autorizo una nueva Requisición: $noreq \n\nFavor de revisar.\n\nGracias.";
+
+                // Configurar PHPMailer
+                $mail = new PHPMailer;
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.office365.com';
+                $mail->Port       = 587;
+                $mail->SMTPAuth   = true;
+                $mail->SMTPSecure = 'STARTTLS';
+
+                // *** Usar variables de entorno para credenciales ***
+                $mail->Username   = getenv('SMTP_USER') ?: 'compras@transvivegdl.com.mx';
+                $mail->Password   = getenv('SMTP_PASS') ?: 'Feb241981@';
+                $mail->addAddress('ejecutivo@transvivegdl.com.mx');
+                $mail->addCC('sistemas@transvivegdl.com.mx');
+                $mail->Subject = "Nueva Requisición Generada";
+                $mail->Body = $mensaje;
+
+                if ($mail->send()) {
+                    echo json_encode(["status" => "success", "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
+                } else {
+                    echo json_encode(["status" => "warning", "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
+                }
+                echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
             } else {
                 echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
             }

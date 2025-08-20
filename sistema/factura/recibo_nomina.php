@@ -1,36 +1,13 @@
 <?php
 require('../fpdf/fpdf.php');
 require('../includes/conversor.php');
-require('../../conexion.php');           // Debe exponer $conection (mysqli)
-// require('../PHPMailer/PHPMailerAutoload.php'); // <-- NO es necesario si solo mostramos
+require('../../conexion.php');           // debe exponer $conection (mysqli)
+require('../PHPMailer/PHPMailerAutoload.php');
 
 set_time_limit(0);
 ini_set('max_execution_time', 0);
 date_default_timezone_set('America/Mexico_City');
 
-$conection->set_charset('utf8mb4');
-
-// -------------------------------------------------------------------
-// Parámetros
-// -------------------------------------------------------------------
-$tipoRaw  = isset($_REQUEST['id'])  ? (string)$_REQUEST['id']  : 'Semanal';
-$semana   = isset($_REQUEST['id2']) ? (string)$_REQUEST['id2'] : '';
-$anio     = isset($_REQUEST['id3']) ? (int)$_REQUEST['id3']    : 0;
-// mostrar=1 => solo visualizar consolidado, SIN enviar correos
-$mostrar  = isset($_REQUEST['mostrar']) ? filter_var($_REQUEST['mostrar'], FILTER_VALIDATE_BOOLEAN) : false;
-
-// Mapea id a tipo si fuera necesario (ajústalo a tu lógica real)
-$tipo = $tipoRaw ?: 'Semanal';
-
-if ($anio <= 0) {
-    header('Content-Type: application/json; charset=utf-8');
-    echo json_encode(['error' => 'Faltan parámetros requeridos (anio)'], JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
-// -------------------------------------------------------------------
-// Clase PDF (encabezado/pie)
-// -------------------------------------------------------------------
 class PDF extends FPDF {
     function Header() {
         $this->Image("../../images/transvive.png", 12, 11, 48, 13, "png", 0);
@@ -46,12 +23,57 @@ class PDF extends FPDF {
     }
 }
 
-// -------------------------------------------------------------------
-// Helpers PDF
-// -------------------------------------------------------------------
+$conection->set_charset('utf8mb4');
+
+// -------------------- Parámetros de entrada --------------------
+$tipo        = isset($_REQUEST['tipo']) ? (string)$_REQUEST['tipo'] : 'Semanal';
+$semana      = isset($_REQUEST['id2'])  ? (string)$_REQUEST['id2']  : '';
+$anio        = isset($_REQUEST['id3'])  ? (int)$_REQUEST['id3']     : 0;
+$id          = isset($_REQUEST['id'])   ? (string)$_REQUEST['id']   : '';
+$mostrar     = isset($_REQUEST['mostrar']) ? (int)$_REQUEST['mostrar'] === 1 : false;      // NUEVO: solo mostrar consolidado en pantalla
+$soloNoEmp   = isset($_REQUEST['noempleado']) ? (int)$_REQUEST['noempleado'] : 0;          // NUEVO: enviar solo un empleado
+
+if (empty($tipo) || $anio <= 0) {
+    header("Content-Type: application/json; charset=utf-8");
+    http_response_code(400);
+    echo json_encode(['error' => 'Faltan parámetros requeridos (tipo/anio)'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// -------------------- Config SMTP --------------------
+define('SMTP_HOST', 'smtp.office365.com');
+define('SMTP_PORT', 587);
+define('SMTP_USER', 'auxiliar.rh@transvivegdl.com.mx');        // From en O365
+define('SMTP_FROM', 'auxiliar.rh@transvivegdl.com.mx');        // Debe ser el mismo usuario o alias permitido
+define('SMTP_NAME', 'Nomina Transvive');
+define('SMTP_PASSWORD', 'ZkKHfzKheT');
+
+// Correo que recibirá el paquete consolidado (o pásalo como $_REQUEST['resumen_to'])
+define('RESUMEN_TO', 'rh@transvivegdl.com.mx');
+
+function mailerBase() {
+    $mail = new PHPMailer();          // PHPMailer v5.x
+    $mail->isSMTP();
+    $mail->Host       = SMTP_HOST;
+    $mail->Port       = SMTP_PORT;
+    $mail->SMTPAuth   = true;
+    $mail->SMTPSecure = 'STARTTLS';        // PHPMailer 5 => 'tls'
+    $mail->SMTPAutoTLS = true;
+    $mail->Username   = SMTP_USER;
+    $mail->Password   = SMTP_PASSWORD;
+    $mail->setFrom(SMTP_FROM, SMTP_NAME);
+    $mail->addReplyTo(SMTP_FROM, SMTP_NAME);
+    $mail->CharSet       = 'UTF-8';
+    $mail->Timeout       = 20;
+    $mail->SMTPKeepAlive = true;
+    $mail->SMTPDebug  = 0; // producción
+    return $mail;
+}
+
+// -------------------- Helpers de PDF --------------------
 function dibujarReciboEnPDF(FPDF $pdf, array $row, array $vueltasRows, int $numeroSemana, string $periodo): void {
-    // Página 1: totales
     $pdf->AddPage('P','Letter');
+
     $pdf->SetFont('Arial','',8);
     $pdf->Ln(12);
     $pdf->Cell(189,5,utf8_decode("Recibo de Pago - Semana $numeroSemana"),0,1,'C');
@@ -106,7 +128,7 @@ function dibujarReciboEnPDF(FPDF $pdf, array $row, array $vueltasRows, int $nume
     $pdf->Cell(189,10,'_________________________',0,1,'R');
     $pdf->Cell(189,5,'Firma',0,1,'R');
 
-    // Página 2: vueltas
+    // -------- Detalle de vueltas ----------
     $pdf->AddPage();
     $pdf->SetFont('Arial','',8);
     $pdf->Ln(12);
@@ -135,14 +157,55 @@ function dibujarReciboEnPDF(FPDF $pdf, array $row, array $vueltasRows, int $nume
     }
 }
 
-// -------------------------------------------------------------------
-// Flujo principal (SOLO PREVIEW CUANDO mostrar=1)
-// -------------------------------------------------------------------
+function pdfReciboSemanalComoString(array $row, array $vueltasRows, int $numeroSemana, string $periodo): string {
+    $pdf = new PDF();
+    dibujarReciboEnPDF($pdf, $row, $vueltasRows, $numeroSemana, $periodo);
+    return $pdf->Output('S');
+}
+
+// -------------------- Helpers de datos/correo --------------------
+function obtenerEmailEmpleado(mysqli $db, $noempleado): ?string {
+    $sql = "SELECT COALESCE(correo, '') AS email FROM empleados WHERE noempleado = ? LIMIT 1";
+    if ($st = $db->prepare($sql)) {
+        $st->bind_param('i', $noempleado);
+        $st->execute();
+        $res = $st->get_result();
+        if ($res && $fila = $res->fetch_assoc()) {
+            $email = trim((string)$fila['email']);
+            return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
+        }
+    }
+    return null;
+}
+
+function enviarRecibo(PHPMailer $m, string $emailDestino, string $nombreDestino, string $pdfData, string $nombreAdjunto, string $asunto, string $cuerpoHTML): array {
+    $m->clearAddresses();
+    $m->clearAttachments();
+    $m->addAddress($emailDestino, $nombreDestino);
+    $m->Subject = $asunto;
+    $m->isHTML(true);
+    $m->Body = $cuerpoHTML;
+    $m->AltBody = strip_tags(preg_replace('/<br\s*\/?>/i', "\n", $cuerpoHTML));
+    $m->addStringAttachment($pdfData, $nombreAdjunto, 'base64', 'application/pdf');
+    if (!$m->send()) {
+        return ['ok' => false, 'msg' => $m->ErrorInfo ?: 'Fallo desconocido'];
+    }
+    return ['ok' => true, 'msg' => 'Enviado'];
+}
+
+// -------------------- Ejecución principal --------------------
+$resultadosEnvio = [
+    'total'           => 0,
+    'enviados'        => 0,
+    'errores'         => [],
+    'resumen_enviado' => false,
+];
+
 switch (strtolower($tipo)) {
     case 'semanal': {
         $numeroSemana = (int)intval(str_replace('Semana ', '', (string)$semana));
         if ($numeroSemana <= 0) {
-            header('Content-Type: application/json; charset=utf-8');
+            header("Content-Type: application/json; charset=utf-8");
             echo json_encode(['error' => 'Semana inválida.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
@@ -152,22 +215,24 @@ switch (strtolower($tipo)) {
         $fi->setISODate($anio, $numeroSemana, 1);
         $ff = new DateTime();
         $ff->setISODate($anio, $numeroSemana, 7);
+
         $periodo    = 'Del: ' . $fi->format('d/m/Y') . ' al: ' . $ff->format('d/m/Y');
         $fechaIniDB = $fi->format('Y-m-d');
         $fechaFinDB = $ff->format('Y-m-d');
 
-        // Traer empleados
+        // Empleados de la semana
         $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado");
         if (!$stmt) {
-            header('Content-Type: application/json; charset=utf-8');
+            header("Content-Type: application/json; charset=utf-8");
             echo json_encode(['error' => 'Error preparando consulta de nómina: ' . $conection->error], JSON_UNESCAPED_UNICODE);
             exit;
         }
         $stmt->bind_param("ii", $numeroSemana, $anio);
         $stmt->execute();
         $rs = $stmt->get_result();
+
         if (!$rs || $rs->num_rows === 0) {
-            header('Content-Type: application/json; charset=utf-8');
+            header("Content-Type: application/json; charset=utf-8");
             echo json_encode(['error' => 'No hay datos para la semana seleccionada.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
@@ -179,27 +244,112 @@ switch (strtolower($tipo)) {
                        ORDER BY fecha ASC";
         $stmtVueltas = $conection->prepare($sqlVueltas);
         if (!$stmtVueltas) {
-            header('Content-Type: application/json; charset=utf-8');
+            header("Content-Type: application/json; charset=utf-8");
             echo json_encode(['error' => 'Error preparando consulta de vueltas: ' . $conection->error], JSON_UNESCAPED_UNICODE);
             exit;
         }
 
-        // ====== MODO MOSTRAR (NO ENVÍA CORREOS) ======
-        if ($mostrar) {
-            $pdfAll = new PDF();
+        // NUEVO: Si mostrar=1, no creamos Mailer ni enviamos correos
+        $mailer = null;
+        if (!$mostrar) {
+            $mailer = mailerBase();
+        }
 
-            while ($row = $rs->fetch_assoc()) {
-                // Si tu tabla registro_viajes relaciona por noempleado, cambia aquí operador = ?
-                $stmtVueltas->bind_param("sss", $row['nombre'], $fechaIniDB, $fechaFinDB);
-                $stmtVueltas->execute();
-                $resV = $stmtVueltas->get_result();
-                $vueltasRows = $resV ? $resV->fetch_all(MYSQLI_ASSOC) : [];
+        // NUEVO: PDF consolidado solo si vamos a mostrar en pantalla (mostrar=1) o si quieres conservar tu flujo original
+        $pdfAll = ($mostrar) ? new PDF() : new PDF(); // lo usamos también en full-send original
 
-                // Agrega 2 páginas por empleado al consolidado
-                dibujarReciboEnPDF($pdfAll, $row, $vueltasRows, $numeroSemana, $periodo);
+        $enviadosSolo = false; // para el caso noempleado
+
+        while ($row = $rs->fetch_assoc()) {
+            // Filtro para "solo un empleado" (no aplica cuando mostrar=1)
+            if (!$mostrar && $soloNoEmp > 0 && (int)$row['noempleado'] !== $soloNoEmp) {
+                continue;
             }
 
-            // Mostrar en pantalla
+            $resultadosEnvio['total']++;
+
+            // Vueltas del periodo
+            // OJO: cambia $row['nombre'] si tu campo operador realmente es noempleado u otro
+            $stmtVueltas->bind_param("sss", $row['nombre'], $fechaIniDB, $fechaFinDB);
+            $stmtVueltas->execute();
+            $resV = $stmtVueltas->get_result();
+            $vueltasRows = $resV ? $resV->fetch_all(MYSQLI_ASSOC) : [];
+
+            // Agregar al consolidado (para mostrar o para conservar layout original)
+            dibujarReciboEnPDF($pdfAll, $row, $vueltasRows, $numeroSemana, $periodo);
+
+            // Si mostrar=1 -> NO enviar correos
+            if ($mostrar) {
+                continue;
+            }
+
+            // Si estamos en modo "solo un empleado"
+            if ($soloNoEmp > 0) {
+                $email = obtenerEmailEmpleado($conection, $row['noempleado']);
+                if (!$email) {
+                    $resultadosEnvio['errores'][] = [
+                        'noempleado' => $row['noempleado'],
+                        'nombre'     => $row['nombre'],
+                        'error'      => 'Sin email válido'
+                    ];
+                } else {
+                    $pdfData = pdfReciboSemanalComoString($row, $vueltasRows, $numeroSemana, $periodo);
+                    $asunto = "Recibo de Nómina - Semana {$numeroSemana} ({$periodo})";
+                    $cuerpo = "<p>Hola <strong>{$row['nombre']}</strong>,</p>
+                               <p>Adjunto encontrarás tu recibo de nómina correspondiente a la <strong>Semana {$numeroSemana}</strong> ({$periodo}).</p>
+                               <p>Saludos.</p>";
+                    $nombreAdj = "Recibo_Semana_{$numeroSemana}_{$row['noempleado']}.pdf";
+                    $r = enviarRecibo($mailer, $email, $row['nombre'], $pdfData, $nombreAdj, $asunto, $cuerpo);
+                    if ($r['ok']) {
+                        $resultadosEnvio['enviados']++;
+                        $enviadosSolo = true;
+                    } else {
+                        $resultadosEnvio['errores'][] = [
+                            'noempleado' => $row['noempleado'],
+                            'nombre'     => $row['nombre'],
+                            'error'      => $r['msg']
+                        ];
+                    }
+                }
+                // Como es solo un empleado, no seguimos iterando innecesariamente
+                break;
+            }
+
+            // Flujo original: envío a todos
+            $email = obtenerEmailEmpleado($conection, $row['noempleado']);
+            if (!$email) {
+                $resultadosEnvio['errores'][] = [
+                    'noempleado' => $row['noempleado'],
+                    'nombre'     => $row['nombre'],
+                    'error'      => 'Sin email válido'
+                ];
+                continue;
+            }
+
+            $pdfData = pdfReciboSemanalComoString($row, $vueltasRows, $numeroSemana, $periodo);
+            $asunto = "Recibo de Nómina - Semana {$numeroSemana} ({$periodo})";
+            $cuerpo = "<p>Hola <strong>{$row['nombre']}</strong>,</p>
+                       <p>Adjunto encontrarás tu recibo de nómina correspondiente a la <strong>Semana {$numeroSemana}</strong> ({$periodo}).</p>
+                       <p>Saludos.</p>";
+            $nombreAdj = "Recibo_Semana_{$numeroSemana}_{$row['noempleado']}.pdf";
+            $r = enviarRecibo($mailer, $email, $row['nombre'], $pdfData, $nombreAdj, $asunto, $cuerpo);
+
+            if ($r['ok']) {
+                $resultadosEnvio['enviados']++;
+            } else {
+                $resultadosEnvio['errores'][] = [
+                    'noempleado' => $row['noempleado'],
+                    'nombre'     => $row['nombre'],
+                    'error'      => $r['msg']
+                ];
+            }
+            usleep(300000); // 300 ms
+        }
+
+        // ----- SALIDAS POR MODO -----
+
+        // Modo mostrar=1: solo mostrar el consolidado, sin enviar nada
+        if ($mostrar) {
             $nombreAll = "Recibos_Semana_{$numeroSemana}_Consolidado.pdf";
             $pdfAllData = $pdfAll->Output('S');
             header('Content-Type: application/pdf');
@@ -208,14 +358,59 @@ switch (strtolower($tipo)) {
             exit;
         }
 
-        // ====== MODO ENVIAR (aquí podrías pegar tu lógica de envío si lo deseas) ======
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['ok' => true, 'msg' => 'Aquí va la rama de envío (no ejecutada porque mostrar!=1).'], JSON_UNESCAPED_UNICODE);
+        // Modo soloNoEmp: respondemos JSON y no mandamos consolidado ni resumen
+        if ($soloNoEmp > 0) {
+            if (method_exists($mailer, 'smtpClose')) {
+                $mailer->smtpClose();
+            }
+            header("Content-Type: application/json; charset=utf-8");
+            echo json_encode([
+                'modo'      => 'solo_empleado',
+                'noempleado'=> $soloNoEmp,
+                'enviado'   => $enviadosSolo,
+                'errores'   => $resultadosEnvio['errores']
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // Flujo original completo: enviar consolidado a RH y además mostrar el PDF consolidado
+        $pdfAllData = $pdfAll->Output('S');
+        $asuntoAll  = "Paquete de Recibos - Semana {$numeroSemana} ({$periodo})";
+        $cuerpoAll  = "<p>Se adjunta el <strong>paquete consolidado</strong> con todos los recibos de la Semana {$numeroSemana} ({$periodo}).</p>";
+        $nombreAll  = "Recibos_Semana_{$numeroSemana}_Consolidado.pdf";
+
+        $correoResumen = isset($_REQUEST['resumen_to']) && filter_var($_REQUEST['resumen_to'], FILTER_VALIDATE_EMAIL)
+            ? $_REQUEST['resumen_to']
+            : RESUMEN_TO;
+
+        $rAll = enviarRecibo($mailer, (string)$correoResumen, 'Recursos Humanos', $pdfAllData, $nombreAll, $asuntoAll, $cuerpoAll);
+        $resultadosEnvio['resumen_enviado'] = $rAll['ok'] ? true : ('ERROR: ' . $rAll['msg']);
+
+        if (method_exists($mailer, 'smtpClose')) {
+            $mailer->smtpClose();
+        }
+
+        // Mostramos el consolidado en pantalla (como ya hacías)
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="'.$nombreAll.'"');
+        echo $pdfAllData;
         exit;
     }
 
+    case 'quincenal': {
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode(['error' => 'Pendiente: implementar envío quincenal análogo.'], JSON_UNESCAPED_UNICODE);
+        break;
+    }
+
+    case 'especial': {
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode(['error' => 'Pendiente: implementar envío especial análogo.'], JSON_UNESCAPED_UNICODE);
+        break;
+    }
+
     default:
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['error' => 'Tipo no implementado en este preview.'], JSON_UNESCAPED_UNICODE);
-        exit;
+        header("Content-Type: application/json; charset=utf-8");
+        http_response_code(400);
+        echo json_encode(['error' => 'Tipo de recibo no válido.'], JSON_UNESCAPED_UNICODE);
 }

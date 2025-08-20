@@ -4,6 +4,7 @@ include "../conexion.php";
 session_start();
   $User=$_SESSION['user'];
   $rol=$_SESSION['rol'];
+//   var_dump($_SESSION);
   $idUser = $_SESSION['idUser'];
   $sql = "select * from rol where idrol =$rol ";
   $query = mysqli_query($conection, $sql);
@@ -19,93 +20,72 @@ session_start();
 <html>
 <head>
   <!-- Meta -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TRANSVIVE | ERP</title>
-<link rel="icon" href="../images/favicon.ico" type="image/x-icon"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TRANSVIVE | ERP</title>
+  <link rel="icon" href="../images/favicon.ico" type="image/x-icon"/>
 
-<!-- Google Fonts -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-<!-- Font Awesome -->
-<!-- Font Awesome 5 Free -->
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+  <!-- jQuery UI (solo CSS) -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 
-<!-- jQuery UI -->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+  <!-- AdminLTE -->
+  <link rel="stylesheet" href="../dist/css/adminlte.min.css">
 
-<!-- AdminLTE -->
-<link rel="stylesheet" href="../dist/css/adminlte.min.css">
+  <!-- Ekko Lightbox -->
+  <link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
 
-<!-- Ekko Lightbox -->
-<link rel="stylesheet" href="../plugins/ekko-lightbox/ekko-lightbox.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 
-<!-- overlayScrollbars -->
-<link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
-<!-- Select2 -->
-<link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
-<link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+  <!-- DataTables + Buttons -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css">
 
-<!-- DataTables + Buttons (actualizado a 2025) -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css">
+  <!-- Bootstrap Datepicker CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
 
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-<!-- Bootstrap Datepicker (actualizado) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+  <!-- Bootstrap (AdminLTE usa Bootstrap 4) -->
+  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
-<script>
-  $.datepicker.setDefaults($.datepicker.regional['es']);
-</script> -->
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables + Buttons (JS) -->
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
-<!-- DataTables + Buttons (JS actualizados) -->
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+  <!-- Bootstrap Datepicker: primero la librería, luego el idioma -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.es.min.js"></script>
 
-<!-- Bootstrap Datepicker -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.es.min.js"></script>
+  <!-- Bootbox -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js"></script>
 
-
-<!-- Bootbox (para modales) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js"></script>
-
-<!-- RequireJS -->
-<!-- <script src="./js/require.min.js"></script>
-<script>
-  requirejs.config({ baseUrl: '.' });
-</script> -->
-
-<!-- Estilos personalizados -->
-<style>
-  #fetch_generated_wills {
-    width: 100% !important;
-    table-layout: fixed;
-  }
-  .column-actions {
-    white-space: nowrap;
-    text-align: center;
-    min-width: 160px; /* ajusta según la cantidad de íconos */
-}
-</style>
-
+  <style>
+    #fetch_generated_wills { width: 100% !important; table-layout: fixed; }
+    .column-actions { white-space: nowrap; text-align: center; min-width: 160px; }
+  </style>
 </head>
+
 <body class="hold-transition layout-top-nav">
     <div class="wrapper">
     <!-- Navbar -->
@@ -171,7 +151,7 @@ session_start();
                                     </button>
                                 </div>
                             </form>
-                            <?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23): ?>
+                            <?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23 || $_SESSION['idUser'] == 39): ?>
                             <!-- Tabla -->
                             <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" width="100%">
                                 <thead>
@@ -232,30 +212,14 @@ session_start();
         <div class="control-sidebar-bg"></div>
     </div>
 
-<!-- DataTables Buttons -->
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<!-- Bootstrap Datepicker: primero la librería, luego el idioma -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.es.min.js"></script>
 
-<!-- JSZip (para exportar a Excel) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-<!-- pdfmake (para exportar a PDF) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
-<!-- Botones HTML5 y Print -->
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
-<!-- DataTables Bootstrap 4 (si usas Bootstrap 4) -->
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-
-<!-- Bootstrap Datepicker -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script> -->
-
-<!-- Sweet alert 2 (para alertas) -->
+<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23):?>
+<?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23 || $_SESSION['idUser'] == 39):?>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -366,17 +330,17 @@ session_start();
                                 if (full.estatus == 1) {
                                     //Si el usuario es Raul o Itzu
                                      <?php
-                                        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3) {
+                                        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3 || $_SESSION['idUser'] == 39) {
                                     ?>
                                     actions =
                                         `
-                                        <a href='factura/requisicion.php?id=${full.Folio}' target='_blank'>
-                                            <i class='fa fa-print" style="font-size: .8rem;' title="Ver PDF Requisicion"></i> Imprimir
+                                        <a href='factura/requisicion.php?id=${full.Folio}' target='_blank' title="Ver Requisicion">
+                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
                                         </a>
                                         |
                                         <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion" 
-                                            data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}">
-                                            <i class="fa fa-thumbs-up" title="Autorizar Requisicion" style="font-size:.8rem;"></i> Autorizar
+                                            data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}" class="text-success" title="Autorizar">
+                                            <i class="fa fa-thumbs-up" title="Autorizar Requisicion" style="font-size:.8rem;"></i>
                                         </a> 
                                         `
                                         //Si el rol de usuario es compras o administrador
@@ -388,7 +352,7 @@ session_start();
                                                 <i class="far fa-edit" style="font-size:.8rem;"></i>
                                             </a> |
                                             <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                                <i class="fa fa-print" style="font-size:.8rem;" title="Im primir Requisicion"></i>
+                                                <i class="fa fa-print" style="font-size:.8rem;" title="Imprimir Requisicion"></i>
                                             </a> |
                                             <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
                                                 <i class="fa fa-ban" style="font-size:.8rem;"></i>
@@ -747,14 +711,14 @@ session_start();
             });
 
             // Inicialización del datepicker
-            $(".datepicker").datepicker({
-                language: 'es',
-                dateFormat: "dd-mm-yyyy",
-                changeYear: true,
-                changeMonth: true,
-                todayHighlight: true,
-                autoclose: true
-            });
+            // $(".datepicker").datepicker({
+            //     language: 'es',
+            //     dateFormat: "dd-mm-yyyy",
+            //     changeYear: true,
+            //     changeMonth: true,
+            //     todayHighlight: true,
+            //     autoclose: true
+            // });
         });
     </script>
     <?php endif; ?>

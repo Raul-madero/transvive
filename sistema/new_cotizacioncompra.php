@@ -404,6 +404,7 @@ $(document).ready(function () {
             var areasolicita  = $('#inputSolicita').val();
             var montoaut      = $('#inputMontoaut').val();
             var notas         = $('#inputNotas').val();
+
             var action       = 'AlmacenaRequerimiento';
 
             $.ajax({
