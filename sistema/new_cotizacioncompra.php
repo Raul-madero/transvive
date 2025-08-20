@@ -165,10 +165,13 @@ mysqli_close($conection);
                                                     $solicita = "Recursos Humanos";
                                                     break;
                                                 case 6:
-                                                    $solicita = "Operaciones";
+                                                    $solicita = "Servicio";
                                                     break;
                                                 case 8:
-                                                    $solicita = "Operaciones";
+                                                    $solicita = "Servicio";
+                                                    break;
+                                                case 9:
+                                                    $solicita = "Servicio";
                                                     break;
                                                 case 10:
                                                     $solicita = "Almacen";
