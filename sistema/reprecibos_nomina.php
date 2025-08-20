@@ -18,6 +18,10 @@ session_start();
 
   $sql = 'SELECT noempleado, CONCAT_WS(" ", nombres, apellido_paterno, apellido_materno) AS nombre FROM empleados WHERE estatus = 1 ORDER BY noempleado ASC';
   $query = mysqli_query($conection, $sql);
+  $filas = [];
+  while($row = mysqli_fetch_assoc($query)) {
+    $filas[] = $row;
+  }
   $filas = mysqli_fetch_assoc($query);
 
   mysqli_close($conection);
@@ -132,13 +136,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="row">
   <div class="col-6">
     <label for="empleadoSelect">Enviar solo a:</label>
-    <select id="empleadoSelect" style="width:100%">
+    <select id="empleadoSelect" class="form-control select2bs4" style="width:100%">
       <option value="">--Seleccione--</option>
-      <?php foreach($filas as $empleado): ?>
-        <option value="<?php echo $empleado['noempleado']; ?>">
-          <?php echo $empleado['nombre']; ?>
-        </option>
+      <?php if (!empty($filas) && is_array($filas)): ?>
+        <?php foreach ($filas as $e): ?>
+          <?php if (!is_array($e)) continue; ?>
+          <option value="<?= htmlspecialchars($e['noempleado']) ?>">
+            <?= htmlspecialchars($e['noempleado'].' - '.$e['nombre']) ?>
+          </option>
         <?php endforeach; ?>
+      <?php endif; ?>
     </select>
     <small class="text-muted">Déjalo vacío para “Todos”.</small>
   </div>
@@ -185,10 +192,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <button type="button" class="btn btn-success pull-left"><i class="fa fa-share"></i> Enviar</button>
                       </a>
 
-                      <a href="#" onclick="window.open ('factura/recibo_nomina.php?id='+ document.getElementById('inputTiponomina').value + '&id2='+document.getElementById('semana').value + '&id3='+document.getElementById('inputEjercicio').value + '&mostrar=1' );" >  
-                       
-                          <button type ="button" class="btn btn-primary pull-left"><i class="fa fa-eye"></i> Mostrar</button>
-                        </a>
+                      <a href="#" onclick="
+                        const empleado = document.getElementById('empleadoSelect').value;
+                        let url = 'factura/recibo_nomina.php?id=' + document.getElementById('inputTiponomina').value +
+                                  '&id2=' + document.getElementById('semana').value +
+                                  '&id3=' + document.getElementById('inputEjercicio').value +
+                                  '&mostrar=1';
+                        if (empleado) url += '&noempleado=' + empleado;
+                        window.open(url);
+                      ">
+                        <button type="button" class="btn btn-primary pull-left"><i class="fa fa-eye"></i> Mostrar</button>
+                      </a>
                       </div>
                     <div class="col-3">
                       <a href="#" onclick="window.location ='nominas.php';" >

@@ -221,13 +221,33 @@ switch (strtolower($tipo)) {
         $fechaFinDB = $ff->format('Y-m-d');
 
         // Empleados de la semana
-        $stmt = $conection->prepare("SELECT * FROM historico_nomina WHERE semana = ? AND anio = ? ORDER BY noempleado");
-        if (!$stmt) {
-            header("Content-Type: application/json; charset=utf-8");
-            echo json_encode(['error' => 'Error preparando consulta de nómina: ' . $conection->error], JSON_UNESCAPED_UNICODE);
-            exit;
+        if ($soloNoEmp > 0) {
+            // Mostrar/Enviar solo un empleado
+            $stmt = $conection->prepare("
+                SELECT * FROM historico_nomina 
+                WHERE semana = ? AND anio = ? AND noempleado = ?
+                ORDER BY noempleado
+            ");
+            if (!$stmt) {
+                header("Content-Type: application/json; charset=utf-8");
+                echo json_encode(['error' => 'Error preparando consulta de nómina: ' . $conection->error], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            $stmt->bind_param("iii", $numeroSemana, $anio, $soloNoEmp);
+        } else {
+            // Todos
+            $stmt = $conection->prepare("
+                SELECT * FROM historico_nomina 
+                WHERE semana = ? AND anio = ?
+                ORDER BY noempleado
+            ");
+            if (!$stmt) {
+                header("Content-Type: application/json; charset=utf-8");
+                echo json_encode(['error' => 'Error preparando consulta de nómina: ' . $conection->error], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            $stmt->bind_param("ii", $numeroSemana, $anio);
         }
-        $stmt->bind_param("ii", $numeroSemana, $anio);
         $stmt->execute();
         $rs = $stmt->get_result();
 
