@@ -12339,14 +12339,14 @@ if($_POST['action'] == 'AddProdnuevo')
             }
 
             mysqli_close($conection);
-            }else {
+            }else if($row['estatus'] == 1) {
 
             // Obtener firma autorizada del sistema
             $sql = "SELECT pre_autorizacion FROM perfil_empresa LIMIT 1";
             $result = mysqli_query($conection, $sql);
             $data = mysqli_fetch_assoc($result);
 
-            $firma_autoriza = $data['firma_autoriza'];
+            $firma_autoriza = $data['pre_autorizacion'];
 
             // Validar si la firma enviada es la correcta
             if ($firma_autoriza === $firmareq) {
