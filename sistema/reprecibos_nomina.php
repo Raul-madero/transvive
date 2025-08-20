@@ -23,7 +23,7 @@ session_start();
     $filas[] = $row;
   }
   $filas = mysqli_fetch_assoc($query);
-
+  var_dump($filas);
   mysqli_close($conection);
 ?>
 
