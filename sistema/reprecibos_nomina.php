@@ -136,16 +136,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="row">
   <div class="col-6">
     <label for="empleadoSelect">Enviar solo a:</label>
-    <select id="empleadoSelect" class="form-control select2bs4" style="width:100%">
+    <select id="empleadoSelect" style="width:100%">
       <option value="">--Seleccione--</option>
-      <?php if (!empty($filas) && is_array($filas)): ?>
-        <?php foreach ($filas as $e): ?>
-          <?php if (!is_array($e)) continue; ?>
-          <option value="<?= htmlspecialchars($e['noempleado']) ?>">
-            <?= htmlspecialchars($e['noempleado'].' - '.$e['nombre']) ?>
-          </option>
+      <?php foreach($filas as $empleado): ?>
+        <option value="<?php echo $empleado['noempleado']; ?>">
+          <?php echo $empleado['nombre']; ?>
+        </option>
         <?php endforeach; ?>
-      <?php endif; ?>
     </select>
     <small class="text-muted">Déjalo vacío para “Todos”.</small>
   </div>
