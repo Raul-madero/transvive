@@ -12315,79 +12315,80 @@ if($_POST['action'] == 'AddProdnuevo')
             exit;
         }else if($row['estatus'] == 9){
             // Obtener firma autorizada del sistema
-        $sql = "SELECT firma_autoriza FROM perfil_empresa LIMIT 1";
-        $result = mysqli_query($conection, $sql);
-        $data = mysqli_fetch_assoc($result);
+            $sql = "SELECT firma_autoriza FROM perfil_empresa LIMIT 1";
+            $result = mysqli_query($conection, $sql);
+            $data = mysqli_fetch_assoc($result);
 
-        $firma_autoriza = $data['firma_autoriza'];
+            $firma_autoriza = $data['firma_autoriza'];
 
-        // Validar si la firma enviada es la correcta
-        if ($firma_autoriza === $firmareq) {
-            $sql = "UPDATE requisicion_compra 
-                    SET firma_autoriza = '$firmareq', estatus = 2
-                    WHERE no_requisicion = $noreq";
+            // Validar si la firma enviada es la correcta
+            if ($firma_autoriza === $firmareq) {
+                $sql = "UPDATE requisicion_compra 
+                        SET firma_autoriza = '$firmareq', estatus = 2
+                        WHERE no_requisicion = $noreq";
 
-            if (mysqli_query($conection, $sql)) {
-                echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
-            } else {
-                echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
-            }
-        } else {
-            echo json_encode(['success' => false, 'mensaje' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
-        }
-
-        mysqli_close($conection);
-        }
-
-        // Obtener firma autorizada del sistema
-        $sql = "SELECT pre_autorizacion FROM perfil_empresa LIMIT 1";
-        $result = mysqli_query($conection, $sql);
-        $data = mysqli_fetch_assoc($result);
-
-        $firma_autoriza = $data['firma_autoriza'];
-
-        // Validar si la firma enviada es la correcta
-        if ($firma_autoriza === $firmareq) {
-            $sql = "UPDATE requisicion_compra 
-                    SET firma_autoriza = '$firmareq', estatus = 9
-                    WHERE no_requisicion = $noreq";
-
-            if (mysqli_query($conection, $sql)) {
-                $mensaje = "Se Pre-autorizo una nueva Requisición: $noreq \n\nFavor de revisar.\n\nGracias.";
-
-                // Configurar PHPMailer
-                $mail = new PHPMailer;
-                            $mail->isSMTP();
-                            $mail->Host       = 'smtp.office365.com';
-                            $mail->Port       = 587;
-                            $mail->SMTPAuth   = true;
-                            $mail->SMTPSecure = 'STARTTLS';
-                            $mail->SMTPAutoTLS = true;
-                            // *** Usar variables de entorno para credenciales ***
-                            $mail->Username   = 'compras@transvivegdl.com.mx';
-                            $mail->Password   = 'AWATHsjvb6hW8qe';
-                            $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
-                            $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
-                            $mail->addAddress('ejecutivo@transvivegdl.com.mx');
-                            $mail->addCC('sistemas@transvivegdl.com.mx');
-                            $mail->SetCharset = 'UTF-8';
-                            $mail->Subject = "Nueva Requisición Generada";
-                            $mail->Body = $mensaje;
-
-                if ($mail->send()) {
-                    echo json_encode(["status" => "success", "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
+                if (mysqli_query($conection, $sql)) {
+                    echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
                 } else {
-                    echo json_encode(["status" => "warning", "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
+                    echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
                 }
-                echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
             } else {
-                echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
+                echo json_encode(['success' => false, 'mensaje' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
             }
-        } else {
-            echo json_encode(['success' => false, 'mensaje' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
-        }
 
-        mysqli_close($conection);
+            mysqli_close($conection);
+            }else {
+
+            // Obtener firma autorizada del sistema
+            $sql = "SELECT pre_autorizacion FROM perfil_empresa LIMIT 1";
+            $result = mysqli_query($conection, $sql);
+            $data = mysqli_fetch_assoc($result);
+
+            $firma_autoriza = $data['firma_autoriza'];
+
+            // Validar si la firma enviada es la correcta
+            if ($firma_autoriza === $firmareq) {
+                $sql = "UPDATE requisicion_compra 
+                        SET firma_autoriza = '$firmareq', estatus = 9
+                        WHERE no_requisicion = $noreq";
+
+                if (mysqli_query($conection, $sql)) {
+                    $mensaje = "Se Pre-autorizo una nueva Requisición: $noreq \n\nFavor de revisar.\n\nGracias.";
+
+                    // Configurar PHPMailer
+                    $mail = new PHPMailer;
+                                $mail->isSMTP();
+                                $mail->Host       = 'smtp.office365.com';
+                                $mail->Port       = 587;
+                                $mail->SMTPAuth   = true;
+                                $mail->SMTPSecure = 'STARTTLS';
+                                $mail->SMTPAutoTLS = true;
+                                // *** Usar variables de entorno para credenciales ***
+                                $mail->Username   = 'compras@transvivegdl.com.mx';
+                                $mail->Password   = 'AWATHsjvb6hW8qe';
+                                $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
+                                $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
+                                $mail->addAddress('ejecutivo@transvivegdl.com.mx');
+                                $mail->addCC('sistemas@transvivegdl.com.mx');
+                                $mail->SetCharset = 'UTF-8';
+                                $mail->Subject = "Nueva Requisición Generada";
+                                $mail->Body = $mensaje;
+
+                    if ($mail->send()) {
+                        echo json_encode(["status" => "success", "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
+                    } else {
+                        echo json_encode(["status" => "warning", "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
+                    }
+                    echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
+                } else {
+                    echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
+                }
+            } else {
+                echo json_encode(['success' => false, 'mensaje' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
+            }
+
+            mysqli_close($conection);
+        }
     } else {
         echo json_encode(['success' => false, 'mensaje' => 'Datos incompletos'], JSON_UNESCAPED_UNICODE);
     }
