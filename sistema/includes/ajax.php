@@ -2,6 +2,7 @@
 
 include "../../conexion.php";
 session_start();
+require('../PHPMailer/PHPMailerAutoload.php');
 
 //*Agregar Productos a Entrada
 if ($_POST['action'] == 'AlmacenaCliente') {
