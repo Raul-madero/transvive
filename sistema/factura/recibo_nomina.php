@@ -57,7 +57,7 @@ function mailerBase() {
     $mail->Host       = SMTP_HOST;
     $mail->Port       = SMTP_PORT;
     $mail->SMTPAuth   = true;
-    $mail->SMTPSecure = 'STARTTLS';        // PHPMailer 5 => 'tls'
+    $mail->SMTPSecure = 'STARTTLS'; 
     $mail->SMTPAutoTLS = true;
     $mail->Username   = SMTP_USER;
     $mail->Password   = SMTP_PASSWORD;

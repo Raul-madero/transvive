@@ -5794,7 +5794,6 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
 
                     if (mysqli_stmt_execute($stmt_detalle)) {
                         if (mysqli_affected_rows($conection) > 0) {
-                            //Verificar que la requisicion sea de mantenimiento
                             // Si los detalles se insertaron correctamente, enviar el correo
                             $mensaje = "Se generó una nueva Requisición: $folio \n\nFavor de revisar.\n\nGracias.";
 
@@ -5804,13 +5803,16 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                             $mail->Host       = 'smtp.office365.com';
                             $mail->Port       = 587;
                             $mail->SMTPAuth   = true;
-                            $mail->SMTPSecure = 'tls';
-
+                            $mail->SMTPSecure = 'STARTTLS';
+                            $mail->SMTPAutoTLS = true;
                             // *** Usar variables de entorno para credenciales ***
-                            $mail->Username   = getenv('SMTP_USER') ?: 'compras@transvivegdl.com.mx';
-                            $mail->Password   = getenv('SMTP_PASS') ?: 'Feb241981@';
+                            $mail->Username   = 'compras@transvivegdl.com.mx';
+                            $mail->Password   = 'Feb241981@';
+                            $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
+                            $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
                             $mail->addAddress('gerenciaop@transvivegdl.com.mx');
                             $mail->addCC('sistemas@transvivegdl.com.mx');
+                            $mail->SetCharset = 'UTF-8';
                             $mail->Subject = "Nueva Requisición Generada";
                             $mail->Body = $mensaje;
 
@@ -12355,19 +12357,22 @@ if($_POST['action'] == 'AddProdnuevo')
 
                 // Configurar PHPMailer
                 $mail = new PHPMailer;
-                $mail->isSMTP();
-                $mail->Host       = 'smtp.office365.com';
-                $mail->Port       = 587;
-                $mail->SMTPAuth   = true;
-                $mail->SMTPSecure = 'STARTTLS';
-
-                // *** Usar variables de entorno para credenciales ***
-                $mail->Username   = getenv('SMTP_USER') ?: 'compras@transvivegdl.com.mx';
-                $mail->Password   = getenv('SMTP_PASS') ?: 'Feb241981@';
-                $mail->addAddress('ejecutivo@transvivegdl.com.mx');
-                $mail->addCC('sistemas@transvivegdl.com.mx');
-                $mail->Subject = "Nueva Requisición Generada";
-                $mail->Body = $mensaje;
+                            $mail->isSMTP();
+                            $mail->Host       = 'smtp.office365.com';
+                            $mail->Port       = 587;
+                            $mail->SMTPAuth   = true;
+                            $mail->SMTPSecure = 'STARTTLS';
+                            $mail->SMTPAutoTLS = true;
+                            // *** Usar variables de entorno para credenciales ***
+                            $mail->Username   = 'compras@transvivegdl.com.mx';
+                            $mail->Password   = 'Feb241981@';
+                            $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
+                            $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
+                            $mail->addAddress('ejecutivo@transvivegdl.com.mx');
+                            $mail->addCC('sistemas@transvivegdl.com.mx');
+                            $mail->SetCharset = 'UTF-8';
+                            $mail->Subject = "Nueva Requisición Generada";
+                            $mail->Body = $mensaje;
 
                 if ($mail->send()) {
                     echo json_encode(["status" => "success", "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
