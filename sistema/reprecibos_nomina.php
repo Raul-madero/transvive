@@ -16,7 +16,7 @@ session_start();
   $fechaSegundos = strtotime($fechaActual);
   $anio =  date("Y", $fechaSegundos);
 
-  $sql = 'SELECT noempleado, CONCAT_WS(" ", nombres, apellido_paterno, apellido_materno) AS nombre FROM empleados WHERE estatus = 1 AND tipo_nomina LIKE '%Semanal%' ORDER BY noempleado ASC';
+  $sql = "SELECT noempleado, CONCAT_WS(' ', nombres, apellido_paterno, apellido_materno) AS nombre FROM empleados WHERE estatus = 1 AND tipo_nomina LIKE '%Semanal%' ORDER BY noempleado ASC";
   $query = mysqli_query($conection, $sql);
   $filas = [];
   while($row = mysqli_fetch_assoc($query)) {
