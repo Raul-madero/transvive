@@ -22,7 +22,6 @@ session_start();
   while($row = mysqli_fetch_assoc($query)) {
     $filas[] = $row;
   }
-  $filas = mysqli_fetch_assoc($query);
   var_dump($filas);
   mysqli_close($conection);
 ?>
