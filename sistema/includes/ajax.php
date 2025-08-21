@@ -5713,7 +5713,7 @@ if($_POST['action'] == 'ActualizaMovcotizacion'){
 
 //Almacena Requisicion de compra
 if ($_POST['action'] == 'AlmacenaRequerimiento') {
-    require '../PHPMailer/PHPMailerAutoload.php'; // PHPMailer
+    // require '../PHPMailer/PHPMailerAutoload.php'; // PHPMailer
 
     // Verificación de campos obligatorios
     if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) || empty($_POST['montoaut']) || $_POST['montoaut'] <= 0 || empty($_POST['notas'])) {
@@ -5813,7 +5813,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                             $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
                             $mail->addAddress('gerenciaop@transvivegdl.com.mx');
                             $mail->addCC('sistemas@transvivegdl.com.mx');
-                            $mail->SetCharset = 'UTF-8';
+                            $mail->CharSet = 'UTF-8';
                             $mail->Encoding = 'base64';         // o 'quoted-printable'
                             $mail->isHTML(true);
                             $mail->Subject = "Nueva Requisición Generada";
