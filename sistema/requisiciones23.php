@@ -160,6 +160,7 @@ session_start();
                                         <th class="text-center">No. Requisición</th>
                                         <th class="text-center">Fecha</th>
                                         <th class="text-center">Fecha Requiere Material</th>
+                                        <?php if($_SESSION['idUser'] != 32): ?>
                                         <th class="text-center">No. OC</th>
                                         <th class="text-center">Fecha OC</th>
                                         <th class="text-center">No. Factura</th>
@@ -168,6 +169,7 @@ session_start();
                                         <th class="text-center">Tipo</th>
                                         <th class="text-center">Área Solicitante</th>
                                         <th class="text-center">Monto</th>
+                                        <?php endif; ?>
                                         <th class="text-center">Observaciones</th>
                                         <th class="text-center">Estatus</th>
                                         <th class="text-center">Acciónes</th>
@@ -284,6 +286,7 @@ session_start();
                         },
                         { data: "fechaa", width: "3%", className: "text-center align-middle" },
                         { data: "fecha_req", width: "5%", className: "text-center align-middle", orderable: false },
+                        <?php if($_SESSION['idUser'] != 32): ?>
                         { 
                             data: "no_orden", 
                             width: "5%", 
@@ -318,6 +321,7 @@ session_start();
                             orderable: false,
                             render: $.fn.dataTable.render.number(',', '.', 2)
                         },
+                        <?php endif; ?>
                         { data: "notas", width: "30%", className: "text-center align-middle", orderable: false },
                         { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
                         {
@@ -510,14 +514,16 @@ session_start();
                                         <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
-                                        </a>
-                                        <a class="link_edit text-primary" href="edit_ordencompra.php?id=${full.no_orden}" title="Editar Orden de Compra">
-                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
+                                        </a>`
+                                        <?php if($_SESSION['rol'] != 7): ?>
+                                            actions +=`<a class="link_edit text-primary" href="edit_ordencompra.php?id=${full.no_orden}" title="Editar Orden de Compra">
+                                                    <i class="far fa-edit" style="font-size:.8rem;"></i>
+                                                </a>
+                                            <a data-toggle="modal" data-target="#modalIngreso" data-orden="${full.no_orden}" data-req="${full.Folio}" href="javascript.void(0)" class="text-warning" title="Ingresar Productos">
+                                                <i class="fa-solid fa-right-to-bracket" style="font-size:.8rem;"></i>
                                             </a>
-                                        <a data-toggle="modal" data-target="#modalIngreso" data-orden="${full.no_orden}" data-req="${full.Folio}" href="javascript.void(0)" class="text-warning" title="Ingresar Productos">
-                                            <i class="fa-solid fa-right-to-bracket" style="font-size:.8rem;"></i>
-                                        </a>
-                                        `;
+                                            `;
+                                        <?php endif; ?>
                                         //Facturado desde OC
                                 }else if(full.estatus == 7) {
                                     actions = `
@@ -528,11 +534,13 @@ session_start();
                                         <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
-                                        </a>
-                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Factura">
-                                            <i class="fa fa-upload" style="font-size:.8rem;"></i> 
-                                        </a>
-                                        `;
+                                        </a>`
+                                        <?php if($_SESSION['rol'] != 7): ?>
+                                            actions += `<a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Factura">
+                                                <i class="fa fa-upload" style="font-size:.8rem;"></i> 
+                                            </a>
+                                            `;
+                                        <?php endif; ?>
                                         //Producto Recibido
                                 }else if(full.estatus == 6) {
                                     actions = `
@@ -543,11 +551,13 @@ session_start();
                                         <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
                                             <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
                                             <span style="font-size: .8rem; ">OC</span>
-                                        </a>
-                                        <a data-toggle="modal" data-target="#modalFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
-                                            <i class="fa fa-file" style="font-size:.8rem;" title="Cargar datos de factura"></i>
-                                        </a>
-                                        `;
+                                        </a>`
+                                        <?php if($_SESSION['rol'] != 7): ?>
+                                            `<a data-toggle="modal" data-target="#modalFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
+                                                <i class="fa fa-file" style="font-size:.8rem;" title="Cargar datos de factura"></i>
+                                            </a>
+                                            `;
+                                        <?php endif; ?>
                                         //Por Pagar
                                 }else if(full.estatus == 8) {
                                     actions = `
