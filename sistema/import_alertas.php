@@ -44,11 +44,8 @@ if (isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
 
         while (($data = fgetcsv($handle, 4096)) !== FALSE) {
             if (count($data) >= 6) {
-                $ok++;
-
                 // 3) (OPCIONAL) Evitar duplicados por semana + año(fecha)
                 //    Descomenta si quieres saltar inserciones repetidas
-                
                 $existsStmt->bind_param('sis', $data[0], $currentYear, $data[2]);
                 $existsStmt->execute();
                 $existsStmt->store_result();
@@ -60,7 +57,9 @@ if (isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
                 }
                     
                 $stmt->bind_param("sssssii", $data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $usuario);
-                $stmt->execute();
+                if($stmt->execute()) {
+                    $ok++;
+                }
             } else {
                 $error++;
             }
