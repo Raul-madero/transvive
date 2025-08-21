@@ -151,7 +151,7 @@ session_start();
                                     </button>
                                 </div>
                             </form>
-                            <?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23 || $_SESSION['idUser'] == 39 || $_SESSION('idUser') == 32): ?>
+                            <?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23 || $_SESSION['idUser'] == 39 || $_SESSION['idUser'] == 32): ?>
                             <!-- Tabla -->
                             <table id="fetch_generated_wills" class="table table-hover table-striped table-bordered" width="100%">
                                 <thead>
