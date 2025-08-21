@@ -73,7 +73,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
             $where .= " AND p.area_solicitante = 'Servicio' ";
             break;
         case 7:
-            $where .= " AND p.area_solicitante = 'Mantenimiento' ";
+            $where .= " AND p.area_solicitante = 'Mantenimiento' OR p.area_solicitante = 'Taller' OR p.area_solicitante = 'Laminado' ";
             break;
         case 8:
             $where .= " AND p.area_solicitante = 'Servicio' ";

@@ -167,9 +167,9 @@ session_start();
                                             <th class="text-center">Fecha Factura</th>
                                             <th class="text-center">Fecha Pago</th>
                                             <th class="text-center">Tipo</th>
-                                            <th class="text-center">Área Solicitante</th>
                                             <th class="text-center">Monto</th>
                                         <?php endif; ?>
+                                        <th class="text-center">Área Solicitante</th>
                                         <th class="text-center">Observaciones</th>
                                         <th class="text-center">Estatus</th>
                                         <th class="text-center">Acciónes</th>
@@ -313,7 +313,6 @@ session_start();
                                 orderable: false
                             },
                             { data: "tipor", width: "5%", className: "text-center align-middle", orderable: false },
-                            { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
                             {
                                 data: "monto",
                                 width: "6%",
@@ -322,6 +321,7 @@ session_start();
                                 render: $.fn.dataTable.render.number(',', '.', 2)
                             },
                         <?php endif; ?>
+                        { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
                         { data: "notas", width: "30%", className: "text-center align-middle", orderable: false },
                         { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
                         {
