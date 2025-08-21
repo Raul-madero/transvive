@@ -12,14 +12,10 @@ if (!isset($_SESSION['idUser'])) {
   	header('Location: ../index.php');
 }
 
-// if(!isset($_REQUEST['req'])) {
-//  	header('Location: new_cotizacioncompra.php');
-// }
-// $requisicion = $_REQUEST['req'];
-
-$sqloper   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as operador from empleados where estatus = 1 ORDER BY nombres";
-$queryoper = mysqli_query($conection, $sqloper);
-$filasoper = mysqli_fetch_all($queryoper, MYSQLI_ASSOC); 
+if(!isset($_REQUEST['req'])) {
+ 	header('Location: new_cotizacioncompra.php');
+}
+$requisicion = $_REQUEST['req'];
 
 $sqlrecb   = "select nombre from usuario where rol = 10 and estatus = 1 ORDER BY nombre";
 $queryrecb = mysqli_query($conection, $sqlrecb);
@@ -40,12 +36,6 @@ $filasprov = mysqli_fetch_all($queryprov, MYSQLI_ASSOC);
 $sqlumed   = "select codigo, descripcion from unidades_medida ORDER BY codigo";
 $queryumed = mysqli_query($conection, $sqlumed);
 $filasumed = mysqli_fetch_all($queryumed, MYSQLI_ASSOC); 
-
-// $sqloc   = "select id, no_requisicion from requisicion_compra where estatus = 2";
-// $queryoc = mysqli_query($conection, $sqloc);
-// $filasoc = mysqli_fetch_all($queryoc, MYSQLI_ASSOC); 
-
-
 mysqli_close($conection);
 ?>
 
@@ -112,10 +102,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           $folioe = mysqli_fetch_array($query_folio);
           $nuevofolio=$folioe["folio"]+1; 
-
-          // $query_upfolio = mysqli_query($conection,"UPDATE folios SET folio= folio + 1 where serie = 'CP'");
-          
-
           mysqli_close($conection);
         ?>  
          <?php
@@ -144,15 +130,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="form-group row" style="text-align:left;">
                     <label  for="inputEmail3" class="col-sm-2 col-form-label">No. Requsicion</label>
                     <div class="col-sm-2">
-						<input type="text" class="form-control" id="inputReq" name="inputReq" value="<?php echo "REQ-" . $requisicion; ?>" readonly>
-					</div>
-                     <!-- <select style=" font-size: 14px;"  class="form-control select2bs4" style="width: 100%; text-align: left" id="inputNoorden" name="inputNoorden">
-                       <option value="">No. Requisicion</option>
-                       <?php foreach ($filasoc as $opoc): //llenar las opciones del primer select ?>
-                       <option value="<?= $opoc['no_requisicion'] ?>"><?= $opoc['no_requisicion'] ?></option>  
-                       <?php endforeach; ?>
-                    </select>
-                    </div> -->
+                      <input type="text" class="form-control" style="font-weight: bold; color: green; " id="inputReq" name="inputReq" value="<?php echo "REQ-" . $requisicion; ?>" readonly>
+                    </div>
                   
                     <label for="inputEmail3" class="col-sm-2 col-form-label" style="text-align: right;">Fecha</label>
                     <div class="col-sm-2">

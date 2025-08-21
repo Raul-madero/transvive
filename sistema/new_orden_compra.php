@@ -56,6 +56,14 @@ if (!$queryrecb) {
     die("Error al obtener receptores: " . mysqli_error($conection));
 }
 $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
+
+$sqlreq = "SELECT * FROM requisicion_compra WHERE no_requisicion = $requisicion";
+$queryreq = mysqli_query($conection, $sqlreq);
+if (!$queryreq) {
+    die("Error al obtener requisiciones: " . mysqli_error($conection));
+}
+$filasreq = mysqli_fetch_assoc($queryreq);
+// var_dump($filasreq);
 ?>
 
 <!DOCTYPE html>
@@ -126,7 +134,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">No. Requisición</label>
                     <div class="col-sm-2">
-                      <input type="text" class="form-control" name="inputReq" id="inputReq" value="<?php echo 'REQ-' . $requisicion; ?>" readonly>
+                      <input type="text" class="form-control text-bold text-success" name="inputReq" id="inputReq" value="<?php echo 'REQ-' . $requisicion; ?>" readonly>
                     </div>
 
                     <label class="col-sm-2 col-form-label text-right">Fecha</label>
@@ -225,7 +233,8 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 
                     <label class="col-sm-2 col-form-label">Área Solicitante</label>
                     <div class="col-sm-4">
-                      <select class="form-control custom-select" name="inputSolicita" id="inputSolicita" required>
+                      <input type="text" class="form-control" name="inputSolicitante" id="inputSolicitante" value="<?php echo $filasreq['area_solicitante'] ?>" readonly">
+                      <!-- <select class="form-control custom-select" name="inputSolicita" id="inputSolicita" required>
 					  		<option value="">--  Seleccione --</option>
 							<option value="Aseguramiento de Calidad">Aseguramiento de Calidad</option>
 							<option value="Administracion">Administracion</option>
@@ -237,7 +246,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
 							<option value="Sistemas">Sistemas</option>
 							<option value="Almacen">Almacen</option>
 							<option value="Direccion">Direccion</option>
-                      </select>
+                      </select> -->
                     </div>
                   </div>
 
@@ -293,7 +302,7 @@ $filasrecb = mysqli_fetch_all($queryrecb, MYSQLI_ASSOC);
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Observaciones</label>
                     <div class="col-sm-10">
-                      <textarea class="form-control" name="inputNotas" id="inputNotas" rows="1"></textarea>
+                      <input type="text" class="form-control" name="inputNotas" id="inputNotas" value="<?php echo $filasreq['observaciones'] ?>"/>
                     </div>
                   </div>
 
