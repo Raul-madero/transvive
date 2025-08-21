@@ -12312,7 +12312,7 @@ if($_POST['action'] == 'AddProdnuevo')
         $sql = "SELECT estatus FROM requisicion_compra WHERE no_requisicion = $noreq";
         $result = mysqli_query($conection, $sql);
         $row = mysqli_fetch_assoc($result);
-        var_dump($row);
+        // var_dump($row);
         if ($row['estatus'] == 2) {
             echo "Requisición ya fue autorizada.";
             exit;
@@ -12331,12 +12331,12 @@ if($_POST['action'] == 'AddProdnuevo')
                         WHERE no_requisicion = $noreq";
 
                 if (mysqli_query($conection, $sql)) {
-                    echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
+                    echo json_encode(['success' => true, 'message' => 'Requisición Autorizada'], JSON_UNESCAPED_UNICODE);
                 } else {
-                    echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
+                    echo json_encode(['success' => false, 'message' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
                 }
             } else {
-                echo json_encode(['success' => false, 'mensaje' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
+                echo json_encode(['success' => false, 'message' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
             }
 
             mysqli_close($conection);
@@ -12360,42 +12360,42 @@ if($_POST['action'] == 'AddProdnuevo')
 
                     // Configurar PHPMailer
                     $mail = new PHPMailer;
-                                $mail->isSMTP();
-                                $mail->Host       = 'smtp.office365.com';
-                                $mail->Port       = 587;
-                                $mail->SMTPAuth   = true;
-                                $mail->SMTPSecure = 'STARTTLS';
-                                $mail->SMTPAutoTLS = true;
-                                // *** Usar variables de entorno para credenciales ***
-                                $mail->Username   = 'compras@transvivegdl.com.mx';
-                                $mail->Password   = 'AWATHsjvb6hW8qe';
-                                $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
-                                $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
-                                $mail->addAddress('ejecutivo@transvivegdl.com.mx');
-                                $mail->addCC('sistemas@transvivegdl.com.mx');
-                                $mail->SetCharset = 'UTF-8';
-                                $mail->Encoding = 'base64'; 
-                                $mail->isHTML(true);
-                                $mail->Subject = "Nueva Requisición Generada";
-                                $mail->Body = $mensaje;
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.office365.com';
+                    $mail->Port       = 587;
+                    $mail->SMTPAuth   = true;
+                    $mail->SMTPSecure = 'STARTTLS';
+                    $mail->SMTPAutoTLS = true;
+                    // *** Usar variables de entorno para credenciales ***
+                    $mail->Username   = 'compras@transvivegdl.com.mx';
+                    $mail->Password   = 'AWATHsjvb6hW8qe';
+                    $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
+                    $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
+                    $mail->addAddress('ejecutivo@transvivegdl.com.mx');
+                    $mail->addCC('sistemas@transvivegdl.com.mx');
+                    $mail->CharSet = 'UTF-8';
+                    $mail->Encoding = 'base64'; 
+                    $mail->isHTML(true);
+                    $mail->Subject = "Nueva Requisición Generada";
+                    $mail->Body = $mensaje;
 
                     if ($mail->send()) {
-                        echo json_encode(["status" => "success", "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
+                        echo json_encode(["success" => true, "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
                     } else {
-                        echo json_encode(["status" => "warning", "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
+                        echo json_encode(["success" => true, "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
                     }
-                    echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
+                    // echo json_encode(['success' => true, 'mensaje' => 'Requisición Pre-autorizada'], JSON_UNESCAPED_UNICODE);
                 } else {
-                    echo json_encode(['success' => false, 'mensaje' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
+                    echo json_encode(['success' => false, 'message' => 'Error al autorizar'], JSON_UNESCAPED_UNICODE);
                 }
             } else {
-                echo json_encode(['success' => false, 'mensaje' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
+                echo json_encode(['success' => false, 'message' => 'Firma no válida'], JSON_UNESCAPED_UNICODE);
             }
 
             mysqli_close($conection);
         }
     } else {
-        echo json_encode(['success' => false, 'mensaje' => 'Datos incompletos'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => 'Datos incompletos'], JSON_UNESCAPED_UNICODE);
     }
 }
 

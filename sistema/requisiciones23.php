@@ -1290,44 +1290,27 @@ session_start();
                     tiporeq,
                     firmareq
                 },
+                dataType: 'json',
                 success: function (response) {
-                    try {
-                        if (response && response !== 'error') {
-                            const info = JSON.parse(response);
-                            if (info.success) {
-                                $('#modalAutorizaRequisicion').modal('hide');
-                                $('#form_pass_firma').val('');
+                    console.log(response);
+                    if (response.success) {
+                        $('#modalAutorizaRequisicion').modal('hide');
+                        $('#form_pass_firma').val('');
 
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Autorizado',
-                                    text: info.mensaje,
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: info.mensaje
-                                });
-                            }
-                        } else {
-                            // Error genérico
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Faltan datos',
-                                text: 'Verifica los campos y vuelve a intentar.'
-                            });
-                        }
-                    } catch (err) {
-                        console.error('Error al parsear respuesta:', err, response);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Autorizado',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Respuesta inesperada',
-                            text: 'No se pudo procesar la respuesta del servidor.'
+                            title: 'Error',
+                            text: response.message
                         });
                     }
                 },
@@ -1339,8 +1322,8 @@ session_start();
                         text: 'No se pudo enviar la solicitud al servidor.'
                     });
                 }
-            });
-        });
+            })
+        })
     </script>  
 
     <script> 
