@@ -161,14 +161,14 @@ session_start();
                                         <th class="text-center">Fecha</th>
                                         <th class="text-center">Fecha Requiere Material</th>
                                         <?php if($_SESSION['idUser'] != 32): ?>
-                                        <th class="text-center">No. OC</th>
-                                        <th class="text-center">Fecha OC</th>
-                                        <th class="text-center">No. Factura</th>
-                                        <th class="text-center">Fecha Factura</th>
-                                        <th class="text-center">Fecha Pago</th>
-                                        <th class="text-center">Tipo</th>
-                                        <th class="text-center">Área Solicitante</th>
-                                        <th class="text-center">Monto</th>
+                                            <th class="text-center">No. OC</th>
+                                            <th class="text-center">Fecha OC</th>
+                                            <th class="text-center">No. Factura</th>
+                                            <th class="text-center">Fecha Factura</th>
+                                            <th class="text-center">Fecha Pago</th>
+                                            <th class="text-center">Tipo</th>
+                                            <th class="text-center">Área Solicitante</th>
+                                            <th class="text-center">Monto</th>
                                         <?php endif; ?>
                                         <th class="text-center">Observaciones</th>
                                         <th class="text-center">Estatus</th>
@@ -257,7 +257,7 @@ session_start();
                         {
                         extend: 'colvis',
                         postfixButtons: ['colvisRestore'],
-                        columns: '0,1,2,3,4,5,6'
+                        columns: ':not(.noVis)'
                         },
                         'pageLength'
                     ],
@@ -287,47 +287,47 @@ session_start();
                         { data: "fechaa", width: "3%", className: "text-center align-middle" },
                         { data: "fecha_req", width: "5%", className: "text-center align-middle", orderable: false },
                         <?php if($_SESSION['idUser'] != 32): ?>
-                        { 
-                            data: "no_orden", 
-                            width: "5%", 
-                            className: "text-center align-middle", 
-                            render: data => data === 'N/A' ? data : 'OC-' + data 
-                        },
-                        { data: 'fecha_orden', width: "5%", className: "text-center align-middle" },
-                        {
-                            data: 'no_factura',
-                            width: "5%",
-                            className: "text-center align-middle",
-                            render: data => data === 'N/A' ? data : 'FA-' + data
-                        },
-                        {
-                            data: "fecha_factura",
-                            width: "5%",
-                            className: "text-center align-middle",
-                            orderable: false
-                        },
-                        {
-                            data: "fecha_pago",
-                            width: "5%",
-                            className: "text-center align-middle",
-                            orderable: false
-                        },
-                        { data: "tipor", width: "5%", className: "text-center align-middle", orderable: false },
-                        { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
-                        {
-                            data: "monto",
-                            width: "6%",
-                            className: "text-center align-middle",
-                            orderable: false,
-                            render: $.fn.dataTable.render.number(',', '.', 2)
-                        },
+                            { 
+                                data: "no_orden", 
+                                width: "5%", 
+                                className: "text-center align-middle", 
+                                render: data => data === 'N/A' ? data : 'OC-' + data 
+                            },
+                            { data: 'fecha_orden', width: "5%", className: "text-center align-middle" },
+                            {
+                                data: 'no_factura',
+                                width: "5%",
+                                className: "text-center align-middle",
+                                render: data => data === 'N/A' ? data : 'FA-' + data
+                            },
+                            {
+                                data: "fecha_factura",
+                                width: "5%",
+                                className: "text-center align-middle",
+                                orderable: false
+                            },
+                            {
+                                data: "fecha_pago",
+                                width: "5%",
+                                className: "text-center align-middle",
+                                orderable: false
+                            },
+                            { data: "tipor", width: "5%", className: "text-center align-middle", orderable: false },
+                            { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
+                            {
+                                data: "monto",
+                                width: "6%",
+                                className: "text-center align-middle",
+                                orderable: false,
+                                render: $.fn.dataTable.render.number(',', '.', 2)
+                            },
                         <?php endif; ?>
                         { data: "notas", width: "30%", className: "text-center align-middle", orderable: false },
                         { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
                         {
                             orderable: false,
                             width: "20%",
-                            className: "text-center column-actions align-middle",
+                            className: "text-center column-actions align-middle noVis",
                             render: function (data, type, full) {
                                 let actions = ""
                                 //Si el estado de la requisicion es activa
