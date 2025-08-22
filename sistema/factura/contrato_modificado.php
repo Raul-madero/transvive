@@ -189,8 +189,12 @@ function generarContratoEmpleado($nombreEmpleado) {
     $pdf->Cell(85, 5, '_______________________________', 0, 1, 'C');
     $pdf->Cell(85, 5, utf8_decode('RAUL GUTIERREZ DE VELASCO ROMO'), 0, 0, 'C');
     $pdf->Cell(85, 5, mb_convert_encoding($data['empleado'], 'ISO-8859-1', 'UTF-8'), 0, 1, 'C');
+    $rutaTmp = sys_get_temp_dir() . '/contrato_eventual.pdf';
+    $pdf->Output($rutaTmp, 'F');
 
-    $pdf->Output('I', 'Contrato_Eventual_30_Dias.pdf');
+// Incluye el firmador
+require __DIR__.'/firmar_contrato.php';
+    // $pdf->Output('I', 'Contrato_Eventual_30_Dias.pdf');
 }
 
 if (isset($_GET['id'])) {
