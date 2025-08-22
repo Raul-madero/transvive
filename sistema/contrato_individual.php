@@ -141,13 +141,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     
                                 </div>
                             </div>
+                            <div class="col-3">
+  <a href="#" onclick="
+    const emp = document.getElementById('inputOperador').value;
+    if (!emp) { alert('Selecciona un empleado'); return false; }
+    window.location = 'factura/firmar_contrato.html?id='+ encodeURIComponent(emp);
+  ">
+    <button type="button" class="btn btn-primary pull-left">
+      <i class="fa fa-play"></i> Aceptar
+    </button>
+  </a>
+</div>
+
                         
-                      <div class="col-3">
+                      <!-- <div class="col-3">
                       <a href="#" onclick="window.open ('factura/contrato_modificado.php?id='+document.getElementById('inputOperador').value );" >
                        
                           <button type ="button" class="btn btn-primary pull-left"><i class="fa fa-play"></i> Aceptar</button>
                         </a>
-                      </div>
+                      </div> -->
                     <div class="col-3">
                       <a href="#" onclick="window.location ='empleados.php';" >
                         <button type ="button" class="btn btn-secondary pull-left" href="#"><i class="fa fa-stop"></i> Cancelar</button>
