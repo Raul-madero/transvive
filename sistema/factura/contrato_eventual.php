@@ -449,5 +449,10 @@ $pdf->Cell(85,5,'____________________________________',0,0,'C');
 $pdf->Cell(85,5,'____________________________________',0,1,'C');
 $pdf->Cell(85,5,'RAUL GUTIERREZ DE VELASCO ROMO',0,0,'C');
 $pdf->Cell(85,5,$empleado,0,1,'C');
-$pdf->Output('Contrato Eventual.pdf', 'I');
+$rutaTmp = sys_get_temp_dir() . '/contrato_eventual.pdf';
+$pdf->Output($rutaTmp, 'F');
+
+// Incluye el firmador
+require __DIR__.'/firmar_contrato.php';
+// $pdf->Output('Contrato Eventual.pdf', 'I');
 ?>
