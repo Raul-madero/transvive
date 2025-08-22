@@ -445,14 +445,14 @@ $pdf->SetFont('Arial','B',9);
 $pdf->Cell(85,5,'E M P R E S A',0,0,'C');
 $pdf->Cell(85,5,'E M P L E A D O',0,1,'C');
 $pdf->Ln(10);
-$pdf->Cell(85,5,'____________________________________',0,0,'C');
-$pdf->Cell(85,5,'____________________________________',0,1,'C');
+
+// Recuadro de firma para la empresa
+$pdf->Cell(85,20,'',1,0,'C');  // cuadro vacío
+$pdf->Cell(85,20,'',1,1,'C');  // cuadro vacío
+// $pdf->Cell(85,5,'____________________________________',0,0,'C');
+// $pdf->Cell(85,5,'____________________________________',0,1,'C');
 $pdf->Cell(85,5,'RAUL GUTIERREZ DE VELASCO ROMO',0,0,'C');
 $pdf->Cell(85,5,$empleado,0,1,'C');
-$rutaTmp = sys_get_temp_dir() . '/contrato_eventual.pdf';
-$pdf->Output($rutaTmp, 'F');
 
-// Incluye el firmador
-require __DIR__.'/firmar_contrato.php';
-// $pdf->Output('Contrato Eventual.pdf', 'I');
+$pdf->Output('Contrato Eventual.pdf', 'I');
 ?>
