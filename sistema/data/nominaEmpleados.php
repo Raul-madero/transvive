@@ -67,12 +67,12 @@ function calcularDiasVacaciones($anios) {
     return 32;
 }
 
-function contarImportesFiscales() {
-    $sql = "SELECT COUNT(id) AS total FROM importes_fiscales";
-    $result = $conection->query($sql);
-    $cantidad = $result->fetch_assoc()['total'];
-    return $cantidad == 0 ?? false;
-}
+// function contarImportesFiscales() {
+//     $sql = "SELECT COUNT(id) AS total FROM importes_fiscales";
+//     $result = $conection->query($sql);
+//     $cantidad = $result->fetch_assoc()['total'];
+//     return $cantidad == 0 ?? false;
+// }
 
 function dia15EntreFechas($fecha_inicio, $fecha_fin) {
     $inicio = strtotime($fecha_inicio);
@@ -176,11 +176,11 @@ if (isset($_POST['semana'], $_POST['anio']) && !empty($_POST['semana']) && !empt
         $cantidad = floatval($empleado['cantidad']);
         $total_abonado = floatval($empleado['total_abonado']);
         $pago_fiscal = 0;
-        if($imss == 1 && is_null($empleado['pago_fiscal']) && contarImportesFiscales()) {
-            $pago_fiscal = 2240;
-        }else {
-            $pago_fiscal = floatval($empleado['pago_fiscal']);
-        }
+        // if($imss == 1 && is_null($empleado['pago_fiscal']) && contarImportesFiscales()) {
+        //     $pago_fiscal = 2240;
+        // }else {
+        //     $pago_fiscal = floatval($empleado['pago_fiscal']);
+        // }
         $deduccion_fiscal = floatval($empleado['deduccion_fiscal']);
         $neto = floatval($empleado['neto']);
 
