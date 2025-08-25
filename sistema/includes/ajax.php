@@ -2847,7 +2847,7 @@ if ($_POST['action'] == 'AddDetallemantto') {
 
 //Agregar Productos a Entrada
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'AlmacenaIncidencia') {
-    var_dump($_POST);
+    // var_dump($_POST);
     // Validar campos requeridos
     $required = ['tincidencia','empleado','diastomar','diasderecho','fechaini','fechafin','diasvac'];
     foreach ($required as $r) {

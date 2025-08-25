@@ -179,6 +179,20 @@ if ($_REQUEST['action'] == 'fetch_users') {
 
         $count++;
 
+       // ---------- Normalizaciones y alias seguros ----------
+        // no_orden puede venir NULL: lo normalizamos a string (o null) y además damos un "N/A" para mostrar
+        $noOrdenRaw  = isset($row['no_orden']) && $row['no_orden'] !== '' ? (string)$row['no_orden'] : null;
+        $noOrdenShow = $noOrdenRaw ?? 'N/A';
+
+        // Folio como string siempre
+        $folioRaw = isset($row['no_requisicion']) ? (string)$row['no_requisicion'] : '';
+
+        // Fechas: deja lo que ya tenías; si gustas, puedes formatear aquí igual que arriba
+        $fechaOrdenShow   = $row['fecha_orden']   ?? 'N/A';
+        $noFacturaShow    = $row['no_factura']    ?? 'N/A';
+        $fechaFacturaShow = $row['fecha_factura'] ?? 'N/A';
+        $fechaPagoShow    = $row['fecha_pago']    ?? 'N/A';
+
         $nestedData = [
             'counter'       => $count,
             'pedidono'      => $row["id"],
@@ -193,11 +207,19 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'notas'         => $row['observaciones'],
             'Datenew'       => $row["fecha"],
             'estatusped'    => $estatusMap[$row["estatus"]] ?? '<span class="badge bg-secondary">Desconocido</span>',
-            'no_orden'      => $row['no_orden'] ?? 'N/A',
-            'fecha_orden'   => $row['fecha_orden'] ?? 'N/A',
-            'no_factura'    => $row['no_factura']?? 'N/A',
-            'fecha_factura' => $row['fecha_factura']?? 'N/A',
-            'fecha_pago'    => $row['fecha_pago']?? 'N/A'
+            // Plano (lo que ya usa tu DataTable)
+            'no_orden'      => $noOrdenShow,
+            'fecha_orden'   => $fechaOrdenShow,
+            'no_factura'    => $noFacturaShow,
+            'fecha_factura' => $fechaFacturaShow,
+            'fecha_pago'    => $fechaPagoShow,
+
+            // -------- Alias anidado de compatibilidad --------
+            // Por si en el front alguien accede a full.Foliofull.no_orden o full.Foliofull.Folio
+            'Foliofull'     => [
+                'no_orden' => $noOrdenShow,
+                'Folio'    => $folioRaw
+            ],
         ];
 
 
@@ -211,6 +233,6 @@ if ($_REQUEST['action'] == 'fetch_users') {
         "recordsTotal"    => intval($totalData),
         "recordsFiltered" => intval($totalFiltered),
         "records"         => $data
-    ]);
+    ], JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES);
 }
 ?>

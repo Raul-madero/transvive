@@ -12,9 +12,6 @@ session_start();
   $sqlopr   = "select concat(nombres, ' ', apellido_paterno, ' ', apellido_materno) as empleado from empleados where estatus = 1 ORDER BY apellido_paterno";
   $queryopr = mysqli_query($conection, $sqlopr);
   $filasopr = mysqli_fetch_all($queryopr, MYSQLI_ASSOC); 
-  /*$sqledo = "select estado from estados ORDER BY estado";
-  $queryedo = mysqli_query($conection, $sqledo);
-  $filasedo = mysqli_fetch_all($queryedo, MYSQLI_ASSOC); */
 
   mysqli_close($conection);
 ?>
