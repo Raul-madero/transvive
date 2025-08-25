@@ -1102,7 +1102,6 @@ if ($_POST['action'] == 'AlmacenaViaje') {
 //Envio encuesta Satisfaccion de Cliente
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'enviarEncuesta') {
-    require '../PHPMailer/PHPMailerAutoload.php';
 
     // Validación de entrada
     $fecha   = filter_input(INPUT_POST, 'fecha', FILTER_DEFAULT);
@@ -1193,7 +1192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                 $totalcorreos  = 0;
                 $arrayData  = array();
 
-                require '../PHPMailer/PHPMailerAutoload.php';
+                
 
                 while ($data = mysqli_fetch_assoc($query_envios)){ 
                     $enviomail  = $data['correo'];
@@ -5713,7 +5712,6 @@ if($_POST['action'] == 'ActualizaMovcotizacion'){
 
 //Almacena Requisicion de compra
 if ($_POST['action'] == 'AlmacenaRequerimiento') {
-    // require '../PHPMailer/PHPMailerAutoload.php'; // PHPMailer
 
     // Verificación de campos obligatorios
     if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) || empty($_POST['montoaut']) || $_POST['montoaut'] <= 0 || empty($_POST['notas'])) {
@@ -5812,7 +5810,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
                             $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
                             $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
                             $mail->addAddress('gerenciaop@transvivegdl.com.mx');
-                            $mail->addCC('sistemas@transvivegdl.com.mx');
+                            // $mail->addCC('sistemas@transvivegdl.com.mx');
                             $mail->CharSet = 'UTF-8';
                             $mail->Encoding = 'base64';         // o 'quoted-printable'
                             $mail->isHTML(true);
@@ -12372,7 +12370,7 @@ if($_POST['action'] == 'AddProdnuevo')
                     $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
                     $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
                     $mail->addAddress('ejecutivo@transvivegdl.com.mx');
-                    $mail->addCC('sistemas@transvivegdl.com.mx');
+                    // $mail->addCC('sistemas@transvivegdl.com.mx');
                     $mail->CharSet = 'UTF-8';
                     $mail->Encoding = 'base64'; 
                     $mail->isHTML(true);
