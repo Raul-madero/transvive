@@ -221,564 +221,375 @@ session_start();
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<?php if($_SESSION['rol'] == 1 || $_SESSION['idUser'] == 19 || $_SESSION['idUser'] == 23 || $_SESSION['idUser'] == 39 || $_SESSION['idUser'] == 32):?>
-    <script type="text/javascript">
+<?php
+$IS_EXTENDED = ($_SESSION['rol'] == 1
+    || $_SESSION['idUser'] == 19
+    || $_SESSION['idUser'] == 23
+    || $_SESSION['idUser'] == 39
+    || $_SESSION['idUser'] == 32);
+?>
+<script type="text/javascript">
+$(function () {
+  const IS_EXTENDED = <?php echo json_encode($IS_EXTENDED); ?>;
 
-        $(document).ready(function () {
-        // Carga inicial
-            load_data();
-            function load_data(initial_date = '', final_date = '', gender = '') {
-                const ajax_url = "data/datadetorders_req.php";
+  // Inicial
+  initTable();
 
-                $('#fetch_generated_wills').DataTable({
-                    destroy: true,
-                    processing: true,
-                    serverSide: true,
-                    stateSave: true,
-                    responsive: true,
-                    order: [[0, "desc"]],
-                    lengthMenu: [
-                        [10, 25, 50, 100, -1],
-                        [10, 25, 50, 100, "Todos"]
-                    ],
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copyHtml5',
-                        {
-                            text: 'Excel',
-                            action: function () {
+  // Filtro por fecha/estatus
+  $("#filter").on("click", function (e) {
+    e.preventDefault();
+    const initial_date = $("#initial_date").val();
+    const final_date   = $("#final_date").val();
+    const gender       = $("#gender").val();
 
-                                // Redirige a un PHP que genera el Excel completo
-                                const url = `factura/requis_excel.php`;
-                                window.open(url, '_blank');
-                            }
-                        },
-                        'csvHtml5',
-                        {
-                        extend: 'colvis',
-                        postfixButtons: ['colvisRestore'],
-                        columns: ':not(.noVis)'
-                        },
-                        'pageLength'
-                    ],
-                    ajax: {
-                        url: ajax_url,
-                        type: "POST",
-                        dataType: "json",
-                        data: {
-                            action: "fetch_users",
-                            initial_date,
-                            final_date,
-                            gender
-                        },
-                        dataSrc: function (json) {
-                            // console.log("📦 Respuesta recibida:", json);
-                            return json.records || [];
-                        }
-                    },
-                    columns: [
-                        // { data: "pedidono", width: "3%", className: "text-center" },
-                        {
-                            data: "Folio",
-                            width: "2%",
-                            className: "text-center align-middle",
-                            render: data => 'REQ-' + data
-                        },
-                        { data: "fechaa", width: "3%", className: "text-center align-middle" },
-                        { data: "fecha_req", width: "5%", className: "text-center align-middle", orderable: false },
-                        <?php if($_SESSION['idUser'] != 32): ?>
-                            { 
-                                data: "no_orden", 
-                                width: "5%", 
-                                className: "text-center align-middle", 
-                                render: data => data === 'N/A' ? data : 'OC-' + data 
-                            },
-                            { data: 'fecha_orden', width: "5%", className: "text-center align-middle" },
-                            {
-                                data: 'no_factura',
-                                width: "5%",
-                                className: "text-center align-middle",
-                                render: data => data === 'N/A' ? data : 'FA-' + data
-                            },
-                            {
-                                data: "fecha_factura",
-                                width: "5%",
-                                className: "text-center align-middle",
-                                orderable: false
-                            },
-                            {
-                                data: "fecha_pago",
-                                width: "5%",
-                                className: "text-center align-middle",
-                                orderable: false
-                            },
-                            { data: "tipor", width: "5%", className: "text-center align-middle", orderable: false },
-                            {
-                                data: "monto",
-                                width: "6%",
-                                className: "text-center align-middle",
-                                orderable: false,
-                                render: $.fn.dataTable.render.number(',', '.', 2)
-                            },
-                        <?php endif; ?>
-                        { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
-                        { data: "notas", width: "30%", className: "text-center align-middle", orderable: false },
-                        { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
-                        {
-                            orderable: false,
-                            width: "20%",
-                            className: "text-center column-actions align-middle noVis",
-                            render: function (data, type, full) {
-                                let actions = ""
-                                //Si el estado de la requisicion es activa
-                                if (full.estatus == 1) {
-                                    //Si el usuario es Raul o Itzu
-                                     <?php
-                                        if ($_SESSION['idUser'] == 39) {
-                                    ?>
-                                    actions =
-                                        `
-                                        <a href='factura/requisicion.php?id=${full.Folio}' target='_blank' title="Ver Requisicion">
-                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
-                                        </a>
-                                        |
-                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion" 
-                                            data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}" class="text-success" title="Autorizar">
-                                            <i class="fa fa-thumbs-up" title="Autorizar Requisicion" style="font-size:.8rem;"></i>
-                                        </a> 
-                                        `
-                                        //Si el rol de usuario es compras o administrador
-                                    <?php
-                                        }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) {
-                                    ?>
-                                        actions = 
-                                            `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}" title="Editar Requisicion">
-                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
-                                            </a> |
-                                            <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                                <i class="fa fa-print" style="font-size:.8rem;" title="Imprimir Requisicion"></i>
-                                            </a> |
-                                            <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
-                                                <i class="fa fa-ban" style="font-size:.8rem;"></i>
-                                            </a> |
-                                            <a data-toggle="modal" data-target="#modalBorra" data-id="${full.Folio}" data-name="${full.arear}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisicion">
-                                                <i class="fa fa-trash" style="font-size:.8rem;"></i>
-                                            </a>
-                                            `;
-                                            //El resto de los usuarios
-                                        <?php
-                                            }else {
-                                        ?>
-                                        actions = 
-                                            `
-                                                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" title="Imprimir Requisicion">
-                                                    <i class="fa fa-print" style="font-size: .8rem;"></i>
-                                                </a>
-                                            `;
-                                <?php
-                                    }
-                                ?>
-                                }else if (full.estatus == 9) {
-                                    //Si el usuario es Raul o Itzu
-                                     <?php
-                                        if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3 ) {
-                                    ?>
-                                    actions =
-                                        `
-                                        <a href='factura/requisicion.php?id=${full.Folio}' target='_blank' title="Ver Requisicion">
-                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
-                                        </a>
-                                        |
-                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion" 
-                                            data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.tipor}" class="text-success" title="Autorizar">
-                                            <i class="fa fa-thumbs-up" title="Autorizar Requisicion" style="font-size:.8rem;"></i>
-                                        </a> 
-                                        `
-                                        //Si el rol de usuario es compras o administrador
-                                    <?php
-                                        }else if($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) {
-                                    ?>
-                                        actions = 
-                                            `<a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}" title="Editar Requisicion">
-                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
-                                            </a> |
-                                            <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                                <i class="fa fa-print" style="font-size:.8rem;" title="Imprimir Requisicion"></i>
-                                            </a> |
-                                            <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
-                                                <i class="fa fa-ban" style="font-size:.8rem;"></i>
-                                            </a> |
-                                            <a data-toggle="modal" data-target="#modalBorra" data-id="${full.Folio}" data-name="${full.arear}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisicion">
-                                                <i class="fa fa-trash" style="font-size:.8rem;"></i>
-                                            </a>
-                                            `;
-                                            //El resto de los usuarios
-                                        <?php
-                                            }else {
-                                        ?>
-                                        actions = 
-                                            `
-                                                <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" title="Imprimir Requisicion">
-                                                    <i class="fa fa-print" style="font-size: .8rem;"></i>
-                                                </a>
-                                            `;
-                                <?php
-                                    }
-                                ?>
-                                //Si la requisicion esta autorizada
-                                }else if (full.estatus == 2) {
-                                    //Si el rol de usuario es compras o administrador
-                                    <?php
-                                        if ($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) {
-                                    ?>
-                                    actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:.8rem;" title="Imprimir Requisicion"></i>
-                                        </a> |
-                                        <a href="new_orden_compra.php?req=${full.Folio}" class="text-success">
-                                            <i class="fa fa-clipboard" style="font-size:.8rem;" title="Generar Orden de Compra"></i>
-                                        </a> |
-                                        <a data-toggle="modal" data-target="#modalCancela" data-id="${full.Folio}" data-date="${full.fecha_req}" data-name="${full.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
-                                            <i class="fa fa-ban" style="font-size:.8rem;"></i>
-                                        </a>  | 
-                                         <a data-toggle="modal" data-target="#modalFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary" title="Ingresar datos de factura">
-                                            <i class="fa fa-file" style="font-size:.8rem;"></i>
-                                        </a> 
-                                    `;
-                                    //El resto de los usuarios
-                                <?php
-                                    } else {
-                                ?>
-                                   actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                            <i class="fa fa-print" style="font-size:.8rem;" title="Imprimir Requisicion"></i>
-                                        </a>
-                                        `;
-                                    <?php
-                                        }
-                                    ?>
-                                    //Facturado
-                                } else if (full.estatus == 4) {
-                                    actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" title="Imprimir Requisicion">
-                                            <i class="fa fa-print" style="font-size:.8rem;"></i>
-                                        </a>
-                                        |
-                                        <a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" href="javascript:void(0)" class="text-primary" title="Subir Factura">
-                                            <i class="fa fa-upload" style="font-size:.8rem;"></i> 
-                                        </a>
-                                    `
-                                    //Pagado
-                                }else if(full.estatus == 5) {
-                                    actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;" title="Imprimir Requisicion">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">R</span>
-                                        </a>
-                                        |
-                                        <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Factura"></i>
-                                            <span style="font-size: .8rem; ">F</span>
-                                        </a> 
-                                        
-                                       
-                                        `;
-                                        if(full.no_orden != "N/A") {
-                                            actions += `
-                                            |
-                                                <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
-                                                    <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                                    <span style="font-size: .8rem; ">OC</span>
-                                                </a>
-                                                |
-                                                 <a href="data/verpago.php?orden=${full.no_orden}" target="_blank" class="text-success" style="display: inline-block; text-align: center;">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Pago"></i>
-                                            <span style="font-size: .8rem; ">P</span>
-                                        </a> 
-                                            `
-                                        }else {
-                                            actions += `
-                                             <a href="data/verpago.php?id=${full.Folio}" target="_blank" class="text-success" style="display: inline-block; text-align: center;">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;" title="Ver Pago"></i>
-                                            <span style="font-size: .8rem; ">P</span>
-                                        </a> 
-                                            `
-                                        }
-                                    //Procesado
-                                }else if(full.estatus == 3) {
-                                    actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;" title="Imprimir Requisicion">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">R</span>
-                                        </a>
-                                        <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">OC</span>
-                                        </a>`
-                                        <?php if($_SESSION['rol'] != 7): ?>
-                                            actions +=`<a class="link_edit text-primary" href="edit_ordencompra.php?id=${full.no_orden}" title="Editar Orden de Compra">
-                                                    <i class="far fa-edit" style="font-size:.8rem;"></i>
-                                                </a>
-                                            <a data-toggle="modal" data-target="#modalIngreso" data-orden="${full.no_orden}" data-req="${full.Folio}" href="javascript.void(0)" class="text-warning" title="Ingresar Productos">
-                                                <i class="fa-solid fa-right-to-bracket" style="font-size:.8rem;"></i>
-                                            </a>
-                                            `;
-                                        <?php endif; ?>
-                                        //Facturado desde OC
-                                }else if(full.estatus == 7) {
-                                    actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;" title="Imprimir Factura">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">R</span>
-                                        </a>
-                                        <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">OC</span>
-                                        </a>`
-                                        <?php if($_SESSION['rol'] != 7): ?>
-                                            actions += `<a href="" data-toggle="modal" data-target="#subirFactura" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Factura">
-                                                <i class="fa fa-upload" style="font-size:.8rem;"></i> 
-                                            </a>
-                                            `;
-                                        <?php endif; ?>
-                                        //Producto Recibido
-                                }else if(full.estatus == 6) {
-                                    actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" class="mx-1" style="display: inline-block; text-align: center;" title="Imprimir Requisicion">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem;" title="Imprimir Requisicion">R</span>
-                                        </a>
-                                        <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-orange mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">OC</span>
-                                        </a>`
-                                        <?php if($_SESSION['rol'] != 7): ?>
-                                            `<a data-toggle="modal" data-target="#modalFactura" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1">
-                                                <i class="fa fa-file" style="font-size:.8rem;" title="Cargar datos de factura"></i>
-                                            </a>
-                                            `;
-                                        <?php endif; ?>
-                                        //Por Pagar
-                                }else if(full.estatus == 8) {
-                                    actions = `
-                                        <a href="factura/requisicion.php?id=${full.Folio}" target="_blank" style="display: inline-block; text-align: center;" title="Imprimir requisicion">
-                                            <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                            <span style="font-size: .8rem; ">R</span>
-                                        </a>
-                                        `
-                                        if(full.no_orden === 'N/A' ) {
-                                            actions += `
-                                                <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;" title="Ver Factura">
-                                                    <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                                    <span style="font-size: .8rem; ">F</span>
-                                                </a>
-                                                <a href="" data-toggle="modal" data-target="#pagar" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Pago">
-                                                    <i class="fa fa-upload" style="font-size:.8rem;"></i> 
-                                                </a>
-                                            `
-                                        }else {
-                                            actions += `
-                                            <a href="factura/orden_compra.php?id=${full.no_orden}" target="_blank" class="text-warning mx-1" style="display: inline-block; text-align: center;" title="Imprimir Orden de Compra">
-                                                <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                                <span style="font-size: .8rem; ">OC</span>
-                                            </a>
-                                            <a href="verfactura.php?id=${full.Folio}" target="_blank" class="text-orange" style="display: inline-block; text-align: center;" title="Ver Factura">
-                                                <i class="fa fa-print" style="font-size:.8rem; display: block;"></i>
-                                                <span style="font-size: .8rem; ">F</span>
-                                            </a>
-                                            <a href="" data-toggle="modal" data-target="#pagar" data-id="${full.Folio}" data-orden="${full.no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Pago">
-                                                <i class="fa fa-upload" style="font-size:.8rem;"></i> 
-                                            </a>
-                                            `
-                                        }
-                                        actions += `
-                                        <a class="link_edit text-primary" href="edit_factura.php?id=${full.no_factura}" title="Editar Factura">
-                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
-                                            </a>
-                                        `
-                                }
-                                return actions;
-                            }
-                        }
-                    ],
-                    language: {
-                        url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json",
-                        emptyTable: "No hay datos disponibles"
-                    }
-                });
-            }
-           
-            // Filtro por fecha y estatus
-            $("#filter").on("click", function (e) {
-                e.preventDefault();
-                console.log("Filter clicked");
-                const initial_date = $("#initial_date").val();
-                const final_date = $("#final_date").val();
-                const gender = $("#gender").val();
+    if (!initial_date || !final_date) {
+      $("#error_log").html("⚠️ Debes seleccionar ambas fechas.");
+      return;
+    }
+    const d1 = new Date(initial_date), d2 = new Date(final_date);
+    if (d1 > d2) {
+      $("#error_log").html("⚠️ La fecha final debe ser posterior a la inicial.");
+      return;
+    }
+    $("#error_log").html("");
+    initTable(initial_date, final_date, gender);
+  });
 
-                if (!initial_date || !final_date) {
-                    $("#error_log").html("⚠️ Debes seleccionar ambas fechas.");
-                    return;
-                }
+  // Datepicker
+  $(".datepicker").datepicker({
+    language: 'es',
+    dateFormat: "dd-mm-yy",
+    todayHighlight: true,
+    autoclose: true,
+    changeYear: true,
+    changeMonth: true
+  });
 
-                const date1 = new Date(initial_date);
-                const date2 = new Date(final_date);
+  // ---------- Helpers ----------
+  const get = (o, path) => {
+    if (!o) return undefined;
+    return path.split('.').reduce((acc, k) => (acc && acc[k] !== undefined ? acc[k] : undefined), o);
+  };
 
-                if (date1 > date2) {
-                    $("#error_log").html("⚠️ La fecha final debe ser posterior a la inicial.");
-                    return;
-                }
+  // Normaliza una fila del backend para que SIEMPRE tenga Folio/no_orden/no_factura
+  function sanitizeRow(row) {
+    const Folio      = row?.Folio ?? get(row,'Foliofull.Folio') ?? '';
+    const no_orden   = row?.no_orden ?? get(row,'Foliofull.no_orden') ?? 'N/A';
+    const no_factura = row?.no_factura ?? 'N/A';
+    // Alias anidado para compatibilidad con código viejo
+    const Foliofull  = { Folio, no_orden };
+    return { ...row, Folio, no_orden, no_factura, Foliofull };
+  }
 
-                $("#error_log").html("");
-                load_data(initial_date, final_date, gender);
-            });
+  function formatNoOrden(row) {
+    const no = row?.no_orden ?? get(row,'Foliofull.no_orden') ?? 'N/A';
+    return (!no || no === 'N/A') ? 'N/A' : 'OC-' + no;
+  }
+  function formatNoFactura(row) {
+    const nf = row?.no_factura ?? 'N/A';
+    return nf === 'N/A' ? nf : 'FA-' + nf;
+  }
 
-            // Inicialización del datepicker
-            $(".datepicker").datepicker({
-                language: 'es',
-                dateFormat: "dd-mm-yy",
-                todayHighlight: true,
-                autoclose: true,
-                changeYear: true,
-                changeMonth: true
+  // Render de acciones (usa SIEMPRE variables normalizadas para evitar errores)
+  function renderActions(full) {
+    const r = sanitizeRow(full);
+    const Folio = r.Folio;
+    const no_orden = r.no_orden;
 
-            });
-        });
-    </script>
-    <?php else: ?>
-        <script type="text/javascript">
+    let actions = "";
 
-        $(document).ready(function () {
-        // Carga inicial
-            load_data();
-            function load_data(initial_date = '', final_date = '', gender = '') {
-                const ajax_url = "data/datadetorders_req.php";
+    // Nota: usa siempre javascript:void(0) (sin puntos), y evita href duplicados.
+    // A partir de aquí pego tu lógica por estatus, pero usando Folio/no_orden.
+    if (r.estatus == 1) {
+      <?php if ($_SESSION['idUser'] == 39) { ?>
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Ver Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a> |
+        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion"
+           data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.tipor}" class="text-success" title="Autorizar">
+          <i class="fa fa-thumbs-up" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php } else if ($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) { ?>
+      actions = `
+        <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${r.pedidono}" title="Editar Requisicion">
+          <i class="far fa-edit" style="font-size:.8rem;"></i>
+        </a> |
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a> |
+        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
+          <i class="fa fa-ban" style="font-size:.8rem;"></i>
+        </a> |
+        <a data-toggle="modal" data-target="#modalBorra" data-id="${Folio}" data-name="${r.arear}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisicion">
+          <i class="fa fa-trash" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php } else { ?>
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php } ?>
+    } else if (r.estatus == 9) {
+      <?php if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3 ) { ?>
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Ver Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a> |
+        <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion"
+           data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.tipor}" class="text-success" title="Autorizar">
+          <i class="fa fa-thumbs-up" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php } else if ($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) { ?>
+      actions = `
+        <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${r.pedidono}" title="Editar Requisicion">
+          <i class="far fa-edit" style="font-size:.8rem;"></i>
+        </a> |
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a> |
+        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
+          <i class="fa fa-ban" style="font-size:.8rem;"></i>
+        </a> |
+        <a data-toggle="modal" data-target="#modalBorra" data-id="${Folio}" data-name="${r.arear}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisicion">
+          <i class="fa fa-trash" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php } else { ?>
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php } ?>
+    } else if (r.estatus == 2) {
+      <?php if ($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) { ?>
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a> |
+        <a href="new_orden_compra.php?req=${Folio}" class="text-success" title="Generar Orden de Compra">
+          <i class="fa fa-clipboard" style="font-size:.8rem;"></i>
+        </a> |
+        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
+          <i class="fa fa-ban" style="font-size:.8rem;"></i>
+        </a> |
+        <a data-toggle="modal" data-target="#modalFactura" data-id="${Folio}" href="javascript:void(0)" class="text-primary" title="Ingresar datos de factura">
+          <i class="fa fa-file" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php } else { ?>
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php } ?>
+    } else if (r.estatus == 4) {
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;"></i>
+        </a> |
+        <a data-toggle="modal" data-target="#subirFactura" data-id="${Folio}" href="javascript:void(0)" class="text-primary" title="Subir Factura">
+          <i class="fa fa-upload" style="font-size:.8rem;"></i>
+        </a>`;
+    } else if (r.estatus == 5) {
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" style="display:inline-block;text-align:center;" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
+        </a> |
+        <a href="verfactura.php?id=${Folio}" target="_blank" class="text-orange" style="display:inline-block;text-align:center;" title="Ver Factura">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">F</span>
+        </a>`;
+      if (no_orden !== "N/A") {
+        actions += `
+          |
+          <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-warning mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
+            <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">OC</span>
+          </a> |
+          <a href="data/verpago.php?orden=${no_orden}" target="_blank" class="text-success" style="display:inline-block;text-align:center;" title="Ver Pago">
+            <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">P</span>
+          </a>`;
+      } else {
+        actions += `
+          |
+          <a href="data/verpago.php?id=${Folio}" target="_blank" class="text-success" style="display:inline-block;text-align:center;" title="Ver Pago">
+            <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">P</span>
+          </a>`;
+      }
+    } else if (r.estatus == 3) {
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
+        </a>
+        <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-orange mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">OC</span>
+        </a>`;
+      <?php if($_SESSION['rol'] != 7): ?>
+      actions += `
+        <a class="link_edit text-primary" href="edit_ordencompra.php?id=${no_orden}" title="Editar Orden de Compra">
+          <i class="far fa-edit" style="font-size:.8rem;"></i>
+        </a>
+        <a data-toggle="modal" data-target="#modalIngreso" data-orden="${no_orden}" data-req="${Folio}" href="javascript:void(0)" class="text-warning" title="Ingresar Productos">
+          <i class="fa-solid fa-right-to-bracket" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php endif; ?>
+    } else if (r.estatus == 7) {
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Factura">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
+        </a>
+        <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-orange mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">OC</span>
+        </a>`;
+      <?php if($_SESSION['rol'] != 7): ?>
+      actions += `
+        <a data-toggle="modal" data-target="#subirFactura" data-id="${Folio}" data-orden="${no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Factura">
+          <i class="fa fa-upload" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php endif; ?>
+    } else if (r.estatus == 6) {
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
+        </a>
+        <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-orange mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">OC</span>
+        </a>`;
+      <?php if($_SESSION['rol'] != 7): ?>
+      actions += `
+        <a data-toggle="modal" data-target="#modalFactura" data-orden="${no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Cargar datos de factura">
+          <i class="fa fa-file" style="font-size:.8rem;"></i>
+        </a>`;
+      <?php endif; ?>
+    } else if (r.estatus == 8) {
+      actions = `
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" style="display:inline-block;text-align:center;" title="Imprimir requisicion">
+          <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
+        </a>`;
+      if (no_orden === 'N/A') {
+        actions += `
+          <a href="verfactura.php?id=${Folio}" target="_blank" class="text-orange" style="display:inline-block;text-align:center;" title="Ver Factura">
+            <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">F</span>
+          </a>
+          <a data-toggle="modal" data-target="#pagar" data-id="${Folio}" data-orden="${no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Pago">
+            <i class="fa fa-upload" style="font-size:.8rem;"></i>
+          </a>`;
+      } else {
+        actions += `
+          <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-warning mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
+            <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">OC</span>
+          </a>
+          <a href="verfactura.php?id=${Folio}" target="_blank" class="text-orange" style="display:inline-block;text-align:center;" title="Ver Factura">
+            <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">F</span>
+          </a>
+          <a data-toggle="modal" data-target="#pagar" data-id="${Folio}" data-orden="${no_orden}" href="javascript:void(0)" class="text-primary mx-1" title="Subir Pago">
+            <i class="fa fa-upload" style="font-size:.8rem;"></i>
+          </a>`;
+      }
+      actions += `
+        <a class="link_edit text-primary" href="edit_factura.php?id=${r.no_factura}" title="Editar Factura">
+          <i class="far fa-edit" style="font-size:.8rem;"></i>
+        </a>`;
+    }
 
-                $('#fetch_generated_wills').DataTable({
-                    destroy: true,
-                    processing: true,
-                    serverSide: true,
-                    stateSave: true,
-                    responsive: true,
-                    order: [[0, "desc"]],
-                    lengthMenu: [
-                        [10, 25, 50, 100, -1],
-                        [10, 25, 50, 100, "Todos"]
-                    ],
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copyHtml5',
-                        {
-                            text: 'Excel',
-                            action: function () {
+    return actions;
+  }
 
-                                // Redirige a un PHP que genera el Excel completo
-                                const url = `factura/requis_excel.php`;
-                                window.open(url, '_blank');
-                            }
-                        },
-                        'csvHtml5',
-                        'pageLength'
-                    ],
-                    ajax: {
-                        url: ajax_url,
-                        type: "POST",
-                        dataType: "json",
-                        data: {
-                            action: "fetch_users",
-                            initial_date,
-                            final_date,
-                            gender
-                        },
-                        dataSrc: function (json) {
-                            console.log("📦 Respuesta recibida:", json);
-                            return json.records || [];
-                        }
-                    },
-                    columns: [
-                        // { data: "pedidono", width: "3%", className: "text-center" },
-                        {
-                            data: "Folio",
-                            width: "2%",
-                            className: "text-center align-middle",
-                            render: data => 'REQ-' + data
-                        },
-                        { data: "fechaa", width: "3%", className: "text-center align-middle" },
-                        { data: "fecha_req", width: "5%", className: "text-center align-middle", orderable: false },
-                        { data: "arear", width: "15%", className: "text-center align-middle", orderable: false },
-                        { data: "notas", width: "30%", className: "text-left align-middle", orderable: false },
-                        { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
-                        {
-                            orderable: false,
-                            width: "20%",
-                            className: "text-center column-actions align-middle",
-                            render: function (data, type, full) {
-                                let actions = ""
-                                //Si el estado de la requisicion es activa
-                                if (full.estatus == 1) {
-                                    actions = `
-                                        <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${full.pedidono}" title="Editar Requisicion">
-                                                <i class="far fa-edit" style="font-size:.8rem;"></i>
-                                            </a> |
-                                            <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                                <i class="fa fa-print" style="font-size:.8rem;" title="Im primir Requisicion"></i>
-                                            </a>
-                                        `;
-                                }else {
-                                     actions = `
-                                            <a href="factura/requisicion.php?id=${full.Folio}" target="_blank">
-                                                <i class="fa fa-print" style="font-size:.8rem;" title="Im primir Requisicion"></i>
-                                            </a>
-                                        `;
-                                }
-                                return actions;
-                            }
-                        }
-                    ],
-                    language: {
-                        url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json",
-                        emptyTable: "No hay datos disponibles"
-                    }
-                });
-            }
-           
-            // Filtro por fecha y estatus
-            $("#filter").on("click", function (e) {
-                e.preventDefault();
-                console.log('Filtro...')
-                const initial_date = $("#initial_date").val();
-                const final_date = $("#final_date").val();
-                const gender = $("#gender").val();
+  function initTable(initial_date = '', final_date = '', gender = '') {
+    const ajax_url = "data/datadetorders_req.php";
 
-                if (!initial_date || !final_date) {
-                    $("#error_log").html("⚠️ Debes seleccionar ambas fechas.");
-                    return;
-                }
+    // Columnas comunes
+    const columnsCommon = [
+      {
+        data: "Folio",
+        width: "2%",
+        className: "text-center align-middle",
+        render: (data) => 'REQ-' + data
+      },
+      { data: "fechaa",     width: "3%", className: "text-center align-middle" },
+      { data: "fecha_req",  width: "5%", className: "text-center align-middle", orderable: false },
+    ];
 
-                const date1 = new Date(initial_date);
-                const date2 = new Date(final_date);
+    // Columnas extendidas (solo para perfiles con permisos)
+    const columnsExtended = IS_EXTENDED ? [
+      {
+        data: null,
+        width: "5%",
+        className: "text-center align-middle",
+        render: (d,t,row) => formatNoOrden(row)
+      },
+      { data: "fecha_orden", width: "5%", className: "text-center align-middle" },
+      {
+        data: null,
+        width: "5%",
+        className: "text-center align-middle",
+        render: (d,t,row) => formatNoFactura(row)
+      },
+      { data: "fecha_factura", width: "5%", className: "text-center align-middle", orderable: false },
+      { data: "fecha_pago",    width: "5%", className: "text-center align-middle", orderable: false },
+      { data: "tipor",         width: "5%", className: "text-center align-middle", orderable: false },
+      {
+        data: "monto",
+        width: "6%",
+        className: "text-center align-middle",
+        orderable: false,
+        render: $.fn.dataTable.render.number(',', '.', 2)
+      },
+    ] : [];
 
-                if (date1 > date2) {
-                    $("#error_log").html("⚠️ La fecha final debe ser posterior a la inicial.");
-                    return;
-                }
+    const tailColumns = [
+      { data: "arear",  width: "15%", className: "text-center align-middle", orderable: false },
+      { data: "notas",  width: "30%", className: IS_EXTENDED ? "text-center align-middle" : "text-left align-middle", orderable: false },
+      { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
+      {
+        data: null,
+        orderable: false,
+        width: "20%",
+        className: "text-center column-actions align-middle" + (IS_EXTENDED ? " noVis" : ""),
+        render: (d,t,full) => renderActions(full)
+      }
+    ];
 
-                $("#error_log").html("");
-                load_data(initial_date, final_date, gender);
-            });
+    $('#fetch_generated_wills').DataTable({
+      destroy: true,
+      processing: true,
+      serverSide: true,
+      stateSave: true,
+      responsive: true,
+      order: [[0, "desc"]],
+      lengthMenu: [[10, 25, 50, 100, -1],[10, 25, 50, 100, "Todos"]],
+      dom: 'Bfrtip',
+      buttons: (function() {
+        const base = [
+          'copyHtml5',
+          {
+            text: 'Excel',
+            action: function () { window.open('factura/requis_excel.php', '_blank'); }
+          },
+          'csvHtml5'
+        ];
+        if (IS_EXTENDED) base.push({ extend:'colvis', postfixButtons:['colvisRestore'], columns: ':not(.noVis)' });
+        base.push('pageLength');
+        return base;
+      })(),
+      ajax: {
+        url: ajax_url,
+        type: "POST",
+        dataType: "json",
+        data: { action:"fetch_users", initial_date, final_date, gender },
+        dataSrc: function (json) {
+          // Asegura un array y normaliza cada fila
+          const rows = (json && Array.isArray(json.records)) ? json.records : [];
+          return rows.map(sanitizeRow);
+        }
+      },
+      columns: [...columnsCommon, ...columnsExtended, ...tailColumns],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json",
+        emptyTable: "No hay datos disponibles"
+      }
+    });
+  }
+});
+</script>
 
-            // Inicialización del datepicker
-            // $(".datepicker").datepicker({
-            //     language: 'es',
-            //     dateFormat: "dd-mm-yyyy",
-            //     changeYear: true,
-            //     changeMonth: true,
-            //     todayHighlight: true,
-            //     autoclose: true
-            // });
-        });
-    </script>
-    <?php endif; ?>
     
     <script>
         function actualizarLaPagina(){
