@@ -51,7 +51,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     }
 
 
-    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden, f.no_factura, f.fecha AS fecha_factura, pg.fecha AS fecha_pago';
+    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden, o.total, f.no_factura, f.fecha AS fecha_factura, pg.fecha AS fecha_pago';
     $table = ' requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion LEFT JOIN facturas f ON f.no_requisicion = o.no_requisicion LEFT JOIN pagos_proveedor pg ON pg.no_requisicion = o.no_requisicion';
 
     // Construcción dinámica del WHERE
@@ -164,6 +164,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
     $count = $start;
 
     while ($row = mysqli_fetch_assoc($result)) {
+        // var_dump($row);
         $estatusMap = [
             0 => '<span class="badge bg-danger">Cancelada</span>',
             1 => '<span class="badge bg-primary">Activa</span>',
@@ -192,6 +193,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
         $noFacturaShow    = $row['no_factura']    ?? 'N/A';
         $fechaFacturaShow = $row['fecha_factura'] ?? 'N/A';
         $fechaPagoShow    = $row['fecha_pago']    ?? 'N/A';
+        $totalShow       = isset($row['total']) ? floatval($row['total']) : floatval($row['cant_autorizada']);
 
         $nestedData = [
             'counter'       => $count,
@@ -203,7 +205,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'fecha_req'     => date('d/m/Y', strtotime($row["fecha_requiere"])),
             'tipor'         => $row["tipo_requisicion"],
             'arear'         => $row['area_solicitante'],
-            'monto'         => $row['cant_autorizada'],
+            'monto'         => $totalShow,
             'notas'         => $row['observaciones'],
             'Datenew'       => $row["fecha"],
             'estatusped'    => $estatusMap[$row["estatus"]] ?? '<span class="badge bg-secondary">Desconocido</span>',
