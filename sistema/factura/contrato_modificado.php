@@ -187,17 +187,17 @@ function generarContratoEmpleado($nombreEmpleado) {
     $pdf->Ln(10);
     
     // Recuadro de firma para la empresa
-    $pdf->Cell(85,20,'',1,0,'C');  // cuadro vacío
-    $pdf->Cell(85,20,'',1,1,'C');  // cuadro vacío
-    // $pdf->Cell(85, 5, '_______________________________', 0, 0, 'C');
-    // $pdf->Cell(85, 5, '_______________________________', 0, 1, 'C');
+    // $pdf->Cell(85,20,'',1,0,'C');  // cuadro vacío
+    // $pdf->Cell(85,20,'',1,1,'C');  // cuadro vacío
+    $pdf->Cell(85, 5, '_______________________________', 0, 0, 'C');
+    $pdf->Cell(85, 5, '_______________________________', 0, 1, 'C');
     $pdf->Cell(85, 5, utf8_decode('RAUL GUTIERREZ DE VELASCO ROMO'), 0, 0, 'C');
     $pdf->Cell(85, 5, mb_convert_encoding($data['empleado'], 'ISO-8859-1', 'UTF-8'), 0, 1, 'C');
-    global $rutaTmp;              // ya lo define firmar_y_guardar.php
-    $pdf->Output($rutaTmp, 'F');  // guarda en disco para FPDI
+    // global $rutaTmp;              // ya lo define firmar_y_guardar.php
+    // $pdf->Output($rutaTmp, 'F');  // guarda en disco para FPDI
 
 
-    // $pdf->Output('I', 'Contrato_Eventual_30_Dias.pdf');
+    $pdf->Output('I', 'Contrato_Eventual_30_Dias.pdf');
 }
 
 if (isset($_GET['id'])) {

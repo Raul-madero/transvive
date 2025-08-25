@@ -145,7 +145,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <a href="#" onclick="
     const emp = document.getElementById('inputOperador').value;
     if (!emp) { alert('Selecciona un empleado'); return false; }
-    window.location = 'factura/firmar_contrato.html?id='+ encodeURIComponent(emp);
+    window.location = 'factura/contrato_modificado.php?id='+ encodeURIComponent(emp);
   ">
     <button type="button" class="btn btn-primary pull-left">
       <i class="fa fa-play"></i> Aceptar
