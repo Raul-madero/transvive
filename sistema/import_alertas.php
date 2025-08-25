@@ -46,10 +46,10 @@ if (isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
             if (count($data) >= 6) {
                 // 3) (OPCIONAL) Evitar duplicados por semana + año(fecha)
                 //    Descomenta si quieres saltar inserciones repetidas
-                $existsStmt->bind_param('sis', $data[0], $currentYear, $data[2]);
-                $existsStmt->execute();
-                $existsStmt->store_result();
-                if ($existsStmt->num_rows > 0) {
+                $stmt->bind_param('sis', $data[0], $currentYear, $data[2]);
+                $stmt->execute();
+                $stmt->store_result();
+                if ($stmt->num_rows > 0) {
                     // Ya hay registros para esa semana en el año actual
                     // decide si quieres: continue;  // saltar
                     // o antes borrar/update, según tu lógica
