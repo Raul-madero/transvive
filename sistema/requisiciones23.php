@@ -379,6 +379,9 @@ $(function () {
         </a> |
         <a data-toggle="modal" data-target="#subirFactura" data-id="${Folio}" href="javascript:void(0)" class="text-primary" title="Subir Factura">
           <i class="fa fa-upload" style="font-size:.8rem;"></i>
+        </a> |
+        <a href="new_orden_compra.php?req=${Folio}" class="text-success" title="Generar Orden de Compra">
+          <i class="fa fa-clipboard" style="font-size:.8rem;"></i>
         </a>`;
     } else if (r.estatus == 5) {
       actions = `
@@ -411,6 +414,9 @@ $(function () {
         </a>
         <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-orange mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
           <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">OC</span>
+        </a> |
+        <a href="new_orden_compra.php?req=${Folio}" class="text-success" title="Generar Orden de Compra">
+          <i class="fa fa-clipboard" style="font-size:.8rem;"></i>
         </a>`;
       <?php if($_SESSION['rol'] != 7): ?>
       actions += `
