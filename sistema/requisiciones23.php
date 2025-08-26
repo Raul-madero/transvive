@@ -485,34 +485,34 @@ $(function () {
 
   // ====== Columnas ======
   const columnsCommon = [
-    { data: "Folio", width: "2%", className: "text-center align-middle",
+    { data: "Folio", width: "5%", className: "text-center align-middle",
       render: (data) => `REQ-${str(data)}` },
-    { data: "fechaa",     width: "3%", className: "text-center align-middle",
+    { data: "fechaa",     width: "6%", className: "text-center align-middle",
       render: (d)=> str(d,'') },
-    { data: "fecha_req",  width: "5%", className: "text-center align-middle", orderable: false,
+    { data: "fecha_req",  width: "6%", className: "text-center align-middle", orderable: false,
       render: (d)=> str(d,'') },
   ];
 
   const columnsExtended = IS_EXTENDED ? [
     { data: null, width: "5%", className: "text-center align-middle",
       render: (d,t,row) => formatNoOrden(sanitizeRow(row)) },
-    { data: "fecha_orden",   width: "5%", className: "text-center align-middle", render:(d)=>str(d,'') },
-    { data: "fecha_entrega", width: "5%", className: "text-center align-middle", render:(d)=>str(d,'') },
-    { data: null, width: "5%", className: "text-center align-middle",
+    { data: "fecha_orden",   width: "6%", className: "text-center align-middle", render:(d)=>str(d,'') },
+    { data: "fecha_entrega", width: "6%", className: "text-center align-middle", render:(d)=>str(d,'') },
+    { data: null, width: "6%", className: "text-center align-middle",
       render: (d,t,row) => formatNoFact(sanitizeRow(row)) },
-    { data: "fecha_factura", width: "5%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
-    { data: "fecha_pago",    width: "5%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
-    { data: "tipor",         width: "5%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
-    { data: "monto",         width: "6%", className: "text-center align-middle", orderable:false,
+    { data: "fecha_factura", width: "6%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
+    { data: "fecha_pago",    width: "6%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
+    { data: "tipor",         width: "6%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
+    { data: "monto",         width: "10%", className: "text-center align-middle", orderable:false,
       render: (d)=> money(d) },
   ] : [];
 
   const tailColumns = [
     { data: "arear",  width: "15%", className: "text-center align-middle", orderable: false, render:(d)=>str(d,'') },
-    { data: "notas",  width: "30%", className: IS_EXTENDED ? "text-center align-middle" : "text-left align-middle",
+    { data: "notas",  width: "10%", className: IS_EXTENDED ? "text-center align-middle" : "text-left align-middle",
       orderable: false, render:(d)=>str(d,'') },
-    { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false, render:(d)=>str(d,'') },
-    { data: null, orderable: false, width: "20%",
+    { data: "estatusped", width: "10%", className: "text-center align-middle", orderable: false, render:(d)=>str(d,'') },
+    { data: null, orderable: false, width: "5%",
       className: "text-center column-actions align-middle" + (IS_EXTENDED ? " noVis" : ""),
       render: (d,t,full) => renderActions(full)
     }
@@ -534,7 +534,7 @@ $(function () {
       serverSide: true,
       stateSave: true,
       responsive: true,
-      autoWidth: false,
+      autoWidth: true,
       order: [[0, "desc"]],
       lengthMenu: [[10, 25, 50, 100, -1],[10, 25, 50, 100, "Todos"]],
       dom: 'Bfrtip',
