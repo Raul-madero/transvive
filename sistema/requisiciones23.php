@@ -1732,6 +1732,66 @@ $(function () {
   <input type="hidden" id="detalleImpuestosAdicionales" value="[]">
 </div>
 
+<!-- RETENCIONES -->
+<div class="form-check mb-2">
+  <input class="form-check-input" type="checkbox" id="toggleRetencion">
+  <label class="form-check-label" for="toggleRetencion">Agregar retenciones</label>
+</div>
+
+<div id="grupoRetenciones" style="display:none;">
+  <div class="row g-2 mb-2">
+    <div class="col-md-4">
+      <input type="text" id="nombreRetencion" class="form-control" placeholder="Nombre (ISR, IVA Ret.)">
+    </div>
+    <div class="col-md-2">
+      <select id="tipoRetencion" class="form-control">
+        <option value="porcentaje" selected>%</option>
+        <option value="monto">Monto fijo</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <input type="number" id="valorRetencion" class="form-control" placeholder="Valor" step="0.01" min="0">
+    </div>
+    <div class="col-md-3">
+      <select id="baseRetencion" class="form-control">
+        <option value="subtotal" selected>Sobre Subtotal</option>
+        <option value="iva">Sobre IVA</option>
+        <option value="subtotal_iva">Subtotal + IVA</option>
+      </select>
+    </div>
+    <div class="col-md-1">
+      <button type="button" id="btnAgregarRetencion" class="btn btn-outline-primary w-100">+</button>
+    </div>
+  </div>
+
+  <div id="tablaRetencionesWrap" style="display:none;">
+    <table class="table table-sm align-middle" id="tablaRetenciones">
+      <thead>
+        <tr>
+          <th>Retención</th>
+          <th class="text-end">Tipo</th>
+          <th class="text-end">Base</th>
+          <th class="text-end">Importe</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <th colspan="3" class="text-end">Total retenciones</th>
+          <th class="text-end" id="totalRetenciones">0.00</th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Hidden para backend -->
+  <input type="hidden" id="totalRetencionesHidden" value="0.00">
+  <input type="hidden" id="detalleRetenciones" value="[]">
+</div>
+
+
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -1749,6 +1809,7 @@ $(function () {
    Helpers y estado compartido
 =========================== */
 let impuestosAdicionales = []; // [{nombre, porcentaje, importe}]
+let retenciones = []; // [{nombre, tipo, base, importe}]
 
 // Convierte a número seguro
 function num(v) { 
@@ -1814,29 +1875,91 @@ function renderImpuestos(subtotal) {
   $('#detalleImpuestosAdicionales').val(JSON.stringify(impuestosAdicionales));
 }
 
+// ==== RETENCIONES ====
+// baseAmount según elección
+function baseRetencionAmount(base, subtotal, iva){
+  switch(base){
+    case 'iva': return iva;
+    case 'subtotal_iva': return subtotal + iva;
+    case 'subtotal':
+    default: return subtotal;
+  }
+}
+
+function renderRetenciones(subtotal, iva){
+  const $tbody = $('#tablaRetenciones tbody');
+  if(!$tbody.length) return;
+
+  $tbody.empty();
+  let totalR = 0;
+
+  retenciones.forEach((r, idx) => {
+    const baseAmt = baseRetencionAmount(r.base, subtotal, iva);
+    r.importe = (r.tipo === 'porcentaje') ? baseAmt * (num(r.valor)/100) : num(r.valor);
+    totalR += r.importe;
+
+    $tbody.append(`
+      <tr data-index="${idx}">
+        <td>${r.nombre}</td>
+        <td class="text-end">
+          <select class="form-control form-control-sm sel-tipo">
+            <option value="porcentaje" ${r.tipo==='porcentaje'?'selected':''}>%</option>
+            <option value="monto" ${r.tipo==='monto'?'selected':''}>Monto</option>
+          </select>
+          <input type="number" class="form-control form-control-sm mt-1 input-valor" value="${r.valor}" min="0" step="0.01">
+        </td>
+        <td class="text-end">
+          <select class="form-control form-control-sm sel-base">
+            <option value="subtotal" ${r.base==='subtotal'?'selected':''}>Subtotal</option>
+            <option value="iva" ${r.base==='iva'?'selected':''}>IVA</option>
+            <option value="subtotal_iva" ${r.base==='subtotal_iva'?'selected':''}>Subtotal+IVA</option>
+          </select>
+        </td>
+        <td class="text-end importe-ret">${f2(r.importe)}</td>
+        <td class="text-center">
+          <button type="button" class="btn btn-danger btn-sm btnEliminarRetencion">Eliminar</button>
+        </td>
+      </tr>
+    `);
+  });
+
+  $('#tablaRetencionesWrap').toggle(retenciones.length > 0);
+  $('#totalRetenciones').text(f2(totalR));
+  $('#totalRetencionesHidden').val(f2(totalR));
+  $('#detalleRetenciones').val(JSON.stringify(retenciones));
+}
+
 /* ===========================
    Recalcular Total General
    - Usa #subtotal actual
    - IVA 16% si aplica
    - Suma impuestos adicionales (si el bloque está visible)
 =========================== */
-function recalcularTotal() {
-  const subtotal   = num($('#subtotal').val());
-  const aplicaIva  = $('#aplicaIva').is(':checked');
-  const iva        = aplicaIva ? subtotal * 0.16 : 0;
+function recalcularTotal(){
+  // Subtotal
+  const subtotal = num($('#subtotal').val()) || 0;
+
+  // IVA
+  const aplicaIva = $('#aplicaIva').is(':checked');
+  const iva = aplicaIva ? subtotal * 0.16 : 0;
   $('#iva').val(f2(iva));
 
+  // Impuestos adicionales (+)
   let totalAdicionales = 0;
   if ($('#grupoImpuestoAdicional').is(':visible')) {
-    // recalcula importes individuales y refresca tabla
     renderImpuestos(subtotal);
     totalAdicionales = num($('#totalImpuestosAdicionalesHidden').val());
-  } else {
-    // si está oculto, no cuentan
-    totalAdicionales = 0;
   }
 
-  const total = subtotal + iva + totalAdicionales;
+  // Retenciones (-)
+  let totalRet = 0;
+  if ($('#grupoRetenciones').is(':visible')) {
+    renderRetenciones(subtotal, iva);
+    totalRet = num($('#totalRetencionesHidden').val());
+  }
+
+  // Total final
+  const total = subtotal + iva + totalAdicionales - totalRet;
   $('#total').val(f2(total));
 }
 
@@ -1936,6 +2059,62 @@ $(document).ready(function () {
     recalcularTotal();
   });
 
+   // 9) Mostrar/ocultar retenciones
+  $('#toggleRetencion').change(function(){
+    if(this.checked){
+      $('#grupoRetenciones').slideDown();
+    }else{
+      $('#grupoRetenciones').slideUp();
+      $('#tablaRetencionesWrap').slideUp();
+      retenciones = [];
+      renderRetenciones( num($('#subtotal').val())||0, num($('#iva').val())||0 );
+      recalcularTotal();
+    }
+  });
+
+  // 10) Agregar retención
+  $('#btnAgregarRetencion').on('click', function(e){
+    e.preventDefault();
+    const nombre = ($('#nombreRetencion').val()||'').trim();
+    const tipo   = $('#tipoRetencion').val(); // 'porcentaje'|'monto'
+    const valor  = num($('#valorRetencion').val());
+    const base   = $('#baseRetencion').val(); // 'subtotal'|'iva'|'subtotal_iva'
+
+    if(!nombre || valor<0){ alert('Completa nombre y un valor válido (>= 0).'); return; }
+    // Evita duplicados por nombre (opcional)
+    if(retenciones.some(r => r.nombre.toLowerCase()===nombre.toLowerCase())){
+      alert('Esta retención ya fue agregada.');
+      return;
+    }
+    retenciones.push({ nombre, tipo, valor, base, importe:0 });
+
+    // limpia inputs
+    $('#nombreRetencion').val('');
+    $('#valorRetencion').val('');
+
+    renderRetenciones(num($('#subtotal').val())||0, num($('#iva').val())||0);
+    recalcularTotal();
+  });
+
+  // 11) Editar tipo/valor/base en línea
+  $(document).on('change input', '#tablaRetenciones .sel-tipo, #tablaRetenciones .input-valor, #tablaRetenciones .sel-base', function(){
+    const $tr = $(this).closest('tr');
+    const idx = Number($tr.data('index'));
+    retenciones[idx].tipo  = $tr.find('.sel-tipo').val();
+    retenciones[idx].valor = num($tr.find('.input-valor').val());
+    retenciones[idx].base  = $tr.find('.sel-base').val();
+    renderRetenciones(num($('#subtotal').val())||0, num($('#iva').val())||0);
+    recalcularTotal();
+  });
+
+  // 12) Eliminar retención
+  $(document).on('click', '.btnEliminarRetencion', function(){
+    const idx = Number($(this).closest('tr').data('index'));
+    retenciones.splice(idx,1);
+    renderRetenciones(num($('#subtotal').val())||0, num($('#iva').val())||0);
+    recalcularTotal();
+  });
+
   /* ===========================
      Guardar: envia también los impuestos adicionales
   =========================== */
@@ -1973,8 +2152,8 @@ $(document).ready(function () {
       iva:           num($('#iva').val()),
       total:         num($('#total').val()),
       // NUEVO: impuestos adicionales
-      impuestos_adicionales_total:  num($('#totalImpuestosAdicionalesHidden').val()),
-      impuestos_adicionales_detalle: $('#detalleImpuestosAdicionales').val(), // JSON string
+      impuestos_adicionales: JSON.stringify(impuestosAdicionales),
+      retenciones: JSON.stringify(retenciones),
       productos: JSON.stringify(productos)
     };
 
