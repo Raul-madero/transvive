@@ -1499,20 +1499,20 @@ $(function () {
                     modal.find('#label_factura').text('No. Orden de Compra');
                 }
 
-                function recalcularTotalesDesdeTabla() {
-                    let subtotal = 0;
+                // function recalcularTotalesDesdeTabla() {
+                //     let subtotal = 0;
 
-                    $('#cuerpoFactura tr').each(function () {
-                        const cantidad = parseFloat($(this).find('input.cantidad').val()) || 0;
-                        const precio = parseFloat($(this).find('input.precio').val()) || 0;
-                        const total = cantidad * precio;
+                //     $('#cuerpoFactura tr').each(function () {
+                //         const cantidad = parseFloat($(this).find('input.cantidad').val()) || 0;
+                //         const precio = parseFloat($(this).find('input.precio').val()) || 0;
+                //         const total = cantidad * precio;
 
-                        subtotal += total;
-                        $(this).find('.total').text(total.toFixed(2));
-                    });
+                //         subtotal += total;
+                //         $(this).find('.total').text(total.toFixed(2));
+                //     });
 
-                    $('#subtotal').val(subtotal.toFixed(2)).trigger('input'); // también recalcula IVA e impuesto adicional
-                }
+                //     $('#subtotal').val(subtotal.toFixed(2)).trigger('input'); // también recalcula IVA e impuesto adicional
+                // }
                 //Obtener los proveedores para el selecta de la factura
                 $.ajax({
                     url: 'data/getProveedores.php',
@@ -1584,21 +1584,6 @@ $(function () {
                     }
                 });
             })
-        })
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('#aplicaIva').change(function() {
-                if ($(this).is(':checked')) {
-                    $('#campoIva').show();
-                } else {
-                    $('#campoIva').hide();
-                    $('#iva').val('0.00');
-                    $('#total').val($('#subtotal').val());
-                }
-                recalcularTotal();
-            });
         })
     </script>
 
@@ -1701,48 +1686,52 @@ $(function () {
                             </div>
                         </div>
 
-                        <!-- Resultado del impuesto adicional -->
-                        <div class="form-group row align-items-center" id="resultadoImpuesto" style="display: none;">
-                            <label class="col-sm-4 col-form-label text-left" id="etiquetaImpuestoAdicional"></label>
-                            <div class="col-sm-5">
-                                <input type="text" class="form-control" id="valorImpuestoAdicional" readonly>
-                            </div>
-                            <div class="col-sm-3">
-                                <button type="button" class="btn btn-sm btn-outline-danger" id="eliminarImpuestoAdicional">
-                                    Quitar
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Toggle para mostrar / ocultar el grupo -->
+<div class="form-check mb-2">
+  <input class="form-check-input" type="checkbox" id="toggleImpuesto">
+  <label class="form-check-label" for="toggleImpuesto">Agregar impuestos adicionales</label>
+</div>
 
-                        <!-- Impuestos adicionales -->
-                        <div class="form-group row">
-                            <label class="col-sm-4 col-form-label text-left">¿Tiene Impuesto Adicional?</label>
-                            <div class="col-sm-8">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="toggleImpuesto">
-                                    <label class="custom-control-label" for="toggleImpuesto">Si</label>
-                                </div>
-                            </div>
-                        </div>
+<div id="grupoImpuestoAdicional" style="display:none;">
+  <div class="row g-2 mb-2">
+    <div class="col-md-5">
+      <input type="text" id="nombreImpuestoAdicional" class="form-control" placeholder="Nombre del impuesto (ej. ISH)">
+    </div>
+    <div class="col-md-3">
+      <input type="number" id="porcentajeImpuestoAdicional" class="form-control" placeholder="% (ej. 3)" step="0.01" min="0">
+    </div>
+    <div class="col-md-4">
+      <button type="button" id="btnAgregarImpuesto" class="btn btn-primary w-100">Agregar impuesto</button>
+    </div>
+  </div>
 
-                        <div class="form-group row align-items-center" id="grupoImpuestoAdicional" style="display:none">
-                            <div class="col-4 row align-items-center">
-                                <label for="nombreImpuestoAdicional" class="col-sm-4 col-form-label text-left">Nombre Impuesto:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="nombreImpuestoAdicional" name="nombreImpuestoAdicional">
-                                </div>
-                            </div>
-                            <div class="col-4 row">
-                                <label for="porcentajeImpuestoAdicional" class="col-sm-5 col-form-label text-left">Porcentaje:</label>
-                                <div class="col-sm-7">
-                                    <input type="number" class="form-control" id="porcentajeImpuestoAdicional" name="porcentajeImpuestoAdicional">
-                                </div>
-                            </div>
-                            <div class="col-4 row">
-                                <button class="btn btn-outline-success rounded-full">Agregar Impuesto</button>
-                            </div>
-                        </div>
-                    </div>
+  <!-- Tabla de impuestos agregados -->
+  <div id="resultadoImpuesto" style="display:none;">
+    <table class="table table-sm align-middle" id="tablaImpuestos">
+      <thead>
+        <tr>
+          <th>Impuesto</th>
+          <th class="text-end">% aplicado</th>
+          <th class="text-end">Importe</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <th colspan="2" class="text-end">Total impuestos adicionales</th>
+          <th class="text-end" id="totalImpuestosAdicionales">0.00</th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Campo oculto para enviar el total y el detalle -->
+  <input type="hidden" id="totalImpuestosAdicionalesHidden" value="0.00">
+  <input type="hidden" id="detalleImpuestosAdicionales" value="[]">
+</div>
+
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -1756,169 +1745,266 @@ $(function () {
     </div>
 
     <script>
-         //Recalcular totales despues de haber modificado campos
-            function recalcularTotal() {
-                const subtotal = parseFloat($('#subtotal').val()) || 0;
-                const iva = subtotal * 0.16; // puedes ajustar si el IVA es diferente
-                $('#iva').val(iva.toFixed(2));
+/* ===========================
+   Helpers y estado compartido
+=========================== */
+let impuestosAdicionales = []; // [{nombre, porcentaje, importe}]
 
-                const impuestoAdicional = parseFloat($('#valorImpuestoAdicional').val()) || 0;
-                const total = subtotal + iva + impuestoAdicional;
+// Convierte a número seguro
+function num(v) { 
+  if (typeof v === 'string') v = v.replace(',', '.');
+  const n = parseFloat(v);
+  return isNaN(n) ? 0 : n;
+}
 
-                $('#total').val(total.toFixed(2));
-            }
+// Formato fijo a 2 dec
+function f2(n) { return Number(n).toFixed(2); }
 
-        $(document).ready(function() {
-            //Si esta activado el checkbox para mostrar el grupo de impuestos adicionales
-           $('#toggleImpuesto').change(function () {
-                if ($(this).is(':checked')) {
-                    $('#grupoImpuestoAdicional').slideDown();
-                } else {
-                    $('#grupoImpuestoAdicional').slideUp();
-                    $('#resultadoImpuesto').slideUp();
-                    $('#nombreImpuestoAdicional').val('');
-                    $('#porcentajeImpuestoAdicional').val('');
-                    recalcularTotal(); // limpia impacto del impuesto
-                }
-            });
+/* ===========================
+   Cálculo desde la tabla
+   - Recorre filas y actualiza subtotal y totales por fila
+=========================== */
+function recalcularDesdeTabla() {
+  let subtotal = 0;
 
-             // Evento del botón Agregar Impuesto
-            $('#grupoImpuestoAdicional button').click(function (e) {
-                e.preventDefault();
+  $('#cuerpoFactura tr').each(function () {
+    const $tr = $(this);
+    const cant   = num($tr.find('input.cantidad').val());
+    const precio = num($tr.find('input.precio').val());
+    const total  = cant * precio;
+    subtotal += total;
+    $tr.find('.total').text(f2(total));
+  });
 
-                const nombre = $('#nombreImpuestoAdicional').val().trim();
-                const porcentaje = parseFloat($('#porcentajeImpuestoAdicional').val());
-                const subtotal = parseFloat($('#subtotal').val()) || 0;
+  $('#subtotal').val(f2(subtotal));
+  recalcularTotal(); // encadena IVA + adicionales + total
+}
 
-                if (!nombre || isNaN(porcentaje)) {
-                    alert('Completa nombre y porcentaje del impuesto.');
-                    return;
-                }
+/* ===========================
+   Render de impuestos extra
+=========================== */
+function renderImpuestos(subtotal) {
+  const $tbody = $('#tablaImpuestos tbody');
+  $tbody.empty();
 
-                const valorImpuesto = subtotal * (porcentaje / 100);
-                const total = subtotal + valorImpuesto;
+  let totalAdicionales = 0;
 
-                $('#etiquetaImpuestoAdicional').text(`${nombre} (${porcentaje}%)`);
-                $('#valorImpuestoAdicional').val(valorImpuesto.toFixed(2));
-                $('#resultadoImpuesto').slideDown();
+  impuestosAdicionales.forEach((imp, idx) => {
+    // importe de cada impuesto = % sobre subtotal
+    imp.importe = subtotal * (num(imp.porcentaje) / 100);
+    totalAdicionales += imp.importe;
 
-                recalcularTotal(); // recalcula total final
-            });
+    $tbody.append(`
+      <tr data-index="${idx}">
+        <td>${imp.nombre}</td>
+        <td class="text-end" style="max-width:120px">
+          <input type="number" class="form-control form-control-sm input-porcentaje" value="${imp.porcentaje}" min="0" step="0.01">
+        </td>
+        <td class="text-end importe">${f2(imp.importe)}</td>
+        <td class="text-center">
+          <button type="button" class="btn btn-danger btn-sm btnEliminarImpuesto">Eliminar</button>
+        </td>
+      </tr>
+    `);
+  });
 
-            // Recalcular total con o sin impuesto
-            $('#subtotal').on('input', function () {
-                recalcularTotal();
-            });
-            //Eliminar el impuesto adicional de la tabla
-            $('#eliminarImpuestoAdicional').click(function () {
-                $('#resultadoImpuesto').slideUp();
-                $('#valorImpuestoAdicional').val('');
-                $('#etiquetaImpuestoAdicional').text('');
-                $('#nombreImpuestoAdicional').val('');
-                $('#porcentajeImpuestoAdicional').val('');
-                $('#toggleImpuesto').prop('checked', false);
-                $('#grupoImpuestoAdicional').slideUp();
-                recalcularTotal();
-            });
+  $('#resultadoImpuesto').toggle(impuestosAdicionales.length > 0);
+  $('#totalImpuestosAdicionales').text(f2(totalAdicionales));
+  $('#totalImpuestosAdicionalesHidden').val(f2(totalAdicionales));
+  $('#detalleImpuestosAdicionales').val(JSON.stringify(impuestosAdicionales));
+}
 
-            //Al dar click en el boton guardar, valida los datos del formulario y envía los datos al servidor
-            $('#guardarFactura').click(function (e) {
-                e.preventDefault();
-                //Recorre las filas de la tabla de productos para agregarlos al array de datos
-                const productos = [];
+/* ===========================
+   Recalcular Total General
+   - Usa #subtotal actual
+   - IVA 16% si aplica
+   - Suma impuestos adicionales (si el bloque está visible)
+=========================== */
+function recalcularTotal() {
+  const subtotal   = num($('#subtotal').val());
+  const aplicaIva  = $('#aplicaIva').is(':checked');
+  const iva        = aplicaIva ? subtotal * 0.16 : 0;
+  $('#iva').val(f2(iva));
 
-                $('#cuerpoFactura tr').each(function () {
-                    const fila = $(this);
-                    const codigo = fila.find('td').eq(0).text().trim();
-                    const cantidad = parseFloat(fila.find('input.cantidad').val()) || 0;
-                    const descripcion = fila.find('td').eq(2).text().trim();
-                    const precio = parseFloat(fila.find('input.precio').val()) || 0;
-                    const total = cantidad * precio;
+  let totalAdicionales = 0;
+  if ($('#grupoImpuestoAdicional').is(':visible')) {
+    // recalcula importes individuales y refresca tabla
+    renderImpuestos(subtotal);
+    totalAdicionales = num($('#totalImpuestosAdicionalesHidden').val());
+  } else {
+    // si está oculto, no cuentan
+    totalAdicionales = 0;
+  }
 
-                    productos.push({
-                        codigo,
-                        descripcion,
-                        cantidad,
-                        precio,
-                        total
-                    });
-                });
-                // Valida los datos del formulario
-                const no_requisicion = $('#factura_norequi').val();
-                const no_orden = $('#factura_orden').val();
-                const folio = no_requisicion.replace(/\D+/g, '');
-                const orden = no_orden.replace(/\D+/g, '');
-                const no_factura = $('#no_factura').val();
-                const fecha_factura = $('#fecha').val();
-                const fecha_pago = $('#fecha_pago').val();
-                const proveedor = $('#proveedor').val();
-                const subtotal = parseFloat($('#subtotal').val()) || 0;
-                const iva = parseFloat($('#iva').val()) || 0;
-                const total = parseFloat($('#total').val()) || 0;
-                const impuestoAdicional = $('#nombreImpuestoAdicional').val();
-                const valorImpuestoAdicional = parseFloat($('#porcentajeImpuestoAdicional').val()) || 0;
-                const url = 'data/guardarFactura.php';
-                //Llamada ajax para insertar en la base d edatos
-                $.ajax({
-                    url,
-                    method: 'POST',
-                    data: {
-                        no_requisicion,
-                        folio,
-                        no_orden,
-                        orden,
-                        no_factura,
-                        fecha_factura,
-                        fecha_pago,
-                        proveedor,
-                        subtotal,
-                        iva,
-                        total,
-                        impuestoAdicional,
-                        valorImpuestoAdicional,
-                        productos: JSON.stringify(productos) //convierte el array de productos a JSON
-                    },
-                    success: function (response) {
-                        // Procesa la respuesta del servidor y muestra el resultado al usuario
-                        try {
-                            const res = typeof response === 'string' ? JSON.parse(response) : response;
+  const total = subtotal + iva + totalAdicionales;
+  $('#total').val(f2(total));
+}
 
-                            if (res.status === "success") {
-                                Swal.fire({
-                                    title: 'Factura Guardada!',
-                                    text: res.message,
-                                    icon:'success',
-                                    confirmButtonText: 'Aceptar'
-                                })
-                                $('#modalFactura').modal('hide');
-                                window.location.reload();
-                            } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: res.message,
-                                    icon: 'error',
-                                    confirmButtonText: 'Aceptar'
-                                })
-                            }
-                        } catch (err) {
-                            console.error('Error al parsear respuesta:', err);
-                            Swal.fire('Error', 'Respuesta inesperada del servidor.', 'error');
-                        }
-                    },
-                    error: function (xhr, status, error) {
+/* ===========================
+   Listeners
+=========================== */
+$(document).ready(function () {
+  // 1) Inicialización cuando se abre/cierra el modal (opcional pero útil)
+  $('#modalFactura').on('shown.bs.modal', function () {
+    // Asegura estado limpio de impuestos
+    impuestosAdicionales = [];
+    $('#toggleImpuesto').prop('checked', false);
+    $('#grupoImpuestoAdicional').hide();
+    $('#resultadoImpuesto').hide();
+    renderImpuestos( num($('#subtotal').val()) || 0 );
 
-                        console.error('Error al guardar la factura:', xhr.responseText);
-                        Swal.fire({
-                            title: 'Error al guardar la factura',
-                            text: 'Hubo un error al guardar la factura. Intente nuevamente.',
-                            icon: 'error',
-                            confirmButtonText: 'Aceptar'
-                        })
-                    }
-                })
-            })
-        });
-    </script>
+    // Si tu tabla ya está cargada con productos, calcula de entrada
+    recalcularDesdeTabla();
+  });
+
+  $('#modalFactura').on('hidden.bs.modal', function () {
+    // Limpia por si el usuario vuelve a abrir
+    impuestosAdicionales = [];
+    $('#totalImpuestosAdicionalesHidden').val('0.00');
+    $('#detalleImpuestosAdicionales').val('[]');
+  });
+
+  // 2) Cambios en la tabla de productos → recalcular
+  $(document).on('input', '#cuerpoFactura input.cantidad, #cuerpoFactura input.precio', function () {
+    recalcularDesdeTabla();
+  });
+
+  // 3) Cambios manuales de subtotal → respetar y recalcular
+  $('#subtotal').on('input', function () {
+    // Si el usuario edita a mano el subtotal, solo recalculamos IVA y adicionales
+    recalcularTotal();
+  });
+
+  // 4) Toggle IVA
+  $('#aplicaIva').change(function () {
+    $('#campoIva').toggle(this.checked);
+    if (!this.checked) { $('#iva').val('0.00'); }
+    // Siempre recalcula (esto soluciona "al volver a dar click" vuelve a 16%)
+    recalcularTotal();
+  });
+
+  // 5) Toggle bloque de impuestos adicionales
+  $('#toggleImpuesto').change(function () {
+    if (this.checked) {
+      $('#grupoImpuestoAdicional').slideDown();
+    } else {
+      $('#grupoImpuestoAdicional').slideUp();
+      $('#resultadoImpuesto').slideUp();
+      impuestosAdicionales = [];
+      renderImpuestos(num($('#subtotal').val()) || 0);
+      recalcularTotal();
+    }
+  });
+
+  // 6) Agregar impuesto (evita duplicados por nombre)
+  $('#btnAgregarImpuesto').on('click', function (e) {
+    e.preventDefault();
+    const nombre = $('#nombreImpuestoAdicional').val().trim();
+    const porcentaje = num($('#porcentajeImpuestoAdicional').val());
+
+    if (!nombre || porcentaje < 0) {
+      alert('Completa nombre y un porcentaje válido (>= 0).');
+      return;
+    }
+    const existe = impuestosAdicionales.some(i => i.nombre.toLowerCase() === nombre.toLowerCase());
+    if (existe) {
+      alert('Este impuesto ya fue agregado.');
+      return;
+    }
+
+    impuestosAdicionales.push({ nombre, porcentaje, importe: 0 });
+    $('#nombreImpuestoAdicional').val('');
+    $('#porcentajeImpuestoAdicional').val('');
+
+    renderImpuestos(num($('#subtotal').val()) || 0);
+    recalcularTotal();
+  });
+
+  // 7) Editar % en línea
+  $(document).on('input', '.input-porcentaje', function () {
+    const idx = Number($(this).closest('tr').data('index'));
+    impuestosAdicionales[idx].porcentaje = num($(this).val());
+    renderImpuestos(num($('#subtotal').val()) || 0);
+    recalcularTotal();
+  });
+
+  // 8) Eliminar impuesto
+  $(document).on('click', '.btnEliminarImpuesto', function () {
+    const idx = Number($(this).closest('tr').data('index'));
+    impuestosAdicionales.splice(idx, 1);
+    renderImpuestos(num($('#subtotal').val()) || 0);
+    recalcularTotal();
+  });
+
+  /* ===========================
+     Guardar: envia también los impuestos adicionales
+  =========================== */
+  $('#guardarFactura').click(function (e) {
+    e.preventDefault();
+
+    // Construir productos desde la tabla
+    const productos = [];
+    $('#cuerpoFactura tr').each(function () {
+      const $tr = $(this);
+      const codigo = $tr.find('td').eq(0).text().trim();
+      const cantidad = num($tr.find('input.cantidad').val());
+      const descripcion = $tr.find('td').eq(2).text().trim();
+      const precio = num($tr.find('input.precio').val());
+      const total = cantidad * precio;
+      productos.push({ codigo, descripcion, cantidad, precio, total });
+    });
+
+    // Campos principales
+    const no_requisicion = $('#factura_norequi').val(); // ej "REQ-123"
+    const no_orden       = $('#factura_orden').val();   // ej "OC-456" o vacío
+    const folio          = no_requisicion ? no_requisicion.replace(/\D+/g, '') : '';
+    const orden          = no_orden ? no_orden.replace(/\D+/g, '') : '';
+
+    const payload = {
+      no_requisicion,
+      folio,
+      no_orden,
+      orden,
+      no_factura:    $('#no_factura').val(),
+      fecha_factura: $('#fecha').val(),
+      fecha_pago:    $('#fecha_pago').val(),
+      proveedor:     $('#proveedor').val(),
+      subtotal:      num($('#subtotal').val()),
+      iva:           num($('#iva').val()),
+      total:         num($('#total').val()),
+      // NUEVO: impuestos adicionales
+      impuestos_adicionales_total:  num($('#totalImpuestosAdicionalesHidden').val()),
+      impuestos_adicionales_detalle: $('#detalleImpuestosAdicionales').val(), // JSON string
+      productos: JSON.stringify(productos)
+    };
+
+    $.ajax({
+      url: 'data/guardarFactura.php',
+      method: 'POST',
+      data: payload,
+      success: function (response) {
+        try {
+          const res = typeof response === 'string' ? JSON.parse(response) : response;
+          if (res.status === 'success') {
+            Swal.fire({ title: 'Factura Guardada!', text: res.message, icon:'success', confirmButtonText: 'Aceptar' });
+            $('#modalFactura').modal('hide');
+            window.location.reload();
+          } else {
+            Swal.fire({ title: 'Error', text: res.message, icon:'error', confirmButtonText: 'Aceptar' });
+          }
+        } catch (err) {
+          console.error('Error al parsear respuesta:', err, response);
+          Swal.fire('Error', 'Respuesta inesperada del servidor.', 'error');
+        }
+      },
+      error: function (xhr) {
+        console.error('Error al guardar la factura:', xhr.responseText);
+        Swal.fire({ title: 'Error al guardar la factura', text: 'Hubo un error al guardar la factura. Intente nuevamente.', icon:'error', confirmButtonText: 'Aceptar' });
+      }
+    });
+  });
+});
+</script>
 
     <script>
         //Refrescar la sesion
