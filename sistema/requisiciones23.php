@@ -163,6 +163,7 @@ session_start();
                                         <?php if($_SESSION['idUser'] != 32): ?>
                                             <th class="text-center">No. OC</th>
                                             <th class="text-center">Fecha OC</th>
+                                            <th class="text-center">Fecha Recepcion</th>
                                             <th class="text-center">No. Factura</th>
                                             <th class="text-center">Fecha Factura</th>
                                             <th class="text-center">Fecha Pago</th>
@@ -230,146 +231,134 @@ $IS_EXTENDED = ($_SESSION['rol'] == 1
 ?>
 <script type="text/javascript">
 $(function () {
+  // ====== Config global segura ======
+  $.fn.dataTable.ext.errMode = 'none'; // Evita alerts nativos de DT
+
   const IS_EXTENDED = <?php echo json_encode($IS_EXTENDED); ?>;
+  const ajax_url = "data/datadetorders_req.php";
 
-  // Inicial
-  initTable();
+  // Log de errores visibles
+  const logError = (msg) => $("#error_log").html(msg || "");
 
-  // Filtro por fecha/estatus
-  $("#filter").on("click", function (e) {
-    e.preventDefault();
-    const initial_date = $("#initial_date").val();
-    const final_date   = $("#final_date").val();
-    const gender       = $("#gender").val();
-
-    if (!initial_date || !final_date) {
-      $("#error_log").html("⚠️ Debes seleccionar ambas fechas.");
-      return;
-    }
-    const d1 = new Date(initial_date), d2 = new Date(final_date);
-    if (d1 > d2) {
-      $("#error_log").html("⚠️ La fecha final debe ser posterior a la inicial.");
-      return;
-    }
-    $("#error_log").html("");
-    initTable(initial_date, final_date, gender);
-  });
-
-  // Datepicker
-  $(".datepicker").datepicker({
+  // ====== Datepicker (bootstrap-datepicker) ======
+  // Si usas bootstrap-datepicker, la opción correcta es "format" (no dateFormat)
+  // Cambia a "dateFormat" si usas jQuery UI Datepicker.
+  $(".datepicker").datepicker?.({
     language: 'es',
-    dateFormat: "dd-mm-yy",
+    format: "dd-mm-yyyy",
     todayHighlight: true,
     autoclose: true,
-    changeYear: true,
-    changeMonth: true
+    clearBtn: true
   });
 
-  // ---------- Helpers ----------
+  // ====== Helpers ======
   const get = (o, path) => {
     if (!o) return undefined;
     return path.split('.').reduce((acc, k) => (acc && acc[k] !== undefined ? acc[k] : undefined), o);
   };
+  const nz = (v, d='') => (v === null || v === undefined ? d : v);          // null -> default
+  const str = (v, d='') => (v === null || v === undefined ? d : String(v));  // a string
+  const num = (v, d=0) => (isFinite(v) ? Number(v) : d);                      // a número
 
   // Normaliza una fila del backend para que SIEMPRE tenga Folio/no_orden/no_factura
   function sanitizeRow(row) {
-    const Folio      = row?.Folio ?? get(row,'Foliofull.Folio') ?? '';
-    const no_orden   = row?.no_orden ?? get(row,'Foliofull.no_orden') ?? 'N/A';
-    const no_factura = row?.no_factura ?? 'N/A';
-    // Alias anidado para compatibilidad con código viejo
+    // Acepta varios esquemas del backend
+    const Folio      = nz(row?.Folio, nz(get(row,'Foliofull.Folio'), ''));
+    const no_orden   = nz(row?.no_orden, nz(get(row,'Foliofull.no_orden'), 'N/A'));
+    const no_factura = nz(row?.no_factura, 'N/A');
     const Foliofull  = { Folio, no_orden };
-    return { ...row, Folio, no_orden, no_factura, Foliofull };
+    return {
+      ...row,
+      Folio,
+      no_orden,
+      no_factura,
+      Foliofull
+    };
   }
 
-  function formatNoOrden(row) {
-    const no = row?.no_orden ?? get(row,'Foliofull.no_orden') ?? 'N/A';
-    return (!no || no === 'N/A') ? 'N/A' : 'OC-' + no;
-  }
-  function formatNoFactura(row) {
-    const nf = row?.no_factura ?? 'N/A';
-    return nf === 'N/A' ? nf : 'FA-' + nf;
-  }
+  const formatNoOrden = (row)   => (str(row?.no_orden || get(row,'Foliofull.no_orden') || 'N/A') === 'N/A' ? 'N/A' : `OC-${row.no_orden}`);
+  const formatNoFact  = (row)   => (str(row?.no_factura || 'N/A') === 'N/A' ? 'N/A' : `FA-${row.no_factura}`);
+  const money         = (v)     => new Intl.NumberFormat('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2}).format(num(v));
 
-  // Render de acciones (usa SIEMPRE variables normalizadas para evitar errores)
+  // ====== Acciones (usa SIEMPRE datos normalizados) ======
   function renderActions(full) {
     const r = sanitizeRow(full);
-    const Folio = r.Folio;
+    const Folio    = r.Folio;
     const no_orden = r.no_orden;
 
     let actions = "";
 
-    // Nota: usa siempre javascript:void(0) (sin puntos), y evita href duplicados.
-    // A partir de aquí pego tu lógica por estatus, pero usando Folio/no_orden.
+    // Copié tu lógica, sólo aseguré Folio/no_orden y href seguros (javascript:void(0))
     if (r.estatus == 1) {
       <?php if ($_SESSION['idUser'] == 39) { ?>
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Ver Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Ver Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a> |
         <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion"
-           data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.tipor}" class="text-success" title="Autorizar">
+           data-id="${Folio}" data-date="${nz(r.fecha_req,'')}" data-name="${nz(r.tipor,'')}" class="text-success" title="Autorizar">
           <i class="fa fa-thumbs-up" style="font-size:.8rem;"></i>
         </a>`;
       <?php } else if ($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) { ?>
       actions = `
-        <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${r.pedidono}" title="Editar Requisicion">
+        <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${nz(r.pedidono,'')}" title="Editar Requisición">
           <i class="far fa-edit" style="font-size:.8rem;"></i>
         </a> |
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a> |
-        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
+        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${nz(r.fecha_req,'')}" data-name="${nz(r.arear,'')}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisición">
           <i class="fa fa-ban" style="font-size:.8rem;"></i>
         </a> |
-        <a data-toggle="modal" data-target="#modalBorra" data-id="${Folio}" data-name="${r.arear}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisicion">
+        <a data-toggle="modal" data-target="#modalBorra" data-id="${Folio}" data-name="${nz(r.arear,'')}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisición">
           <i class="fa fa-trash" style="font-size:.8rem;"></i>
         </a>`;
       <?php } else { ?>
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a>`;
       <?php } ?>
     } else if (r.estatus == 9) {
       <?php if ($_SESSION['idUser'] == 17 || $_SESSION['idUser'] == 3 ) { ?>
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Ver Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Ver Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a> |
         <a href="javascript:void(0)" data-toggle="modal" data-target="#modalAutorizaRequisicion"
-           data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.tipor}" class="text-success" title="Autorizar">
+           data-id="${Folio}" data-date="${nz(r.fecha_req,'')}" data-name="${nz(r.tipor,'')}" class="text-success" title="Autorizar">
           <i class="fa fa-thumbs-up" style="font-size:.8rem;"></i>
         </a>`;
       <?php } else if ($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) { ?>
       actions = `
-        <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${r.pedidono}" title="Editar Requisicion">
+        <a class="link_edit text-primary" href="edit_cotizacioncompra.php?id=${nz(r.pedidono,'')}" title="Editar Requisición">
           <i class="far fa-edit" style="font-size:.8rem;"></i>
         </a> |
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a> |
-        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
+        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${nz(r.fecha_req,'')}" data-name="${nz(r.arear,'')}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisición">
           <i class="fa fa-ban" style="font-size:.8rem;"></i>
         </a> |
-        <a data-toggle="modal" data-target="#modalBorra" data-id="${Folio}" data-name="${r.arear}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisicion">
+        <a data-toggle="modal" data-target="#modalBorra" data-id="${Folio}" data-name="${nz(r.arear,'')}" href="javascript:void(0)" class="link_delete text-danger" title="Borrar Requisición">
           <i class="fa fa-trash" style="font-size:.8rem;"></i>
         </a>`;
       <?php } else { ?>
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a>`;
       <?php } ?>
     } else if (r.estatus == 2) {
       <?php if ($_SESSION['rol'] == 16 || $_SESSION['rol'] == 1 || $_SESSION['rol'] == 7 || $_SESSION['idUser'] == 19) { ?>
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a> |
         <a href="new_orden_compra.php?req=${Folio}" class="text-success" title="Generar Orden de Compra">
           <i class="fa fa-clipboard" style="font-size:.8rem;"></i>
         </a> |
-        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${r.fecha_req}" data-name="${r.arear}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisicion">
+        <a data-toggle="modal" data-target="#modalCancela" data-id="${Folio}" data-date="${nz(r.fecha_req,'')}" data-name="${nz(r.arear,'')}" href="javascript:void(0)" class="text-warning" title="Cancelar Requisición">
           <i class="fa fa-ban" style="font-size:.8rem;"></i>
         </a> |
         <a data-toggle="modal" data-target="#modalFactura" data-id="${Folio}" href="javascript:void(0)" class="text-primary" title="Ingresar datos de factura">
@@ -377,13 +366,13 @@ $(function () {
         </a>`;
       <?php } else { ?>
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a>`;
       <?php } ?>
     } else if (r.estatus == 4) {
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;"></i>
         </a> |
         <a data-toggle="modal" data-target="#subirFactura" data-id="${Folio}" href="javascript:void(0)" class="text-primary" title="Subir Factura">
@@ -391,13 +380,13 @@ $(function () {
         </a>`;
     } else if (r.estatus == 5) {
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" style="display:inline-block;text-align:center;" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" style="display:inline-block;text-align:center;" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
         </a> |
         <a href="verfactura.php?id=${Folio}" target="_blank" class="text-orange" style="display:inline-block;text-align:center;" title="Ver Factura">
           <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">F</span>
         </a>`;
-      if (no_orden !== "N/A") {
+      if (str(no_orden) !== "N/A") {
         actions += `
           |
           <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-warning mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
@@ -415,7 +404,7 @@ $(function () {
       }
     } else if (r.estatus == 3) {
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
         </a>
         <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-orange mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
@@ -432,7 +421,7 @@ $(function () {
       <?php endif; ?>
     } else if (r.estatus == 7) {
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Factura">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
         </a>
         <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-orange mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
@@ -446,7 +435,7 @@ $(function () {
       <?php endif; ?>
     } else if (r.estatus == 6) {
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" class="mx-1" style="display:inline-block;text-align:center;" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
         </a>
         <a href="factura/orden_compra.php?id=${no_orden}" target="_blank" class="text-orange mx-1" style="display:inline-block;text-align:center;" title="Imprimir Orden de Compra">
@@ -460,10 +449,10 @@ $(function () {
       <?php endif; ?>
     } else if (r.estatus == 8) {
       actions = `
-        <a href="factura/requisicion.php?id=${Folio}" target="_blank" style="display:inline-block;text-align:center;" title="Imprimir requisicion">
+        <a href="factura/requisicion.php?id=${Folio}" target="_blank" style="display:inline-block;text-align:center;" title="Imprimir Requisición">
           <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">R</span>
         </a>`;
-      if (no_orden === 'N/A') {
+      if (str(no_orden) === 'N/A') {
         actions += `
           <a href="verfactura.php?id=${Folio}" target="_blank" class="text-orange" style="display:inline-block;text-align:center;" title="Ver Factura">
             <i class="fa fa-print" style="font-size:.8rem;display:block;"></i><span style="font-size:.8rem;">F</span>
@@ -484,7 +473,7 @@ $(function () {
           </a>`;
       }
       actions += `
-        <a class="link_edit text-primary" href="edit_factura.php?id=${r.no_factura}" title="Editar Factura">
+        <a class="link_edit text-primary" href="edit_factura.php?id=${nz(r.no_factura,'')}" title="Editar Factura">
           <i class="far fa-edit" style="font-size:.8rem;"></i>
         </a>`;
     }
@@ -492,77 +481,65 @@ $(function () {
     return actions;
   }
 
+  // ====== Columnas ======
+  const columnsCommon = [
+    { data: "Folio", width: "2%", className: "text-center align-middle",
+      render: (data) => `REQ-${str(data)}` },
+    { data: "fechaa",     width: "3%", className: "text-center align-middle",
+      render: (d)=> str(d,'') },
+    { data: "fecha_req",  width: "5%", className: "text-center align-middle", orderable: false,
+      render: (d)=> str(d,'') },
+  ];
+
+  const columnsExtended = IS_EXTENDED ? [
+    { data: null, width: "5%", className: "text-center align-middle",
+      render: (d,t,row) => formatNoOrden(sanitizeRow(row)) },
+    { data: "fecha_orden",   width: "5%", className: "text-center align-middle", render:(d)=>str(d,'') },
+    { data: "fecha_entrega", width: "5%", className: "text-center align-middle", render:(d)=>str(d,'') },
+    { data: null, width: "5%", className: "text-center align-middle",
+      render: (d,t,row) => formatNoFact(sanitizeRow(row)) },
+    { data: "fecha_factura", width: "5%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
+    { data: "fecha_pago",    width: "5%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
+    { data: "tipor",         width: "5%", className: "text-center align-middle", orderable:false, render:(d)=>str(d,'') },
+    { data: "monto",         width: "6%", className: "text-center align-middle", orderable:false,
+      render: (d)=> money(d) },
+  ] : [];
+
+  const tailColumns = [
+    { data: "arear",  width: "15%", className: "text-center align-middle", orderable: false, render:(d)=>str(d,'') },
+    { data: "notas",  width: "30%", className: IS_EXTENDED ? "text-center align-middle" : "text-left align-middle",
+      orderable: false, render:(d)=>str(d,'') },
+    { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false, render:(d)=>str(d,'') },
+    { data: null, orderable: false, width: "20%",
+      className: "text-center column-actions align-middle" + (IS_EXTENDED ? " noVis" : ""),
+      render: (d,t,full) => renderActions(full)
+    }
+  ];
+
+  // ====== Inicializar / Recargar ======
   function initTable(initial_date = '', final_date = '', gender = '') {
-    const ajax_url = "data/datadetorders_req.php";
+    const $tbl = $('#fetch_generated_wills');
 
-    // Columnas comunes
-    const columnsCommon = [
-      {
-        data: "Folio",
-        width: "2%",
-        className: "text-center align-middle",
-        render: (data) => 'REQ-' + data
-      },
-      { data: "fechaa",     width: "3%", className: "text-center align-middle" },
-      { data: "fecha_req",  width: "5%", className: "text-center align-middle", orderable: false },
-    ];
+    // Limpia handlers de errores antiguos
+    $tbl.off('error.dt').on('error.dt', function(e, settings, techNote, message) {
+      logError("⚠️ Error en DataTables: " + message);
+    });
 
-    // Columnas extendidas (solo para perfiles con permisos)
-    const columnsExtended = IS_EXTENDED ? [
-      {
-        data: null,
-        width: "5%",
-        className: "text-center align-middle",
-        render: (d,t,row) => formatNoOrden(row)
-      },
-      { data: "fecha_orden", width: "5%", className: "text-center align-middle" },
-      {
-        data: null,
-        width: "5%",
-        className: "text-center align-middle",
-        render: (d,t,row) => formatNoFactura(row)
-      },
-      { data: "fecha_factura", width: "5%", className: "text-center align-middle", orderable: false },
-      { data: "fecha_pago",    width: "5%", className: "text-center align-middle", orderable: false },
-      { data: "tipor",         width: "5%", className: "text-center align-middle", orderable: false },
-      {
-        data: "monto",
-        width: "6%",
-        className: "text-center align-middle",
-        orderable: false,
-        render: $.fn.dataTable.render.number(',', '.', 2)
-      },
-    ] : [];
-
-    const tailColumns = [
-      { data: "arear",  width: "15%", className: "text-center align-middle", orderable: false },
-      { data: "notas",  width: "30%", className: IS_EXTENDED ? "text-center align-middle" : "text-left align-middle", orderable: false },
-      { data: "estatusped", width: "4%", className: "text-center align-middle", orderable: false },
-      {
-        data: null,
-        orderable: false,
-        width: "20%",
-        className: "text-center column-actions align-middle" + (IS_EXTENDED ? " noVis" : ""),
-        render: (d,t,full) => renderActions(full)
-      }
-    ];
-
-    $('#fetch_generated_wills').DataTable({
+    // Instancia
+    $tbl.DataTable({
       destroy: true,
       processing: true,
       serverSide: true,
       stateSave: true,
       responsive: true,
+      autoWidth: false,
       order: [[0, "desc"]],
       lengthMenu: [[10, 25, 50, 100, -1],[10, 25, 50, 100, "Todos"]],
       dom: 'Bfrtip',
-      buttons: (function() {
+      buttons: (() => {
         const base = [
           'copyHtml5',
-          {
-            text: 'Excel',
-            action: function () { window.open('factura/requis_excel.php', '_blank'); }
-          },
+          { text: 'Excel', action: () => window.open('factura/requis_excel.php', '_blank') },
           'csvHtml5'
         ];
         if (IS_EXTENDED) base.push({ extend:'colvis', postfixButtons:['colvisRestore'], columns: ':not(.noVis)' });
@@ -574,23 +551,69 @@ $(function () {
         type: "POST",
         dataType: "json",
         data: { action:"fetch_users", initial_date, final_date, gender },
+        // Robustez ante formatos distintos
         dataSrc: function (json) {
-          // Asegura un array y normaliza cada fila
-          const rows = (json && Array.isArray(json.records)) ? json.records : [];
-          return rows.map(sanitizeRow);
+          try {
+            if (!json) { logError("⚠️ Respuesta vacía del servidor."); return []; }
+            if (json.error) { logError("⚠️ " + json.error); }
+            const arr = Array.isArray(json.records) ? json.records
+                      : Array.isArray(json.data)    ? json.data
+                      : (Array.isArray(json) ? json : []);
+            const norm = arr.map(sanitizeRow);
+            if (!norm.length) { logError("Sin resultados para el filtro seleccionado."); }
+            return norm;
+          } catch (e) {
+            logError("⚠️ Error procesando datos: " + (e?.message || e));
+            return [];
+          }
+        },
+        error: function (xhr) {
+          const msg = xhr?.responseJSON?.error || xhr?.statusText || 'Error desconocido';
+          logError("⚠️ Error en la petición: " + msg);
         }
       },
       columns: [...columnsCommon, ...columnsExtended, ...tailColumns],
       language: {
         url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json",
-        emptyTable: "No hay datos disponibles"
+        emptyTable: "No hay datos disponibles",
+        zeroRecords: "No se encontraron coincidencias"
+      },
+      // Evita que stateSave rompa si cambia la estructura de columnas
+      stateSaveParams: function (settings, data) {
+        // Limpia selecciones de colvis al guardar estado si no es extended
+        if (!IS_EXTENDED && data?.columns) {
+          data.columns.forEach(c => { c.visible = true; });
+        }
       }
     });
   }
+
+  // ====== Filtro por fecha/estatus ======
+  $("#filter").on("click", function (e) {
+    e.preventDefault();
+    const initial_date = $("#initial_date").val();
+    const final_date   = $("#final_date").val();
+    const gender       = $("#gender").val();
+
+    if (!initial_date || !final_date) {
+      logError("⚠️ Debes seleccionar ambas fechas.");
+      return;
+    }
+    const d1 = new Date(initial_date.split('-').reverse().join('-')); // dd-mm-yyyy -> yyyy-mm-dd
+    const d2 = new Date(final_date.split('-').reverse().join('-'));
+    if (d1 > d2) {
+      logError("⚠️ La fecha final debe ser posterior a la inicial.");
+      return;
+    }
+    logError("");
+    initTable(initial_date, final_date, gender);
+  });
+
+  // ====== Carga inicial ======
+  initTable();
 });
 </script>
 
-    
     <script>
         function actualizarLaPagina(){
             window.location.reload();
@@ -1438,6 +1461,21 @@ $(function () {
     </script>  
 
     <script>
+        function recalcularTotalesDesdeTabla() {
+            let subtotal = 0;
+
+            $('#cuerpoFactura tr').each(function () {
+                const cantidad = parseFloat($(this).find('input.cantidad').val()) || 0;
+                const precio = parseFloat($(this).find('input.precio').val()) || 0;
+                const total = cantidad * precio;
+
+                subtotal += total;
+                $(this).find('.total').text(total.toFixed(2));
+            });
+
+            $('#subtotal').val(subtotal.toFixed(2)).trigger('input'); // también recalcula IVA e impuesto adicional
+        }
+
         $(document).ready(function() {
             //Variables del modal factura
             $('#modalFactura').on('show.bs.modal', function (event) {
@@ -1547,6 +1585,21 @@ $(function () {
         })
     </script>
 
+    <script>
+        $(document).ready(function() {
+            $('#aplicaIva').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#campoIva').show();
+                } else {
+                    $('#campoIva').hide();
+                    $('#iva').val('0.00');
+                    $('#total').val($('#subtotal').val());
+                }
+                recalcularTotal();
+            });
+        })
+    </script>
+
     <!-- Modal para agregar datos de factura -->
     <div class="modal fade" id="modalFactura" tabindex="-1" role="dialog" aria-labelledby="modalBorraLabel" aria-hidden="true">
         <div div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -1620,19 +1673,25 @@ $(function () {
 
                         <!-- Totales -->
                         <div class="form-group row">
-                            <div class="col-4 row">
+                            <div class="col-3 row">
                                 <label for="subtotal" class="col-sm-3 col-form-label text-left">Subtotal:</label>
                                 <div class="col-sm-9">
                                     <input type="number" class="form-control" id="subtotal" name="subtotal">
                                 </div>
                             </div>
-                            <div class="col-4 row">
-                                <label for="iva" class="col-sm-3 col-form-label text-left">IVA:</label>
-                                <div class="col-sm-9">
-                                    <input type="number" class="form-control" id="iva" name="iva" readonly>
-                                </div>
+                            <div class="col-2 align-items-center justify-content-center d-flex flex-column">
+                                <label for="aplicaIva">¿Aplica IVA?</label>
+                                <input type="checkbox" id="aplicaIva" name="aplicaIva" checked>
                             </div>
-                            <div class="col-4 row">
+                            <div id="campoIva" class="col-4 row">
+                                <!-- <div class="col-4 row"> -->
+                                    <label for="iva" class="col-sm-3 col-form-label text-left">IVA:</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="iva" name="iva" readonly>
+                                    </div>
+                                <!-- </div> -->
+                            </div>
+                            <div class="col-3 row">
                                 <label for="proveedor" class="col-sm-3 col-form-label text-left">Total:</label>
                                 <div class="col-sm-9">
                                     <input type="number" class="form-control" id="total" name="total" readonly>
@@ -1695,6 +1754,18 @@ $(function () {
     </div>
 
     <script>
+         //Recalcular totales despues de haber modificado campos
+            function recalcularTotal() {
+                const subtotal = parseFloat($('#subtotal').val()) || 0;
+                const iva = subtotal * 0.16; // puedes ajustar si el IVA es diferente
+                $('#iva').val(iva.toFixed(2));
+
+                const impuestoAdicional = parseFloat($('#valorImpuestoAdicional').val()) || 0;
+                const total = subtotal + iva + impuestoAdicional;
+
+                $('#total').val(total.toFixed(2));
+            }
+
         $(document).ready(function() {
             //Si esta activado el checkbox para mostrar el grupo de impuestos adicionales
            $('#toggleImpuesto').change(function () {
@@ -1747,18 +1818,6 @@ $(function () {
                 $('#grupoImpuestoAdicional').slideUp();
                 recalcularTotal();
             });
-
-            //Recalcular totales despues de haber modificado campos
-            function recalcularTotal() {
-                const subtotal = parseFloat($('#subtotal').val()) || 0;
-                const iva = subtotal * 0.16; // puedes ajustar si el IVA es diferente
-                $('#iva').val(iva.toFixed(2));
-
-                const impuestoAdicional = parseFloat($('#valorImpuestoAdicional').val()) || 0;
-                const total = subtotal + iva + impuestoAdicional;
-
-                $('#total').val(total.toFixed(2));
-            }
 
             //Al dar click en el boton guardar, valida los datos del formulario y envía los datos al servidor
             $('#guardarFactura').click(function (e) {

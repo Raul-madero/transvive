@@ -51,8 +51,8 @@ if ($_REQUEST['action'] == 'fetch_users') {
     }
 
 
-    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden, o.total, f.no_factura, f.fecha AS fecha_factura, pg.fecha AS fecha_pago';
-    $table = ' requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion LEFT JOIN facturas f ON f.no_requisicion = o.no_requisicion LEFT JOIN pagos_proveedor pg ON pg.no_requisicion = o.no_requisicion';
+    $columns = ' p.id, p.no_requisicion, p.fecha, p.fecha_requiere, p.tipo_requisicion, p.area_solicitante, p.cant_autorizada, p.observaciones, p.estatus, o.no_orden, o.fecha AS fecha_orden, o.total, f.no_factura, f.fecha AS fecha_factura, pg.fecha AS fecha_pago, e.fecha AS fecha_entrega';
+    $table = ' requisicion_compra p LEFT JOIN orden_compra o ON o.no_requisicion = p.no_requisicion LEFT JOIN facturas f ON f.no_requisicion = o.no_requisicion LEFT JOIN pagos_proveedor pg ON pg.no_requisicion = o.no_requisicion LEFT JOIN entradas e ON e.no_orden = o.no_orden';
 
     // Construcción dinámica del WHERE
     $where = " WHERE p.id > 0 $date_range $estatus_filter";
@@ -190,6 +190,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
 
         // Fechas: deja lo que ya tenías; si gustas, puedes formatear aquí igual que arriba
         $fechaOrdenShow   = $row['fecha_orden']   ?? 'N/A';
+        $fechaEntregaShow = $row['fecha_entrega'] ?? 'N/A';
         $noFacturaShow    = $row['no_factura']    ?? 'N/A';
         $fechaFacturaShow = $row['fecha_factura'] ?? 'N/A';
         $fechaPagoShow    = $row['fecha_pago']    ?? 'N/A';
@@ -215,6 +216,7 @@ if ($_REQUEST['action'] == 'fetch_users') {
             'no_factura'    => $noFacturaShow,
             'fecha_factura' => $fechaFacturaShow,
             'fecha_pago'    => $fechaPagoShow,
+            'fecha_entrega' => $fechaEntregaShow,
 
             // -------- Alias anidado de compatibilidad --------
             // Por si en el front alguien accede a full.Foliofull.no_orden o full.Foliofull.Folio

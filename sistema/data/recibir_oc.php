@@ -1,14 +1,30 @@
 <?php 
 include("../../conexion.php");
 
-$orden = $_POST['orden'];
+$orden = trim($_POST['orden']);
+$soloDigitos = intval(preg_replace('/\D/', '', $orden));
+$orden = $soloDigitos;
 $fecha = $_POST['fecha_entrada'];
 $almacen = $_POST['almacen_recibe'];
 $requisicion = $_POST['req'];
 $productos = json_decode($_POST['productos']);
-// var_dump($productos);
+// var_dump($orden);
 if ($orden == '' || $fecha == '' || $almacen == '' || empty($productos)) {
     echo json_encode(array('error'=> 'Faltan datos obligatorios'));
+    exit;
+}
+
+$sql = "SELECT COUNT(id) AS total FROM entradas WHERE no_orden = ?";
+$stmt = $conection->prepare($sql);
+$stmt->bind_param("i", $orden);
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($countEntradas);
+$stmt->fetch();
+$stmt->close();
+
+if ($countEntradas > 0) {
+    echo json_encode(array('error'=> 'La orden ya ha sido recibida anteriormente'));
     exit;
 }
 
@@ -35,9 +51,9 @@ foreach ($productos as $producto) {
         $stock_minimo = $row['stock_minimo'];
         $stocK_maximo = $row['stock_maximo'];
 
-        $query = "INSERT INTO entradas (cantidad, fecha, id_producto, id_almacen, no_requisicion) VALUES (?,?,?,?,?)";
+        $query = "INSERT INTO entradas (cantidad, fecha, id_producto, id_almacen, no_requisicion, no_orden) VALUES (?,?,?,?,?,?)";
         $stmt = $conection->prepare($query);
-        $stmt->bind_param("issii", $producto->cantidad, $fecha, $id, $almacen, $requisicion);
+        $stmt->bind_param("issiii", $producto->cantidad, $fecha, $id, $almacen, $requisicion, $orden);
         if ($stmt->execute()) {
             $stmt->close();
         }else {
