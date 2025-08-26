@@ -223,11 +223,13 @@ session_start();
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <?php
-$IS_EXTENDED = ($_SESSION['rol'] == 1
-    || $_SESSION['idUser'] == 19
-    || $_SESSION['idUser'] == 23
-    || $_SESSION['idUser'] == 39
-    || $_SESSION['idUser'] == 32);
+$ROL  = isset($_SESSION['rol']) ? (int)$_SESSION['rol'] : 0;
+$UID  = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : 0;
+
+$IS_EXTENDED = (
+    in_array($ROL, [1,7,16], true) ||
+    in_array($UID, [19,23,39], true)
+) && $UID !== 32;   // 32 nunca ve columnas extendidas
 ?>
 <script type="text/javascript">
 $(function () {
