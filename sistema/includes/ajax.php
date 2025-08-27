@@ -14017,6 +14017,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'AlmacenaEvaluaservicio') {
         echo json_encode(["status" => "error", "message" => "Capture los datos requeridos"]);
         exit;
     }
+    // Asegura sesión
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$usuario = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : 0;
 
     // Helpers seguros
 // Helpers para PHP 7
