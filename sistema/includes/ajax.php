@@ -14074,7 +14074,7 @@ $sql = "INSERT INTO evaluaciones_servicios (
     precios_competitivos, documentacion, credito, tiempo_respuesta, calidad_servicio,
     fecha_hist1, historia1, fecha_hist2, historia2, fecha_hist3, historia3,
     calificacion_compras, calificacion_calidad, calificacion_total, resultado, acciones, id_usuario
-) VALUES (?,?,?,?, ?,?,?,?, ?,?, ?,?,?, ?,?, ?,?,?, ?,?, ?)";
+) VALUES (?,?,?,?, ?,?,?,?, ?,?, ?,?,?, ?,?, ?,?,?, ?,?, ?,?)";
 
 if (!($stmt = $conection->prepare($sql))) {
     echo json_encode(["status"=>"error","message"=>"Error al preparar: ".$conection->error]);
