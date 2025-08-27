@@ -14018,9 +14018,21 @@ if (isset($_POST['action']) && $_POST['action'] === 'AlmacenaEvaluaservicio') {
         exit;
     }
 
-    // Helpers seguros (evitan notices si falta una clave y normalizan NULOS)
-    $S = fn($k) => isset($_POST[$k]) ? trim((string)$_POST[$k]) : null;
-    $I = fn($k) => isset($_POST[$k]) && $_POST[$k] !== '' && is_numeric($_POST[$k]) ? (int)$_POST[$k] : null;
+    // Helpers seguros
+$S = function($k) {
+    return isset($_POST[$k]) ? trim((string)$_POST[$k]) : null;
+};
+$I = function($k) {
+    return isset($_POST[$k]) && $_POST[$k] !== '' && is_numeric($_POST[$k])
+        ? (int)$_POST[$k]
+        : null;
+};
+$D = function($k) {
+    return isset($_POST[$k]) && is_numeric($_POST[$k])
+        ? (float)$_POST[$k]
+        : null;
+};
+
 
     $tipo_eval  = $S('tipo_eval');
     $fecha      = $S('fecha');                  // YYYY-MM-DD
@@ -14042,9 +14054,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'AlmacenaEvaluaservicio') {
     $calidads   = $S('calidad_se');
 
     // Totales/calificaciones: si son números, normaliza
-    $tot_compras = $S('tot_compras');
-    $tot_calidad = $S('tot_calidad');
-    $calif_total = $S('calif_total');
+    $tot_compras = $D('tot_compras');
+    $tot_calidad = $D('tot_calidad');
+    $calif_total = $D('calif_total');
 
     $estatusc   = $S('estatusc');   // resultado
     $acciones   = $S('acciones');
