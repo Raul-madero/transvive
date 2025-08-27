@@ -13999,62 +13999,123 @@ if($_POST['action'] == 'EliminaEvaluametro')
     exit;
 } 
 
-//Almacena Evaluacion de Producto
-if ($_POST['action'] == 'AlmacenaEvaluaservicio') {
+// Almacena Evaluacion de Producto
+if (isset($_POST['action']) && $_POST['action'] === 'AlmacenaEvaluaservicio') {
+    // Siempre establece charset antes de trabajar con la conexión
+    if (function_exists('mysqli_report')) {
+        mysqli_report(MYSQLI_REPORT_OFF); // evitamos excepciones para controlar errores manualmente
+    }
+    $conection->set_charset('utf8mb4');
 
+    // Validación mínima requerida
     if (
-        empty($_POST['fecha']) || 
-        empty($_POST['tipo_eval']) || 
-        empty($_POST['proveedor']) || 
+        empty($_POST['fecha']) ||
+        empty($_POST['tipo_eval']) ||
+        empty($_POST['proveedor']) ||
         empty($_POST['producto'])
     ) {
-        echo json_encode(["status" => "error", "message"=> "Capture los datos requeridos"]);
+        echo json_encode(["status" => "error", "message" => "Capture los datos requeridos"]);
         exit;
     }
 
-    // Escapar valores para seguridad
-    $tipo_eval   = mysqli_real_escape_string($conection, $_POST['tipo_eval']);
-    $fecha       = mysqli_real_escape_string($conection, $_POST['fecha']);
-    $proveedor   = mysqli_real_escape_string($conection, $_POST['proveedor']);
-    $producto    = mysqli_real_escape_string($conection, $_POST['producto']);
-    $consulta    = mysqli_real_escape_string($conection, $_POST['consulta']);
-    $fecha_h1    = mysqli_real_escape_string($conection, $_POST['fecha_h1']);
-    $historial1  = mysqli_real_escape_string($conection, $_POST['historial_h1']);
-    $fecha_h2    = mysqli_real_escape_string($conection, $_POST['fecha_h2']);
-    $historial2  = mysqli_real_escape_string($conection, $_POST['historial_h2']);
-    $fecha_h3    = mysqli_real_escape_string($conection, $_POST['fecha_h3']);
-    $historial3  = mysqli_real_escape_string($conection, $_POST['historial_h3']);
-    $tot_compras = mysqli_real_escape_string($conection, $_POST['tot_compras']);
-    $tot_calidad = mysqli_real_escape_string($conection, $_POST['tot_calidad']);
-    $calif_total = mysqli_real_escape_string($conection, $_POST['calif_total']);
-    $estatusc    = mysqli_real_escape_string($conection, $_POST['estatusc']);
-    $acciones    = mysqli_real_escape_string($conection, $_POST['acciones']);
-    $precios     = mysqli_real_escape_string($conection, $_POST['precio']);
-    $documenta   = mysqli_real_escape_string($conection, $_POST['documenta']);
-    $credito     = mysqli_real_escape_string($conection, $_POST['credito']);
-    $tiempo_res  = mysqli_real_escape_string($conection, $_POST['tiempo_res']);        
-    $calidads    = mysqli_real_escape_string($conection, $_POST['calidad_se']);
+    // Helpers seguros (evitan notices si falta una clave y normalizan NULOS)
+    $S = fn($k) => isset($_POST[$k]) ? trim((string)$_POST[$k]) : null;
+    $I = fn($k) => isset($_POST[$k]) && $_POST[$k] !== '' && is_numeric($_POST[$k]) ? (int)$_POST[$k] : null;
 
-    $usuario     = $_SESSION['idUser'];
+    $tipo_eval  = $S('tipo_eval');
+    $fecha      = $S('fecha');                  // YYYY-MM-DD
+    $proveedor  = $I('proveedor');              // INT
+    $producto   = $I('producto');               // INT
+    $consulta   = $S('consulta');
+    $fecha_h1   = $S('fecha_h1');
+    $historial1 = $S('historial_h1');
+    $fecha_h2   = $S('fecha_h2');
+    $historial2 = $S('historial_h2');
+    $fecha_h3   = $S('fecha_h3');
+    $historial3 = $S('historial_h3');
 
-    // INSERT
-    $sql = "INSERT INTO evaluaciones_servicios (
-        tipo_evaluacion, fecha_eval, cveproveedor, producto, consulta, precios_competitivos, documentacion, credito, 
-        tiempo_respuesta, calidad_servicio, fecha_hist1, historia1, fecha_hist2, historia2, fecha_hist3, historia3, 
-        calificacion_compras, calificacion_calidad, calificacion_total, resultado, acciones, id_usuario
-    ) VALUES (
-        '$tipo_eval', '$fecha', '$proveedor', '$producto', '$consulta', '$precios', '$documenta', '$credito', 
-        '$tiempo_res', '$calidads', '$fecha_h1', '$historial1', '$fecha_h2', '$historial2', '$fecha_h3', '$historial3', 
-        '$tot_compras', '$tot_calidad', '$calif_total', '$estatusc', '$acciones', '$usuario'
-    )";
+    // Ojo: en tu POST usas 'precio' (singular); la columna es 'precios_competitivos'
+    $precios    = $S('precio');
+    $documenta  = $S('documenta');
+    $credito    = $S('credito');
+    $tiempo_res = $S('tiempo_res');
+    $calidads   = $S('calidad_se');
 
-    if (mysqli_query($conection, $sql)) {
-        echo json_encode(["message" => "Evaluación almacenada correctamente", "status" => "success"]);
-    } else {
-        echo json_encode(["mesage" => "No se pudo guardar la evaluación", "status"=> "error"]);
+    // Totales/calificaciones: si son números, normaliza
+    $tot_compras = $S('tot_compras');
+    $tot_calidad = $S('tot_calidad');
+    $calif_total = $S('calif_total');
+
+    $estatusc   = $S('estatusc');   // resultado
+    $acciones   = $S('acciones');
+
+    $usuario = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : null;
+
+    // Validación de tipos críticos
+    if ($proveedor === null || $producto === null || $usuario === null) {
+        echo json_encode(["status" => "error", "message" => "Proveedor, producto o usuario inválidos."]);
+        exit;
     }
 
-    mysqli_close($conection);
+    // Prepared statement
+    $sql = "INSERT INTO evaluaciones_servicios (
+        tipo_evaluacion, fecha_eval, cveproveedor, producto, consulta,
+        precios_competitivos, documentacion, credito, tiempo_respuesta, calidad_servicio,
+        fecha_hist1, historia1, fecha_hist2, historia2, fecha_hist3, historia3,
+        calificacion_compras, calificacion_calidad, calificacion_total, resultado, acciones, id_usuario
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?
+    )";
+
+    if (!($stmt = $conection->prepare($sql))) {
+        echo json_encode(["status" => "error", "message" => "Error al preparar: ".$conection->error]);
+        exit;
+    }
+
+    // Tipos:
+    // s = string, i = integer
+    // Orden de bind debe coincidir con los ? del SQL
+    $stmt->bind_param(
+        'ssii' . 'ssss' . 'ss' . 'ssss' . 'sssss' . 'i',
+        $tipo_eval,                  // s
+        $fecha,                      // s
+        $proveedor,                  // i
+        $producto,                   // i
+        $consulta,                   // s
+        $precios,                    // s
+        $documenta,                  // s
+        $credito,                    // s
+        $tiempo_res,                 // s
+        $calidads,                   // s
+        $fecha_h1,                   // s
+        $historial1,                 // s
+        $fecha_h2,                   // s
+        $historial2,                 // s
+        $fecha_h3,                   // s
+        $historial3,                 // s
+        $tot_compras,                // s (si tu columna es numérica, conviértelo a número y usa 'd' o 'i')
+        $tot_calidad,                // s (igual que arriba)
+        $calif_total,                // s (igual que arriba)
+        $estatusc,                   // s
+        $acciones,                   // s
+        $usuario                     // i
+    );
+
+    $ok = $stmt->execute();
+    if ($ok) {
+        echo json_encode(["status" => "success", "message" => "Evaluación almacenada correctamente"]);
+    } else {
+        // Mensaje explícito para depurar (puedes ocultarlo en producción)
+        echo json_encode([
+            "status" => "error",
+            "message" => "No se pudo guardar la evaluación",
+            "sql_error" => $stmt->error
+        ]);
+    }
+    $stmt->close();
+    $conection->close();
     exit;
 }
 
