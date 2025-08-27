@@ -14019,114 +14019,91 @@ if (isset($_POST['action']) && $_POST['action'] === 'AlmacenaEvaluaservicio') {
     }
 
     // Helpers seguros
-$S = function($k) {
-    return isset($_POST[$k]) ? trim((string)$_POST[$k]) : null;
-};
-$I = function($k) {
-    return isset($_POST[$k]) && $_POST[$k] !== '' && is_numeric($_POST[$k])
-        ? (int)$_POST[$k]
-        : null;
-};
-$D = function($k) {
-    return isset($_POST[$k]) && is_numeric($_POST[$k])
-        ? (float)$_POST[$k]
-        : null;
-};
+// Helpers para PHP 7
+$S = function($k) { return isset($_POST[$k]) ? trim((string)$_POST[$k]) : null; };
 
+$tipo_eval  = $S('tipo_eval');
+$fecha      = $S('fecha');
+$proveedor  = $S('proveedor');   // puede venir "12" o "A-12"
+$producto   = $S('producto');    // idem
 
-    $tipo_eval  = $S('tipo_eval');
-    $fecha      = $S('fecha');                  // YYYY-MM-DD
-    $proveedor  = $I('proveedor');              // INT
-    $producto   = $I('producto');               // INT
-    $consulta   = $S('consulta');
-    $fecha_h1   = $S('fecha_h1');
-    $historial1 = $S('historial_h1');
-    $fecha_h2   = $S('fecha_h2');
-    $historial2 = $S('historial_h2');
-    $fecha_h3   = $S('fecha_h3');
-    $historial3 = $S('historial_h3');
+// Valida requeridos básicos
+$faltantes = [];
+if (!$fecha)      $faltantes[] = 'fecha';
+if (!$tipo_eval)  $faltantes[] = 'tipo_eval';
+if (!$proveedor)  $faltantes[] = 'proveedor';
+if (!$producto)   $faltantes[] = 'producto';
+if (!$usuario)    $faltantes[] = 'usuario (sesión)';
 
-    // Ojo: en tu POST usas 'precio' (singular); la columna es 'precios_competitivos'
-    $precios    = $S('precio');
-    $documenta  = $S('documenta');
-    $credito    = $S('credito');
-    $tiempo_res = $S('tiempo_res');
-    $calidads   = $S('calidad_se');
+if (!empty($faltantes)) {
+    echo json_encode([
+        "status"  => "error",
+        "message" => "Faltan/Inválidos: " . implode(', ', $faltantes)
+    ]);
+    exit;
+}
 
-    // Totales/calificaciones: si son números, normaliza
-    $tot_compras = $D('tot_compras');
-    $tot_calidad = $D('tot_calidad');
-    $calif_total = $D('calif_total');
+// Normaliza tipos dinámicamente para proveedor/producto
+$prov_es_int = ctype_digit($proveedor);
+$prod_es_int = ctype_digit($producto);
 
-    $estatusc   = $S('estatusc');   // resultado
-    $acciones   = $S('acciones');
+// Resto de campos
+$consulta   = $S('consulta');
+$fecha_h1   = $S('fecha_h1');     $historial1 = $S('historial_h1');
+$fecha_h2   = $S('fecha_h2');     $historial2 = $S('historial_h2');
+$fecha_h3   = $S('fecha_h3');     $historial3 = $S('historial_h3');
+$precios    = $S('precio');
+$documenta  = $S('documenta');
+$credito    = $S('credito');
+$tiempo_res = $S('tiempo_res');
+$calidads   = $S('calidad_se');
+$tot_compras = $S('tot_compras');       // si en BD son DECIMAL, luego cambiamos tipo 'd'
+$tot_calidad = $S('tot_calidad');
+$calif_total = $S('calif_total');
+$estatusc    = $S('estatusc');
+$acciones    = $S('acciones');
 
-    $usuario = isset($_SESSION['idUser']) ? (int)$_SESSION['idUser'] : null;
+// PREPARED
+$sql = "INSERT INTO evaluaciones_servicios (
+    tipo_evaluacion, fecha_eval, cveproveedor, producto, consulta,
+    precios_competitivos, documentacion, credito, tiempo_respuesta, calidad_servicio,
+    fecha_hist1, historia1, fecha_hist2, historia2, fecha_hist3, historia3,
+    calificacion_compras, calificacion_calidad, calificacion_total, resultado, acciones, id_usuario
+) VALUES (?,?,?,?, ?,?,?,?, ?,?, ?,?,?, ?,?, ?,?,?, ?,?, ?)";
 
-    // Validación de tipos críticos
-    if ($proveedor === null || $producto === null || $usuario === null) {
-        echo json_encode(["status" => "error", "message" => "Proveedor, producto o usuario inválidos."]);
-        exit;
-    }
+if (!($stmt = $conection->prepare($sql))) {
+    echo json_encode(["status"=>"error","message"=>"Error al preparar: ".$conection->error]);
+    exit;
+}
 
-    // Prepared statement
-    $sql = "INSERT INTO evaluaciones_servicios (
-        tipo_evaluacion, fecha_eval, cveproveedor, producto, consulta,
-        precios_competitivos, documentacion, credito, tiempo_respuesta, calidad_servicio,
-        fecha_hist1, historia1, fecha_hist2, historia2, fecha_hist3, historia3,
-        calificacion_compras, calificacion_calidad, calificacion_total, resultado, acciones, id_usuario
-    ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?
-    )";
+// Construye string de tipos dinámico
+// Base: tipo_eval(s), fecha(s), proveedor(?), producto(?), consulta(s),
+// precios(s), documenta(s), credito(s), tiempo_res(s), calidads(s),
+// fecha_h1(s), historial1(s), fecha_h2(s), historial2(s), fecha_h3(s), historial3(s),
+// tot_compras(s), tot_calidad(s), calif_total(s), estatusc(s), acciones(s), usuario(i)
+$types  = 'ss' . ($prov_es_int ? 'i' : 's') . ($prod_es_int ? 'i' : 's') . 's';
+$types .= 'ssss' . 's';          // precios, documenta, credito, tiempo_res, calidads
+$types .= 'ss' . 'ss' . 'ss';    // (f1,h1),(f2,h2),(f3,h3)
+$types .= 'sss' . 'ss' . 'i';    // tot_compras, tot_calidad, calif_total, estatusc, acciones, usuario
 
-    if (!($stmt = $conection->prepare($sql))) {
-        echo json_encode(["status" => "error", "message" => "Error al preparar: ".$conection->error]);
-        exit;
-    }
+// Ajusta variables para bind según tipos
+$proveedor_val = $prov_es_int ? (int)$proveedor : $proveedor;
+$producto_val  = $prod_es_int ? (int)$producto  : $producto;
 
-    // Tipos:
-    // s = string, i = integer
-    // Orden de bind debe coincidir con los ? del SQL
-    $stmt->bind_param(
-        'ssii' . 'ssss' . 'ss' . 'ssss' . 'sssss' . 'i',
-        $tipo_eval,                  // s
-        $fecha,                      // s
-        $proveedor,                  // i
-        $producto,                   // i
-        $consulta,                   // s
-        $precios,                    // s
-        $documenta,                  // s
-        $credito,                    // s
-        $tiempo_res,                 // s
-        $calidads,                   // s
-        $fecha_h1,                   // s
-        $historial1,                 // s
-        $fecha_h2,                   // s
-        $historial2,                 // s
-        $fecha_h3,                   // s
-        $historial3,                 // s
-        $tot_compras,                // s (si tu columna es numérica, conviértelo a número y usa 'd' o 'i')
-        $tot_calidad,                // s (igual que arriba)
-        $calif_total,                // s (igual que arriba)
-        $estatusc,                   // s
-        $acciones,                   // s
-        $usuario                     // i
-    );
+$stmt->bind_param(
+    $types,
+    $tipo_eval, $fecha, $proveedor_val, $producto_val, $consulta,
+    $precios, $documenta, $credito, $tiempo_res, $calidads,
+    $fecha_h1, $historial1, $fecha_h2, $historial2, $fecha_h3, $historial3,
+    $tot_compras, $tot_calidad, $calif_total, $estatusc, $acciones, $usuario
+);
 
-    $ok = $stmt->execute();
-    if ($ok) {
-        echo json_encode(["status" => "success", "message" => "Evaluación almacenada correctamente"]);
-    } else {
-        // Mensaje explícito para depurar (puedes ocultarlo en producción)
-        echo json_encode([
-            "status" => "error",
-            "message" => "No se pudo guardar la evaluación",
-            "sql_error" => $stmt->error
-        ]);
-    }
-    $stmt->close();
+if ($stmt->execute()) {
+    echo json_encode(["status"=>"success","message"=>"Evaluación almacenada correctamente"]);
+} else {
+    echo json_encode(["status"=>"error","message"=>"No se pudo guardar la evaluación","sql_error"=>$stmt->error]);
+}
+$stmt->close();
     $conection->close();
     exit;
 }
