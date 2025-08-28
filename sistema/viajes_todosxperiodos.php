@@ -221,10 +221,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         
 
                       <div class="col-2">
-                      <a href="#" onclick="window.open ('factura/viajes_xperiodoexcel.php?id='+ document.getElementById('inputSemana').value + 'id2='+document.getElementById('inputMes').value + 'id3='+document.getElementById('inputEjercicio').value + 'fIni=' + document.getElementById('fechaIni').value + 'fFin=' + document.getElementById('fechaFin').value );" >
-                       
-                          <button type ="button" class="btn btn-success pull-left"><i class="fa fa-file-excel"></i> Excel</button>
-                        </a>
+                      <a href="#"
+   onclick="window.open(
+     'factura/viajes_xperiodoexcel.php'
+     + '?id='  + encodeURIComponent(document.getElementById('inputSemana').value)
+     + '&id2=' + encodeURIComponent(document.getElementById('inputMes').value)
+     + '&id3=' + encodeURIComponent(document.getElementById('inputEjercicio').value)
+     + '&fIni='+ encodeURIComponent(document.getElementById('fechaIni').value)
+     + '&fFin='+ encodeURIComponent(document.getElementById('fechaFin').value)
+   );">
+  <button type="button" class="btn btn-success pull-left"><i class="fa fa-file-excel"></i> Excel</button>
+</a>
                       </div>
                     <div class="col-2">
                       <a href="#" onclick="window.location ='viajes23.php';" >
