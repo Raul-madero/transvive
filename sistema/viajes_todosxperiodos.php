@@ -45,6 +45,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
    <!-- Select2 -->
   <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.1/i18n/jquery.ui.datepicker-es.min.js" crossorigin="anonymous"></script>
 </head>
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
@@ -189,7 +191,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         <option value="2040">2040</option>
                                     </select>
                                 </div>
-                            </div>   
+                            </div>
+
+                            <div class="col-4">
+                              <label for="fechaIni">Desde:</label>
+                              <input class="datepicker" type="date" id="fechaIni" name="fechaIni">
+                              <br>
+                              <label for="fechaFin">Hasta:</label>
+                              <input class="datepicker" type="date" id="fechaFin" name="fechaFin">
+                            </div>
                            
                             <!--
                             <div class="col-3">
@@ -211,7 +221,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         
 
                       <div class="col-2">
-                      <a href="#" onclick="window.open ('factura/viajes_xperiodoexcel.php?id='+ document.getElementById('inputSemana').value + 'id2='+document.getElementById('inputMes').value + 'id3='+document.getElementById('inputEjercicio').value );" >
+                      <a href="#" onclick="window.open ('factura/viajes_xperiodoexcel.php?id='+ document.getElementById('inputSemana').value + 'id2='+document.getElementById('inputMes').value + 'id3='+document.getElementById('inputEjercicio').value + 'fIni=' + document.getElementById('fechaIni').value + 'fFin=' + document.getElementById('fechaFin').value );" >
                        
                           <button type ="button" class="btn btn-success pull-left"><i class="fa fa-file-excel"></i> Excel</button>
                         </a>
@@ -257,8 +267,45 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="../dist/js/adminlte.min.js"></script>
 <!-- Select2 -->
 <script src="../plugins/select2/js/select2.full.min.js"></script>
+<!-- Bootstrap Datepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
 <!-- AdminLTE for demo purposes
 <script src="../dist/js/demo.js"></script> -->
+
+<script>
+			$(document).ready(function () {
+				// Configuración del Datepicker en español
+				$.datepicker.regional['es'] = {
+					closeText: 'Cerrar',
+					prevText: '< Ant',
+					nextText: 'Sig >',
+					currentText: 'Hoy',
+					monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+						'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+					monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+						'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+					dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+					dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+					dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+					weekHeader: 'Sm',
+					dateFormat: 'dd-mm-yy',
+					firstDay: 1,
+					isRTL: false,
+					showMonthAfterYear: false,
+					yearSuffix: ''
+				};
+
+				$.datepicker.setDefaults($.datepicker.regional['es']); // Aplicar la configuración en español
+				// Inicializar Datepicker
+				$(".datepicker").datepicker({
+					dateFormat: "dd-mm-yy",        // Formato de fecha
+					changeMonth: true,
+					changeYear: true,
+					showButtonPanel: true
+				});
+			});
+
+		</script>
 <script>
 
 $('#btn_salir').click(function(e){

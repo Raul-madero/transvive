@@ -7,7 +7,6 @@
    
     include('../../conexion.php');
     $conection->set_charset('utf8');
-
     $idoentrada=$_REQUEST['id'];
 //$nosemana=$_REQUEST['semana'];
 
@@ -19,6 +18,8 @@ $fecha_fin = substr($idoentrada, $fin2, 10);
 $finfin = strrpos($idoentrada, "id3"); 
 $final3 = $finfin + 4;
 $fecha_ejercicio = substr($idoentrada, $final3, 10);
+$fecha_desde = $_REQUEST['fIni'];
+$fecha_hasta = $_REQUEST['fFin'];
 //Consulta sql encabezado
 
 
@@ -108,9 +109,17 @@ $titulo = "REPORTE DE VIAJES DE: $nosemana ";
           $ffin = $fecha_ejercicio . '-12-31';
           break;
         }
-    $titulo = "REPORTE DE VIAJES POR MES DE: $monthNameSpanish" ;    
+    $titulo = "REPORTE DE VIAJES POR MES DE: $monthNameSpanish" ;   
+    
+    $sql = "SELECT rv.id, rv.semana, rv.fecha, rv.cliente, rv.direccion, rv.destino, rv.costo_viaje, rv.hora_inicio, rv.hora_fin, rv.hora_llegadareal, rv.hora_finreal, rv.notas, rv.unidad, rv.unidad_ejecuta, rv.num_unidad, rv.numero_unidades, if(rv.estatus = 1,'Activo',if(rv.estatus = 2, 'Realizado', if(rv.estatus= 3,'Cancelado', if(rv.estatus = 4,'Iniciado',if(rv.estatus=5, 'Finalizado', ''))))) as Status, rv.valor_vuelta, rv.sueldo_vuelta, rv.ruta, rv.operador, if (rv.planeado = 1, 'Planeado', 'Registrado') as Tipoviaje, rv.tipo_viaje, us.nombre AS jefeo, CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) as superv, em.noempleado, rv.personas, rv.personas_fin, ru.sueldo_camion AS sueldo_ruta_camion, ru.sueldo_camioneta AS sueldo_ruta_camioneta, ru.sueldo_sprinter AS sueldo_ruta_sprinter, ru.sueldo_semid AS sueldo_semi, em.sueldo_camion, em.sueldo_camioneta, em.sueldo_sprinter  FROM registro_viajes rv LEFT JOIN clientes ct ON rv.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON rv.id_supervisor = sp.idacceso LEFT JOIN empleados em ON rv.operador = CONCAT(em.nombres, ' ', em.apellido_paterno, ' ', em.apellido_materno) LEFT JOIN rutas ru ON rv.cliente = ru.cliente AND rv.ruta = ru.ruta";
+    if($fecha_desde != "") {
+      $sql += "WHERE rv.fecha BETWEEN '$fecha_desde' and '$fecha_hasta' ORDER by rv.fecha, rv.id";
+    }else {
+      $sql += " WHERE rv.fecha BETWEEN '$fini' and '$ffin' ORDER by rv.fecha, rv.id";
+    }
 
-  $query_productos = mysqli_query($conection,"SELECT rv.id, rv.semana, rv.fecha, rv.cliente, rv.direccion, rv.destino, rv.costo_viaje, rv.hora_inicio, rv.hora_fin, rv.hora_llegadareal, rv.hora_finreal, rv.notas, rv.unidad, rv.unidad_ejecuta, rv.num_unidad, rv.numero_unidades, if(rv.estatus = 1,'Activo',if(rv.estatus = 2, 'Realizado', if(rv.estatus= 3,'Cancelado', if(rv.estatus = 4,'Iniciado',if(rv.estatus=5, 'Finalizado', ''))))) as Status, rv.valor_vuelta, rv.sueldo_vuelta, rv.ruta, rv.operador, if (rv.planeado = 1, 'Planeado', 'Registrado') as Tipoviaje, rv.tipo_viaje, us.nombre AS jefeo, CONCAT(sp.nombres, ' ', sp.apellido_paterno, ' ', sp.apellido_materno) as superv, em.noempleado, rv.personas, rv.personas_fin, ru.sueldo_camion AS sueldo_ruta_camion, ru.sueldo_camioneta AS sueldo_ruta_camioneta, ru.sueldo_sprinter AS sueldo_ruta_sprinter, ru.sueldo_semid AS sueldo_semi, em.sueldo_camion, em.sueldo_camioneta, em.sueldo_sprinter  FROM registro_viajes rv LEFT JOIN clientes ct ON rv.cliente=ct.nombre_corto LEFT JOIN usuario us ON ct.id_supervisor = us.idusuario LEFT JOIN supervisores sp ON rv.id_supervisor = sp.idacceso LEFT JOIN empleados em ON rv.operador = CONCAT(em.nombres, ' ', em.apellido_paterno, ' ', em.apellido_materno) LEFT JOIN rutas ru ON rv.cliente = ru.cliente AND rv.ruta = ru.ruta WHERE rv.fecha BETWEEN '$fini' and '$ffin' ORDER by rv.fecha, rv.id");
+  $query_productos = mysqli_query($conection, $sql);
+
 $result_detalle = mysqli_num_rows($query_productos);
 mysqli_close($conection); 
 }
