@@ -35,20 +35,20 @@ if (isset($_FILES["name"]) && !empty($_FILES['name']['name'])) {
 
         if ($data !== FALSE && count($data) >= 1) {
             $semana = $data[0];
-            // $existsStmt = $conection->prepare("SELECT 1 FROM alertas WHERE semana = ? AND YEAR(fecha) = ? LIMIT 1");
-            // $existsStmt->bind_param("si", $semana, $currentYear);
-            // $existsStmt->execute();
-            // $result = $existsStmt->get_result();
-            // if ($result->num_rows > 0) {
-            //     // Ya existen registros para esa semana y año
-            //     echo "<script>
-            //         alert('Ya existen alertas cargadas para la " . htmlspecialchars($semana) . " del año $currentYear');
-            //         window.location = './alertas.php';
-            //     </script>";
-            //     fclose($handle);
-            //     exit;
-            // }
-            // $existsStmt->close();
+            $existsStmt = $conection->prepare("SELECT 1 FROM alertas WHERE semana = ? AND YEAR(fecha) = ? LIMIT 1");
+            $existsStmt->bind_param("si", $semana, $currentYear);
+            $existsStmt->execute();
+            $result = $existsStmt->get_result();
+            if ($result->num_rows > 0) {
+                // Ya existen registros para esa semana y año
+                echo "<script>
+                    alert('Ya existen alertas cargadas para la " . htmlspecialchars($semana) . " del año $currentYear');
+                    window.location = './alertas.php';
+                </script>";
+                fclose($handle);
+                exit;
+            }
+            $existsStmt->close();
 
             // Si no existen, proceder a insertar todos los registros
             $sql = "INSERT INTO alertas (fecha, semana, unidad, operador, noalertas, velocidad, limite, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
