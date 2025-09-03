@@ -290,7 +290,7 @@ mysqli_close($conection);
                             <div class="form-group row" style="text-align:left;">
                                 <label for="inputEmail3" class="col-sm-3 col-form-label">Monto Aprox. Autorizado</label>
                                 <div class="col-sm-9">
-                                    <input type="number" step="any" class="form-control" id="inputMontoaut" name="inputMontoaut" value="0.00">
+                                    <input type="number" step="any" class="form-control" id="inputMontoaut" name="inputMontoaut" value="0.00" readonly>
                                 </div>
                             </div>    
 
@@ -659,6 +659,7 @@ function recalcularTotales() {
 
     const iva = subtotal * 0.16; // 16% de impuesto
     const total = subtotal + iva;
+    $('#inputMontoaut').val(total.toFixed(2));
 
     const htmlTotales = `
         <tr>
