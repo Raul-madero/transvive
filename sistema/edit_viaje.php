@@ -671,8 +671,8 @@ $('#guardar_tipoactividad').click(function(e) {
     e.preventDefault();
 
     // Captura los valores primero
-    let unidad         = $('#inputTipo').val().trim();
-    let unidad_ejec    = $('#inputTipoejecutado').val().trim();
+    let unidad         = $('#inputTipo').val().trim().toLowerCase();
+    let unidad_ejec    = $('#inputTipoejecutado').val().trim().toLowerCase();
 
     // Si son diferentes, solicita justificación
     if (unidad !== unidad_ejec) {
