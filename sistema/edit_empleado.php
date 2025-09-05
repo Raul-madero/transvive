@@ -87,6 +87,10 @@ if ($result_sqlact == 0) {
     $fecha_baja      = $data['fecha_baja'];
     $fecha_reingreso = $data['fecha_reingreso'];
     $estatus         = $data['estatus'];
+    $correo       = $data['correo'];
+    $nombre_emergencia = $data['nombre_emergencia'];
+    $telefono_emergencia = $data['telefono_emergencia'];
+    $parentesco = $data['parentesco'];
 
     if ($data['tipo_contrato'] == 'Eventual') {
       $verboton = '';
@@ -162,28 +166,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <?php
-        if ($_SESSION['rol'] == 4) {
-          include('includes/navbarsup.php');
-        } else {
-          if ($_SESSION['rol'] == 5) {
-            include('includes/navbarrhuman.php');
-          } else {
-            if ($_SESSION['rol'] == 6) {
-              include('includes/navbaroperac.php');
-            } else {
-              if ($_SESSION['rol'] == 8) {
-                include('includes/navbarjefeoper.php');
-              } else {
-                if ($_SESSION['rol'] == 9) {
-                  include('includes/navbargrcia.php');
-                } else {
-                  include('includes/navbar.php');
-                }
-              }
-            }
-          }
-        }
+        <?php include('includes/generalnavbar.php');
 
         if ($_SESSION['rol'] == 9) {
           $activo = "disabled";
@@ -327,11 +310,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           </div>
                         </div>
                         <div class="form-group row">
+                          <label for="inputCorreo" class="col-sm-2 col-form-label" style="text-align: left;">Correo Electronico:</label>
+                          <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputCorreo" name="inputCorreo" placeholder="Correo" value="<?php echo $correo; ?>">
+                          </div>
+                        </div>
+                        <div class="form-group row">
                           <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">Contacto de Emergencia:</label>
                           <div class="col-sm-10">
                             <input type="text" class="form-control" id="inputCemergencia" name="inputCemergencia" value="<?php echo $cemergencia; ?>">
                           </div>
                         </div>
+                        <div class="border border-4 border-warning rounded-lg mb-4">
+													<div class="form-group row">
+														<label for="inputName2" class="col-sm-12 col-form-label text-center">Contacto de Emergencia</label>
+													</div>
+													<div class="form-group row">
+														<label for="inputNombreEmergencia" class="col-sm-2 col-form-label text-left">Nombre:</label>
+														<div class="col-sm-5">
+															<input type="text" class="form-control" id="inputNombreemergencia" name="inputNombreemergencia" placeholder="Nombre Contacto de Emergencia" value="<?php echo $nombre_emergencia; ?>">
+														</div>
+														<label for="inputTelefonoemergencia" class="col-2 col-form-label text-left">Telefono:</label>
+														<div class="col-3">
+															<input type="text" class="form-control" id="inputTelefonoemergencia" name="inputTelefonoemergencia" placeholder="Telefono de Emergencia" value="<?php echo $telefono_emergencia; ?>">
+														</div>
+													</div>
+													<div class="form-group row">
+														<label for="inputParentesco" class="col-4">Parentesco:</label>
+														<div class="col-5">
+															<input type="text" class="form-control" id="inputParentesco" name="inputParentesco" placeholder="Parentesco" value="<?php echo $parentesco; ?>">
+														</div>
+													</div>
+												</div>
                         <div class="form-group row">
                           <label for="inputName2" class="col-sm-2 col-form-label" style="text-align: left;">R.F.C.:</label>
                           <div class="col-sm-4">

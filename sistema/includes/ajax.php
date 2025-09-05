@@ -5710,15 +5710,26 @@ if($_POST['action'] == 'ActualizaMovcotizacion'){
         } 
 
 
-//Almacena Requisicion de compra
+// Almacena Requisicion de compra
 if ($_POST['action'] == 'AlmacenaRequerimiento') {
 
+    // --- Configuración base (opcional) ---
+    // date_default_timezone_set('America/Mexico_City');
+    // header('Content-Type: application/json; charset=utf-8');
+
     // Verificación de campos obligatorios
-    if (empty($_POST['fecha']) || empty($_POST['tipo']) || empty($_POST['areasolicita']) || empty($_POST['montoaut']) || $_POST['montoaut'] <= 0 || empty($_POST['notas'])) {
+    if (
+        empty($_POST['fecha']) ||
+        empty($_POST['tipo']) ||
+        empty($_POST['areasolicita']) ||
+        empty($_POST['montoaut']) ||
+        $_POST['montoaut'] <= 0 ||
+        empty($_POST['notas'])
+    ) {
         echo json_encode(["status" => "error", "message" => "Faltan datos obligatorios"]);
         exit;
     }
-    
+
     // Validación y saneamiento de entradas
     $folio        = isset($_POST['folio']) ? intval($_POST['folio']) : 0;
     $fecha        = isset($_POST['fecha']) ? trim($_POST['fecha']) : '';
@@ -5728,7 +5739,7 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
     $monto_aut    = isset($_POST['montoaut']) ? floatval($_POST['montoaut']) : 0.0;
     $notas        = isset($_POST['notas']) ? trim($_POST['notas']) : '';
     $usuario      = isset($_SESSION['idUser']) ? intval($_SESSION['idUser']) : 0;
-    $rol          = isset($_SESSION['rol']) ? intval($_SESSION['rol']) : 0;  
+    $rol          = isset($_SESSION['rol']) ? intval($_SESSION['rol']) : 0;
 
     // Validación de datos requeridos
     if ($folio === 0 || $fecha === '' || $tipo === '' || $areasolicita === '') {
@@ -5736,111 +5747,177 @@ if ($_POST['action'] == 'AlmacenaRequerimiento') {
         exit;
     }
 
-    // Comprobación si el folio ya existe en la base de datos
-    $sql = "SELECT COUNT(*) as numreg FROM requisicion_compra WHERE no_requisicion = $folio";
-    $query = mysqli_query($conection, $sql);
+    // ===== NUEVO: calcular folio final y validar detalles =====
 
-    if (!$query) {
-        // Manejo de error si la consulta falla
-        echo json_encode(["status" => "error", "message" => "Error en la consulta de base de datos"]);
+    // Folio de ORIGEN (el que viene en el form) para leer la tabla temporal
+    $folio_origen = $folio;
+
+    // Función auxiliar: verifica colisión del folio en cabecera o detalles
+    $existe_conflicto = function(mysqli $cx, int $f) : bool {
+        // Encabezado
+        $sql1 = "SELECT 1 FROM requisicion_compra WHERE no_requisicion = ? LIMIT 1";
+        if (!($stmt1 = $cx->prepare($sql1))) return true;
+        $stmt1->bind_param("i", $f);
+        $stmt1->execute();
+        $stmt1->store_result();
+        $hay_encabezado = $stmt1->num_rows > 0;
+        $stmt1->close();
+
+        // Detalles
+        $sql2 = "SELECT 1 FROM detalle_requisicioncompra WHERE folio = ? LIMIT 1";
+        if (!($stmt2 = $cx->prepare($sql2))) return true;
+        $stmt2->bind_param("i", $f);
+        $stmt2->execute();
+        $stmt2->store_result();
+        $hay_detalles = $stmt2->num_rows > 0;
+        $stmt2->close();
+
+        return ($hay_encabezado || $hay_detalles);
+    };
+
+    // Encontrar el siguiente folio libre
+    $folio_final = $folio_origen;
+    while ($existe_conflicto($conection, $folio_final)) {
+        $folio_final++;
+    }
+
+    // Verificar que existan productos en la tabla temporal del folio de origen
+    $sql_detalle_temp = "SELECT COUNT(*) AS total FROM detalle_temp_cotizacioncompra WHERE folio = ?";
+    if (!($stmt_tmp = $conection->prepare($sql_detalle_temp))) {
+        echo json_encode(["status" => "error", "message" => "Error al verificar productos (prep): " . $conection->error]);
+        exit;
+    }
+    $stmt_tmp->bind_param("i", $folio_origen);
+    $stmt_tmp->execute();
+    $stmt_tmp->bind_result($total_temp);
+    $stmt_tmp->fetch();
+    $stmt_tmp->close();
+
+    if ((int)$total_temp === 0) {
+        echo json_encode(["status" => "error", "message" => "Debe agregar al menos un producto a la requisición (tabla temporal)."]);
         exit;
     }
 
-    $data = mysqli_fetch_assoc($query);
+    // ===== Transacción para evitar inconsistencias =====
+    $conection->begin_transaction();
 
-    // Si el folio ya existe, incrementar
-    if ($data['numreg'] > 0) {
-        $folio++; // Incrementa el folio en 1 si ya existe
-    }
+    try {
+        // Intentar insertar encabezado con posible reintento si hay conflicto de llave (poco probable)
+        $sql_ins_cab = "INSERT INTO requisicion_compra
+            (no_requisicion, fecha, fecha_requiere, tipo_requisicion, area_solicitante, cant_autorizada, observaciones, usuario_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    // Verificar que existan productos en detalle_temp_cotizacioncompra para este folio
-    $sql_detalle_check = "SELECT COUNT(*) as total FROM detalle_temp_cotizacioncompra WHERE folio = ?";
-    if ($stmt_check = mysqli_prepare($conection, $sql_detalle_check)) {
-        mysqli_stmt_bind_param($stmt_check, "i", $folio);
-        mysqli_stmt_execute($stmt_check);
-        mysqli_stmt_bind_result($stmt_check, $total_detalles);
-        mysqli_stmt_fetch($stmt_check);
-        mysqli_stmt_close($stmt_check);
-
-        if ($total_detalles == 0) {
-            echo json_encode(["status" => "error", "message" => "Debe agregar al menos un producto a la requisición."]);
-            exit;
+        if (!($stmt_cab = $conection->prepare($sql_ins_cab))) {
+            throw new Exception("Error preparando encabezado: " . $conection->error);
         }
-    } else {
-        echo json_encode(["status" => "error", "message" => "Error al verificar los productos de la requisición."]);
-        exit;
-    }
 
+        // Tipos: i s s s s d s i  => "issssdsi"
+        $folio_actual = $folio_final;
+        $max_reintentos = 5;
+        $ok_cabecera = false;
 
-    // Consulta para insertar en requisicion_compra
-    $query = "INSERT INTO requisicion_compra 
-        (no_requisicion, fecha, fecha_requiere, tipo_requisicion, area_solicitante, cant_autorizada, observaciones, usuario_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        for ($i = 0; $i < $max_reintentos; $i++) {
+            $stmt_cab->bind_param("issssdsi",
+                $folio_actual,   // i
+                $fecha,          // s
+                $fecha_req,      // s
+                $tipo,           // s
+                $areasolicita,   // s
+                $monto_aut,      // d
+                $notas,          // s
+                $usuario         // i
+            );
 
-    if ($stmt = mysqli_prepare($conection, $query)) {
-        mysqli_stmt_bind_param($stmt, "issssdsd", $folio, $fecha, $fecha_req, $tipo, $areasolicita, $monto_aut, $notas, $usuario);
-
-        if (mysqli_stmt_execute($stmt)) {
-            if (mysqli_affected_rows($conection) > 0) {
-                // Insertar los detalles de la requisición desde la tabla temporal
-                $query_detalle = "INSERT INTO detalle_requisicioncompra 
-                    (folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token) 
-                    SELECT $folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token 
-                    FROM detalle_temp_cotizacioncompra WHERE folio = ?";
-
-                if ($stmt_detalle = mysqli_prepare($conection, $query_detalle)) {
-                    mysqli_stmt_bind_param($stmt_detalle, "i", $folio);
-
-                    if (mysqli_stmt_execute($stmt_detalle)) {
-                        if (mysqli_affected_rows($conection) > 0) {
-                            // Si los detalles se insertaron correctamente, enviar el correo
-                            $mensaje = "Se generó una nueva Requisición: $folio \n\nFavor de revisar.\n\nGracias.";
-
-                            // Configurar PHPMailer
-                            $mail = new PHPMailer;
-                            $mail->isSMTP();
-                            $mail->Host       = 'smtp.office365.com';
-                            $mail->Port       = 587;
-                            $mail->SMTPAuth   = true;
-                            $mail->SMTPSecure = 'STARTTLS';
-                            $mail->SMTPAutoTLS = true;
-                            // *** Usar variables de entorno para credenciales ***
-                            $mail->Username   = 'compras@transvivegdl.com.mx';
-                            $mail->Password   = 'AWATHsjvb6hW8qe';
-                            $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
-                            $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
-                            $mail->addAddress('gerenciaop@transvivegdl.com.mx');
-                            // $mail->addCC('sistemas@transvivegdl.com.mx');
-                            $mail->CharSet = 'UTF-8';
-                            $mail->Encoding = 'base64';         // o 'quoted-printable'
-                            $mail->isHTML(true);
-                            $mail->Subject = "Nueva Requisición Generada";
-                            $mail->Body = $mensaje;
-
-                            if ($mail->send()) {
-                                echo json_encode(["status" => "success", "message" => "Requisición almacenada, detalles agregados y correo enviado"]);
-                            } else {
-                                echo json_encode(["status" => "warning", "message" => "Requisición almacenada y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo]);
-                            }
-                        } else {
-                            echo json_encode(["status" => "error", "message" => "No se insertaron detalles en la requisición" . mysqli_error($conection)]);
-                        }
-                    } else {
-                        echo json_encode(["status" => "error", "message" => "Error al ejecutar la inserción de detalles: " . mysqli_error($conection)]);
-                    }
-                    mysqli_stmt_close($stmt_detalle);
-                } else {
-                    echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta de detalles" . mysqli_error($conection)]);
-                }
+            if ($stmt_cab->execute()) {
+                $ok_cabecera = true;
+                break;
             } else {
-                echo json_encode(["status" => "error", "message" => "No se pudo almacenar la requisición" . mysqli_error($conection)]);
+                // Si hay duplicado de llave (1062), incrementar folio y reintentar
+                if ($conection->errno == 1062) {
+                    $folio_actual++;
+                    continue;
+                } else {
+                    throw new Exception("Error insertando encabezado: " . $conection->error);
+                }
             }
-        } else {
-            echo json_encode(["status" => "error", "message" => "Error en la ejecución de la consulta: " . mysqli_error($conection)]);
         }
-        mysqli_stmt_close($stmt);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Error en la preparación de la consulta" . mysqli_error($conection)]);
+        $stmt_cab->close();
+
+        if (!$ok_cabecera) {
+            throw new Exception("No fue posible reservar un folio único para la requisición.");
+        }
+
+        // Insertar los detalles desde la tabla temporal:
+        // LEE del folio_origen, GRABA con folio_actual
+        $sql_ins_det = "INSERT INTO detalle_requisicioncompra
+            (folio, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token)
+            SELECT ?, cantidad, codigo, descripcion, marca, precio, impuesto, impuesto_isr, impuesto_ieps, dato_e, dato_om, importe, token
+            FROM detalle_temp_cotizacioncompra
+            WHERE folio = ?";
+
+        if (!($stmt_det = $conection->prepare($sql_ins_det))) {
+            throw new Exception("Error preparando detalles: " . $conection->error);
+        }
+        $stmt_det->bind_param("ii", $folio_actual, $folio_origen);
+        if (!$stmt_det->execute()) {
+            $stmt_det->close();
+            throw new Exception("Error insertando detalles: " . $conection->error);
+        }
+        $afectados = $conection->affected_rows;
+        $stmt_det->close();
+
+        if ($afectados <= 0) {
+            throw new Exception("No se insertaron detalles en la requisición.");
+        }
+
+        // Si todo ok, confirmar transacción
+        $conection->commit();
+
+        // ===== Enviar correo (fuera de la transacción) =====
+        // Nota: ajusta la ruta si usas autoload por Composer
+        if (!class_exists('PHPMailer')) {
+            require_once '../PHPMailer/PHPMailerAutoload.php';
+        }
+
+        $mensaje = "Se generó una nueva Requisición: {$folio_actual}\n\nFavor de revisar.\n\nGracias.";
+
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->Host         = 'smtp.office365.com';
+        $mail->Port         = 587;
+        $mail->SMTPAuth     = true;
+        $mail->SMTPSecure   = 'STARTTLS';
+        $mail->SMTPAutoTLS  = true;
+        // *** Idealmente usa variables de entorno ***
+        $mail->Username     = 'compras@transvivegdl.com.mx';
+        $mail->Password     = 'AWATHsjvb6hW8qe';
+        $mail->setFrom('compras@transvivegdl.com.mx', "Compras");
+        $mail->addReplyTo('compras@transvivegdl.com.mx', "Compras");
+        $mail->addAddress('gerenciaop@transvivegdl.com.mx');
+        // $mail->addCC('sistemas@transvivegdl.com.mx');
+        $mail->CharSet      = 'UTF-8';
+        $mail->Encoding     = 'base64';
+        $mail->isHTML(true);
+        $mail->Subject      = "Nueva Requisición Generada";
+        $mail->Body         = nl2br(htmlentities($mensaje, ENT_QUOTES, 'UTF-8'));
+
+        if ($mail->send()) {
+            echo json_encode([
+                "status"  => "success",
+                "message" => "Requisición almacenada (folio {$folio_actual}), detalles agregados y correo enviado"
+            ]);
+        } else {
+            echo json_encode([
+                "status"  => "warning",
+                "message" => "Requisición almacenada (folio {$folio_actual}) y detalles agregados, pero el correo no se pudo enviar: " . $mail->ErrorInfo
+            ]);
+        }
+
+    } catch (Throwable $e) {
+        // Deshacer en caso de error
+        $conection->rollback();
+        echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        exit;
     }
 
     mysqli_close($conection);
