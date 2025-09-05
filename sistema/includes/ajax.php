@@ -736,7 +736,7 @@ if ($_POST['action'] == 'AlmacenaEmpleado') {
         $telefono     = $valNull('telefono');
         $correo       = $valNull('correo');
         $rfc          = $val('rfc');
-        $curp         = $val('elcurp');
+        $curp         = $val('curp');
         $nombre_emergencia   = $val('nombreEmergencia');
         $telefono_emergencia = $val('telefonoEmergencia');
         $parentesco   = $val('parentesco');
