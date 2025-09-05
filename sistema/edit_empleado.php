@@ -814,7 +814,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			var adeudo = $('#inputAdeudo').val();
 			var saldo_adeudo = $('#inputSaldoAdeudo').val();
 			var bonos = $('#inputBonos').val();
-			var clasif_cat = $('#inputClasifcat').val();
+			// var clasif_cat = $('#inputClasifcat').val();
 			var bonosc2 = $('#inputBonosc2').val();
 			var bonosemanal = $('#inputBonosemanal').val();
 			var apoyomes = $('#inputApoyomes').val();
@@ -843,6 +843,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
 			var datebaja = $('#inputDatebaja').val();
 			var datereingreso = $('#inputDatereingreso').val();
 			var action = 'AlmacenaEditEmpleado';
+      let correo = $('#inputCorreo').val();
+      // let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // if (!emailRegex.test(correo)) {
+      //   Swal.fire({
+      //     icon: 'error',
+      //     title: 'Ooops...',
+      //     text: 'El correo electrónico no es válido.'
+      //   });
+      //   return; // Detener la ejecución si el correo no es válido
+      // }
+      let nombreEmergencia = $('#inputNombreemergencia').val();
+      let telefonoEmergencia = $('#inputTelefonoemergencia').val();
+      let parentesco = $('#inputParentesco').val();
 
 			$.ajax({
 				url: 'includes/ajax.php',
@@ -882,7 +895,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					adeudo: adeudo,
 					saldo_adeudo: saldo_adeudo,
 					bonos: bonos,
-					clasif_cat: clasif_cat,
+					// clasif_cat: clasif_cat,
 					bonosc2: bonosc2,
 					bonosemanal: bonosemanal,
 					apoyomes: apoyomes,
@@ -909,9 +922,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					recontratable: recontratable,
 					comentarios: comentarios,
 					datebaja: datebaja,
-					datereingreso: datereingreso
+					datereingreso: datereingreso,
+          correo: correo,
+          nombreEmergencia: nombreEmergencia,
+          telefonoEmergencia: telefonoEmergencia,
+          parentesco: parentesco
 				},
 				success: function(response) {
+          console.log(response);
 					let info = JSON.parse(response)
 					if (info.error) {
 						Swal.fire({
